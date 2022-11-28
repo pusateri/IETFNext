@@ -17,6 +17,9 @@
 		F8E9B9BE2934101300CA6F09 /* IETFNextUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9BD2934101300CA6F09 /* IETFNextUITests.swift */; };
 		F8E9B9C02934101300CA6F09 /* IETFNextUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9BF2934101300CA6F09 /* IETFNextUITestsLaunchTests.swift */; };
 		F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9CC2934295E00CA6F09 /* Load.swift */; };
+		F8E9B9CF293444B000CA6F09 /* GroupListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9CE293444B000CA6F09 /* GroupListView.swift */; };
+		F8E9B9D1293444CC00CA6F09 /* ScheduleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9D0293444CC00CA6F09 /* ScheduleListView.swift */; };
+		F8E9B9D32935070D00CA6F09 /* MeetingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +54,9 @@
 		F8E9B9BD2934101300CA6F09 /* IETFNextUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextUITests.swift; sourceTree = "<group>"; };
 		F8E9B9BF2934101300CA6F09 /* IETFNextUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		F8E9B9CC2934295E00CA6F09 /* Load.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Load.swift; sourceTree = "<group>"; };
+		F8E9B9CE293444B000CA6F09 /* GroupListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListView.swift; sourceTree = "<group>"; };
+		F8E9B9D0293444CC00CA6F09 /* ScheduleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleListView.swift; sourceTree = "<group>"; };
+		F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,11 +110,14 @@
 				F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */,
 				F8E9B99E2934101200CA6F09 /* Persistence.swift */,
 				F8E9B9A32934101200CA6F09 /* ContentView.swift */,
+				F8E9B9CE293444B000CA6F09 /* GroupListView.swift */,
+				F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */,
+				F8E9B9D0293444CC00CA6F09 /* ScheduleListView.swift */,
+				F8E9B9CC2934295E00CA6F09 /* Load.swift */,
 				F8E9B9A52934101300CA6F09 /* Assets.xcassets */,
 				F8E9B9A72934101300CA6F09 /* IETFNext.entitlements */,
 				F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */,
 				F8E9B9A82934101300CA6F09 /* Preview Content */,
-				F8E9B9CC2934295E00CA6F09 /* Load.swift */,
 			);
 			path = IETFNext;
 			sourceTree = "<group>";
@@ -268,11 +277,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8E9B9D32935070D00CA6F09 /* MeetingListView.swift in Sources */,
 				F8E9B99D2934101200CA6F09 /* IETFNextApp.swift in Sources */,
 				F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
 				F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */,
+				F8E9B9CF293444B000CA6F09 /* GroupListView.swift in Sources */,
 				F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */,
+				F8E9B9D1293444CC00CA6F09 /* ScheduleListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,7 +456,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 12.6;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNext;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -482,7 +494,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 12.6;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNext;
 				PRODUCT_NAME = "$(TARGET_NAME)";

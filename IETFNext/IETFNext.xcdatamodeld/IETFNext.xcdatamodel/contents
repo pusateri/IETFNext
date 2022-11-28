@@ -1,9 +1,58 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="false" userDefinedModelVersionIdentifier="">
-    <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
-        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21512" systemVersion="21G217" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Area" representedClassName="Area" syncable="YES" codeGenerationType="class">
+        <attribute name="desc" attributeType="String"/>
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="modified" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WG" inverseName="area" inverseEntity="WG"/>
     </entity>
-    <elements>
-        <element name="Item" positionX="-63" positionY="-18" width="128" height="44"/>
-    </elements>
+    <entity name="Location" representedClassName="Location" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="level_name" optional="YES" attributeType="String"/>
+        <attribute name="level_sort" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="map" optional="YES" attributeType="String"/>
+        <attribute name="modified" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="x" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="y" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sess" inverseName="location" inverseEntity="Sess"/>
+    </entity>
+    <entity name="Meeting" representedClassName="Meeting" syncable="YES" codeGenerationType="class">
+        <attribute name="name" attributeType="String"/>
+        <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sess" inverseName="meeting" inverseEntity="Sess"/>
+    </entity>
+    <entity name="Presentatio" representedClassName="Presentatio" syncable="YES" codeGenerationType="class">
+        <attribute name="name" attributeType="String"/>
+        <attribute name="order" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="resource_uri" attributeType="URI"/>
+        <attribute name="rev" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="session" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Sess" inverseName="presentations" inverseEntity="Sess"/>
+    </entity>
+    <entity name="Sess" representedClassName="Sess" syncable="YES" codeGenerationType="class">
+        <attribute name="agenda" optional="YES" attributeType="URI"/>
+        <attribute name="end" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="is_bof" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="minutes" optional="YES" attributeType="URI"/>
+        <attribute name="modified" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="session_id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="session_res_uri" attributeType="URI"/>
+        <attribute name="start" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="status" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WG" inverseName="sessions" inverseEntity="WG"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="sessions" inverseEntity="Location"/>
+        <relationship name="meeting" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Meeting" inverseName="sessions" inverseEntity="Meeting"/>
+        <relationship name="presentations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Presentatio" inverseName="session" inverseEntity="Presentatio"/>
+    </entity>
+    <entity name="WG" representedClassName="WG" syncable="YES" codeGenerationType="class">
+        <attribute name="acronym" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="state" attributeType="String"/>
+        <attribute name="type" attributeType="String"/>
+        <relationship name="area" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Area" inverseName="groups" inverseEntity="Area"/>
+        <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sess" inverseName="group" inverseEntity="Sess"/>
+    </entity>
 </model>

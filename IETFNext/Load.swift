@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 extension String {
     func convertToTimeInterval() -> TimeInterval {
@@ -24,23 +25,23 @@ extension String {
     }
 }
 
-public struct CustomTimeInterval: Codable {
+struct CustomTimeInterval: Codable {
     let value: TimeInterval
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let text = try container.decode(String.self)
         self.value = text.convertToTimeInterval()
     }
 }
 
-public protocol HasDateFormatter {
+protocol HasDateFormatter {
     static var dateFormatter: DateFormatter { get }
 }
 
-public struct CustomDate<E:HasDateFormatter>: Codable {
+struct CustomDate<E:HasDateFormatter>: Codable {
 
     let value: Date
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let text = try container.decode(String.self)
         guard let date = E.dateFormatter.date(from: text) else {
@@ -54,90 +55,90 @@ public struct CustomDate<E:HasDateFormatter>: Codable {
 
 }
 
-public struct RFC3339Date: HasDateFormatter {
-    public static var dateFormatter: DateFormatter {
+struct RFC3339Date: HasDateFormatter {
+    static var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
         return formatter
     }
 }
 
-public enum Schedule {
-    case location(Location)
+enum Schedule {
+    case location(JSONLocation)
     case parent(Parent)
     case session(Session)
 }
 
-public enum ObjectType: String, Decodable {
+enum ObjectType: String, Decodable {
     case location
     case parent
     case session
 }
 
-public enum Status: String, Decodable {
+enum Status: String, Decodable {
     case canceled
     case resched
     case sched
 }
 
-public struct Location: Decodable {
-    public let id: Int
-    public let level_name: String?
-    public let level_sort: Int?
-    public let map: String?
-    public let modified: CustomDate<RFC3339Date>
-    public let name: String
-    public let objtype: ObjectType
-    public let x: Float?
-    public let y: Float?
+struct JSONLocation: Decodable {
+    let id: Int32
+    let level_name: String?
+    let level_sort: Int32?
+    let map: String?
+    let modified: CustomDate<RFC3339Date>
+    let name: String
+    let objtype: ObjectType
+    let x: Float?
+    let y: Float?
 }
 
-public struct Parent: Decodable {
-    public let id: Int
-    public let description: String
-    public let modified: CustomDate<RFC3339Date>
-    public let name: String
-    public let objtype: ObjectType
+struct Parent: Decodable {
+    let id: Int32
+    let description: String
+    let modified: CustomDate<RFC3339Date>
+    let name: String
+    let objtype: ObjectType
 }
 
-public struct Session: Decodable {
-    public let agenda: String?
-    public let duration: CustomTimeInterval
-    public let group: Group
-    public let id: Int
-    public let is_bof: Bool
-    public let location: String
-    public let minutes: String?
-    public let modified: CustomDate<RFC3339Date>
-    public let name: String
-    public let objtype: ObjectType
-    public let presentations: [Presentation]?
-    public let session_id: Int
-    public let session_res_uri: String
-    public let start: CustomDate<RFC3339Date>
-    public let status: Status
+struct Session: Decodable {
+    let agenda: String?
+    let duration: CustomTimeInterval
+    let group: Group
+    let id: Int32
+    let is_bof: Bool
+    let location: String
+    let minutes: String?
+    let modified: CustomDate<RFC3339Date>
+    let name: String
+    let objtype: ObjectType
+    let presentations: [Presentation]?
+    let session_id: Int32
+    let session_res_uri: String
+    let start: CustomDate<RFC3339Date>
+    let status: Status
 }
 
-public struct Presentation: Decodable {
-    public let name: String
-    public let order: Int
-    public let resource_uri: String
-    public let rev: String
-    public let title: String
+struct Presentation: Decodable {
+    let name: String
+    let order: Int32
+    let resource_uri: String
+    let rev: String
+    let title: String
 }
 
-public enum GroupState: String, Decodable {
+enum GroupState: String, Decodable {
     case active
     case bof
     case proposed
 }
 
-public struct Group: Decodable {
-    public let acronym: String
-    public let name: String
-    public let parent: String?
-    public let state: GroupState
-    public let type: String
+struct Group: Decodable {
+    let acronym: String
+    let name: String
+    let parent: String?
+    let state: GroupState
+    let type: String
 }
 
 extension Schedule: Decodable {
@@ -145,14 +146,14 @@ extension Schedule: Decodable {
         case objtype = "objtype"
     }
 
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let singleContainer = try decoder.singleValueContainer()
 
         let type = try container.decode(String.self, forKey: .objtype)
         switch type {
         case "location":
-            let location = try singleContainer.decode(Location.self)
+            let location = try singleContainer.decode(JSONLocation.self)
             self = .location(location)
         case "parent":
             let parent = try singleContainer.decode(Parent.self)
@@ -168,7 +169,7 @@ extension Schedule: Decodable {
     }
 }
 
-public func loadData(meeting: String) async {
+public func loadData(meeting: String, context: NSManagedObjectContext) async {
     guard let url = URL(string: "https://datatracker.ietf.org/meeting/\(meeting)/agenda.json") else {
         print("Invalid URL")
         return
@@ -179,8 +180,27 @@ public func loadData(meeting: String) async {
             let decoder = JSONDecoder()
             let messages = try decoder.decode([String:[Schedule]].self, from: data)
             let objs = messages[meeting] ?? []
+            // first pass get dependencies
             for obj in objs {
-                print(obj)
+                switch(obj) {
+                case .location(let loc):
+                    updateLocation(context:context, location:loc)
+                case .parent(let area):
+                    updateArea(context:context, area:area)
+                case .session(_):
+                    continue
+                }
+            }
+            // second pass get sessions
+            for obj in objs {
+                switch(obj) {
+                case .location(_):
+                    continue
+                case .parent(_):
+                    continue
+                case .session(let session):
+                    updateSession(context:context, session:session)
+                }
             }
         } catch DecodingError.dataCorrupted(let context) {
             print(context)
@@ -199,4 +219,45 @@ public func loadData(meeting: String) async {
     } catch {
         print("Unexpected agenda format")
     }
+}
+
+private func updateLocation(context: NSManagedObjectContext, location: JSONLocation) {
+    let loc: Location!
+
+    let fetchLocation: NSFetchRequest<Location> = Location.fetchRequest()
+    fetchLocation.predicate = NSPredicate(format: "id = %@", location.id)
+
+    let results = try? context.fetch(fetchLocation)
+
+    if results?.count == 0 {
+        // here you are inserting
+        loc = Location(context: context)
+    } else {
+        // here you are updating
+        loc = results?.first
+    }
+
+    loc.id = location.id
+    loc.name = location.name
+    loc.level_name = location.level_name
+    loc.level_sort = location.level_sort ?? 0
+    loc.map = location.map
+    loc.modified = location.modified
+    loc.x = location.x ?? 0.0
+    loc.y = location.y ?? 0.0
+
+    do {
+        try context.save()
+    }
+    catch {
+        print("Unable to save Location \(location.name)")
+    }
+}
+
+private func updateArea(context: NSManagedObjectContext, area: Parent) {
+
+}
+
+private func updateSession(context: NSManagedObjectContext, session: Session) {
+
 }
