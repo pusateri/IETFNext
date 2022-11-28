@@ -16,6 +16,7 @@
 		F8E9B9B42934101300CA6F09 /* IETFNextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9B32934101300CA6F09 /* IETFNextTests.swift */; };
 		F8E9B9BE2934101300CA6F09 /* IETFNextUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9BD2934101300CA6F09 /* IETFNextUITests.swift */; };
 		F8E9B9C02934101300CA6F09 /* IETFNextUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9BF2934101300CA6F09 /* IETFNextUITestsLaunchTests.swift */; };
+		F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9CC2934295E00CA6F09 /* Load.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		F8E9B9B92934101300CA6F09 /* IETFNextUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IETFNextUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8E9B9BD2934101300CA6F09 /* IETFNextUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextUITests.swift; sourceTree = "<group>"; };
 		F8E9B9BF2934101300CA6F09 /* IETFNextUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F8E9B9CC2934295E00CA6F09 /* Load.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Load.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				F8E9B9A72934101300CA6F09 /* IETFNext.entitlements */,
 				F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */,
 				F8E9B9A82934101300CA6F09 /* Preview Content */,
+				F8E9B9CC2934295E00CA6F09 /* Load.swift */,
 			);
 			path = IETFNext;
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8E9B99D2934101200CA6F09 /* IETFNextApp.swift in Sources */,
+				F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
 				F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */,
 				F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */,
