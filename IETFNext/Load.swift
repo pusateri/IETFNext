@@ -34,39 +34,10 @@ struct CustomTimeInterval: Codable {
     }
 }
 
-protocol HasDateFormatter {
-    static var dateFormatter: DateFormatter { get }
-}
-
-struct CustomDate<E:HasDateFormatter>: Codable {
-
-    let value: Date
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        let text = try container.decode(String.self)
-        guard let date = E.dateFormatter.date(from: text) else {
-            throw CustomDateError.general
-        }
-        self.value = date
-    }
-    enum CustomDateError: Error {
-        case general
-    }
-
-}
-
-struct RFC3339Date: HasDateFormatter {
-    static var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
-        return formatter
-    }
-}
-
 enum Schedule {
     case location(JSONLocation)
     case parent(Parent)
-    case session(Session)
+    case session(JSONSession)
 }
 
 enum ObjectType: String, Decodable {
@@ -86,7 +57,7 @@ struct JSONLocation: Decodable {
     let level_name: String?
     let level_sort: Int32?
     let map: String?
-    let modified: CustomDate<RFC3339Date>
+    let modified: Date
     let name: String
     let objtype: ObjectType
     let x: Float?
@@ -96,12 +67,12 @@ struct JSONLocation: Decodable {
 struct Parent: Decodable {
     let id: Int32
     let description: String
-    let modified: CustomDate<RFC3339Date>
+    let modified: Date
     let name: String
     let objtype: ObjectType
 }
 
-struct Session: Decodable {
+struct JSONSession: Decodable {
     let agenda: String?
     let duration: CustomTimeInterval
     let group: Group
@@ -109,17 +80,17 @@ struct Session: Decodable {
     let is_bof: Bool
     let location: String
     let minutes: String?
-    let modified: CustomDate<RFC3339Date>
+    let modified: Date
     let name: String
     let objtype: ObjectType
-    let presentations: [Presentation]?
+    let presentations: [JSONPresentation]?
     let session_id: Int32
     let session_res_uri: String
-    let start: CustomDate<RFC3339Date>
+    let start: Date
     let status: Status
 }
 
-struct Presentation: Decodable {
+struct JSONPresentation: Decodable {
     let name: String
     let order: Int32
     let resource_uri: String
@@ -159,14 +130,24 @@ extension Schedule: Decodable {
             let parent = try singleContainer.decode(Parent.self)
             self = .parent(parent)
         case "session":
-            let session = try singleContainer.decode(Session.self)
-            print(session)
+            let session = try singleContainer.decode(JSONSession.self)
             self = .session(session)
         default:
             fatalError("Unknown type of content.")
             // or handle this case properly
         }
     }
+}
+
+private extension DateFormatter {
+    static let rfc3339: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
 }
 
 public func loadData(meeting: String, context: NSManagedObjectContext) async {
@@ -178,6 +159,7 @@ public func loadData(meeting: String, context: NSManagedObjectContext) async {
         let (data, _) = try await URLSession.shared.data(from: url)
         do {
             let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
             let messages = try decoder.decode([String:[Schedule]].self, from: data)
             let objs = messages[meeting] ?? []
             // first pass get dependencies
@@ -225,7 +207,7 @@ private func updateLocation(context: NSManagedObjectContext, location: JSONLocat
     let loc: Location!
 
     let fetchLocation: NSFetchRequest<Location> = Location.fetchRequest()
-    fetchLocation.predicate = NSPredicate(format: "id = %@", location.id)
+    fetchLocation.predicate = NSPredicate(format: "id = %d", location.id)
 
     let results = try? context.fetch(fetchLocation)
 
@@ -239,7 +221,7 @@ private func updateLocation(context: NSManagedObjectContext, location: JSONLocat
 
     loc.id = location.id
     loc.name = location.name
-    loc.level_name = location.level_name
+    loc.level_name = location.level_name ?? "Uncategorized"
     loc.level_sort = location.level_sort ?? 0
     loc.map = location.map
     loc.modified = location.modified
@@ -258,6 +240,6 @@ private func updateArea(context: NSManagedObjectContext, area: Parent) {
 
 }
 
-private func updateSession(context: NSManagedObjectContext, session: Session) {
+private func updateSession(context: NSManagedObjectContext, session: JSONSession) {
 
 }

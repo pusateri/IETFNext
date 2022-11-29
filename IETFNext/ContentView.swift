@@ -28,7 +28,7 @@ struct ContentView: View {
                     }
 
                     NavigationLink("Floor Maps") {
-                        Text("Locations")
+                        LocationListView()
                     }
                 }
                 Section(header: Text("Settings")) {
@@ -45,7 +45,7 @@ struct ContentView: View {
                     }
                 }
             }
-            Text("Yokahama")
+            Text("115 - Yokahama")
         } content: {
             Text("3")
         } detail: {

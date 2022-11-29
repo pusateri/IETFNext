@@ -6,14 +6,15 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct ScheduleListView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Sess.start, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \Session.start, ascending: true)],
         animation: .default)
-    private var sessions: FetchedResults<Sess>
+    private var sessions: FetchedResults<Session>
 
     var body: some View {
         Text("ScheduleListView")
