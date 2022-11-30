@@ -54,6 +54,9 @@ struct JSONMeeting: Decodable {
     let venue_addr: String
     let venue_name: String
 }
+private func selectMeeting(meeting: Meeting) {
+    print(meeting.number!)
+}
 
 struct MeetingListView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -65,7 +68,7 @@ struct MeetingListView: View {
 
     var body: some View {
         List(meetings) { mtg in
-            Text("IETF \(mtg.number!)")
+            MeetingListRowView(meeting: mtg)
         }
         .task {
             await loadMeetings(context:viewContext)

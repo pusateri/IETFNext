@@ -21,6 +21,8 @@
 		F8E9B9D1293444CC00CA6F09 /* ScheduleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9D0293444CC00CA6F09 /* ScheduleListView.swift */; };
 		F8E9B9D32935070D00CA6F09 /* MeetingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */; };
 		F8E9BA112935624100CA6F09 /* LocationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9BA102935624100CA6F09 /* LocationListView.swift */; };
+		F8E9BA1329366A4000CA6F09 /* MeetingListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */; };
+		F8E9BA152936B5FA00CA6F09 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9BA142936B5FA00CA6F09 /* WebView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +61,8 @@
 		F8E9B9D0293444CC00CA6F09 /* ScheduleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleListView.swift; sourceTree = "<group>"; };
 		F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingListView.swift; sourceTree = "<group>"; };
 		F8E9BA102935624100CA6F09 /* LocationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListView.swift; sourceTree = "<group>"; };
+		F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingListRowView.swift; sourceTree = "<group>"; };
+		F8E9BA142936B5FA00CA6F09 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,8 +118,10 @@
 				F8E9B9A32934101200CA6F09 /* ContentView.swift */,
 				F8E9B9CE293444B000CA6F09 /* GroupListView.swift */,
 				F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */,
+				F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */,
 				F8E9B9D0293444CC00CA6F09 /* ScheduleListView.swift */,
 				F8E9BA102935624100CA6F09 /* LocationListView.swift */,
+				F8E9BA142936B5FA00CA6F09 /* WebView.swift */,
 				F8E9B9CC2934295E00CA6F09 /* Load.swift */,
 				F8E9B9A52934101300CA6F09 /* Assets.xcassets */,
 				F8E9B9A72934101300CA6F09 /* IETFNext.entitlements */,
@@ -281,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8E9BA112935624100CA6F09 /* LocationListView.swift in Sources */,
+				F8E9BA1329366A4000CA6F09 /* MeetingListRowView.swift in Sources */,
 				F8E9B9D32935070D00CA6F09 /* MeetingListView.swift in Sources */,
 				F8E9B99D2934101200CA6F09 /* IETFNextApp.swift in Sources */,
 				F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */,
@@ -289,6 +296,7 @@
 				F8E9B9CF293444B000CA6F09 /* GroupListView.swift in Sources */,
 				F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */,
 				F8E9B9D1293444CC00CA6F09 /* ScheduleListView.swift in Sources */,
+				F8E9BA152936B5FA00CA6F09 /* WebView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
