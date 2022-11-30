@@ -156,6 +156,18 @@ public func loadData(meeting: Meeting, context: NSManagedObjectContext) async {
         return
     }
     do {
+        let dayFormatter = DateFormatter()
+        dayFormatter.locale = Locale(identifier: Locale.current.identifier)
+        dayFormatter.dateFormat = "yyyy-MM-dd EEEE"
+        dayFormatter.calendar = Calendar(identifier: .iso8601)
+        dayFormatter.timeZone = TimeZone(identifier: meeting.time_zone!)
+
+        let rangeFormatter = DateFormatter()
+        rangeFormatter.locale = Locale(identifier: Locale.current.identifier)
+        rangeFormatter.dateFormat = "HHmm"
+        rangeFormatter.calendar = Calendar(identifier: .iso8601)
+        rangeFormatter.timeZone = TimeZone(identifier: meeting.time_zone!)
+
         let (data, _) = try await URLSession.shared.data(from: url)
         do {
             let decoder = JSONDecoder()
@@ -181,7 +193,7 @@ public func loadData(meeting: Meeting, context: NSManagedObjectContext) async {
                 case .parent(_):
                     continue
                 case .session(let session):
-                    updateSession(context:context, meeting:meeting, session:session)
+                    updateSession(context:context, dayFormatter:dayFormatter, rangeFormatter:rangeFormatter, meeting:meeting, session:session)
                 }
             }
         } catch DecodingError.dataCorrupted(let context) {
@@ -265,8 +277,11 @@ private func updateArea(context: NSManagedObjectContext, parent: Parent) {
     }
 }
 
-private func updateSession(context: NSManagedObjectContext, meeting: Meeting, session: JSONSession) {
+private func updateSession(context: NSManagedObjectContext, dayFormatter: DateFormatter, rangeFormatter: DateFormatter, meeting: Meeting, session: JSONSession) {
     let s: Session!
+    let end = session.start.addingTimeInterval(session.duration.value)
+    let start_time = rangeFormatter.string(from: session.start)
+    let end_time = rangeFormatter.string(from: end)
 
     let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
     fetchSession.predicate = NSPredicate(format: "id = %d", session.id)
@@ -282,7 +297,6 @@ private func updateSession(context: NSManagedObjectContext, meeting: Meeting, se
     }
 
     //s.agenda = session.agenda
-    //s.duration = session.duration
     //s.group = Group()
     s.id = session.id
     s.is_bof = session.is_bof
@@ -294,6 +308,9 @@ private func updateSession(context: NSManagedObjectContext, meeting: Meeting, se
     s.session_id = session.session_id
     //s.session_res_uri = session.session_res_uri
     s.start = session.start
+    s.end = end
+    s.day = dayFormatter.string(from: session.start)
+    s.timerange = "\(start_time)-\(end_time)"
     //s.status = session.status
     s.meeting = meeting
 

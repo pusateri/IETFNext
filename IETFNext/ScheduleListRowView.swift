@@ -19,6 +19,10 @@ struct ScheduleListRowView: View {
                 Image(systemName: "circle.fill")
                     .foregroundColor(.gray)
                 Spacer()
+            }
+            HStack {
+                Text("\(session.timerange!)")
+                Spacer()
                 if let loc = session.location {
                     Text("\(loc.name!)")
                         .foregroundColor(.secondary)

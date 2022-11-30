@@ -11,17 +11,24 @@ import CoreData
 struct ScheduleListView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Session.start, ascending: true)],
+    @SectionedFetchRequest(
+        sectionIdentifier: \.day!, sortDescriptors: [
+            NSSortDescriptor(keyPath: \Session.start, ascending: true),
+            NSSortDescriptor(keyPath: \Session.end, ascending: false),
+        ],
         predicate: NSPredicate(format: "meeting.number = %@", "115"),
         animation: .default)
-    private var sessions: FetchedResults<Session>
+    private var sessions: SectionedFetchResults<String, Session>
 
     @State var selected: Session.ID?
 
     var body: some View {
-        List(sessions, selection: $selected) { session in
-            ScheduleListRowView(session: session)
+        List(sessions, selection: $selected) { section in
+            Section(header: Text(section.id)) {
+                ForEach(section) { session in
+                    ScheduleListRowView(session: session)
+                }
+            }
         }
     }
 }
