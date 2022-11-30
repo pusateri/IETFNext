@@ -70,9 +70,6 @@ struct MeetingListView: View {
         List(meetings) { mtg in
             MeetingListRowView(meeting: mtg)
         }
-        .task {
-            await loadMeetings(context:viewContext)
-        }
     }
 }
 
@@ -87,21 +84,33 @@ private extension DateFormatter {
     }()
 }
 
-private func loadMeetings(context: NSManagedObjectContext) async {
-    guard let url = URL(string: "https://datatracker.ietf.org/api/v1/meeting/meeting/?type__in=ietf") else {
-        print("Invalid URL")
-        return
+public func loadMeetings(context: NSManagedObjectContext, limit: Int32, offset: Int32) async -> [Meeting] {
+    let url: URL
+    if limit == 0 {
+        guard let all_url = URL(string: "https://datatracker.ietf.org/api/v1/meeting/meeting/?type=ietf") else {
+            print("Invalid URL")
+            return []
+        }
+        url = all_url
+    } else {
+        guard let limit_url = URL(string: "https://datatracker.ietf.org/api/v1/meeting/meeting/?type=ietf&limit=\(limit)&offset=\(offset)") else {
+            print("Invalid URL")
+            return []
+        }
+        url = limit_url
     }
     do {
         let (data, _) = try await URLSession.shared.data(from: url)
         do {
+            var meetings: [Meeting] = []
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
-            let meetings = try decoder.decode(Meetings.self, from: data)
+            let json_meetings = try decoder.decode(Meetings.self, from: data)
 
-            for obj in meetings.objects {
-                updateMeeting(context:context, meeting:obj)
+            for obj in json_meetings.objects {
+                meetings.append(updateMeeting(context:context, meeting:obj))
             }
+            return meetings
         } catch DecodingError.dataCorrupted(let context) {
             print(context)
         } catch DecodingError.keyNotFound(let key, let context) {
@@ -119,9 +128,10 @@ private func loadMeetings(context: NSManagedObjectContext) async {
     } catch {
         print("Unexpected Meeting format")
     }
+    return []
 }
 
-private func updateMeeting(context: NSManagedObjectContext, meeting: JSONMeeting) {
+private func updateMeeting(context: NSManagedObjectContext, meeting: JSONMeeting) -> Meeting {
     let mtg: Meeting!
 
     let fetchMeeting: NSFetchRequest<Meeting> = Meeting.fetchRequest()
@@ -138,6 +148,7 @@ private func updateMeeting(context: NSManagedObjectContext, meeting: JSONMeeting
         mtg = results?.first
     }
 
+    mtg.acknowledgements = meeting.acknowledgements
     mtg.city = meeting.city
     mtg.country = meeting.country
     mtg.number = meeting.number
@@ -153,6 +164,7 @@ private func updateMeeting(context: NSManagedObjectContext, meeting: JSONMeeting
     catch {
         print("Unable to save Meeting \(meeting.number)")
     }
+    return mtg
 }
 
 struct MeetingListView_Previews: PreviewProvider {

@@ -21,55 +21,63 @@ extension UISplitViewController {
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State private var columnVisibility = NavigationSplitViewVisibility.all
-    @State private var selectedItem: String? = "schedule"
+    @State private var selected_meeting: Meeting?
+    @AppStorage("meetingNumber") var meetingNumber: String = "115"
+
+    @ViewBuilder
+    var first_header: some View {
+        if let m = selected_meeting {
+            Text("IETF \(m.number!) \(m.city!)")
+        } else {
+            Text("IETF")
+        }
+    }
 
     var body: some View {
-        NavigationSplitView(columnVisibility:
-                                $columnVisibility) {
-            List(selection: $selectedItem) {
-                Section(header: Text("IETF 115")) {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
+            List() {
+                Section(header: first_header) {
                     NavigationLink(destination: GroupListView()) {
                         HStack {
                             Image(systemName: "person.3")
-                                .frame(width: 32, height: 32)
+                                .frame(width: 32, height: 32) // constant width left aligns text
                             Text("Working Groups")
                         }
                     }
-                    NavigationLink(destination: ScheduleListView()) {
-                        HStack {
-                            Image(systemName: "calendar")
-                                .frame(width: 32, height: 32)
-                            Text("Schedule")
-                        }
+                    if let m = selected_meeting {
+                        NavigationLink(destination: ScheduleListView()
+                            .environmentObject(m)) {
+                                HStack {
+                                    Image(systemName: "calendar")
+                                        .frame(width: 32, height: 32) // constant width left aligns text
+                                    Text("Schedule")
+                                }
+                            }
                     }
                     NavigationLink(destination: LocationListView()) {
                         HStack {
                             Image(systemName: "map")
-                                .frame(width: 32, height: 32)
+                                .frame(width: 32, height: 32) // constant width left aligns text
                             Text("Venue & Room Locations")
-                        }
-                    }
-                }
-                Section(header: Text("Settings")) {
-                    NavigationLink(destination: MeetingListView()) {
-                        HStack {
-                            Image(systemName: "airplane.departure")
-                                .frame(width: 32, height: 32)
-                            Text("Change Meeting")
                         }
                     }
                 }
             }
             .toolbar {
                 ToolbarItem {
-                    Button(action: more) {
+                    Menu {
+                        Button(action: {}) {
+                            Label("Change Meeting", systemImage: "airplane.departure")
+                        }
+                        Label("Version 1.1", systemImage: "v.circle")
+                    }
+                    label: {
                         Label("More", systemImage: "ellipsis.circle")
                     }
                 }
             }
-            Text("115 - Yokahama")
         } content: {
-            Text("3")
+            ScheduleListView()
         } detail: {
             DetailView(url: "about:")
             .toolbar {
@@ -94,7 +102,19 @@ struct ContentView: View {
             }
         }
         .task {
-            await loadData(meeting:"115", context:viewContext)
+            // find the first meeting that has an acknowledgements section filled in and grab the sessions for it
+            let mtgs = await loadMeetings(context:viewContext, limit:0, offset:0)
+            for mtg in mtgs {
+                if let ack = mtg.acknowledgements {
+                    if ack.count == 0 {
+                        continue
+                    }
+                    selected_meeting = mtg
+                    meetingNumber = mtg.number!
+                    await loadData(meeting:mtg, context:viewContext)
+                    break
+                }
+            }
         }
     }
 

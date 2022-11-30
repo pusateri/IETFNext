@@ -5,7 +5,15 @@
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="modified" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String"/>
-        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WG" inverseName="area" inverseEntity="WG"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Group" inverseName="area" inverseEntity="Group"/>
+    </entity>
+    <entity name="Group" representedClassName="Group" syncable="YES" codeGenerationType="class">
+        <attribute name="acronym" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="state" attributeType="String"/>
+        <attribute name="type" attributeType="String"/>
+        <relationship name="area" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Area" inverseName="groups" inverseEntity="Area"/>
+        <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Session" inverseName="group" inverseEntity="Session"/>
     </entity>
     <entity name="Location" representedClassName="Location" syncable="YES" codeGenerationType="class">
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
@@ -19,6 +27,7 @@
         <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Session" inverseName="location" inverseEntity="Session"/>
     </entity>
     <entity name="Meeting" representedClassName="Meeting" syncable="YES" codeGenerationType="class">
+        <attribute name="acknowledgements" optional="YES" attributeType="String"/>
         <attribute name="city" optional="YES" attributeType="String"/>
         <attribute name="country" optional="YES" attributeType="String"/>
         <attribute name="date" optional="YES" attributeType="String"/>
@@ -49,17 +58,9 @@
         <attribute name="session_res_uri" attributeType="URI"/>
         <attribute name="start" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="status" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WG" inverseName="sessions" inverseEntity="WG"/>
+        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="sessions" inverseEntity="Group"/>
         <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="sessions" inverseEntity="Location"/>
         <relationship name="meeting" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Meeting" inverseName="sessions" inverseEntity="Meeting"/>
         <relationship name="presentations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Presentation" inverseName="session" inverseEntity="Presentation"/>
-    </entity>
-    <entity name="WG" representedClassName="WG" syncable="YES" codeGenerationType="class">
-        <attribute name="acronym" attributeType="String"/>
-        <attribute name="name" attributeType="String"/>
-        <attribute name="state" attributeType="String"/>
-        <attribute name="type" attributeType="String"/>
-        <relationship name="area" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Area" inverseName="groups" inverseEntity="Area"/>
-        <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Session" inverseName="group" inverseEntity="Session"/>
     </entity>
 </model>

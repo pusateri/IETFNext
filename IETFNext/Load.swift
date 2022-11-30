@@ -75,7 +75,7 @@ struct Parent: Decodable {
 struct JSONSession: Decodable {
     let agenda: String?
     let duration: CustomTimeInterval
-    let group: Group
+    let group: JSONGroup
     let id: Int32
     let is_bof: Bool
     let location: String
@@ -104,7 +104,7 @@ enum GroupState: String, Decodable {
     case proposed
 }
 
-struct Group: Decodable {
+struct JSONGroup: Decodable {
     let acronym: String
     let name: String
     let parent: String?
@@ -150,8 +150,8 @@ private extension DateFormatter {
     }()
 }
 
-public func loadData(meeting: String, context: NSManagedObjectContext) async {
-    guard let url = URL(string: "https://datatracker.ietf.org/meeting/\(meeting)/agenda.json") else {
+public func loadData(meeting: Meeting, context: NSManagedObjectContext) async {
+    guard let url = URL(string: "https://datatracker.ietf.org/meeting/\(meeting.number!)/agenda.json") else {
         print("Invalid URL")
         return
     }
@@ -161,14 +161,14 @@ public func loadData(meeting: String, context: NSManagedObjectContext) async {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
             let messages = try decoder.decode([String:[Schedule]].self, from: data)
-            let objs = messages[meeting] ?? []
+            let objs = messages[meeting.number!] ?? []
             // first pass get dependencies
             for obj in objs {
                 switch(obj) {
                 case .location(let loc):
                     updateLocation(context:context, location:loc)
                 case .parent(let area):
-                    updateArea(context:context, area:area)
+                    updateArea(context:context, parent:area)
                 case .session(_):
                     continue
                 }
@@ -181,7 +181,7 @@ public func loadData(meeting: String, context: NSManagedObjectContext) async {
                 case .parent(_):
                     continue
                 case .session(let session):
-                    updateSession(context:context, session:session)
+                    updateSession(context:context, meeting:meeting, session:session)
                 }
             }
         } catch DecodingError.dataCorrupted(let context) {
@@ -236,10 +236,71 @@ private func updateLocation(context: NSManagedObjectContext, location: JSONLocat
     }
 }
 
-private func updateArea(context: NSManagedObjectContext, area: Parent) {
+private func updateArea(context: NSManagedObjectContext, parent: Parent) {
+    let area: Area!
 
+    let fetchArea: NSFetchRequest<Area> = Area.fetchRequest()
+    fetchArea.predicate = NSPredicate(format: "name = %@", parent.name)
+
+    let results = try? context.fetch(fetchArea)
+
+    if results?.count == 0 {
+        // here you are inserting
+        area = Area(context: context)
+    } else {
+        // here you are updating
+        area = results?.first
+    }
+
+    area.id = parent.id
+    area.desc = parent.description
+    area.modified = parent.modified
+    area.name = parent.name
+
+    do {
+        try context.save()
+    }
+    catch {
+        print("Unable to save Area \(area.name!)")
+    }
 }
 
-private func updateSession(context: NSManagedObjectContext, session: JSONSession) {
+private func updateSession(context: NSManagedObjectContext, meeting: Meeting, session: JSONSession) {
+    let s: Session!
 
+    let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
+    fetchSession.predicate = NSPredicate(format: "id = %d", session.id)
+
+    let results = try? context.fetch(fetchSession)
+
+    if results?.count == 0 {
+        // here you are inserting
+        s = Session(context: context)
+    } else {
+        // here you are updating
+        s = results?.first
+    }
+
+    //s.agenda = session.agenda
+    //s.duration = session.duration
+    //s.group = Group()
+    s.id = session.id
+    s.is_bof = session.is_bof
+    //s.location = Location()
+    //s.minutes = session.minutes
+    s.modified = session.modified
+    s.name = session.name
+    //s.presentations: [JSONPresentation]?
+    s.session_id = session.session_id
+    //s.session_res_uri = session.session_res_uri
+    s.start = session.start
+    //s.status = session.status
+    s.meeting = meeting
+
+    do {
+        try context.save()
+    }
+    catch {
+        print("Unable to save Session \(s.id)")
+    }
 }

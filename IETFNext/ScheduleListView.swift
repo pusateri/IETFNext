@@ -13,16 +13,21 @@ struct ScheduleListView: View {
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Session.start, ascending: true)],
+        predicate: NSPredicate(format: "meeting.number = %@", "115"),
         animation: .default)
     private var sessions: FetchedResults<Session>
 
+    @State var selected: Session.ID?
+
     var body: some View {
-        Text("ScheduleListView")
+        List(sessions, selection: $selected) { session in
+            ScheduleListRowView(session: session)
+        }
     }
 }
 
 struct ScheduleListView_Previews: PreviewProvider {
     static var previews: some View {
-        ScheduleListView()
+        ScheduleListView(selected: 1)
     }
 }

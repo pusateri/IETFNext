@@ -6,10 +6,22 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct GroupListView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Group.acronym, ascending: false)],
+        animation: .default)
+    private var groups: FetchedResults<Group>
+
+    @State private var selected: String?
+
     var body: some View {
-        Text("Group List View")
+        List(groups, selection: $selected) { group in
+            Text("\(group.acronym!))")
+        }
     }
 }
 
