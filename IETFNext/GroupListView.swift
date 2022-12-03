@@ -11,16 +11,29 @@ import CoreData
 struct GroupListView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Group.acronym, ascending: false)],
+    @SectionedFetchRequest(
+        sectionIdentifier: \.areaKey!, sortDescriptors: [
+            NSSortDescriptor(keyPath: \Group.areaKey, ascending: true),
+            NSSortDescriptor(keyPath: \Group.acronym, ascending: true),
+        ],
         animation: .default)
-    private var groups: FetchedResults<Group>
+    private var groups: SectionedFetchResults<String, Group>
 
     @State private var selected: String?
 
     var body: some View {
-        List(groups, selection: $selected) { group in
-            Text("\(group.acronym!))")
+        List(groups, selection: $selected) { section in
+            Section(header: Text(section.id).foregroundColor(Color.blue)) {
+                ForEach(section) { group in
+                    VStack(alignment: .leading) {
+                        Text(group.acronym!)
+                            .bold()
+                        Text(group.name!)
+                            .foregroundColor(Color(.gray))
+                    }
+                }
+            }
+            .textCase(.uppercase)
         }
     }
 }

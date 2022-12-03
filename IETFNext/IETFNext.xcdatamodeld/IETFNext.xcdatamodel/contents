@@ -9,6 +9,7 @@
     </entity>
     <entity name="Group" representedClassName="Group" syncable="YES" codeGenerationType="class">
         <attribute name="acronym" attributeType="String"/>
+        <attribute name="areaKey" attributeType="String"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="state" attributeType="String"/>
         <attribute name="type" attributeType="String"/>
@@ -19,7 +20,7 @@
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="level_name" optional="YES" attributeType="String"/>
         <attribute name="level_sort" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="map" optional="YES" attributeType="String"/>
+        <attribute name="map" optional="YES" attributeType="URI"/>
         <attribute name="modified" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="x" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -58,7 +59,7 @@
         <attribute name="session_id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="session_res_uri" attributeType="URI"/>
         <attribute name="start" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="status" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="status" attributeType="String"/>
         <attribute name="timerange" attributeType="String"/>
         <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="sessions" inverseEntity="Group"/>
         <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="sessions" inverseEntity="Location"/>
