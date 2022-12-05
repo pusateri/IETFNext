@@ -16,7 +16,7 @@ struct ScheduleListRowView: View {
                 .font(Font.system(size: 32, weight: .bold))
                 .foregroundColor(Color(hex: areaColors[session.group?.areaKey ?? "ietf"] ?? 0xffff99))
             VStack(alignment: .leading) {
-                Text("\(session.name!)")
+                Text("\(session.name!) (\(session.group?.acronym ?? ""))")
                     .bold()
                     .foregroundColor(.primary)
                 HStack {

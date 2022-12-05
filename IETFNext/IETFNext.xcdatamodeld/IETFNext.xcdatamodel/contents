@@ -70,5 +70,10 @@
         <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="sessions" inverseEntity="Location"/>
         <relationship name="meeting" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Meeting" inverseName="sessions" inverseEntity="Meeting"/>
         <relationship name="presentations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Presentation" inverseName="session" inverseEntity="Presentation"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="session_id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
 </model>

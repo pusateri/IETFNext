@@ -48,12 +48,17 @@ struct ContentView: View {
                         }
                     }
                     if let m = selectedMeeting {
-                        NavigationLink(destination: ScheduleListView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession)
+                        NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession)
                             .environmentObject(m)) {
                                 HStack {
                                     Image(systemName: "calendar")
                                         .frame(width: 32, height: 32) // constant width left aligns text
                                     Text("Schedule")
+                                }
+                            }
+                            .onChange(of: selectedSession) { newValue in
+                                if let session = newValue {
+                                    selectedGroup = session.group
                                 }
                             }
                     }
@@ -82,7 +87,7 @@ struct ContentView: View {
                 }
             }
         } content: {
-            ScheduleListView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession)
+            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession)
         } detail: {
             WebView(url: "about:")
             .onChange(of: selectedGroup) { newValue in
