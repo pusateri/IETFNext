@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
+		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E9B99D2934101200CA6F09 /* IETFNextApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */; };
 		F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B99E2934101200CA6F09 /* Persistence.swift */; };
 		F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */; };
@@ -18,7 +19,6 @@
 		F8E9B9BE2934101300CA6F09 /* IETFNextUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9BD2934101300CA6F09 /* IETFNextUITests.swift */; };
 		F8E9B9C02934101300CA6F09 /* IETFNextUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9BF2934101300CA6F09 /* IETFNextUITestsLaunchTests.swift */; };
 		F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9CC2934295E00CA6F09 /* Load.swift */; };
-		F8E9B9CF293444B000CA6F09 /* GroupListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9CE293444B000CA6F09 /* GroupListView.swift */; };
 		F8E9B9D1293444CC00CA6F09 /* ScheduleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9D0293444CC00CA6F09 /* ScheduleListView.swift */; };
 		F8E9B9D32935070D00CA6F09 /* MeetingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */; };
 		F8E9BA112935624100CA6F09 /* LocationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9BA102935624100CA6F09 /* LocationListView.swift */; };
@@ -46,6 +46,7 @@
 
 /* Begin PBXFileReference section */
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
+		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
 		F8E9B9992934101200CA6F09 /* IETFNext.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IETFNext.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextApp.swift; sourceTree = "<group>"; };
 		F8E9B99E2934101200CA6F09 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -60,7 +61,6 @@
 		F8E9B9BD2934101300CA6F09 /* IETFNextUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextUITests.swift; sourceTree = "<group>"; };
 		F8E9B9BF2934101300CA6F09 /* IETFNextUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		F8E9B9CC2934295E00CA6F09 /* Load.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Load.swift; sourceTree = "<group>"; };
-		F8E9B9CE293444B000CA6F09 /* GroupListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListView.swift; sourceTree = "<group>"; };
 		F8E9B9D0293444CC00CA6F09 /* ScheduleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleListView.swift; sourceTree = "<group>"; };
 		F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingListView.swift; sourceTree = "<group>"; };
 		F8E9BA102935624100CA6F09 /* LocationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListView.swift; sourceTree = "<group>"; };
@@ -121,7 +121,7 @@
 				F8E9B99E2934101200CA6F09 /* Persistence.swift */,
 				F8E127BB293BFE1B004A35E8 /* AreaColors.swift */,
 				F8E9B9A32934101200CA6F09 /* ContentView.swift */,
-				F8E9B9CE293444B000CA6F09 /* GroupListView.swift */,
+				F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */,
 				F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */,
 				F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */,
 				F8E9B9D0293444CC00CA6F09 /* ScheduleListView.swift */,
@@ -300,9 +300,9 @@
 				F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
 				F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */,
-				F8E9B9CF293444B000CA6F09 /* GroupListView.swift in Sources */,
 				F8E9BA172937EB2C00CA6F09 /* ScheduleListRowView.swift in Sources */,
 				F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */,
+				F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */,
 				F8E9B9D1293444CC00CA6F09 /* ScheduleListView.swift in Sources */,
 				F8E9BA152936B5FA00CA6F09 /* WebView.swift in Sources */,
 			);
