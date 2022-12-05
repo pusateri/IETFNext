@@ -10,8 +10,11 @@ import CoreData
 
 struct GroupListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Binding var selectedMeeting: Meeting?
+    @Binding var selectedGroup: Group?
+    @State private var searchText = ""
 
-    @SectionedFetchRequest(
+    @SectionedFetchRequest<String, Group>(
         sectionIdentifier: \.areaKey!, sortDescriptors: [
             NSSortDescriptor(keyPath: \Group.areaKey, ascending: true),
             NSSortDescriptor(keyPath: \Group.acronym, ascending: true),
@@ -19,27 +22,43 @@ struct GroupListView: View {
         animation: .default)
     private var groups: SectionedFetchResults<String, Group>
 
-    @State private var selected: String?
-
     var body: some View {
-        List(groups, selection: $selected) { section in
-            Section(header: Text(section.id).foregroundColor(Color.blue)) {
-                ForEach(section) { group in
-                    VStack(alignment: .leading) {
-                        Text(group.acronym!)
-                            .bold()
-                        Text(group.name!)
-                            .foregroundColor(Color(.gray))
+        List(groups) { section in
+            Section(header: Text(section.id.uppercased()).foregroundColor(Color.blue)) {
+                ForEach(section, id: \.self.acronym) { group in
+                    HStack {
+                        Rectangle()
+                            .fill(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xffff99))
+                            .frame(width: 8, height: 32)
+                        VStack(alignment: .leading) {
+                            Text(group.acronym!)
+                                .bold()
+                            Text(group.name!)
+                                .foregroundColor(Color(.gray))
+                        }
+                    }
+                    .onTapGesture {
+                        selectedGroup = group
                     }
                 }
             }
-            .textCase(.uppercase)
+            .headerProminence(.increased)
         }
+        .searchable(text: $searchText)
     }
+/*
+    var searchResults: [String] {
+       if searchText.isEmpty {
+         return names
+       } else {
+         return names.filter { $0.contains(searchText) }
+       }
+   }
+ */
 }
 
 struct GroupListView_Previews: PreviewProvider {
     static var previews: some View {
-        GroupListView()
+        GroupListView(selectedMeeting: .constant(nil), selectedGroup: .constant(nil))
     }
 }

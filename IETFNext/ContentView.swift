@@ -21,12 +21,14 @@ extension UISplitViewController {
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State private var columnVisibility = NavigationSplitViewVisibility.all
-    @State private var selected_meeting: Meeting?
+    @State var selectedMeeting: Meeting?
+    @State var selectedGroup: Group? = nil
+    @State var selectedSession: Session?
     @AppStorage("meetingNumber") var meetingNumber: String = "115"
 
     @ViewBuilder
     var first_header: some View {
-        if let m = selected_meeting {
+        if let m = selectedMeeting {
             Text("IETF \(m.number!) \(m.city!)")
         } else {
             Text("IETF")
@@ -37,15 +39,15 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List() {
                 Section(header: first_header) {
-                    NavigationLink(destination: GroupListView()) {
+                    NavigationLink(destination: GroupListView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup)) {
                         HStack {
                             Image(systemName: "person.3")
                                 .frame(width: 32, height: 32) // constant width left aligns text
                             Text("Working Groups")
                         }
                     }
-                    if let m = selected_meeting {
-                        NavigationLink(destination: ScheduleListView()
+                    if let m = selectedMeeting {
+                        NavigationLink(destination: ScheduleListView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession)
                             .environmentObject(m)) {
                                 HStack {
                                     Image(systemName: "calendar")
@@ -77,9 +79,16 @@ struct ContentView: View {
                 }
             }
         } content: {
-            ScheduleListView()
+            ScheduleListView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession)
+            .onChange(of: selectedMeeting) { newValue in
+                print("Meeting changed to \(selectedMeeting?.number! ?? "None")")
+            }
         } detail: {
-            DetailView(url: "about:")
+            WebView(url: "about:")
+            .onChange(of: selectedGroup) { newValue in
+                print("Group changed to \(selectedGroup?.acronym! ?? "None")")
+            }
+            .navigationTitle(selectedGroup?.acronym ?? "None")
             .toolbar {
                 ToolbarItem(placement: ToolbarItemPlacement.navigationBarLeading) {
                     Button(action: {
@@ -109,7 +118,7 @@ struct ContentView: View {
                     if ack.count == 0 {
                         continue
                     }
-                    selected_meeting = mtg
+                    selectedMeeting = mtg
                     meetingNumber = mtg.number!
                     await loadData(meeting:mtg, context:viewContext)
                     break

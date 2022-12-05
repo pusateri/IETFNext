@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E9B99D2934101200CA6F09 /* IETFNextApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */; };
 		F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B99E2934101200CA6F09 /* Persistence.swift */; };
 		F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */; };
@@ -44,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E9B9992934101200CA6F09 /* IETFNext.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IETFNext.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextApp.swift; sourceTree = "<group>"; };
 		F8E9B99E2934101200CA6F09 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 			children = (
 				F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */,
 				F8E9B99E2934101200CA6F09 /* Persistence.swift */,
+				F8E127BB293BFE1B004A35E8 /* AreaColors.swift */,
 				F8E9B9A32934101200CA6F09 /* ContentView.swift */,
 				F8E9B9CE293444B000CA6F09 /* GroupListView.swift */,
 				F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */,
@@ -293,6 +296,7 @@
 				F8E9BA1329366A4000CA6F09 /* MeetingListRowView.swift in Sources */,
 				F8E9B9D32935070D00CA6F09 /* MeetingListView.swift in Sources */,
 				F8E9B99D2934101200CA6F09 /* IETFNextApp.swift in Sources */,
+				F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */,
 				F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
 				F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */,

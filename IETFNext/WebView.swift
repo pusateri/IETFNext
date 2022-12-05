@@ -8,15 +8,15 @@
 import SwiftUI
 import WebKit
 
-struct DetailView: View {
+struct WebView: View {
     let url: String
 
     var body: some View {
-        WebView(urlPath: url)
+        WebViewRepresentable(urlPath: url)
     }
 }
 
-struct WebView: UIViewRepresentable {
+struct WebViewRepresentable: UIViewRepresentable {
     var urlPath: String?
     func makeUIView(context: Context) -> WKWebView {
         return WKWebView()
@@ -31,9 +31,9 @@ struct WebView: UIViewRepresentable {
         }
     }
 }
-struct DetailView_Previews: PreviewProvider {
+struct WebView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailView(url: "https://apple.com")
+        WebView(url: "https://apple.com")
     }
 }
 

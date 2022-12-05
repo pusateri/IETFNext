@@ -54,12 +54,10 @@ struct JSONMeeting: Decodable {
     let venue_addr: String
     let venue_name: String
 }
-private func selectMeeting(meeting: Meeting) {
-    print(meeting.number!)
-}
 
 struct MeetingListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Binding var selectedMeeting: Meeting?
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Meeting.date, ascending: false)],
@@ -67,7 +65,7 @@ struct MeetingListView: View {
     private var meetings: FetchedResults<Meeting>
 
     var body: some View {
-        List(meetings) { mtg in
+        List(meetings, selection: $selectedMeeting) { mtg in
             MeetingListRowView(meeting: mtg)
         }
     }
@@ -169,6 +167,6 @@ private func updateMeeting(context: NSManagedObjectContext, meeting: JSONMeeting
 
 struct MeetingListView_Previews: PreviewProvider {
     static var previews: some View {
-        MeetingListView()
+        MeetingListView(selectedMeeting: .constant(nil))
     }
 }
