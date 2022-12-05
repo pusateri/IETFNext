@@ -57,6 +57,7 @@ struct JSONMeeting: Decodable {
 
 struct MeetingListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) var dismiss
     @Binding var selectedMeeting: Meeting?
 
     @FetchRequest(
@@ -65,8 +66,21 @@ struct MeetingListView: View {
     private var meetings: FetchedResults<Meeting>
 
     var body: some View {
-        List(meetings, selection: $selectedMeeting) { mtg in
-            MeetingListRowView(meeting: mtg)
+        NavigationView {
+            List(meetings, id: \.self, selection: $selectedMeeting) { mtg in
+                MeetingListRowView(meeting: mtg)
+            }
+            .navigationTitle("IETF \(selectedMeeting?.number! ?? "Select Meeting")")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel", role: .cancel) {
+                        dismiss()
+                    }
+                }
+            }
+            .onChange(of: selectedMeeting) { newValue in
+                dismiss()
+            }
         }
     }
 }

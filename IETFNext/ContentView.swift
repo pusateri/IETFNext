@@ -21,6 +21,7 @@ extension UISplitViewController {
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State private var columnVisibility = NavigationSplitViewVisibility.all
+    @State private var showingMeetings = false
     @State var selectedMeeting: Meeting?
     @State var selectedGroup: Group? = nil
     @State var selectedSession: Session?
@@ -68,7 +69,9 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItem {
                     Menu {
-                        Button(action: {}) {
+                        Button(action: {
+                            showingMeetings.toggle()
+                        }) {
                             Label("Change Meeting", systemImage: "airplane.departure")
                         }
                         Label("Version 1.1", systemImage: "v.circle")
@@ -80,9 +83,6 @@ struct ContentView: View {
             }
         } content: {
             ScheduleListView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession)
-            .onChange(of: selectedMeeting) { newValue in
-                print("Meeting changed to \(selectedMeeting?.number! ?? "None")")
-            }
         } detail: {
             WebView(url: "about:")
             .onChange(of: selectedGroup) { newValue in
@@ -109,6 +109,9 @@ struct ContentView: View {
                     }
                 }
             }
+        }
+        .sheet(isPresented: $showingMeetings) {
+            MeetingListView(selectedMeeting: $selectedMeeting)
         }
         .task {
             // find the first meeting that has an acknowledgements section filled in and grab the sessions for it
