@@ -9,7 +9,6 @@ import SwiftUI
 
 
 struct GroupListFilteredView: View {
-    @Environment(\.dismissSearch) var dismissSearch
     @SectionedFetchRequest<String, Group> var fetchRequest: SectionedFetchResults<String, Group>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
@@ -29,9 +28,9 @@ struct GroupListFilteredView: View {
     }
 
     var body: some View {
-        List(fetchRequest) { section in
+        List(fetchRequest, selection: $selectedGroup) { section in
             Section(header: Text(section.id.uppercased()).foregroundColor(Color.blue)) {
-                ForEach(section, id: \.self.acronym) { group in
+                ForEach(section, id: \.self) { group in
                     HStack {
                         Rectangle()
                             .fill(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xffff99))
@@ -42,9 +41,6 @@ struct GroupListFilteredView: View {
                             Text(group.name!)
                                 .foregroundColor(Color(.gray))
                         }
-                    }
-                    .onTapGesture {
-                        selectedGroup = group
                     }
                 }
             }
@@ -60,7 +56,6 @@ struct GroupListFilteredView: View {
         }
         .onChange(of: selectedGroup) { newValue in
             searchText = ""
-            dismissSearch()     // doesn't seem to work
         }
         .onChange(of: searchText) { newValue in
             if newValue.isEmpty {

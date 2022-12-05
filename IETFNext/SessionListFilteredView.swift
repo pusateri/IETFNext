@@ -33,18 +33,13 @@ struct SessionListFilteredView: View {
         List(fetchRequest, selection: $selectedSession) { section in
             Section(header: Text(section.id)) {
                 ForEach(section, id: \.self) { session in
-                    ScheduleListRowView(session: session)
+                    SessionListRowView(session: session)
                 }
             }
         }
         .onChange(of: selectedMeeting) { newValue in
             if let meeting = newValue {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
-            }
-        }
-        .onChange(of: selectedSession) { newValue in
-            if let session = newValue {
-                print(session.name!)
             }
         }
     }

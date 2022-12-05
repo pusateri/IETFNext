@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ScheduleListRowView: View {
+struct SessionListRowView: View {
     var session: Session
     var body: some View {
 
@@ -38,6 +38,6 @@ struct ScheduleListRowView: View {
 struct ScheduleListRowView_Previews: PreviewProvider {
     static var session = Session()
     static var previews: some View {
-        ScheduleListRowView(session: session)
+        SessionListRowView(session: session)
     }
 }
