@@ -10,29 +10,50 @@ import CoreData
 
 struct LocationListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @SectionedFetchRequest<String, Location> var fetchRequest: SectionedFetchResults<String, Location>
+    @State var selectedLocation: Location?
+    @Binding var selectedMeeting: Meeting?
 
-    @SectionedFetchRequest(
-        sectionIdentifier: \.level_name!, sortDescriptors: [
-            NSSortDescriptor(keyPath: \Location.level_name, ascending: true),
-            NSSortDescriptor(keyPath: \Location.name, ascending: true),
-        ],
-        animation: .default)
-    private var locations: SectionedFetchResults<String, Location>
+    init(selectedMeeting: Binding<Meeting?>) {
+        _fetchRequest = SectionedFetchRequest<String, Location>(
+            sectionIdentifier: \.level_name!,
+            sortDescriptors: [
+                NSSortDescriptor(keyPath: \Location.level_name, ascending: true),
+                NSSortDescriptor(keyPath: \Location.name, ascending: true),
+            ],
+            predicate: NSPredicate(format: "meeting.number = %@", selectedMeeting.wrappedValue?.number ?? "0"),
+            animation: .default
+        )
+        self._selectedMeeting = selectedMeeting
+    }
 
     var body: some View {
-        List(locations) { section in
+        List(fetchRequest, selection: $selectedLocation) { section in
             Section(header: Text(section.id)) {
-                ForEach(section) { location in
-                    Text(location.name ?? "Unknown")
+                ForEach(section, id: \.self) { location in
+                    HStack {
+                        Text(location.name ?? "Unknown")
+                        Spacer()
+                        if location.sessions?.count ?? 0 == 1 {
+                            Text("1 Session")
+                        } else {
+                            Text("\(location.sessions?.count ?? 0) Sessions")
+                        }
+                    }
                 }
             }
+            .headerProminence(.increased)
         }
         .listStyle(.inset)
-    }
-}
-
-struct LocationListView_Previews: PreviewProvider {
-    static var previews: some View {
-        LocationListView()
+        .onChange(of: selectedMeeting) { newValue in
+            if let meeting = newValue {
+                fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
+            }
+        }
+        .onChange(of: selectedLocation) { newValue in
+            if let location = selectedLocation {
+                print(location.name!)
+            }
+        }
     }
 }

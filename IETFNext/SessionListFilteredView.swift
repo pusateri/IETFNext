@@ -37,7 +37,6 @@ struct SessionListFilteredView: View {
                     SessionListRowView(session: session)
                 }
             }
-            //.headerProminence(.increased)
         }
         .listStyle(.inset)
         .toolbar {

@@ -171,27 +171,31 @@ public func loadData(meeting: Meeting, context: NSManagedObjectContext) async {
             let objs = messages[meeting.number!] ?? []
 
             // first pass get dependencies
-            for obj in objs {
-                switch(obj) {
-                case .location(let loc):
-                    updateLocation(context:context, location:loc)
-                case .parent(let area):
-                    updateArea(context:context, parent:area)
-                case .session(_):
-                    continue
+            context.performAndWait {
+                for obj in objs {
+                    switch(obj) {
+                    case .location(let loc):
+                        updateLocation(context:context, meeting:meeting, location:loc)
+                    case .parent(let area):
+                        updateArea(context:context, parent:area)
+                    case .session(_):
+                        continue
+                    }
                 }
             }
             // second pass get sessions
-            for obj in objs {
-                switch(obj) {
-                case .location(_):
-                    continue
-                case .parent(_):
-                    continue
-                case .session(let session):
+            context.performAndWait {
+                for obj in objs {
+                    switch(obj) {
+                    case .location(_):
+                        continue
+                    case .parent(_):
+                        continue
+                    case .session(let JSONsession):
                         if let baseURL = baseURL {
-                            updateSession(context:context, baseURL: baseURL, dayFormatter:dayFormatter, rangeFormatter:rangeFormatter, meeting:meeting, session:session)
+                            updateSession(context:context, baseURL: baseURL, dayFormatter:dayFormatter, rangeFormatter:rangeFormatter, meeting:meeting, session:JSONsession)
                         }
+                    }
                 }
             }
         } catch DecodingError.dataCorrupted(let context) {
@@ -213,92 +217,91 @@ public func loadData(meeting: Meeting, context: NSManagedObjectContext) async {
     }
 }
 
-private func updateLocation(context: NSManagedObjectContext, location: JSONLocation) {
+private func updateLocation(context: NSManagedObjectContext, meeting:Meeting, location: JSONLocation) {
     let fetchLocation: NSFetchRequest<Location> = Location.fetchRequest()
     fetchLocation.predicate = NSPredicate(format: "id = %d", location.id)
 
-    context.performAndWait {
-        var loc: Location!
-        var save = false
-        let results = try? context.fetch(fetchLocation)
+    var loc: Location!
+    var save = false
+    let results = try? context.fetch(fetchLocation)
 
-        if results?.count == 0 {
-            // here you are inserting
-            loc = Location(context: context)
-            loc.id = location.id
-            save = true
-        } else {
-            // here you are updating
-            loc = results?.first
-        }
+    if results?.count == 0 {
+        // here you are inserting
+        loc = Location(context: context)
+        loc.id = location.id
+        loc.meeting = meeting
+        save = true
+    } else {
+        // here you are updating
+        loc = results?.first
+    }
 
-        if loc.name != location.name {
-            loc.name = location.name
-            save = true
-        }
-        if let level_name = location.level_name {
-            if loc.level_name != level_name {
-                loc.level_name = level_name
-                save = true
-            }
-        } else {
-            if loc.level_name != "Uncategorized" {
-                loc.level_name = "Uncategorized"
-                save = true
-            }
-        }
-        if let level_sort = location.level_sort {
-            if loc.level_sort != level_sort {
-                loc.level_sort = level_sort
-                save = true
-            }
-        } else {
-            if loc.level_sort != 0 {
-                loc.level_sort = 0
-                save = true
-            }
-        }
-        if let map = location.map {
-            let url = URL(string: map)
-            if loc.map != url {
-                loc.map = url
-                save = true
-            }
-        }
-        if loc.modified != location.modified {
-            loc.modified = location.modified
+    if loc.name != location.name {
+        loc.name = location.name
+        save = true
+    }
+    if let level_name = location.level_name {
+        if loc.level_name != level_name {
+            loc.level_name = level_name
             save = true
         }
-        if let x = location.x {
-            if loc.x != x {
-                loc.x = x
-                save = true
-            }
-        } else {
-            if loc.x != 0.0 {
-                loc.x = 0.0
-                save = true
-            }
+    } else {
+        if loc.level_name != "Uncategorized" {
+            loc.level_name = "Uncategorized"
+            save = true
         }
-        if let y = location.y {
-            if loc.y != y {
-                loc.y = y
-                save = true
-            }
-        } else {
-            if loc.y != 0.0 {
-                loc.y = 0.0
-                save = true
-            }
+    }
+    if let level_sort = location.level_sort {
+        if loc.level_sort != level_sort {
+            loc.level_sort = level_sort
+            save = true
         }
+    } else {
+        if loc.level_sort != 0 {
+            loc.level_sort = 0
+            save = true
+        }
+    }
+    if let map = location.map {
+        let url = URL(string: map)
+        if loc.map != url {
+            loc.map = url
+            save = true
+        }
+    }
+    if loc.modified != location.modified {
+        loc.modified = location.modified
+        save = true
+    }
+    if let x = location.x {
+        if loc.x != x {
+            loc.x = x
+            save = true
+        }
+    } else {
+        if loc.x != 0.0 {
+            loc.x = 0.0
+            save = true
+        }
+    }
+    if let y = location.y {
+        if loc.y != y {
+            loc.y = y
+            save = true
+        }
+    } else {
+        if loc.y != 0.0 {
+            loc.y = 0.0
+            save = true
+        }
+    }
 
-        if save {
-            do {
-                try context.save()
-            }
-            catch {
-                print("Unable to save Location \(location.name)")
-            }
+    if save {
+        do {
+            try context.save()
+        }
+        catch {
+            print("Unable to save Location \(location.name)")
         }
     }
 }
@@ -308,41 +311,39 @@ private func updateArea(context: NSManagedObjectContext, parent: Parent) {
     let fetchArea: NSFetchRequest<Area> = Area.fetchRequest()
     fetchArea.predicate = NSPredicate(format: "name = %@", parent.name)
 
-    context.performAndWait {
-        var area: Area!
-        var save = false
-        let results = try? context.fetch(fetchArea)
+    var area: Area!
+    var save = false
+    let results = try? context.fetch(fetchArea)
 
-        if results?.count == 0 {
-            // here you are inserting
-            area = Area(context: context)
-            area.name = parent.name
-            save = true
-        } else {
-            // here you are updating
-            area = results?.first
-        }
+    if results?.count == 0 {
+        // here you are inserting
+        area = Area(context: context)
+        area.name = parent.name
+        save = true
+    } else {
+        // here you are updating
+        area = results?.first
+    }
 
-        if area.id != parent.id {
-            area.id = parent.id
-            save = true
-        }
-        if area.desc != parent.description {
-            area.desc = parent.description
-            save = true
-        }
-        if area.modified != parent.modified {
-            area.modified = parent.modified
-            save = true
-        }
+    if area.id != parent.id {
+        area.id = parent.id
+        save = true
+    }
+    if area.desc != parent.description {
+        area.desc = parent.description
+        save = true
+    }
+    if area.modified != parent.modified {
+        area.modified = parent.modified
+        save = true
+    }
 
-        if save {
-            do {
-                try context.save()
-            }
-            catch {
-                print("Unable to save Area \(area.name!)")
-            }
+    if save {
+        do {
+            try context.save()
+        }
+        catch {
+            print("Unable to save Area \(area.name!)")
         }
     }
 }
@@ -364,12 +365,11 @@ private func findArea(context: NSManagedObjectContext, name: String) -> Area? {
     return area
 }
 
-private func findLocation(context: NSManagedObjectContext, name: String) -> Location? {
+private func findLocation(context: NSManagedObjectContext, meeting: Meeting, name: String) -> Location? {
     let location: Location?
 
     let fetchLocation: NSFetchRequest<Location> = Location.fetchRequest()
-    fetchLocation.predicate = NSPredicate(format: "name = %@", name)
-
+    fetchLocation.predicate = NSPredicate(format: "(meeting.number = %@) AND (name = %@)", meeting.number!, name)
     let results = try? context.fetch(fetchLocation)
 
     if results?.count == 0 {
@@ -420,107 +420,105 @@ private func updateSession(context: NSManagedObjectContext, baseURL: URL, dayFor
     let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
     fetchSession.predicate = NSPredicate(format: "id = %d", session.id)
 
-    context.performAndWait {
-        var s: Session!
-        var save = false
-        let end = session.start.addingTimeInterval(session.duration.value)
-        let start_time = rangeFormatter.string(from: session.start)
-        let end_time = rangeFormatter.string(from: end)
-        let results = try? context.fetch(fetchSession)
+    var s: Session!
+    var save = false
+    let end = session.start.addingTimeInterval(session.duration.value)
+    let start_time = rangeFormatter.string(from: session.start)
+    let end_time = rangeFormatter.string(from: end)
+    let results = try? context.fetch(fetchSession)
 
-        if results?.count == 0 {
-            // here you are inserting
-            s = Session(context: context)
-            s.id = session.id
-            save = true
-        } else {
-            // here you are updating
-            s = results?.first
-        }
-        let group_obj = updateGroup(context:context, group:session.group)
-        if let group_obj = group_obj {
-            if s.group != group_obj {
-                s.group = group_obj
-                save = true
-            }
-        }
-        if let agenda = session.agenda {
-            let url = URL(string: agenda)
-            if s.agenda != url {
-                s.agenda = url
-                save = true
-            }
-        }
-        if save || s.is_bof != session.is_bof {
-            s.is_bof = session.is_bof
+    if results?.count == 0 {
+        // here you are inserting
+        s = Session(context: context)
+        s.id = session.id
+        save = true
+    } else {
+        // here you are updating
+        s = results?.first
+    }
+    let group_obj = updateGroup(context:context, group:session.group)
+    if let group_obj = group_obj {
+        if s.group != group_obj {
+            s.group = group_obj
             save = true
         }
-        let loc = findLocation(context: context, name: session.location)
-        if s.location != loc {
-            s.location = loc
+    }
+    if let agenda = session.agenda {
+        let url = URL(string: agenda)
+        if s.agenda != url {
+            s.agenda = url
             save = true
         }
-        if let minutes = session.minutes {
-            let url = URL(string: minutes)
-            if s.minutes != url {
-                s.minutes = url
-                save = true
-            }
-        }
-        if s.modified != session.modified {
-            s.modified = session.modified
+    }
+    if save || s.is_bof != session.is_bof {
+        s.is_bof = session.is_bof
+        save = true
+    }
+    let loc = findLocation(context: context, meeting:meeting, name:session.location)
+    if s.location != loc {
+        s.location = loc
+        save = true
+    }
+    if let minutes = session.minutes {
+        let url = URL(string: minutes)
+        if s.minutes != url {
+            s.minutes = url
             save = true
         }
-        if s.name != session.name {
-            s.name = session.name
-            save = true
-        }
-        //s.presentations: [JSONPresentation]?
-        if s.session_id != session.session_id {
-            s.session_id = session.session_id
-            save = true
-        }
-        let uri = URL(string: session.session_res_uri, relativeTo:baseURL)
-        if s.session_res_uri != uri {
-            s.session_res_uri = uri
-            save = true
-        }
-        if s.start != session.start {
-            s.start = session.start
-            save = true
-        }
-        if s.end != end {
-            s.end = end
-            save = true
-        }
-        let day = dayFormatter.string(from: session.start)
-        if s.day != day {
-            s.day = day
-            save = true
-        }
-        let timerange = "\(start_time)-\(end_time)"
-        if s.timerange != timerange {
-            s.timerange = timerange
-            save = true
-        }
-        if s.status != session.status {
-            s.status = session.status
-            save = true
-        }
-        if s.meeting != meeting {
-            s.meeting = meeting
-            save = true
-        }
+    }
+    if s.modified != session.modified {
+        s.modified = session.modified
+        save = true
+    }
+    if s.name != session.name {
+        s.name = session.name
+        save = true
+    }
+    //s.presentations: [JSONPresentation]?
+    if s.session_id != session.session_id {
+        s.session_id = session.session_id
+        save = true
+    }
+    let uri = URL(string: session.session_res_uri, relativeTo:baseURL)
+    if s.session_res_uri != uri {
+        s.session_res_uri = uri
+        save = true
+    }
+    if s.start != session.start {
+        s.start = session.start
+        save = true
+    }
+    if s.end != end {
+        s.end = end
+        save = true
+    }
+    let day = dayFormatter.string(from: session.start)
+    if s.day != day {
+        s.day = day
+        save = true
+    }
+    let timerange = "\(start_time)-\(end_time)"
+    if s.timerange != timerange {
+        s.timerange = timerange
+        save = true
+    }
+    if s.status != session.status {
+        s.status = session.status
+        save = true
+    }
+    if s.meeting != meeting {
+        s.meeting = meeting
+        save = true
+    }
 
-        if save {
-            do {
-                try context.save()
-            }
-            catch {
-                print("Unable to save Session or Group \(String(describing: s.name)), \(String(describing: group_obj?.acronym))")
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+    if save {
+        do {
+            try context.save()
+        }
+        catch {
+            print("Unable to save Session or Group \(String(describing: s.name)), \(String(describing: group_obj?.acronym))")
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
 }

@@ -62,7 +62,7 @@ struct ContentView: View {
                                 }
                             }
                     }
-                    NavigationLink(destination: LocationListView()) {
+                    NavigationLink(destination: LocationListView(selectedMeeting: $selectedMeeting)) {
                         HStack {
                             Image(systemName: "map")
                                 .frame(width: 32, height: 32) // constant width left aligns text

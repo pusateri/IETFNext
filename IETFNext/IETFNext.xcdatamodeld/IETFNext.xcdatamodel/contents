@@ -30,6 +30,7 @@
         <attribute name="name" attributeType="String"/>
         <attribute name="x" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="y" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="meeting" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Meeting" inverseName="locations" inverseEntity="Meeting"/>
         <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Session" inverseName="location" inverseEntity="Session"/>
     </entity>
     <entity name="Meeting" representedClassName="Meeting" syncable="YES" codeGenerationType="class">
@@ -42,6 +43,7 @@
         <attribute name="updated_at" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="venue_addr" optional="YES" attributeType="String"/>
         <attribute name="venue_name" optional="YES" attributeType="String"/>
+        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="meeting" inverseEntity="Location"/>
         <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Session" inverseName="meeting" inverseEntity="Session"/>
     </entity>
     <entity name="Presentation" representedClassName="Presentation" syncable="YES" codeGenerationType="class">
