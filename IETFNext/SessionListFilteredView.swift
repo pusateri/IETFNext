@@ -37,6 +37,16 @@ struct SessionListFilteredView: View {
                 }
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: {
+                    print("filter")
+                }) {
+                    Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
+                    // line.3.horizontal.decrease.circle.fill
+                }
+            }
+        }
         .onChange(of: selectedMeeting) { newValue in
             if let meeting = newValue {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)

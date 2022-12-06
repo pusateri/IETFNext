@@ -16,7 +16,8 @@ struct GroupListFilteredView: View {
 
     init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>) {
         _fetchRequest = SectionedFetchRequest<String, Group>(
-            sectionIdentifier: \.areaKey!, sortDescriptors: [
+            sectionIdentifier: \.areaKey!,
+            sortDescriptors: [
                 NSSortDescriptor(keyPath: \Group.areaKey, ascending: true),
                 NSSortDescriptor(keyPath: \Group.acronym, ascending: true),
             ],

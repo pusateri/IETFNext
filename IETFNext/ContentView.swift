@@ -25,6 +25,7 @@ struct ContentView: View {
     @State var selectedMeeting: Meeting?
     @State var selectedGroup: Group? = nil
     @State var selectedSession: Session?
+    @State var loadURL: String? = "about:"
     @AppStorage("meetingNumber") var meetingNumber: String = "115"
 
     @ViewBuilder
@@ -89,7 +90,7 @@ struct ContentView: View {
         } content: {
             SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession)
         } detail: {
-            WebView(url: "about:")
+            WebView(loadURL: $loadURL)
             .onChange(of: selectedGroup) { newValue in
                 print("Group changed to \(selectedGroup?.acronym! ?? "None")")
             }

@@ -56,6 +56,7 @@
         <attribute name="agenda" optional="YES" attributeType="URI"/>
         <attribute name="day" attributeType="String"/>
         <attribute name="end" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="favorite" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="is_bof" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="minutes" optional="YES" attributeType="URI"/>

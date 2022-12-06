@@ -8,13 +8,19 @@
 import SwiftUI
 
 struct SessionListRowView: View {
-    var session: Session
+    @Environment(\.managedObjectContext) private var viewContext
+    @ObservedObject var session: Session
     var body: some View {
 
         HStack {
-            Image(systemName: "star")
-                .font(Font.system(size: 32, weight: .bold))
-                .foregroundColor(Color(hex: areaColors[session.group?.areaKey ?? "ietf"] ?? 0xffff99))
+            Button(action: {
+                session.favorite.toggle()
+                saveFavorite()
+            }) {
+                Image(systemName: session.favorite == true ? "star.fill" : "star")
+                    .font(Font.system(size: 32, weight: .bold))
+                    .foregroundColor(Color(hex: areaColors[session.group?.areaKey ?? "ietf"] ?? 0xffff99))
+            }
             VStack(alignment: .leading) {
                 Text("\(session.name!) (\(session.group?.acronym ?? ""))")
                     .bold()
@@ -30,6 +36,16 @@ struct SessionListRowView: View {
                             .foregroundColor(.secondary)
                     }
                 }
+            }
+        }
+    }
+
+    func saveFavorite() {
+        if viewContext.hasChanges {
+            do {
+                try viewContext.save()
+            } catch {
+                print("Unable to save Session favorite \(session.name!)")
             }
         }
     }

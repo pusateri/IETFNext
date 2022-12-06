@@ -9,10 +9,12 @@ import SwiftUI
 import WebKit
 
 struct WebView: View {
-    let url: String
+    @Binding var loadURL: String?
 
     var body: some View {
-        WebViewRepresentable(urlPath: url)
+        if let loadURL = loadURL {
+            WebViewRepresentable(urlPath: loadURL)
+        }
     }
 }
 
@@ -31,10 +33,3 @@ struct WebViewRepresentable: UIViewRepresentable {
         }
     }
 }
-struct WebView_Previews: PreviewProvider {
-    static var previews: some View {
-        WebView(url: "https://apple.com")
-    }
-}
-
-
