@@ -52,7 +52,10 @@ struct SessionListFilteredView: View {
                 }
             }
         }
-        //.navigationTitle(favoritesOnly ? "\(fetchRequest.count) Favorites" : "\(fetchRequest.reduce(0, {$0 + $1.count})) Sessions")
+        .navigationBarTitle(
+            Text("\(fetchRequest.reduce(0, {$0 + $1.count})) Sessions"),
+            displayMode: .inline
+        )
         .onChange(of: selectedMeeting) { newValue in
             if let meeting = newValue {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)

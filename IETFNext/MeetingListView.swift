@@ -70,7 +70,7 @@ struct MeetingListView: View {
             List(meetings, id: \.self, selection: $selectedMeeting) { mtg in
                 MeetingListRowView(meeting: mtg)
             }
-            .navigationTitle("IETF \(selectedMeeting?.number! ?? "Select Meeting")")
+            .navigationBarTitle("IETF \(selectedMeeting?.number! ?? "Select Meeting")", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel", role: .cancel) {

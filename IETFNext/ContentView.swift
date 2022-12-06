@@ -93,7 +93,7 @@ struct ContentView: View {
             .onChange(of: selectedGroup) { newValue in
                 print("Group changed to \(selectedGroup?.acronym! ?? "None")")
             }
-            .navigationTitle(selectedGroup?.acronym ?? "None")
+            .navigationBarTitle(selectedGroup?.acronym ?? "None", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: ToolbarItemPlacement.navigationBarLeading) {
                     Button(action: {
@@ -121,6 +121,11 @@ struct ContentView: View {
         .onAppear {
             if let number = UserDefaults.standard.string(forKey:"MeetingNumber") {
                 selectedMeeting = selectMeeting(context: viewContext, number: number)
+                if let meeting = selectedMeeting {
+                    Task {
+                        await loadData(meeting:meeting, context:viewContext)
+                    }
+                }
             } else {
                 showingMeetings.toggle()
             }

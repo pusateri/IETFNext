@@ -46,12 +46,6 @@ enum ObjectType: String, Decodable {
     case session
 }
 
-enum Status: String, Decodable {
-    case canceled
-    case resched
-    case sched
-}
-
 struct JSONLocation: Decodable {
     let id: Int32
     let level_name: String?
@@ -87,7 +81,7 @@ struct JSONSession: Decodable {
     let session_id: Int32
     let session_res_uri: String
     let start: Date
-    let status: Status
+    let status: String?
 }
 
 struct JSONPresentation: Decodable {
@@ -509,8 +503,8 @@ private func updateSession(context: NSManagedObjectContext, baseURL: URL, dayFor
             s.timerange = timerange
             save = true
         }
-        if s.status != session.status.rawValue {
-            s.status = session.status.rawValue
+        if s.status != session.status {
+            s.status = session.status
             save = true
         }
         if s.meeting != meeting {
