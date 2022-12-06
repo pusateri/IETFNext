@@ -26,7 +26,6 @@ struct ContentView: View {
     @State var selectedGroup: Group? = nil
     @State var selectedSession: Session?
     @State var loadURL: String? = "about:"
-    @AppStorage("meetingNumber") var meetingNumber: String = "115"
 
     @ViewBuilder
     var first_header: some View {
@@ -119,19 +118,11 @@ struct ContentView: View {
         .sheet(isPresented: $showingMeetings) {
             MeetingListView(selectedMeeting: $selectedMeeting)
         }
-        .task {
-            // find the first meeting that has an acknowledgements section filled in and grab the sessions for it
-            let mtgs = await loadMeetings(context:viewContext, limit:0, offset:0)
-            for mtg in mtgs {
-                if let ack = mtg.acknowledgements {
-                    if ack.count == 0 {
-                        continue
-                    }
-                    selectedMeeting = mtg
-                    meetingNumber = mtg.number!
-                    await loadData(meeting:mtg, context:viewContext)
-                    break
-                }
+        .onAppear {
+            if let number = UserDefaults.standard.string(forKey:"MeetingNumber") {
+                selectedMeeting = selectMeeting(context: viewContext, number: number)
+            } else {
+                showingMeetings.toggle()
             }
         }
     }
