@@ -27,6 +27,7 @@ struct LocationListView: View {
                 }
             }
         }
+        .listStyle(.inset)
     }
 }
 

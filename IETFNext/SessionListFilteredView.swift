@@ -11,6 +11,7 @@ import CoreData
 struct SessionListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
+    @State var favoritesOnly: Bool = false
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
 
@@ -36,20 +37,34 @@ struct SessionListFilteredView: View {
                     SessionListRowView(session: session)
                 }
             }
+            //.headerProminence(.increased)
         }
+        .listStyle(.inset)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: {
-                    print("filter")
+                    withAnimation {
+                        favoritesOnly.toggle()
+                        updatePredicate()
+                    }
                 }) {
-                    Label("Filter", systemImage: "line.3.horizontal.decrease.circle")
-                    // line.3.horizontal.decrease.circle.fill
+                    Label("Filter", systemImage: favoritesOnly == true ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
                 }
             }
         }
+        //.navigationTitle(favoritesOnly ? "\(fetchRequest.count) Favorites" : "\(fetchRequest.reduce(0, {$0 + $1.count})) Sessions")
         .onChange(of: selectedMeeting) { newValue in
             if let meeting = newValue {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
+            }
+        }
+    }
+    func updatePredicate() {
+        if let meeting = selectedMeeting {
+            if favoritesOnly == false {
+                fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
+            } else {
+                fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@ AND favorite = %d", meeting.number!, true)
             }
         }
     }

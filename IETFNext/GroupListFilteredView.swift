@@ -45,8 +45,9 @@ struct GroupListFilteredView: View {
                     }
                 }
             }
-            .headerProminence(.increased)
+            //.headerProminence(.increased)
         }
+        .listStyle(.inset)
         .searchable(text: $searchText)
         .keyboardType(.alphabet)
         .disableAutocorrection(true)
