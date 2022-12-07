@@ -20,8 +20,9 @@ extension UISplitViewController {
 */
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @State private var columnVisibility = NavigationSplitViewVisibility.automatic
     @State private var showingMeetings = false
+
+    @State var columnVisibility = NavigationSplitViewVisibility.automatic
     @State var selectedMeeting: Meeting?
     @State var selectedGroup: Group? = nil
     @State var selectedSession: Session?
@@ -83,59 +84,14 @@ struct ContentView: View {
         } content: {
             SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL)
         } detail: {
-            WebView(url: $loadURL)
-            .onChange(of: selectedGroup) { newValue in
-                if let group = selectedGroup {
-                    title = group.acronym!
-                }
-            }
-            .onChange(of: selectedSession) { newValue in
-                if let session = selectedSession {
-                    title = session.group?.acronym ?? ""
-                    if let agenda = session.agenda {
-                        loadURL = agenda
-                    } else {
-                        loadURL = URL(string: "about:blank")!
-                    }
-                }
-            }
-            .onChange(of: selectedLocation) { newValue in
-                if let location = selectedLocation {
-                    title = location.name!
-                    if let map = location.map {
-                        loadURL = map
-                    } else {
-                        loadURL = URL(string: "about:blank")!
-                    }
-                }
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text(title)
-                }
-                if UIDevice.current.userInterfaceIdiom == .pad  ||
-                    UIDevice.current.userInterfaceIdiom == .mac {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: {
-                            switch (columnVisibility) {
-                                case .detailOnly:
-                                    columnVisibility = NavigationSplitViewVisibility.automatic
-
-                                default:
-                                    columnVisibility = NavigationSplitViewVisibility.detailOnly
-                            }
-                        }) {
-                            switch (columnVisibility) {
-                                case .detailOnly:
-                                    Label("Expand", systemImage: "arrow.down.right.and.arrow.up.left")
-                                default:
-                                    Label("Contract", systemImage: "arrow.up.left.and.arrow.down.right")
-                            }
-                        }
-                    }
-                }
-            }
+            DetailView(
+                selectedMeeting:$selectedMeeting,
+                selectedGroup:$selectedGroup,
+                selectedSession:$selectedSession,
+                selectedLocation:$selectedLocation,
+                loadURL:$loadURL,
+                title:$title,
+                columnVisibility:$columnVisibility)
         }
         .sheet(isPresented: $showingMeetings) {
             MeetingListView(selectedMeeting: $selectedMeeting)

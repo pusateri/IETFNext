@@ -5,3 +5,7 @@ add buttons for charter, minutes, video, slides, drafts, related drafts
 parse presentation slides into core data
 core data background context
 
+IETF colors:
+	gray: 0xc0c0c0
+	dark blue: 0x434254
+	gold: 
