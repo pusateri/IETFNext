@@ -14,9 +14,10 @@ struct SessionListFilteredView: View {
     @State var favoritesOnly: Bool = false
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
+    @Binding var loadURL: URL?
 
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>) {
         _fetchRequest = SectionedFetchRequest<String, Session>(
             sectionIdentifier: \.day!,
             sortDescriptors: [
@@ -28,6 +29,7 @@ struct SessionListFilteredView: View {
         )
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
+        self._loadURL = loadURL
     }
 
     var body: some View {
@@ -57,6 +59,9 @@ struct SessionListFilteredView: View {
             if let meeting = newValue {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
             }
+        }
+        .onAppear {
+            loadURL = URL(string: "about:blank")!
         }
     }
     func updatePredicate() {

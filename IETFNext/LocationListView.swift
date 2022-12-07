@@ -13,8 +13,9 @@ struct LocationListView: View {
     @SectionedFetchRequest<String, Location> var fetchRequest: SectionedFetchResults<String, Location>
     @Binding var selectedLocation: Location?
     @Binding var selectedMeeting: Meeting?
+    @Binding var loadURL: URL?
 
-    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>, loadURL: Binding<URL?>) {
         _fetchRequest = SectionedFetchRequest<String, Location>(
             sectionIdentifier: \.level_name!,
             sortDescriptors: [
@@ -26,6 +27,7 @@ struct LocationListView: View {
         )
         self._selectedMeeting = selectedMeeting
         self._selectedLocation = selectedLocation
+        self._loadURL = loadURL
     }
 
     var body: some View {
@@ -52,6 +54,9 @@ struct LocationListView: View {
             if let meeting = newValue {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
             }
+        }
+        .onAppear {
+            loadURL = URL(string: "about:blank")!
         }
     }
 }

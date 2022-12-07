@@ -42,21 +42,21 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List() {
                 Section(header: first_header) {
-                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession)) {
+                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL)) {
                         HStack {
                             Image(systemName: "calendar")
                                 .frame(width: 32, height: 32) // constant width left aligns text
                             Text("Schedule")
                         }
                     }
-                    NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup)) {
+                    NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, loadURL: $loadURL)) {
                         HStack {
                             Image(systemName: "person.3")
                                 .frame(width: 32, height: 32) // constant width left aligns text
                             Text("Working Groups")
                         }
                     }
-                    NavigationLink(destination: LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)) {
+                    NavigationLink(destination: LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, loadURL: $loadURL)) {
                         HStack {
                             Image(systemName: "map")
                                 .frame(width: 32, height: 32) // constant width left aligns text
@@ -81,7 +81,7 @@ struct ContentView: View {
                 }
             }
         } content: {
-            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession)
+            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL)
         } detail: {
             WebView(url: $loadURL)
             .onChange(of: selectedGroup) { newValue in

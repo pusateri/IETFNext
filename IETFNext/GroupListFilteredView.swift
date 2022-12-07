@@ -12,9 +12,10 @@ struct GroupListFilteredView: View {
     @SectionedFetchRequest<String, Group> var fetchRequest: SectionedFetchResults<String, Group>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
+    @Binding var loadURL: URL?
     @State private var searchText = ""
 
-    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, loadURL: Binding<URL?>) {
         _fetchRequest = SectionedFetchRequest<String, Group>(
             sectionIdentifier: \.areaKey!,
             sortDescriptors: [
@@ -26,6 +27,7 @@ struct GroupListFilteredView: View {
         )
         self._selectedMeeting = selectedMeeting
         self._selectedGroup = selectedGroup
+        self._loadURL = loadURL
     }
 
     var body: some View {
@@ -70,6 +72,9 @@ struct GroupListFilteredView: View {
                         format: "(ANY sessions.meeting.number = %@) AND ((name contains[cd] %@) OR (acronym contains[cd] %@))", meeting.number!, newValue, newValue)
                 }
             }
+        }
+        .onAppear {
+            loadURL = URL(string: "about:blank")!
         }
     }
 }
