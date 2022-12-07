@@ -24,7 +24,7 @@ public let areaColors: [String: UInt] = [
     "art": 0x99ccff,    // blue
     "gen": 0x99ffcc,    // teal
     "int": 0xcccccc,    // grey
-    "ietf": 0xffff99,   // yellow
+    "ietf": 0xf6c844,   // yellow old 0xffff99
     "irtf": 0x99FFFF,   // cyan
     "ops": 0xff99ff,    // magenta
     "rai": 0xffcc99,    // orange

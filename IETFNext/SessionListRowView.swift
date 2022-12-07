@@ -19,7 +19,7 @@ struct SessionListRowView: View {
             }) {
                 Image(systemName: session.favorite == true ? "star.fill" : "star")
                     .font(Font.system(size: 32, weight: .bold))
-                    .foregroundColor(Color(hex: areaColors[session.group?.areaKey ?? "ietf"] ?? 0xffff99))
+                    .foregroundColor(Color(hex: areaColors[session.group?.areaKey ?? "ietf"] ?? 0xf6c844))
             }
             .buttonStyle(BorderlessButtonStyle())
             VStack(alignment: .leading) {

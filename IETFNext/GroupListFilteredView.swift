@@ -36,7 +36,7 @@ struct GroupListFilteredView: View {
                 ForEach(section, id: \.self) { group in
                     HStack {
                         Rectangle()
-                            .fill(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xffff99))
+                            .fill(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xf6c844))
                             .frame(width: 8, height: 32)
                         VStack(alignment: .leading) {
                             Text(group.acronym!)
