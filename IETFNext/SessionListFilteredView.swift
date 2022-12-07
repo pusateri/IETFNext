@@ -15,9 +15,10 @@ struct SessionListFilteredView: View {
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
     @Binding var loadURL: URL?
+    @Binding var title: String
 
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>) {
         _fetchRequest = SectionedFetchRequest<String, Session>(
             sectionIdentifier: \.day!,
             sortDescriptors: [
@@ -30,6 +31,7 @@ struct SessionListFilteredView: View {
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
         self._loadURL = loadURL
+        self._title = title
     }
 
     var body: some View {
@@ -41,7 +43,28 @@ struct SessionListFilteredView: View {
             }
         }
         .listStyle(.inset)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                VStack {
+                    Text("Schedule")
+                        .font(.headline)
+                    Text("\(favoritesOnly ? "Filter: Favorites" : "")")
+                        .font(.footnote)
+                        .foregroundColor(Color.blue)
+                }
+            }
+            ToolbarItem(placement: .bottomBar) {
+                if let meeting = selectedMeeting {
+                    if let number = meeting.number {
+                        if let city = meeting.city {
+                            Text("IETF \(number) (\(city))")
+                                .font(.subheadline)
+                                .foregroundColor(Color.blue)
+                        }
+                    }
+                }
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button(action: {
                     withAnimation {
@@ -53,17 +76,23 @@ struct SessionListFilteredView: View {
                 }
             }
         }
-        .navigationTitle(Text("Schedule"))
-        .navigationBarTitleDisplayMode(.inline)
         .onChange(of: selectedMeeting) { newValue in
             if let meeting = newValue {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
             }
         }
-        .onAppear {
-            loadURL = URL(string: "about:blank")!
+        .onChange(of: selectedSession) { newValue in
+            if let session = selectedSession {
+                title = session.group?.acronym ?? ""
+                if let agenda = session.agenda {
+                    loadURL = agenda
+                } else {
+                    loadURL = URL(string: "about:blank")!
+                }
+            }
         }
     }
+    
     func updatePredicate() {
         if let meeting = selectedMeeting {
             if favoritesOnly == false {

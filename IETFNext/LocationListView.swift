@@ -14,8 +14,9 @@ struct LocationListView: View {
     @Binding var selectedLocation: Location?
     @Binding var selectedMeeting: Meeting?
     @Binding var loadURL: URL?
+    @Binding var title: String
 
-    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>, loadURL: Binding<URL?>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>, loadURL: Binding<URL?>, title: Binding<String>) {
         _fetchRequest = SectionedFetchRequest<String, Location>(
             sectionIdentifier: \.level_name!,
             sortDescriptors: [
@@ -28,6 +29,7 @@ struct LocationListView: View {
         self._selectedMeeting = selectedMeeting
         self._selectedLocation = selectedLocation
         self._loadURL = loadURL
+        self._title = title
     }
 
     var body: some View {
@@ -48,11 +50,53 @@ struct LocationListView: View {
             .headerProminence(.increased)
         }
         .listStyle(.inset)
-        .navigationTitle(Text("Rooms"))
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                if let meeting = selectedMeeting {
+                    if let venue = meeting.venue_name {
+                        VStack {
+                            Text("Rooms")
+                                .font(.headline)
+                            Text(venue)
+                                .font(.subheadline)
+                        }
+                    }
+                }
+            }
+            ToolbarItem(placement: .bottomBar) {
+                if let meeting = selectedMeeting {
+                    if let number = meeting.number {
+                        if let city = meeting.city {
+                            Text("IETF \(number) (\(city))")
+                                .font(.subheadline)
+                                .foregroundColor(Color.blue)
+                        }
+                    }
+                }
+            }
+        }
         .onChange(of: selectedMeeting) { newValue in
             if let meeting = newValue {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
+            }
+        }
+        .onChange(of: selectedLocation) { newValue in
+            if let location = selectedLocation {
+                if let name = location.name {
+                    if let level = location.level_name {
+                        if level == "Uncategorized" {
+                            title = name
+                        } else {
+                            title = "\(level) - \(name)"
+                        }
+                    }
+                }
+                if let map = location.map {
+                    loadURL = map
+                } else {
+                    loadURL = URL(string: "about:blank")!
+                }
             }
         }
         .onAppear {

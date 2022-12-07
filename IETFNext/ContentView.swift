@@ -43,21 +43,21 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List() {
                 Section(header: first_header) {
-                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL)) {
+                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title)) {
                         HStack {
                             Image(systemName: "calendar")
                                 .frame(width: 32, height: 32) // constant width left aligns text
                             Text("Schedule")
                         }
                     }
-                    NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, loadURL: $loadURL)) {
+                    NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, loadURL: $loadURL, title: $title)) {
                         HStack {
                             Image(systemName: "person.3")
                                 .frame(width: 32, height: 32) // constant width left aligns text
                             Text("Working Groups")
                         }
                     }
-                    NavigationLink(destination: LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, loadURL: $loadURL)) {
+                    NavigationLink(destination: LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, loadURL: $loadURL, title: $title)) {
                         HStack {
                             Image(systemName: "map")
                                 .frame(width: 32, height: 32) // constant width left aligns text
@@ -82,13 +82,11 @@ struct ContentView: View {
                 }
             }
         } content: {
-            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL)
+            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title)
         } detail: {
             DetailView(
                 selectedMeeting:$selectedMeeting,
-                selectedGroup:$selectedGroup,
                 selectedSession:$selectedSession,
-                selectedLocation:$selectedLocation,
                 loadURL:$loadURL,
                 title:$title,
                 columnVisibility:$columnVisibility)

@@ -12,44 +12,19 @@ struct DetailView: View {
     @State private var showingOptions = false
 
     @Binding var selectedMeeting: Meeting?
-    @Binding var selectedGroup: Group?
     @Binding var selectedSession: Session?
-    @Binding var selectedLocation: Location?
     @Binding var loadURL: URL?
     @Binding var title: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     var body: some View {
         WebView(url: $loadURL)
-        .onChange(of: selectedGroup) { newValue in
-            if let group = selectedGroup {
-                title = group.acronym!
-            }
-        }
-        .onChange(of: selectedSession) { newValue in
-            if let session = selectedSession {
-                title = session.group?.acronym ?? ""
-                if let agenda = session.agenda {
-                    loadURL = agenda
-                } else {
-                    loadURL = URL(string: "about:blank")!
-                }
-            }
-        }
-        .onChange(of: selectedLocation) { newValue in
-            if let location = selectedLocation {
-                title = location.name!
-                if let map = location.map {
-                    loadURL = map
-                } else {
-                    loadURL = URL(string: "about:blank")!
-                }
-            }
-        }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text(title)
+                    .font(.title2)
+                    .bold()
             }
             if UIDevice.current.userInterfaceIdiom == .pad  ||
                 UIDevice.current.userInterfaceIdiom == .mac {
@@ -164,6 +139,9 @@ struct DetailView: View {
                     Label("More", systemImage: "ellipsis.circle")
                 }
             }
+        }
+        .onChange(of: selectedMeeting) { newValue in
+            loadURL = URL(string: "about:blank")!
         }
     }
 }
