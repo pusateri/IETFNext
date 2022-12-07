@@ -20,12 +20,14 @@ extension UISplitViewController {
 */
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @State private var columnVisibility = NavigationSplitViewVisibility.all
+    @State private var columnVisibility = NavigationSplitViewVisibility.automatic
     @State private var showingMeetings = false
     @State var selectedMeeting: Meeting?
     @State var selectedGroup: Group? = nil
     @State var selectedSession: Session?
+    @State var selectedLocation: Location?
     @State var loadURL: URL? = nil
+    @State var title: String = ""
 
     @ViewBuilder
     var first_header: some View {
@@ -40,6 +42,20 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List() {
                 Section(header: first_header) {
+                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession)) {
+                        HStack {
+                            Image(systemName: "calendar")
+                                .frame(width: 32, height: 32) // constant width left aligns text
+                            Text("Schedule")
+                        }
+                    }
+                   /*
+                    .onChange(of: selectedSession) { newValue in
+                    if let session = newValue {
+                    selectedGroup = session.group
+                    }
+                    }
+                    */
                     NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup)) {
                         HStack {
                             Image(systemName: "person.3")
@@ -47,22 +63,7 @@ struct ContentView: View {
                             Text("Working Groups")
                         }
                     }
-                    if let m = selectedMeeting {
-                        NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession)
-                            .environmentObject(m)) {
-                                HStack {
-                                    Image(systemName: "calendar")
-                                        .frame(width: 32, height: 32) // constant width left aligns text
-                                    Text("Schedule")
-                                }
-                            }
-                            .onChange(of: selectedSession) { newValue in
-                                if let session = newValue {
-                                    selectedGroup = session.group
-                                }
-                            }
-                    }
-                    NavigationLink(destination: LocationListView(selectedMeeting: $selectedMeeting)) {
+                    NavigationLink(destination: LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)) {
                         HStack {
                             Image(systemName: "map")
                                 .frame(width: 32, height: 32) // constant width left aligns text
@@ -92,16 +93,19 @@ struct ContentView: View {
             WebView(url: $loadURL)
             .onChange(of: selectedGroup) { newValue in
                 if let group = selectedGroup {
+                    title = group.acronym!
+                    /*
                     if let session = selectedSession {
                         if session.group != group {
                             loadURL = agendaForGroup(context: viewContext, group:group)
                         }
                     }
-
+                     */
                 }
             }
             .onChange(of: selectedSession) { newValue in
                 if let session = selectedSession {
+                    title = session.group?.acronym ?? ""
                     if let agenda = session.agenda {
                         loadURL = agenda
                     } else {
@@ -109,23 +113,40 @@ struct ContentView: View {
                     }
                 }
             }
-            .navigationBarTitle(selectedGroup?.acronym ?? "None", displayMode: .inline)
+            .onChange(of: selectedLocation) { newValue in
+                if let location = selectedLocation {
+                    title = location.name!
+                    if let map = location.map {
+                        loadURL = map
+                    } else {
+                        loadURL = URL(string: "about:blank")!
+                    }
+                }
+            }
+            //.navigationTitle($title)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: ToolbarItemPlacement.navigationBarLeading) {
-                    Button(action: {
-                        switch (columnVisibility) {
-                        case .detailOnly:
-                            columnVisibility = NavigationSplitViewVisibility.automatic
+                ToolbarItem(placement: .principal) {
+                    Text($title)
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    if UIDevice.current.userInterfaceIdiom == .pad  ||
+                        UIDevice.current.userInterfaceIdiom == .mac {
+                        Button(action: {
+                            switch (columnVisibility) {
+                                case .detailOnly:
+                                    columnVisibility = NavigationSplitViewVisibility.automatic
 
-                        default:
-                            columnVisibility = NavigationSplitViewVisibility.detailOnly
-                        }
-                    }) {
-                        switch (columnVisibility) {
-                        case .detailOnly:
-                            Label("Expand", systemImage: "arrow.down.right.and.arrow.up.left")
-                        default:
-                            Label("Contract", systemImage: "arrow.up.left.and.arrow.down.right")
+                                default:
+                                    columnVisibility = NavigationSplitViewVisibility.detailOnly
+                            }
+                        }) {
+                            switch (columnVisibility) {
+                                case .detailOnly:
+                                    Label("Expand", systemImage: "arrow.down.right.and.arrow.up.left")
+                                default:
+                                    Label("Contract", systemImage: "arrow.up.left.and.arrow.down.right")
+                            }
                         }
                     }
                 }

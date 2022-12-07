@@ -11,10 +11,10 @@ import CoreData
 struct LocationListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @SectionedFetchRequest<String, Location> var fetchRequest: SectionedFetchResults<String, Location>
-    @State var selectedLocation: Location?
+    @Binding var selectedLocation: Location?
     @Binding var selectedMeeting: Meeting?
 
-    init(selectedMeeting: Binding<Meeting?>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>) {
         _fetchRequest = SectionedFetchRequest<String, Location>(
             sectionIdentifier: \.level_name!,
             sortDescriptors: [
@@ -25,6 +25,7 @@ struct LocationListView: View {
             animation: .default
         )
         self._selectedMeeting = selectedMeeting
+        self._selectedLocation = selectedLocation
     }
 
     var body: some View {
@@ -45,6 +46,8 @@ struct LocationListView: View {
             .headerProminence(.increased)
         }
         .listStyle(.inset)
+        .navigationTitle(Text("Rooms"))
+        .navigationBarTitleDisplayMode(.inline)
         .onChange(of: selectedMeeting) { newValue in
             if let meeting = newValue {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)

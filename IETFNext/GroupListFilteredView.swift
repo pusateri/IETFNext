@@ -51,6 +51,8 @@ struct GroupListFilteredView: View {
         .searchable(text: $searchText)
         .keyboardType(.alphabet)
         .disableAutocorrection(true)
+        .navigationTitle(Text("Groups"))
+        .navigationBarTitleDisplayMode(.inline)
         .onChange(of: selectedMeeting) { newValue in
             if let meeting = newValue {
                 fetchRequest.nsPredicate = NSPredicate(format: "ANY sessions.meeting.number = %@", meeting.number!)

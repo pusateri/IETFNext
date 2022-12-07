@@ -49,6 +49,7 @@ struct WebView: UIViewRepresentable {
 
             // open all links in Safari
             if (url.host == "datatracker.ietf.org" && url.path.starts(with: "/meeting")) ||
+                (url.host == "www.ietf.org") ||
                 (url.scheme == "about") {
                 decisionHandler(.allow)
                 return
