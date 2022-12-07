@@ -26,9 +26,6 @@ struct WebView: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.dataDetectorTypes = [.link]
-        // tried work around bug but didn't help
-        //let dropSharedWorkersScript = WKUserScript(source: "delete window.SharedWorker;", injectionTime: WKUserScriptInjectionTime.atDocumentStart, forMainFrameOnly: false)
-        //webConfiguration.userContentController.addUserScript(dropSharedWorkersScript)
 
         return WKWebView(frame: .zero, configuration:webConfiguration)
     }
@@ -47,7 +44,7 @@ struct WebView: UIViewRepresentable {
                 return
             }
 
-            // open all links in Safari
+            // open all links not described here in Safari
             if (url.host == "datatracker.ietf.org" && url.path.starts(with: "/meeting")) ||
                 (url.host == "www.ietf.org") ||
                 (url.scheme == "about") {

@@ -49,13 +49,6 @@ struct ContentView: View {
                             Text("Schedule")
                         }
                     }
-                   /*
-                    .onChange(of: selectedSession) { newValue in
-                    if let session = newValue {
-                    selectedGroup = session.group
-                    }
-                    }
-                    */
                     NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup)) {
                         HStack {
                             Image(systemName: "person.3")
@@ -94,13 +87,6 @@ struct ContentView: View {
             .onChange(of: selectedGroup) { newValue in
                 if let group = selectedGroup {
                     title = group.acronym!
-                    /*
-                    if let session = selectedSession {
-                        if session.group != group {
-                            loadURL = agendaForGroup(context: viewContext, group:group)
-                        }
-                    }
-                     */
                 }
             }
             .onChange(of: selectedSession) { newValue in
@@ -123,15 +109,14 @@ struct ContentView: View {
                     }
                 }
             }
-            //.navigationTitle($title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text($title)
+                    Text(title)
                 }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    if UIDevice.current.userInterfaceIdiom == .pad  ||
-                        UIDevice.current.userInterfaceIdiom == .mac {
+                if UIDevice.current.userInterfaceIdiom == .pad  ||
+                    UIDevice.current.userInterfaceIdiom == .mac {
+                    ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {
                             switch (columnVisibility) {
                                 case .detailOnly:

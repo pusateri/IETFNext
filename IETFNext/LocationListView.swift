@@ -53,10 +53,5 @@ struct LocationListView: View {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
             }
         }
-        .onChange(of: selectedLocation) { newValue in
-            if let location = selectedLocation {
-                print(location.name!)
-            }
-        }
     }
 }
