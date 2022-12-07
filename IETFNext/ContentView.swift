@@ -25,7 +25,7 @@ struct ContentView: View {
     @State var selectedMeeting: Meeting?
     @State var selectedGroup: Group? = nil
     @State var selectedSession: Session?
-    @State var loadURL: String? = "about:"
+    @State var loadURL: URL? = nil
 
     @ViewBuilder
     var first_header: some View {
@@ -89,9 +89,25 @@ struct ContentView: View {
         } content: {
             SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession)
         } detail: {
-            WebView(loadURL: $loadURL)
+            WebView(url: $loadURL)
             .onChange(of: selectedGroup) { newValue in
-                print("Group changed to \(selectedGroup?.acronym! ?? "None")")
+                if let group = selectedGroup {
+                    if let session = selectedSession {
+                        if session.group != group {
+                            loadURL = agendaForGroup(context: viewContext, group:group)
+                        }
+                    }
+
+                }
+            }
+            .onChange(of: selectedSession) { newValue in
+                if let session = selectedSession {
+                    if let agenda = session.agenda {
+                        loadURL = agenda
+                    } else {
+                        loadURL = URL(string: "about:blank")!
+                    }
+                }
             }
             .navigationBarTitle(selectedGroup?.acronym ?? "None", displayMode: .inline)
             .toolbar {
@@ -132,9 +148,11 @@ struct ContentView: View {
         }
     }
 
-    private func more() {
-        withAnimation {
-
+    private func agendaForGroup(context: NSManagedObjectContext, group: Group) -> URL {
+        if let url = URL(string: "https://datatracker.ietf.org/meeting/114/materials/agenda-114-emailcore-01") {
+            return url
+        } else {
+            return URL(string: "about:")!
         }
     }
 }

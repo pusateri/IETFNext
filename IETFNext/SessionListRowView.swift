@@ -21,6 +21,7 @@ struct SessionListRowView: View {
                     .font(Font.system(size: 32, weight: .bold))
                     .foregroundColor(Color(hex: areaColors[session.group?.areaKey ?? "ietf"] ?? 0xffff99))
             }
+            .buttonStyle(BorderlessButtonStyle())
             VStack(alignment: .leading) {
                 Text("\(session.name!) (\(session.group?.acronym ?? ""))")
                     .bold()

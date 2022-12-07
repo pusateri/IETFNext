@@ -8,28 +8,53 @@
 import SwiftUI
 import WebKit
 
-struct WebView: View {
-    @Binding var loadURL: String?
 
-    var body: some View {
-        if let loadURL = loadURL {
-            WebViewRepresentable(urlPath: loadURL)
-        }
+extension WKWebView {
+    func load(_ url: URL) {
+        let request = URLRequest(url: url)
+        load(request)
     }
 }
 
-struct WebViewRepresentable: UIViewRepresentable {
-    var urlPath: String?
+struct WebView: UIViewRepresentable {
+    @Binding var url: URL?
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
     func makeUIView(context: Context) -> WKWebView {
-        return WKWebView()
+        let webConfiguration = WKWebViewConfiguration()
+        webConfiguration.dataDetectorTypes = [.link]
+        // tried work around bug but didn't help
+        //let dropSharedWorkersScript = WKUserScript(source: "delete window.SharedWorker;", injectionTime: WKUserScriptInjectionTime.atDocumentStart, forMainFrameOnly: false)
+        //webConfiguration.userContentController.addUserScript(dropSharedWorkersScript)
+
+        return WKWebView(frame: .zero, configuration:webConfiguration)
     }
 
     func updateUIView(_ uiView : WKWebView , context : Context) {
-        if let response = urlPath {
-            if let url = URL(string: response){
-                let request = URLRequest(url: url)
-                  uiView.load(request)
+        uiView.navigationDelegate = context.coordinator
+        if let url = url {
+            uiView.load(url)
+        }
+    }
+
+    class Coordinator : NSObject, WKNavigationDelegate {
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            guard let url = navigationAction.request.url else {
+                decisionHandler(.allow)
+                return
             }
+
+            // open all links in Safari
+            if (url.host == "datatracker.ietf.org" && url.path.starts(with: "/meeting")) ||
+                (url.scheme == "about") {
+                decisionHandler(.allow)
+                return
+            }
+            UIApplication.shared.open(url)
+            decisionHandler(.cancel)
         }
     }
 }
