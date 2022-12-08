@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct DetailView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) var sizeClass
     @State private var showingOptions = false
     private var slideArray: [Presentation] = []
+    private var docArray: [Document] = []
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
     @Binding var loadURL: URL?
@@ -25,7 +27,17 @@ struct DetailView: View {
         self._title = title
         self._columnVisibility = columnVisibility
 
+        updateDocuments()
         updateSlides()
+    }
+    mutating func updateDocuments() {
+        if let session = selectedSession {
+            if let group = session.group {
+                if let docs: Set<Document> = group.documents as! Set<Document>? {
+                    docArray = docs.sorted(by: {$0.name! < $1.name!})
+                }
+            }
+        }
     }
     mutating func updateSlides() {
         if let session = selectedSession {
@@ -80,13 +92,15 @@ struct DetailView: View {
             }
             ToolbarItem {
                 Menu {
-                    Button(action: {
-                    }) {
-                        Text("First Draft")
-                    }
-                    Button(action: {
-                    }) {
-                        Text("Second Draft")
+                    ForEach(docArray, id: \.self) { d in
+                        Button(action: {
+                            // htmlized
+                            //let urlString = "https://datatracker.ietf.org/doc/html/\(d.name!)-\(d.rev!)"
+                            let urlString = "https://www.ietf.org/archive/id/\(d.name!)-\(d.rev!).html"
+                            loadURL = URL(string: urlString)!
+                        }) {
+                            Text(d.title!)
+                        }
                     }
                 }
                 label: {

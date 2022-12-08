@@ -83,7 +83,14 @@ struct SessionListFilteredView: View {
         }
         .onChange(of: selectedSession) { newValue in
             if let session = selectedSession {
-                title = session.group?.acronym ?? ""
+                if let group = session.group {
+                    if let wg = group.acronym {
+                        title = wg
+                        Task {
+                            await loadDrafts(context:viewContext, limit:0, offset:0, group:group)
+                        }
+                    }
+                }
                 if let agenda = session.agenda {
                     loadURL = agenda
                 } else {

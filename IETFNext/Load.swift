@@ -25,6 +25,14 @@ extension String {
     }
 }
 
+struct Meta: Decodable {
+    let limit: Int32
+    let next: String?
+    let offset: Int32
+    let previous: String?
+    let total_count: Int32
+}
+
 struct CustomTimeInterval: Codable {
     let value: TimeInterval
     init(from decoder: Decoder) throws {
@@ -104,6 +112,42 @@ struct JSONGroup: Decodable {
     let parent: String?
     let state: GroupState
     let type: String
+}
+
+// Documents like internet drafts, RFCs
+struct Documents: Decodable {
+    let meta: Meta
+    let objects: [JSONDocument]
+}
+
+struct JSONDocument: Decodable {
+    let abstract: String
+    let ad: String?
+    let expires: Date
+    let external_url: String?
+    let group: String?
+    let id: Int32
+    let intended_std_level: String?
+    let internal_comments: String?
+    let name: String
+    let note: String?
+    let notify: String?
+    let order: Int32
+    let pages: Int32
+    let resource_uri: String
+    let rev: String
+    let rfc: String?
+    let shepherd: String?
+    let states: [String]?
+    let std_level: String?
+    let stream: String?
+    let submissions: [String]?
+    let tags: [String]?
+    let time: Date
+    let title: String
+    let type: String
+    let uploaded_filename: String?
+    let words: Int32?
 }
 
 extension Schedule: Decodable {
@@ -214,6 +258,208 @@ public func loadData(meeting: Meeting, context: NSManagedObjectContext) async {
         }
     } catch {
         print("Unexpected agenda format")
+    }
+}
+
+public func loadDrafts(context: NSManagedObjectContext, limit: Int32, offset: Int32, group: Group) async {
+    let url: URL
+    let urlString = "https://datatracker.ietf.org/api/v1/doc/document/?group__acronym=\(group.acronym!)&type=draft&states__slug__contains=active"
+
+    if offset == 0 {
+        guard let url0 = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        url = url0
+    } else {
+        guard let url_offset = URL(string: urlString + "limit=\(limit)&offset=\(offset)") else {
+            print("Invalid URL")
+            return
+        }
+        url = url_offset
+    }
+    do {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        do {
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
+            let json_docs = try decoder.decode(Documents.self, from: data)
+
+            for obj in json_docs.objects {
+                updateDocument(context:context, group:group, document:obj)
+            }
+        } catch DecodingError.dataCorrupted(let context) {
+            print(context)
+        } catch DecodingError.keyNotFound(let key, let context) {
+            print("Key '\(key)' not found:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch DecodingError.valueNotFound(let value, let context) {
+            print("Value '\(value)' not found:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch DecodingError.typeMismatch(let type, let context) {
+            print("Type '\(type)' mismatch:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch {
+            print("error: ", error)
+        }
+    } catch {
+        print("Unexpected Meeting format")
+    }
+}
+
+private func updateDocument(context: NSManagedObjectContext, group: Group, document: JSONDocument) {
+    let fetchDocument: NSFetchRequest<Document> = Document.fetchRequest()
+    fetchDocument.predicate = NSPredicate(format: "id = %d", document.id)
+
+    var doc: Document!
+    var save = false
+    let results = try? context.fetch(fetchDocument)
+
+    if results?.count == 0 {
+        // here you are inserting
+        doc = Document(context: context)
+        doc.id = document.id
+        save = true
+    } else {
+        // here you are updating
+        doc = results?.first
+    }
+
+    if doc.abstract != document.abstract {
+        doc.abstract = document.abstract
+        save = true
+    }
+    if let ad = document.ad {
+        if doc.ad != ad {
+            doc.ad = ad
+            save = true
+        }
+    }
+    if doc.expires != document.expires {
+        doc.expires = document.expires
+        save = true
+    }
+    if let external_url = document.external_url {
+        let url = URL(string: external_url)
+        if doc.external_url != url {
+            doc.external_url = url
+            save = true
+        }
+    }
+    if let group_uri = document.group {
+        if doc.group_uri != group_uri {
+            doc.group_uri = group_uri
+            save = true
+        }
+    }
+    if let intended_std_level = document.intended_std_level {
+        if doc.intended_std_level != intended_std_level {
+            doc.intended_std_level = intended_std_level
+            save = true
+        }
+    }
+    if let internal_comments = document.internal_comments {
+        if doc.internal_comments != internal_comments {
+            doc.internal_comments = internal_comments
+            save = true
+        }
+    }
+    if doc.name != document.name {
+        doc.name = document.name
+        save = true
+    }
+    if let note = document.note {
+        if doc.note != note {
+            doc.note = note
+            save = true
+        }
+    }
+    if let notify = document.notify {
+        if doc.notify != notify {
+            doc.notify = notify
+            save = true
+        }
+    }
+    if doc.order != document.order {
+        doc.order = document.order
+        save = true
+    }
+    if doc.pages != document.pages {
+        doc.pages = document.pages
+        save = true
+    }
+    if doc.resource_uri != document.resource_uri {
+        doc.resource_uri = document.resource_uri
+        save = true
+    }
+    if doc.rev != document.rev {
+        doc.rev = document.rev
+        save = true
+    }
+    if let rfc = document.rfc {
+        if doc.rfc != rfc {
+            doc.rfc = rfc
+            save = true
+        }
+    }
+    if let shepherd = document.shepherd {
+        if doc.shepherd != shepherd {
+            doc.shepherd = shepherd
+            save = true
+        }
+    }
+    if let std_level = document.std_level {
+        if doc.std_level != std_level {
+            doc.std_level = std_level
+            save = true
+        }
+    }
+    if let stream = document.stream {
+        if doc.stream != stream {
+            doc.stream = stream
+            save = true
+        }
+    }
+    if doc.time != document.time {
+        doc.time = document.time
+        save = true
+    }
+    if doc.title != document.title {
+        doc.title = document.title
+        save = true
+    }
+    if doc.type != document.type {
+        doc.type = document.type
+        save = true
+    }
+    if let uploaded_filename = document.uploaded_filename {
+        if doc.uploaded_filename != uploaded_filename {
+            doc.uploaded_filename = uploaded_filename
+            save = true
+        }
+    }
+    if let words = document.words {
+        if doc.words != words {
+            doc.words = words
+            save = true
+        }
+    }
+    /*
+        Ignoring array of strings items:
+            states, submissions, tags
+     */
+
+    // associate document with working group
+    if doc.group != group {
+        doc.group = group
+    }
+    if save {
+        do {
+            try context.save()
+        }
+        catch {
+            print("Unable to save Document \(document.name)")
+        }
     }
 }
 

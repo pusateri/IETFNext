@@ -14,14 +14,6 @@ struct Meetings: Decodable {
     let objects: [JSONMeeting]
 }
 
-struct Meta: Decodable {
-    let limit: Int32
-    let next: String?
-    let offset: Int32
-    let previous: String?
-    let total_count: Int32
-}
-
 struct JSONMeeting: Decodable {
     let acknowledgements: String
     let agenda: String
