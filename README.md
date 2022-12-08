@@ -1,9 +1,10 @@
-Set subtitle for location to level_name
-Add other filter options like days, bofs
-clear title when clearing the webview
-add buttons for charter, minutes, video, slides, drafts, related drafts
-parse presentation slides into core data
-core data background context
+*** TODO ***
+
+1. Add other filter options like days, bofs
+2. clear title when clearing the webview
+3. core data background context
+4. fetch presentation slides from menu button
+5. select schedule, filter, select session, then back button and filter button is still selected but all sessions show up
 
 IETF colors:
 	gray: 0xc0c0c0
