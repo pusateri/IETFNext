@@ -65,8 +65,12 @@ struct DetailView: View {
                 Menu {
                     ForEach(slideArray, id: \.self) { p in
                         Button(action: {
+                            if let meeting = selectedMeeting {
+                                let urlString = "https://www.ietf.org/proceedings/\(meeting.number!)/slides/\(p.name!)-\(p.rev!).pdf"
+                                loadURL = URL(string: urlString)!
+                            }
                         }) {
-                            Text(p.title!)
+                            Label(p.title!, systemImage: "square.stack")
                         }
                     }
                 }
