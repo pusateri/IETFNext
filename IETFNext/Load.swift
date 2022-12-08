@@ -415,6 +415,38 @@ private func updateGroup(context: NSManagedObjectContext, group: JSONGroup) -> G
     return g
 }
 
+private func updatePresentation(context: NSManagedObjectContext, presentation: JSONPresentation) -> Presentation? {
+    let p: Presentation!
+
+    let fetchPresentation: NSFetchRequest<Presentation> = Presentation.fetchRequest()
+    fetchPresentation.predicate = NSPredicate(format: "resource_uri = %@", presentation.resource_uri)
+
+    let results = try? context.fetch(fetchPresentation)
+
+    if results?.count == 0 {
+        // here you are inserting
+        p = Presentation(context: context)
+        p.resource_uri = presentation.resource_uri
+    } else {
+        // here you are updating
+        p = results?.first
+    }
+    if p.name != presentation.name {
+        p.name = presentation.name
+    }
+    if p.order != presentation.order {
+        p.order = presentation.order
+    }
+    if p.title != presentation.title {
+        p.title = presentation.title
+    }
+    if p.rev != presentation.rev {
+        p.rev = presentation.rev
+    }
+
+    return p
+}
+
 private func updateSession(context: NSManagedObjectContext, baseURL: URL, dayFormatter: DateFormatter, rangeFormatter: DateFormatter, meeting: Meeting, session: JSONSession) {
 
     let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
@@ -510,6 +542,16 @@ private func updateSession(context: NSManagedObjectContext, baseURL: URL, dayFor
         s.meeting = meeting
         save = true
     }
+
+    var new: Set<Presentation> = Set()
+    if let new_json = session.presentations {
+        for presentation in new_json {
+            if let p = updatePresentation(context:context, presentation: presentation) {
+                new.insert(p)
+            }
+        }
+    }
+    s.presentations = new as NSSet
 
     if save {
         do {

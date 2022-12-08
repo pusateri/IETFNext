@@ -7,16 +7,29 @@
 
 import SwiftUI
 
-
 struct DetailView: View {
     @State private var showingOptions = false
-
+    private var slideArray: [Presentation] = []
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
     @Binding var loadURL: URL?
     @Binding var title: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+
+        self._selectedMeeting = selectedMeeting
+        self._selectedSession = selectedSession
+        self._loadURL = loadURL
+        self._title = title
+        self._columnVisibility = columnVisibility
+
+        if let session = selectedSession.wrappedValue {
+            if let slides: Set<Presentation> = session.presentations as! Set<Presentation>? {
+                slideArray = slides.sorted(by: {$0.order < $1.order})
+            }
+        }
+    }
     var body: some View {
         WebView(url: $loadURL)
         .navigationBarTitleDisplayMode(.inline)
@@ -49,13 +62,11 @@ struct DetailView: View {
             }
             ToolbarItem {
                 Menu {
-                    Button(action: {
-                    }) {
-                        Text("First Presentation")
-                    }
-                    Button(action: {
-                    }) {
-                        Text("Second Presentation")
+                    ForEach(slideArray, id: \.self) { p in
+                        Button(action: {
+                        }) {
+                            Text(p.title!)
+                        }
                     }
                 }
                 label: {
@@ -113,7 +124,6 @@ struct DetailView: View {
                     }
                     Button(action: {
                         if let session = selectedSession {
-                            //
                             if let group = session.group?.acronym {
                                 loadURL = URL(string: "https://datatracker.ietf.org/doc/charter-ietf-\(group)/")
                             } else {

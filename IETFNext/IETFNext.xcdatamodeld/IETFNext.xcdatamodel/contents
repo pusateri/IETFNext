@@ -49,7 +49,7 @@
     <entity name="Presentation" representedClassName="Presentation" syncable="YES" codeGenerationType="class">
         <attribute name="name" attributeType="String"/>
         <attribute name="order" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="resource_uri" attributeType="URI"/>
+        <attribute name="resource_uri" attributeType="String"/>
         <attribute name="rev" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="session" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Session" inverseName="presentations" inverseEntity="Session"/>
