@@ -10,6 +10,7 @@ import CoreData
 
 struct LocationListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.horizontalSizeClass) var sizeClass
     @SectionedFetchRequest<String, Location> var fetchRequest: SectionedFetchResults<String, Location>
     @Binding var selectedLocation: Location?
     @Binding var selectedMeeting: Meeting?
@@ -85,7 +86,7 @@ struct LocationListView: View {
             if let location = selectedLocation {
                 if let name = location.name {
                     if let level = location.level_name {
-                        if level == "Uncategorized" {
+                        if sizeClass == .compact || level == "Uncategorized" {
                             title = name
                         } else {
                             title = "\(level) - \(name)"

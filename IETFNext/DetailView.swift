@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct DetailView: View {
+    @Environment(\.horizontalSizeClass) var sizeClass
     @State private var showingOptions = false
     private var slideArray: [Presentation] = []
     @Binding var selectedMeeting: Meeting?
@@ -24,7 +25,10 @@ struct DetailView: View {
         self._title = title
         self._columnVisibility = columnVisibility
 
-        if let session = selectedSession.wrappedValue {
+        updateSlides()
+    }
+    mutating func updateSlides() {
+        if let session = selectedSession {
             if let slides: Set<Presentation> = session.presentations as! Set<Presentation>? {
                 slideArray = slides.sorted(by: {$0.order < $1.order})
             }
@@ -35,12 +39,9 @@ struct DetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text(title)
-                    .font(.title2)
-                    .bold()
+                Text(title).bold()
             }
-            if UIDevice.current.userInterfaceIdiom == .pad  ||
-                UIDevice.current.userInterfaceIdiom == .mac {
+            if sizeClass == .regular {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         switch (columnVisibility) {
