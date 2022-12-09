@@ -8,6 +8,15 @@
 import SwiftUI
 import CoreData
 
+extension Bundle {
+    var releaseVersionNumber: String {
+        return infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
+    }
+    var buildVersionNumber: String {
+        return infoDictionary?["CFBundleVersion"] as? String ?? "?"
+    }
+}
+
 public struct Agenda: Identifiable, Hashable {
     public let id: Int32
     public let desc: String
@@ -72,7 +81,7 @@ struct ContentView: View {
                         }) {
                             Label("Change Meeting", systemImage: "airplane.departure")
                         }
-                        Label("Version 1.1", systemImage: "v.circle")
+                        Label("Version \(Bundle.main.releaseVersionNumber).\(Bundle.main.buildVersionNumber) (\(Git.kRevisionNumber))", systemImage: "v.circle")
                     }
                     label: {
                         Label("More", systemImage: "ellipsis.circle")

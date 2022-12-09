@@ -12,6 +12,7 @@
 		F8E127C0293EA7A4004A35E8 /* SessionListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */; };
 		F8E127C22940E254004A35E8 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127C12940E254004A35E8 /* DetailView.swift */; };
 		F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127C52942BF18004A35E8 /* DocumentListView.swift */; };
+		F8E127C92943F13B004A35E8 /* Revision.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127C82943F13B004A35E8 /* Revision.swift */; };
 		F8E9B99D2934101200CA6F09 /* IETFNextApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */; };
 		F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B99E2934101200CA6F09 /* Persistence.swift */; };
 		F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */; };
@@ -52,6 +53,7 @@
 		F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListFilteredView.swift; sourceTree = "<group>"; };
 		F8E127C12940E254004A35E8 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		F8E127C52942BF18004A35E8 /* DocumentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListView.swift; sourceTree = "<group>"; };
+		F8E127C82943F13B004A35E8 /* Revision.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Revision.swift; sourceTree = SOURCE_ROOT; };
 		F8E9B9992934101200CA6F09 /* IETFNext.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IETFNext.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextApp.swift; sourceTree = "<group>"; };
 		F8E9B99E2934101200CA6F09 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 		F8E9B99B2934101200CA6F09 /* IETFNext */ = {
 			isa = PBXGroup;
 			children = (
+				F8E127C82943F13B004A35E8 /* Revision.swift */,
 				F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */,
 				F8E9B99E2934101200CA6F09 /* Persistence.swift */,
 				F8E127BB293BFE1B004A35E8 /* AreaColors.swift */,
@@ -175,6 +178,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F8E9B9C32934101300CA6F09 /* Build configuration list for PBXNativeTarget "IETFNext" */;
 			buildPhases = (
+				F8E127C72943EF86004A35E8 /* Git Run Script */,
 				F8E9B9952934101200CA6F09 /* Sources */,
 				F8E9B9962934101200CA6F09 /* Frameworks */,
 				F8E9B9972934101200CA6F09 /* Resources */,
@@ -293,6 +297,28 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		F8E127C72943EF86004A35E8 /* Git Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Git Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "REV=`git rev-parse --verify --short HEAD 2>/dev/null`\necho \"struct Git { static let kRevisionNumber=\\\"$REV\\\" }\" > ${PROJECT_DIR}/Revision.swift\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		F8E9B9952934101200CA6F09 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -306,6 +332,7 @@
 				F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */,
 				F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */,
 				F8E127C0293EA7A4004A35E8 /* SessionListFilteredView.swift in Sources */,
+				F8E127C92943F13B004A35E8 /* Revision.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
 				F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */,
 				F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */,
@@ -485,7 +512,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNext;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -523,7 +550,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNext;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
