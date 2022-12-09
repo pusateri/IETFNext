@@ -20,6 +20,7 @@ struct ContentView: View {
     @State var selectedLocation: Location?
     @State var loadURL: URL? = nil
     @State var title: String = ""
+    @State var favoritesOnly: Bool = false
 
     @ViewBuilder
     var first_header: some View {
@@ -34,7 +35,7 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List() {
                 Section(header: first_header) {
-                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title)) {
+                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, favoritesOnly: $favoritesOnly)) {
                         HStack {
                             Image(systemName: "calendar")
                                 .frame(width: 32, height: 32) // constant width left aligns text
@@ -73,7 +74,7 @@ struct ContentView: View {
                 }
             }
         } content: {
-            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title)
+            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, favoritesOnly: $favoritesOnly)
         } detail: {
             DetailView(
                 selectedMeeting:$selectedMeeting,

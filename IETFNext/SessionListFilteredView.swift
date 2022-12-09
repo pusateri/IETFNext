@@ -11,27 +11,41 @@ import CoreData
 struct SessionListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
-    @State var favoritesOnly: Bool = false
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
     @Binding var loadURL: URL?
     @Binding var title: String
+    @Binding var favoritesOnly: Bool
 
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>) {
-        _fetchRequest = SectionedFetchRequest<String, Session>(
-            sectionIdentifier: \.day!,
-            sortDescriptors: [
-                NSSortDescriptor(keyPath: \Session.start, ascending: true),
-                NSSortDescriptor(keyPath: \Session.end, ascending: false),
-            ],
-            predicate: NSPredicate(format: "meeting.number = %@", selectedMeeting.wrappedValue?.number ?? "0"),
-            animation: .default
-        )
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, favoritesOnly: Binding<Bool>) {
+
+        if favoritesOnly.wrappedValue == false {
+            _fetchRequest = SectionedFetchRequest<String, Session> (
+                sectionIdentifier: \.day!,
+                sortDescriptors: [
+                    NSSortDescriptor(keyPath: \Session.start, ascending: true),
+                    NSSortDescriptor(keyPath: \Session.end, ascending: false),
+                ],
+                predicate: NSPredicate(format: "meeting.number = %@", selectedMeeting.wrappedValue?.number ?? "0"),
+                animation: .default
+            )
+        } else {
+            _fetchRequest = SectionedFetchRequest<String, Session> (
+                sectionIdentifier: \.day!,
+                sortDescriptors: [
+                    NSSortDescriptor(keyPath: \Session.start, ascending: true),
+                    NSSortDescriptor(keyPath: \Session.end, ascending: false),
+                ],
+                predicate: NSPredicate(format: "meeting.number = %@ AND favorite = %d", selectedMeeting.wrappedValue?.number ?? "0", true),
+                animation: .default
+            )
+        }
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
         self._loadURL = loadURL
         self._title = title
+        self._favoritesOnly = favoritesOnly
     }
 
     var body: some View {
