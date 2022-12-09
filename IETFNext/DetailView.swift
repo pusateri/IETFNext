@@ -10,9 +10,8 @@ import SwiftUI
 struct DetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) var sizeClass
-    @FetchRequest<Document> var docRequest: FetchedResults<Document>
     @FetchRequest<Presentation> var presentationRequest: FetchedResults<Presentation>
-    @State private var showingOptions = false
+    @State private var showingDocuments = false
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
     @Binding var loadURL: URL?
@@ -21,14 +20,6 @@ struct DetailView: View {
 
     init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
 
-        _docRequest = FetchRequest<Document>(
-            sortDescriptors: [
-                NSSortDescriptor(keyPath: \Document.name, ascending: true),
-            ],
-            // placeholder predicate
-            predicate: NSPredicate(format: "group.acronym = %@", selectedSession.wrappedValue?.group?.acronym! ?? "0"),
-            animation: .default
-        )
         _presentationRequest = FetchRequest<Presentation>(
             sortDescriptors: [
                 NSSortDescriptor(keyPath: \Presentation.order, ascending: true),
@@ -89,19 +80,11 @@ struct DetailView: View {
                 }
             }
             ToolbarItem {
-                Menu {
-                    ForEach(docRequest, id: \.self) { d in
-                        Button(action: {
-                            // htmlized
-                            //let urlString = "https://datatracker.ietf.org/doc/html/\(d.name!)-\(d.rev!)"
-                            let urlString = "https://www.ietf.org/archive/id/\(d.name!)-\(d.rev!).html"
-                            loadURL = URL(string: urlString)!
-                        }) {
-                            Text(d.title!)
-                        }
+                Button(action: {
+                    if let _ = selectedSession {
+                        showingDocuments.toggle()
                     }
-                }
-                label: {
+                }) {
                     Label("Documents", systemImage: "doc")
                 }
             }
@@ -167,15 +150,19 @@ struct DetailView: View {
                 }
             }
         }
+        .sheet(isPresented: $showingDocuments) {
+            if let session = selectedSession {
+                if let wg = session.group?.acronym {
+                    DocumentListView(wg: wg, loadURL:$loadURL)
+                }
+            }
+        }
         .onChange(of: selectedMeeting) { newValue in
             loadURL = URL(string: "about:blank")!
         }
         .onChange(of: selectedSession) { newValue in
             if let session = selectedSession {
                 presentationRequest.nsPredicate = NSPredicate(format: "session = %@", session)
-                if let group = session.group {
-                    docRequest.nsPredicate = NSPredicate(format: "group = %@", group)
-                }
             }
         }
     }

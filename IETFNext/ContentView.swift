@@ -7,17 +7,8 @@
 
 import SwiftUI
 import CoreData
-/*
-extension UISplitViewController {
-    open override func viewDidLoad() {
-        preferredDisplayMode = UISplitViewController.DisplayMode.oneBesideSecondary
 
-        // remove sidebar button, make sidebar always appear !
-       presentsWithGesture = displayMode != .oneBesideSecondary
 
-    }
-}
-*/
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State private var showingMeetings = false

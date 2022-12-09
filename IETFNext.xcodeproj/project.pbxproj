@@ -11,6 +11,7 @@
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E127C0293EA7A4004A35E8 /* SessionListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */; };
 		F8E127C22940E254004A35E8 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127C12940E254004A35E8 /* DetailView.swift */; };
+		F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127C52942BF18004A35E8 /* DocumentListView.swift */; };
 		F8E9B99D2934101200CA6F09 /* IETFNextApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */; };
 		F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B99E2934101200CA6F09 /* Persistence.swift */; };
 		F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */; };
@@ -50,6 +51,7 @@
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
 		F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListFilteredView.swift; sourceTree = "<group>"; };
 		F8E127C12940E254004A35E8 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		F8E127C52942BF18004A35E8 /* DocumentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListView.swift; sourceTree = "<group>"; };
 		F8E9B9992934101200CA6F09 /* IETFNext.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IETFNext.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextApp.swift; sourceTree = "<group>"; };
 		F8E9B99E2934101200CA6F09 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				F8E127BB293BFE1B004A35E8 /* AreaColors.swift */,
 				F8E9B9A32934101200CA6F09 /* ContentView.swift */,
 				F8E127C12940E254004A35E8 /* DetailView.swift */,
+				F8E127C52942BF18004A35E8 /* DocumentListView.swift */,
 				F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */,
 				F8E9BA102935624100CA6F09 /* LocationListView.swift */,
 				F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */,
@@ -304,6 +307,7 @@
 				F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */,
 				F8E127C0293EA7A4004A35E8 /* SessionListFilteredView.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
+				F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */,
 				F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */,
 				F8E9BA172937EB2C00CA6F09 /* SessionListRowView.swift in Sources */,
 				F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */,
