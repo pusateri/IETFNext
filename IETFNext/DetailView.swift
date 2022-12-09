@@ -111,6 +111,8 @@ struct DetailView: View {
                     }) {
                         Label("View Minutes", systemImage: "clock")
                     }
+                    .disabled(selectedSession?.minutes == nil)
+                    /*
                     Button(action: {
                         loadURL = URL(string: "about:blank")!
                     }) {
@@ -121,6 +123,7 @@ struct DetailView: View {
                     }) {
                         Label("Listen Audio", systemImage: "speaker.wave.3")
                     }
+                     */
                     Button(action: {
                         if let session = selectedSession {
                             if let group = session.group?.acronym {

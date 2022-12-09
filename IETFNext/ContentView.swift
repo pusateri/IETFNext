@@ -106,14 +106,6 @@ struct ContentView: View {
             }
         }
     }
-
-    private func agendaForGroup(context: NSManagedObjectContext, group: Group) -> URL {
-        if let url = URL(string: "https://datatracker.ietf.org/meeting/114/materials/agenda-114-emailcore-01") {
-            return url
-        } else {
-            return URL(string: "about:")!
-        }
-    }
 }
 
 
