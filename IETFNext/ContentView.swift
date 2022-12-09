@@ -8,6 +8,11 @@
 import SwiftUI
 import CoreData
 
+public struct Agenda: Identifiable, Hashable {
+    public let id: Int32
+    public let desc: String
+    public let url: URL
+}
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -21,6 +26,7 @@ struct ContentView: View {
     @State var loadURL: URL? = nil
     @State var title: String = ""
     @State var favoritesOnly: Bool = false
+    @State var agendas: [Agenda] = []
 
     @ViewBuilder
     var first_header: some View {
@@ -35,7 +41,7 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List() {
                 Section(header: first_header) {
-                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, favoritesOnly: $favoritesOnly)) {
+                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, favoritesOnly: $favoritesOnly, agendas: $agendas)) {
                         HStack {
                             Image(systemName: "calendar")
                                 .frame(width: 32, height: 32) // constant width left aligns text
@@ -74,14 +80,15 @@ struct ContentView: View {
                 }
             }
         } content: {
-            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, favoritesOnly: $favoritesOnly)
+            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, favoritesOnly: $favoritesOnly, agendas: $agendas)
         } detail: {
             DetailView(
                 selectedMeeting:$selectedMeeting,
                 selectedSession:$selectedSession,
                 loadURL:$loadURL,
                 title:$title,
-                columnVisibility:$columnVisibility)
+                columnVisibility:$columnVisibility,
+                agendas: $agendas)
         }
         .sheet(isPresented: $showingMeetings) {
             MeetingListView(selectedMeeting: $selectedMeeting)

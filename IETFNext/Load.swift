@@ -188,6 +188,16 @@ private extension DateFormatter {
     }()
 }
 
+public func findSessionsForGroup(context: NSManagedObjectContext, meeting: Meeting, group: Group) -> [Session]? {
+
+    let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
+    fetchSession.predicate = NSPredicate(format: "meeting = %@ AND group = %@", meeting, group)
+    fetchSession.sortDescriptors = [
+        NSSortDescriptor(keyPath: \Session.start, ascending: true)
+        ]
+    return try? context.fetch(fetchSession)
+}
+
 public func loadData(meeting: Meeting, context: NSManagedObjectContext) async {
     let baseURL = URL(string: "https://datatracker.ietf.org")
     guard let url = URL(string: "/meeting/\(meeting.number!)/agenda.json", relativeTo:baseURL) else {

@@ -8,6 +8,14 @@
 import SwiftUI
 import CoreData
 
+
+extension Sequence where Iterator.Element: Hashable {
+    func unique() -> [Iterator.Element] {
+        var seen: Set<Iterator.Element> = []
+        return filter { seen.insert($0).inserted }
+    }
+}
+
 struct SessionListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
@@ -16,9 +24,10 @@ struct SessionListFilteredView: View {
     @Binding var loadURL: URL?
     @Binding var title: String
     @Binding var favoritesOnly: Bool
+    @Binding var agendas: [Agenda]
 
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, favoritesOnly: Binding<Bool>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, favoritesOnly: Binding<Bool>, agendas: Binding<[Agenda]>) {
 
         if favoritesOnly.wrappedValue == false {
             _fetchRequest = SectionedFetchRequest<String, Session> (
@@ -46,6 +55,7 @@ struct SessionListFilteredView: View {
         self._loadURL = loadURL
         self._title = title
         self._favoritesOnly = favoritesOnly
+        self._agendas = agendas
     }
 
     var body: some View {
@@ -96,19 +106,26 @@ struct SessionListFilteredView: View {
             }
         }
         .onChange(of: selectedSession) { newValue in
-            if let session = selectedSession {
-                if let group = session.group {
-                    if let wg = group.acronym {
-                        title = wg
+            if let meeting = selectedMeeting {
+                if let session = selectedSession {
+                    if let group = session.group {
+                        // find all agendas for all sessions in the same group
+                        let all_sessions = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)
+                        agendas = uniqueAgendasForSessions(sessions: all_sessions)
+
+                        if let wg = group.acronym {
+                            // update the title and load the corresponding documents
+                            title = wg
+                        }
                         Task {
                             await loadDrafts(context:viewContext, limit:0, offset:0, group:group)
                         }
                     }
-                }
-                if let agenda = session.agenda {
-                    loadURL = agenda
-                } else {
-                    loadURL = URL(string: "about:blank")!
+                    if let agenda = session.agenda {
+                        loadURL = agenda
+                    } else {
+                        loadURL = URL(string: "about:blank")!
+                    }
                 }
             }
         }
@@ -122,6 +139,34 @@ struct SessionListFilteredView: View {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@ AND favorite = %d", meeting.number!, true)
             }
         }
+    }
+
+    // build a list of agenda items, number them only if more than 1
+    func uniqueAgendasForSessions(sessions: [Session]?) -> [Agenda] {
+        var agendas: [Agenda] = []
+        var seen: Set<String> = []
+        var index: Int32 = 1
+        for session in sessions ?? [] {
+            if let agendaURL = session.agenda {
+                seen.insert(agendaURL.absoluteString)
+            }
+        }
+        let numbered = seen.count > 1
+        seen = []
+        for session in sessions ?? [] {
+            if let agendaURL = session.agenda {
+                if !seen.contains(agendaURL.absoluteString) {
+                    seen.insert(agendaURL.absoluteString)
+                    var desc: String = "View Agenda"
+                    if numbered {
+                        desc = "View Agenda \(index)"
+                    }
+                    agendas.append(Agenda(id:index, desc:desc, url:agendaURL))
+                    index += 1
+                }
+            }
+        }
+        return agendas
     }
 }
 

@@ -19,21 +19,6 @@ struct GroupListFilteredView: View {
     @Binding var title: String
     @State private var searchText = ""
 
-    private func findSessionForGroup(context: NSManagedObjectContext, meeting: Meeting, group: Group) -> Session? {
-        let session: Session?
-
-        let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
-        fetchSession.predicate = NSPredicate(format: "meeting = %@ AND group = %@", meeting, group)
-        let results = try? context.fetch(fetchSession)
-
-        if results?.count == 0 {
-            session = nil
-        } else {
-            session = results?.first
-        }
-        return session
-    }
-
     init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>) {
         _fetchRequest = SectionedFetchRequest<String, Group>(
             sectionIdentifier: \.areaKey!,
@@ -101,7 +86,8 @@ struct GroupListFilteredView: View {
             searchText = ""
             if let group = selectedGroup {
                 if let meeting = selectedMeeting {
-                    selectedSession = findSessionForGroup(context:viewContext, meeting:meeting, group:group)
+                    let sessions = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)
+                    selectedSession = sessions?.first ?? nil
                 }
             }
         }

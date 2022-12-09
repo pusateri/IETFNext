@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct DetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) var sizeClass
@@ -17,8 +18,9 @@ struct DetailView: View {
     @Binding var loadURL: URL?
     @Binding var title: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
+    @Binding var agendas: [Agenda]
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
 
         _presentationRequest = FetchRequest<Presentation>(
             sortDescriptors: [
@@ -33,6 +35,7 @@ struct DetailView: View {
         self._loadURL = loadURL
         self._title = title
         self._columnVisibility = columnVisibility
+        self._agendas = agendas
     }
 
     var body: some View {
@@ -90,16 +93,12 @@ struct DetailView: View {
             }
             ToolbarItem {
                 Menu {
-                    Button(action: {
-                        if let session = selectedSession {
-                            if let agenda = session.agenda {
-                                loadURL = agenda
-                            } else {
-                                loadURL = URL(string: "about:blank")!
-                            }
+                    ForEach(agendas) { agenda in
+                        Button(action: {
+                            loadURL = agenda.url
+                        }) {
+                            Label("\(agenda.desc)", systemImage: "list.bullet.clipboard")
                         }
-                    }) {
-                        Label("View Agenda", systemImage: "list.bullet.clipboard")
                     }
                     Button(action: {
                         if let session = selectedSession {
