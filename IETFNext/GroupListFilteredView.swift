@@ -100,7 +100,6 @@ struct GroupListFilteredView: View {
         .onChange(of: selectedGroup) { newValue in
             searchText = ""
             if let group = selectedGroup {
-                //title = group.acronym!
                 if let meeting = selectedMeeting {
                     selectedSession = findSessionForGroup(context:viewContext, meeting:meeting, group:group)
                 }

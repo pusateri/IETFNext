@@ -100,7 +100,6 @@ struct SessionListFilteredView: View {
                 if let group = session.group {
                     if let wg = group.acronym {
                         title = wg
-                        print(wg)
                         Task {
                             await loadDrafts(context:viewContext, limit:0, offset:0, group:group)
                         }
