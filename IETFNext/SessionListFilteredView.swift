@@ -63,6 +63,7 @@ struct SessionListFilteredView: View {
             Section(header: Text(section.id)) {
                 ForEach(section, id: \.self) { session in
                     SessionListRowView(session: session)
+                        .listRowBackground(session.is_bof ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
                 }
             }
         }

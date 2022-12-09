@@ -51,6 +51,7 @@ struct GroupListFilteredView: View {
                                 .foregroundColor(Color(.gray))
                         }
                     }
+                    .listRowBackground(group.state == "bof" ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
                 }
             }
             .headerProminence(.increased)

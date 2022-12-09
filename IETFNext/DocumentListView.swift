@@ -32,9 +32,10 @@ struct DocumentListView: View {
                     ForEach(documents, id: \.self) { d in
                         VStack(alignment: .leading) {
                             Text(d.title!)
+                                .foregroundColor(.primary)
                             Text(d.name!)
                                 .font(.subheadline)
-                                .foregroundColor(Color(.gray))
+                                .foregroundColor(.secondary)
                         }
                     }
                 }
