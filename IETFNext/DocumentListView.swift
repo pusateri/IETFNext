@@ -27,13 +27,21 @@ struct DocumentListView: View {
 
     var body: some View {
         NavigationView {
-            List(documents, id: \.self, selection: $selectedDocument) { d in
-                VStack {
-                    Text(d.title!)
-                    Text(d.group?.acronym ?? "None")
+            List(selection: $selectedDocument) {
+                Section("Drafts") {
+                    ForEach(documents, id: \.self) { d in
+                        VStack(alignment: .leading) {
+                            Text(d.title!)
+                            Text(d.name!)
+                                .font(.subheadline)
+                                .foregroundColor(Color(.gray))
+                        }
+                    }
                 }
+                .headerProminence(.increased)
             }
-            .navigationTitle("\(wg) Documents")
+            .listStyle(.inset)
+            .navigationTitle("\(wg)")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -46,11 +54,7 @@ struct DocumentListView: View {
         .onChange(of: selectedDocument) { newValue in
             if let d = selectedDocument {
                 dismiss()
-                // htmlized
-                //let urlString = "https://datatracker.ietf.org/doc/html/\(d.name!)-\(d.rev!)"
-                let urlString = "https://www.ietf.org/archive/id/\(d.name!)-\(d.rev!).html"
-                // https://www.ietf.org/archive/id/draft-clemm-nmrg-dist-intent-03.html
-                print(urlString)
+                let urlString = "https://datatracker.ietf.org/doc/html/\(d.name!)-\(d.rev!)"
                 loadURL = URL(string: urlString)!
             }
         }
