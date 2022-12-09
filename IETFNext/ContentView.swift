@@ -42,7 +42,7 @@ struct ContentView: View {
                             Text("Schedule")
                         }
                     }
-                    NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, loadURL: $loadURL, title: $title)) {
+                    NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, selectedSession: $selectedSession, loadURL: $loadURL, title: $title)) {
                         HStack {
                             Image(systemName: "person.3")
                                 .frame(width: 32, height: 32) // constant width left aligns text

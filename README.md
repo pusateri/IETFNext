@@ -3,7 +3,6 @@
 1. Add other filter options like days, bofs
 2. clear title when clearing the webview
 3. core data background context
-4. make group list view load info
 
 IETF colors:
 	gray: 0xc0c0c0

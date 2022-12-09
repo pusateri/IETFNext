@@ -6,17 +6,35 @@
 //
 
 import SwiftUI
+import CoreData
 
 
 struct GroupListFilteredView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @SectionedFetchRequest<String, Group> var fetchRequest: SectionedFetchResults<String, Group>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
+    @Binding var selectedSession: Session?
     @Binding var loadURL: URL?
     @Binding var title: String
     @State private var searchText = ""
 
-    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, loadURL: Binding<URL?>, title: Binding<String>) {
+    private func findSessionForGroup(context: NSManagedObjectContext, meeting: Meeting, group: Group) -> Session? {
+        let session: Session?
+
+        let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
+        fetchSession.predicate = NSPredicate(format: "meeting = %@ AND group = %@", meeting, group)
+        let results = try? context.fetch(fetchSession)
+
+        if results?.count == 0 {
+            session = nil
+        } else {
+            session = results?.first
+        }
+        return session
+    }
+
+    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>) {
         _fetchRequest = SectionedFetchRequest<String, Group>(
             sectionIdentifier: \.areaKey!,
             sortDescriptors: [
@@ -28,6 +46,7 @@ struct GroupListFilteredView: View {
         )
         self._selectedMeeting = selectedMeeting
         self._selectedGroup = selectedGroup
+        self._selectedSession = selectedSession
         self._loadURL = loadURL
         self._title = title
     }
@@ -81,7 +100,10 @@ struct GroupListFilteredView: View {
         .onChange(of: selectedGroup) { newValue in
             searchText = ""
             if let group = selectedGroup {
-                title = group.acronym!
+                //title = group.acronym!
+                if let meeting = selectedMeeting {
+                    selectedSession = findSessionForGroup(context:viewContext, meeting:meeting, group:group)
+                }
             }
         }
         .onChange(of: searchText) { newValue in
