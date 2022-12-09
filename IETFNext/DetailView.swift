@@ -10,9 +10,9 @@ import SwiftUI
 struct DetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) var sizeClass
+    @FetchRequest<Document> var docRequest: FetchedResults<Document>
+    @FetchRequest<Presentation> var presentationRequest: FetchedResults<Presentation>
     @State private var showingOptions = false
-    private var slideArray: [Presentation] = []
-    private var docArray: [Document] = []
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
     @Binding var loadURL: URL?
@@ -21,31 +21,29 @@ struct DetailView: View {
 
     init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
 
+        _docRequest = FetchRequest<Document>(
+            sortDescriptors: [
+                NSSortDescriptor(keyPath: \Document.name, ascending: true),
+            ],
+            // placeholder predicate
+            predicate: NSPredicate(format: "group.acronym = %@", selectedSession.wrappedValue?.group?.acronym! ?? "0"),
+            animation: .default
+        )
+        _presentationRequest = FetchRequest<Presentation>(
+            sortDescriptors: [
+                NSSortDescriptor(keyPath: \Presentation.order, ascending: true),
+            ],
+            // placeholder predicate
+            predicate: NSPredicate(format: "session.group.acronym = %@", selectedSession.wrappedValue?.group?.acronym! ?? "0"),
+            animation: .default
+        )
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
         self._loadURL = loadURL
         self._title = title
         self._columnVisibility = columnVisibility
+    }
 
-        updateDocuments()
-        updateSlides()
-    }
-    mutating func updateDocuments() {
-        if let session = selectedSession {
-            if let group = session.group {
-                if let docs: Set<Document> = group.documents as! Set<Document>? {
-                    docArray = docs.sorted(by: {$0.name! < $1.name!})
-                }
-            }
-        }
-    }
-    mutating func updateSlides() {
-        if let session = selectedSession {
-            if let slides: Set<Presentation> = session.presentations as! Set<Presentation>? {
-                slideArray = slides.sorted(by: {$0.order < $1.order})
-            }
-        }
-    }
     var body: some View {
         WebView(url: $loadURL)
         .navigationBarTitleDisplayMode(.inline)
@@ -75,7 +73,7 @@ struct DetailView: View {
             }
             ToolbarItem {
                 Menu {
-                    ForEach(slideArray, id: \.self) { p in
+                    ForEach(presentationRequest, id: \.self) { p in
                         Button(action: {
                             if let meeting = selectedMeeting {
                                 let urlString = "https://www.ietf.org/proceedings/\(meeting.number!)/slides/\(p.name!)-\(p.rev!).pdf"
@@ -92,7 +90,7 @@ struct DetailView: View {
             }
             ToolbarItem {
                 Menu {
-                    ForEach(docArray, id: \.self) { d in
+                    ForEach(docRequest, id: \.self) { d in
                         Button(action: {
                             // htmlized
                             //let urlString = "https://datatracker.ietf.org/doc/html/\(d.name!)-\(d.rev!)"
@@ -171,6 +169,14 @@ struct DetailView: View {
         }
         .onChange(of: selectedMeeting) { newValue in
             loadURL = URL(string: "about:blank")!
+        }
+        .onChange(of: selectedSession) { newValue in
+            if let session = selectedSession {
+                presentationRequest.nsPredicate = NSPredicate(format: "session = %@", session)
+                if let group = session.group {
+                    docRequest.nsPredicate = NSPredicate(format: "group = %@", group)
+                }
+            }
         }
     }
 }
