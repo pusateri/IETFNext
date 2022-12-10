@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IETF DNSSD Charter (v01)</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <style type="text/css" mdedia="screen">
+      :root {
+          color-scheme: light dark;
+      }
+      pre {
+         font-family: "Roboto Mono", "courier new", courier, monospace;
+         font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <pre>
+Background
+----------
+
+Zero configuration networking protocols are currently well suited to
+discover services within the scope of a single link.  In particular,
+the DNS-SD [RFC 6763] and mDNS [RFC6762] protocol suite (sometimes
+referred to using Apple Computer Inc.'s trademark, Bonjour) are
+widely used for DNS-based service discovery and host name resolution
+on a single link.
+
+The DNS-SD/mDNS protocol suite is used in many scenarios including
+home, campus, and enterprise networks.  However, the zero configuration
+mDNS protocol is constrained to link-local multicast scope by design,
+and therefore cannot be used to discover services on remote links.
+
+In a home network that consists of a single (possibly bridged) link,
+users experience the expected discovery behavior; available services
+appear because all devices share a common link.  However, in multi-link
+home networks (as envisaged by the homenet WG) or in routed campus or
+enterprise networks, devices and users can only discover services on
+the same link, which is a significant limitation.  This has led to
+calls, such as the Educause petition, to develop an appropriate service
+discovery solution to span multiple links or to perform discovery across
+a wide area, not necessarily on directly connected links.
+
+In addition, the "Smart Energy Profile 2 Application Protocol Standard",
+published by ZigBee Alliance and HomePlug Powerline Alliance specifies
+the DNS-SD/mDNS protocol suite as the basis for its method of zero
+configuration service discovery.  However, its use of wireless mesh
+multi-link subnets in conjunction with traditional routed networks will
+require extensions to the DNS-SD/mDNS protocols to allow operation
+across multiple links.
+
+The scenarios in which multi-link service discovery is required may
+be zero configuration environments, environments where administrative
+configuration is supported, or a mixture of the two.
+
+As demand for service discovery across wider area routed networks
+grows, some vendors are beginning to ship proprietary solutions.  It
+is thus both timely and important that efforts to develop improved, 
+scalable, autonomous service discovery solutions for routed networks 
+are coordinated towards producing a single, standards-based solution.
+
+Working Group Description
+-------------------------
+
+The focus of the WG is to develop a solution for extended, scalable 
+DNS-SD.  This work is likely to highlight problems and challenges with 
+naming protocols, as some level of coexistence will be required between 
+local zero configuration name services and those forming part of the 
+global DNS.  It is important that these issues are captured and 
+documented for further analysis; solving those problems is however not 
+within the scope of this WG.
+
+The WG will consider the tradeoffs between reusing/extending existing
+protocols and developing entirely new ones.  It is highly desirable
+that any new solution is backwardly compatible with existing DNS-SD/mDNS
+deployments.  Any solution developed by the dnssd WG must not conflict
+or interfere with the operation of other zero-configuration service and
+naming protocols such as uPnP or LLMNR.  Integration with such protocols
+is out of scope for this WG.
+
+Current zero configuration discovery protocols are constrained to
+operate within a single link, which implicitly limits the scope of
+discovery. In extending service discovery protocols to operate over
+multiple links, devices will inherently become discoverable over a
+wider area, which may introduce security or privacy concerns. The WG
+will consider such concerns when exploring the solution space for
+multi-link service discovery.
+
+To that end, the primary goals of the dnssd WG are as follows:
+
+1. To document a set of requirements for scalable, autonomous
+   DNS-based service discovery in routed, multi-link networks in the
+   following five scenarios:
+      
+   (A) Personal Area networks, e.g., one laptop and one printer.
+       This is the simplest example of a service discovery network,
+       and may or may not have external connectivity. 
+		       
+   (B) Home networks, as envisaged by the homenet WG, consisting of 
+       one or more exit routers, with one or more upstream providers 
+       or networks, and an arbitrary internal topology with 
+       heterogeneous media where routing is automatically configured. 
+       The home network would typically be a single zero configuration 
+       administrative domain with a relatively limited number of 
+       devices. 
+								    
+   (C) Wireless 'hotspot' networks, which may include wireless networks
+       made available in public places, or temporary or permanent
+       infrastructures targeted towards meeting or conference style
+       events, e.g., as provided for IETF meetings.  In such
+       environments other devices may be more likely to be 'hostile'
+       to the user.
+       
+   (D) Enterprise networks, consisting of larger routed networks, 
+       with large numbers of devices, which may be deployments 
+       spanning over multiple sites with multiple upstreams, and
+       one more more administrative domains (depending on internal
+       administrative delegation).  The large majority of the 
+       forwarding and security devices are configured.  These may
+       be commercial or academic networks, with differing levels 
+       of administrative control over certain devices on the network,
+       and BYOD devices commonplace in the campus scenario.
+
+   (E) Mesh networks such as RPL/6LoWPAN, with one or more links per
+       routable prefix, which may or may not have external connectivity.
+       The topology may use technologies including 802.11 wireless, 
+       HomePlug AV and GP, and ZigBee IP. 
+
+   In the above scenarios, the aim is to facilitate service discovery 
+   across the defined site.  It is also desirable that a user or device, 
+   when away from such a site, is still able to discover services 
+   within that site, e.g. a user discovering services in their home 
+   network while remote from it.
+
+   It is also desirable that multiple discovery scopes are supported,
+   from the point of view of either performing discovery within a 
+   specified scope or advertisement within a specified scope, and 
+   being able to discover (enumerate) the set of scopes such that 
+   an application could then choose to do either. It should be noted
+   that scope in this sense might refer to 'building' or 'room' and thus 
+   might have no correlation to network topology.
+
+2. To develop an improved, scalable solution for service discovery 
+   that can operate in multi-link networks, where devices may be
+   in neighboring or non-neighboring links, applicable to
+   the scenarios above.  The solution will consider tradeoffs between
+   reusing/extending existing protocols and developing entirely new
+   protocols. 
+
+   The solution should include documentation or definition of the
+   interfaces that can be implemented, separately to transport of 
+   the information.
+
+3. To document challenges and problems encountered in the coexistence 
+   of zero configuration and global DNS name services in such 
+   multi-link networks, including consideration of both the name 
+   resolution mechanism and the namespace.
+
+It is important that the dnssd WG takes input from stakeholders in
+the scenarios it is considering.  For example, the homenet WG is
+currently evaluating its own requirements for naming and service
+discovery; it is up to the homenet WG as to whether it wishes to
+recommend adoption of the solution developed in the dnssd WG, but
+coordination between the WGs is desirable.
+    </pre>
+  </body>
+</html>
+    
