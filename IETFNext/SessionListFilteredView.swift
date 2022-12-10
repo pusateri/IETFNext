@@ -120,6 +120,7 @@ struct SessionListFilteredView: View {
                         }
                         Task {
                             await loadDrafts(context:viewContext, limit:0, offset:0, group:group)
+                            await loadCharterDocument(context:viewContext, group:group)
                         }
                     }
                     if let agenda = session.agenda {

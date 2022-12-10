@@ -1,0 +1,31 @@
+{
+    "abstract": "DNS-SD Extensions",
+    "ad": "/api/v1/person/person/105099/",
+    "expires": null,
+    "external_url": "",
+    "group": "/api/v1/group/group/1895/",
+    "id": 52110,
+    "intended_std_level": null,
+    "internal_comments": "",
+    "name": "charter-ietf-dnssd",
+    "note": "",
+    "notify": "cheshire@apple.com, kerlyn@ieee.org",
+    "order": 1,
+    "pages": null,
+    "resource_uri": "/api/v1/doc/document/charter-ietf-dnssd/",
+    "rev": "01",
+    "rfc": null,
+    "shepherd": null,
+    "states": [
+        "/api/v1/doc/state/88/"
+    ],
+    "std_level": null,
+    "stream": null,
+    "submissions": [],
+    "tags": [],
+    "time": "2019-03-27T10:48:45",
+    "title": "DNS-SD Extensions",
+    "type": "/api/v1/name/doctypename/charter/",
+    "uploaded_filename": "",
+    "words": null
+}

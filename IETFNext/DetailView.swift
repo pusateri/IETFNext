@@ -12,6 +12,7 @@ struct DetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) var sizeClass
     @FetchRequest<Presentation> var presentationRequest: FetchedResults<Presentation>
+    @FetchRequest<Document> var charterRequest: FetchedResults<Document>
     @State private var showingDocuments = false
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
@@ -30,6 +31,14 @@ struct DetailView: View {
             predicate: NSPredicate(format: "session.group.acronym = %@", selectedSession.wrappedValue?.group?.acronym! ?? "0"),
             animation: .default
         )
+        _charterRequest = FetchRequest<Document>(
+            sortDescriptors: [
+                NSSortDescriptor(keyPath: \Document.time, ascending: false),
+            ],
+            predicate: NSPredicate(format: "(name contains %@) AND (type contains \"charter\")", selectedSession.wrappedValue?.group?.acronym! ?? "0"),
+            animation: .default
+        )
+
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
         self._loadURL = loadURL
@@ -127,14 +136,22 @@ struct DetailView: View {
                     Button(action: {
                         if let session = selectedSession {
                             if let group = session.group?.acronym {
-                                loadURL = URL(string: "https://datatracker.ietf.org/doc/charter-ietf-\(group)/")
+                                if let rev = charterRequest.first?.rev {
+                                    loadURL = URL(string:
+                                                    "https://www.ietf.org/charter/charter-ietf-\(group)-\(rev).txt")
+                                }
                             } else {
                                 loadURL = URL(string: "about:blank")!
                             }
                         }
                     }) {
-                        Label("View Charter", systemImage: "pencil")
+                        if let rev = charterRequest.first?.rev {
+                            Label("View Charter (v\(rev))", systemImage: "pencil")
+                        } else {
+                            Label("View Charter", systemImage: "pencil")
+                        }
                     }
+                    .disabled(charterRequest.first == nil)
                     Button(action: {
                         if let session = selectedSession {
                             if let group = session.group?.acronym {

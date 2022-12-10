@@ -123,7 +123,7 @@ struct Documents: Decodable {
 struct JSONDocument: Decodable {
     let abstract: String
     let ad: String?
-    let expires: Date
+    let expires: Date?
     let external_url: String?
     let group: String?
     let id: Int32
@@ -133,7 +133,7 @@ struct JSONDocument: Decodable {
     let note: String?
     let notify: String?
     let order: Int32
-    let pages: Int32
+    let pages: Int32?
     let resource_uri: String
     let rev: String
     let rfc: String?
@@ -317,6 +317,39 @@ public func loadDrafts(context: NSManagedObjectContext, limit: Int32, offset: In
     }
 }
 
+public func loadCharterDocument(context: NSManagedObjectContext, group: Group) async {
+    let urlString = "https://datatracker.ietf.org/api/v1/doc/document/charter-ietf-\(group.acronym!)/"
+
+    guard let url = URL(string: urlString) else {
+        print("Invalid URL: \(urlString)")
+        return
+    }
+    do {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        do {
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
+            let json_doc = try decoder.decode(JSONDocument.self, from: data)
+
+            updateDocument(context:context, group:group, document:json_doc)
+        } catch DecodingError.dataCorrupted(let context) {
+            print(context)
+        } catch DecodingError.keyNotFound(let key, let context) {
+            print("Key '\(key)' not found:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch DecodingError.valueNotFound(let value, let context) {
+            print("Value '\(value)' not found:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch DecodingError.typeMismatch(let type, let context) {
+            print("Type '\(type)' mismatch:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch {
+            print("error: ", error)
+        }
+    } catch {
+        print("Unexpected Meeting format")
+    }
+}
 private func updateDocument(context: NSManagedObjectContext, group: Group, document: JSONDocument) {
     let fetchDocument: NSFetchRequest<Document> = Document.fetchRequest()
     fetchDocument.predicate = NSPredicate(format: "id = %d", document.id)
@@ -394,9 +427,11 @@ private func updateDocument(context: NSManagedObjectContext, group: Group, docum
         doc.order = document.order
         save = true
     }
-    if doc.pages != document.pages {
-        doc.pages = document.pages
-        save = true
+    if let pages = document.pages {
+        if doc.pages != pages {
+            doc.pages = pages
+            save = true
+        }
     }
     if doc.resource_uri != document.resource_uri {
         doc.resource_uri = document.resource_uri

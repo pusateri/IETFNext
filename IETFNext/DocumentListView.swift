@@ -19,7 +19,7 @@ struct DocumentListView: View {
     init(wg: String, loadURL: Binding<URL?>) {
         _documents = FetchRequest<Document>(
             sortDescriptors: [NSSortDescriptor(keyPath: \Document.name, ascending: true)],
-            predicate: NSPredicate(format: "ANY group.acronym = %@", wg),
+            predicate: NSPredicate(format: "(ANY group.acronym = %@) AND (type contains \"draft\")", wg),
             animation: .default)
         self.wg = wg
         self._loadURL = loadURL

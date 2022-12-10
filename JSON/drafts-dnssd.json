@@ -1,0 +1,141 @@
+{
+    "meta": {
+        "limit": 20,
+        "next": null,
+        "offset": 0,
+        "previous": null,
+        "total_count": 3
+    },
+    "objects": [
+        {
+            "abstract": "   The Service Registration Protocol for DNS-Based Service Discovery\n   uses the standard DNS Update mechanism to enable DNS-Based Service\n   Discovery using only unicast packets.  This makes it possible to\n   deploy DNS Service Discovery without multicast, which greatly\n   improves scalability and improves performance on networks where\n   multicast service is not an optimal choice, particularly 802.11\n   (Wi-Fi) and 802.15.4 (IoT) networks.  DNS-SD Service registration\n   uses public keys and SIG(0) to allow services to defend their\n   registrations against attack.\n",
+            "ad": null,
+            "expires": "2023-04-15T07:53:20",
+            "external_url": "",
+            "group": "/api/v1/group/group/1895/",
+            "id": 87101,
+            "intended_std_level": "/api/v1/name/intendedstdlevelname/ps/",
+            "internal_comments": "",
+            "name": "draft-ietf-dnssd-srp",
+            "note": "",
+            "notify": "dschinazi.ietf@gmail.com",
+            "order": 1,
+            "pages": 32,
+            "resource_uri": "/api/v1/doc/document/draft-ietf-dnssd-srp/",
+            "rev": "17",
+            "rfc": null,
+            "shepherd": "/api/v1/person/email/dschinazi.ietf@gmail.com/",
+            "states": [
+                "/api/v1/doc/state/1/",
+                "/api/v1/doc/state/150/",
+                "/api/v1/doc/state/42/"
+            ],
+            "std_level": null,
+            "stream": "/api/v1/name/streamname/ietf/",
+            "submissions": [
+                "/api/v1/submit/submission/99501/",
+                "/api/v1/submit/submission/102551/",
+                "/api/v1/submit/submission/105479/",
+                "/api/v1/submit/submission/113517/",
+                "/api/v1/submit/submission/113526/",
+                "/api/v1/submit/submission/115230/",
+                "/api/v1/submit/submission/115951/",
+                "/api/v1/submit/submission/116409/",
+                "/api/v1/submit/submission/116639/",
+                "/api/v1/submit/submission/116687/",
+                "/api/v1/submit/submission/120496/",
+                "/api/v1/submit/submission/122118/",
+                "/api/v1/submit/submission/122204/",
+                "/api/v1/submit/submission/125877/",
+                "/api/v1/submit/submission/127555/",
+                "/api/v1/submit/submission/128531/",
+                "/api/v1/submit/submission/128949/",
+                "/api/v1/submit/submission/129060/"
+            ],
+            "tags": [
+                "/api/v1/name/doctagname/rev-wg/"
+            ],
+            "time": "2022-10-12T07:53:20",
+            "title": "Service Registration Protocol for DNS-Based Service Discovery",
+            "type": "/api/v1/name/doctypename/draft/",
+            "uploaded_filename": "",
+            "words": null
+        },
+        {
+            "abstract": "   This document describes an EDNS(0) option that can be used by DNS\n   Update requestors and DNS servers to include a lease lifetime in a\n   DNS Update or response, allowing a server to garbage collect stale\n   resource records that have been added by DNS Updates\n",
+            "ad": null,
+            "expires": "2023-04-10T08:47:05",
+            "external_url": "",
+            "group": "/api/v1/group/group/1895/",
+            "id": 104560,
+            "intended_std_level": null,
+            "internal_comments": "",
+            "name": "draft-ietf-dnssd-update-lease",
+            "note": "",
+            "notify": "chris.box.ietf@gmail.com",
+            "order": 1,
+            "pages": 9,
+            "resource_uri": "/api/v1/doc/document/draft-ietf-dnssd-update-lease/",
+            "rev": "03",
+            "rfc": null,
+            "shepherd": "/api/v1/person/email/chris.box.ietf@gmail.com/",
+            "states": [
+                "/api/v1/doc/state/1/",
+                "/api/v1/doc/state/150/",
+                "/api/v1/doc/state/42/"
+            ],
+            "std_level": null,
+            "stream": "/api/v1/name/streamname/ietf/",
+            "submissions": [
+                "/api/v1/submit/submission/122119/",
+                "/api/v1/submit/submission/125876/",
+                "/api/v1/submit/submission/127532/",
+                "/api/v1/submit/submission/128948/"
+            ],
+            "tags": [
+                "/api/v1/name/doctagname/rev-wglc/"
+            ],
+            "time": "2022-10-10T16:29:35",
+            "title": "An EDNS(0) option to negotiate Leases on DNS Updates",
+            "type": "/api/v1/name/doctypename/draft/",
+            "uploaded_filename": "",
+            "words": null
+        },
+        {
+            "abstract": "   An Advertising Proxy advertises the contents of a DNS zone, for\n   example maintained using the DNSSD Service Registration Protocol\n   (SRP), using multicast DNS.  This allows legacy clients to discover\n   services registered with SRP using multicast DNS.\n",
+            "ad": null,
+            "expires": "2023-01-12T11:43:59",
+            "external_url": "",
+            "group": "/api/v1/group/group/1895/",
+            "id": 106082,
+            "intended_std_level": null,
+            "internal_comments": "",
+            "name": "draft-ietf-dnssd-advertising-proxy",
+            "note": "",
+            "notify": "",
+            "order": 1,
+            "pages": 14,
+            "resource_uri": "/api/v1/doc/document/draft-ietf-dnssd-advertising-proxy/",
+            "rev": "01",
+            "rfc": null,
+            "shepherd": null,
+            "states": [
+                "/api/v1/doc/state/1/",
+                "/api/v1/doc/state/150/",
+                "/api/v1/doc/state/38/"
+            ],
+            "std_level": null,
+            "stream": "/api/v1/name/streamname/ietf/",
+            "submissions": [
+                "/api/v1/submit/submission/123520/",
+                "/api/v1/submit/submission/127530/"
+            ],
+            "tags": [],
+            "time": "2022-07-11T11:43:59",
+            "title": "Advertising Proxy for DNS-SD Service Registration Protocol",
+            "type": "/api/v1/name/doctypename/draft/",
+            "uploaded_filename": "",
+            "words": null
+        }
+    ]
+}
