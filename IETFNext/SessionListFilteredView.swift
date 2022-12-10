@@ -60,7 +60,7 @@ struct SessionListFilteredView: View {
 
     var body: some View {
         List(fetchRequest, selection: $selectedSession) { section in
-            Section(header: Text(section.id)) {
+            Section(header: Text(section.id).foregroundColor(.primary)) {
                 ForEach(section, id: \.self) { session in
                     SessionListRowView(session: session)
                         .listRowBackground(session.is_bof ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
@@ -73,10 +73,11 @@ struct SessionListFilteredView: View {
             ToolbarItem(placement: .principal) {
                 VStack {
                     Text("Schedule")
+                        .foregroundColor(.primary)
                         .font(.headline)
                     Text("\(favoritesOnly ? "Filter: Favorites" : "")")
                         .font(.footnote)
-                        .foregroundColor(Color.blue)
+                        .foregroundColor(.accentColor)
                 }
             }
             ToolbarItem(placement: .bottomBar) {
@@ -85,7 +86,7 @@ struct SessionListFilteredView: View {
                         if let city = meeting.city {
                             Text("IETF \(number) (\(city))")
                                 .font(.subheadline)
-                                .foregroundColor(Color.blue)
+                                .foregroundColor(.accentColor)
                         }
                     }
                 }

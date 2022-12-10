@@ -71,7 +71,7 @@ struct LocationListView: View {
                         if let city = meeting.city {
                             Text("IETF \(number) (\(city))")
                                 .font(.subheadline)
-                                .foregroundColor(Color.blue)
+                                .foregroundColor(.accentColor)
                         }
                     }
                 }

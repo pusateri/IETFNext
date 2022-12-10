@@ -38,7 +38,7 @@ struct GroupListFilteredView: View {
 
     var body: some View {
         List(fetchRequest, selection: $selectedGroup) { section in
-            Section(header: Text(section.id.uppercased()).foregroundColor(Color.blue)) {
+            Section(header: Text(section.id.uppercased()).foregroundColor(.accentColor)) {
                 ForEach(section, id: \.self) { group in
                     HStack {
                         Rectangle()
@@ -46,9 +46,10 @@ struct GroupListFilteredView: View {
                             .frame(width: 8, height: 32)
                         VStack(alignment: .leading) {
                             Text(group.acronym!)
+                                .foregroundColor(.primary)
                                 .bold()
                             Text(group.name!)
-                                .foregroundColor(Color(.gray))
+                                .foregroundColor(.secondary)
                         }
                     }
                     .listRowBackground(group.state == "bof" ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
@@ -72,7 +73,7 @@ struct GroupListFilteredView: View {
                         if let city = meeting.city {
                             Text("IETF \(number) (\(city))")
                                 .font(.subheadline)
-                                .foregroundColor(Color.blue)
+                                .foregroundColor(.accentColor)
                         }
                     }
                 }

@@ -28,6 +28,7 @@ struct SessionListRowView: View {
                     .foregroundColor(.primary)
                 HStack {
                     Text("\(session.timerange!)")
+                        .foregroundColor(.primary)
                     Spacer()
                     if let loc = session.location {
                         Text("\(loc.name!)")
