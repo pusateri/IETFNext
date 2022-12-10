@@ -8,13 +8,12 @@
 6. push the schedule controller on iPhone startup?
 7. keep track of all sessions per group
 8. Find a way to select session favorites from detail view
-9. Find a way to get native HTML for drafts
-10. print pdf version of drafts
-11. keep downloaded folder of drafts, slides that can be purged
-12. add bofs to group list search filter
-13. add settings when add local time
-14. crash sometimes when filter by favorites and then select Session
-15. webview background loading
+9. print pdf version of drafts
+10. keep downloaded folder of drafts, slides that can be purged
+11. add bofs to group list search filter
+12. add settings when add local time
+13. crash sometimes when filter by favorites and then select Session
+14. webview background loading
 
 IETF colors:
 	gray: 0xc0c0c0

@@ -55,7 +55,10 @@ struct DocumentListView: View {
         .onChange(of: selectedDocument) { newValue in
             if let d = selectedDocument {
                 dismiss()
-                let urlString = "https://datatracker.ietf.org/doc/html/\(d.name!)-\(d.rev!)"
+                // htmlized
+                // let urlString = "https://datatracker.ietf.org/doc/html/\(d.name!)-\(d.rev!)"
+                // native html
+                let urlString = "https://www.ietf.org/archive/id/\(d.name!)-\(d.rev!).html"
                 loadURL = URL(string: urlString)!
             }
         }
