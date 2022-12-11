@@ -18,6 +18,7 @@ extension WKWebView {
 
 struct WebView: UIViewRepresentable {
     @Binding var url: URL?
+    @Binding var html: String
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -34,6 +35,8 @@ struct WebView: UIViewRepresentable {
         uiView.navigationDelegate = context.coordinator
         if let url = url {
             uiView.load(url)
+        } else if html.count != 0 {
+            uiView.loadHTMLString(html, baseURL: nil)
         }
     }
 
@@ -43,7 +46,7 @@ struct WebView: UIViewRepresentable {
                 decisionHandler(.allow)
                 return
             }
-// /doc/html/draft-clemm-nmrg-dist-intent-03
+
             // open all links not described here in Safari
             if (url.host == "datatracker.ietf.org" &&
                     (url.path.starts(with: "/meeting") || url.path.starts(with: "/doc/html/"))) ||

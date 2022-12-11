@@ -33,6 +33,7 @@ struct ContentView: View {
     @State var selectedSession: Session?
     @State var selectedLocation: Location?
     @State var loadURL: URL? = nil
+    @State var html: String = ""
     @State var title: String = ""
     @State var favoritesOnly: Bool = false
     @State var agendas: [Agenda] = []
@@ -95,6 +96,7 @@ struct ContentView: View {
                 selectedMeeting:$selectedMeeting,
                 selectedSession:$selectedSession,
                 loadURL:$loadURL,
+                html:$html,
                 title:$title,
                 columnVisibility:$columnVisibility,
                 agendas: $agendas)

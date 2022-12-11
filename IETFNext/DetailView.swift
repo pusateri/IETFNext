@@ -17,11 +17,12 @@ struct DetailView: View {
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
     @Binding var loadURL: URL?
+    @Binding var html: String
     @Binding var title: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
     @Binding var agendas: [Agenda]
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, html: Binding<String>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
 
         _presentationRequest = FetchRequest<Presentation>(
             sortDescriptors: [
@@ -43,12 +44,13 @@ struct DetailView: View {
         self._selectedSession = selectedSession
         self._loadURL = loadURL
         self._title = title
+        self._html = html
         self._columnVisibility = columnVisibility
         self._agendas = agendas
     }
 
     var body: some View {
-        WebView(url: $loadURL)
+        WebView(url: $loadURL, html: $html)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
