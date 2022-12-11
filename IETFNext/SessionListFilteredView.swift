@@ -112,8 +112,10 @@ struct SessionListFilteredView: View {
                 if let session = selectedSession {
                     if let group = session.group {
                         // find all agendas for all sessions in the same group
-                        let all_sessions = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)
-                        agendas = uniqueAgendasForSessions(sessions: all_sessions)
+                        viewContext.performAndWait {
+                            let all_sessions = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)
+                            agendas = uniqueAgendasForSessions(sessions: all_sessions)
+                        }
 
                         if let wg = group.acronym {
                             // update the title and load the corresponding documents

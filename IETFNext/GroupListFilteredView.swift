@@ -88,8 +88,10 @@ struct GroupListFilteredView: View {
             searchText = ""
             if let group = selectedGroup {
                 if let meeting = selectedMeeting {
-                    let sessions = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)
-                    selectedSession = sessions?.first ?? nil
+                    viewContext.performAndWait {
+                        let sessions = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)
+                        selectedSession = sessions?.first ?? nil
+                    }
                 }
             }
         }

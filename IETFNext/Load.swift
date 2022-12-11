@@ -121,7 +121,7 @@ struct Documents: Decodable {
 }
 
 struct JSONDocument: Decodable {
-    let abstract: String
+    let abstract: String?
     let ad: String?
     let expires: Date?
     let external_url: String?
@@ -143,7 +143,7 @@ struct JSONDocument: Decodable {
     let stream: String?
     let submissions: [String]?
     let tags: [String]?
-    let time: Date
+    let time: Date?
     let title: String
     let type: String
     let uploaded_filename: String?
@@ -295,8 +295,10 @@ public func loadDrafts(context: NSManagedObjectContext, limit: Int32, offset: In
             decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
             let json_docs = try decoder.decode(Documents.self, from: data)
 
-            for obj in json_docs.objects {
-                updateDocument(context:context, group:group, document:obj)
+            context.performAndWait {
+                for obj in json_docs.objects {
+                    updateDocument(context:context, group:group, document:obj)
+                }
             }
         } catch DecodingError.dataCorrupted(let context) {
             print(context)
@@ -331,7 +333,9 @@ public func loadCharterDocument(context: NSManagedObjectContext, group: Group) a
             decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
             let json_doc = try decoder.decode(JSONDocument.self, from: data)
 
-            updateDocument(context:context, group:group, document:json_doc)
+            context.performAndWait {
+                updateDocument(context:context, group:group, document:json_doc)
+            }
         } catch DecodingError.dataCorrupted(let context) {
             print(context)
         } catch DecodingError.keyNotFound(let key, let context) {
@@ -350,6 +354,7 @@ public func loadCharterDocument(context: NSManagedObjectContext, group: Group) a
         print("Unexpected Meeting format")
     }
 }
+
 private func updateDocument(context: NSManagedObjectContext, group: Group, document: JSONDocument) {
     let fetchDocument: NSFetchRequest<Document> = Document.fetchRequest()
     fetchDocument.predicate = NSPredicate(format: "id = %d", document.id)
@@ -368,9 +373,11 @@ private func updateDocument(context: NSManagedObjectContext, group: Group, docum
         doc = results?.first
     }
 
-    if doc.abstract != document.abstract {
-        doc.abstract = document.abstract
-        save = true
+    if let abstract = document.abstract {
+        if doc.abstract != abstract {
+            doc.abstract = abstract
+            save = true
+        }
     }
     if let ad = document.ad {
         if doc.ad != ad {
@@ -378,9 +385,11 @@ private func updateDocument(context: NSManagedObjectContext, group: Group, docum
             save = true
         }
     }
-    if doc.expires != document.expires {
-        doc.expires = document.expires
-        save = true
+    if let expires = document.expires {
+        if doc.expires != expires {
+            doc.expires = expires
+            save = true
+        }
     }
     if let external_url = document.external_url {
         let url = URL(string: external_url)
@@ -465,9 +474,11 @@ private func updateDocument(context: NSManagedObjectContext, group: Group, docum
             save = true
         }
     }
-    if doc.time != document.time {
-        doc.time = document.time
-        save = true
+    if let time = document.time {
+        if doc.time != time {
+            doc.time = time
+            save = true
+        }
     }
     if doc.title != document.title {
         doc.title = document.title
@@ -497,6 +508,7 @@ private func updateDocument(context: NSManagedObjectContext, group: Group, docum
     // associate document with working group
     if doc.group != group {
         doc.group = group
+        save = true
     }
     if save {
         do {
@@ -797,7 +809,6 @@ private func updateSession(context: NSManagedObjectContext, baseURL: URL, dayFor
         s.name = session.name
         save = true
     }
-    //s.presentations: [JSONPresentation]?
     if s.session_id != session.session_id {
         s.session_id = session.session_id
         save = true

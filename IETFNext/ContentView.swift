@@ -106,7 +106,9 @@ struct ContentView: View {
         }
         .onAppear {
             if let number = UserDefaults.standard.string(forKey:"MeetingNumber") {
-                selectedMeeting = selectMeeting(context: viewContext, number: number)
+                viewContext.performAndWait {
+                    selectedMeeting = selectMeeting(context: viewContext, number: number)
+                }
                 if let meeting = selectedMeeting {
                     Task {
                         await loadData(meeting:meeting, context:viewContext)

@@ -121,8 +121,10 @@ private func loadMeetings(context: NSManagedObjectContext, limit: Int32, offset:
             decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
             let json_meetings = try decoder.decode(Meetings.self, from: data)
 
-            for obj in json_meetings.objects {
-                meetings.append(updateMeeting(context:context, meeting:obj))
+            context.performAndWait {
+                for obj in json_meetings.objects {
+                    meetings.append(updateMeeting(context:context, meeting:obj))
+                }
             }
         } catch DecodingError.dataCorrupted(let context) {
             print(context)
