@@ -12,8 +12,9 @@
 10. keep downloaded folder of drafts, slides that can be purged
 11. add bofs to group list search filter
 12. add settings when add local time
-13. crash sometimes when filter by favorites and then select Session
+13. fixed? crash sometimes when filter by favorites and then select Session
 14. webview background loading
+15. detail view moving from open slides to try and open drafts gives error
 
 IETF colors:
 	gray: 0xc0c0c0
