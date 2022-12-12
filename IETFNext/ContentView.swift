@@ -26,8 +26,7 @@ public struct Agenda: Identifiable, Hashable {
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State private var showingMeetings = false
-
-    @State var columnVisibility = NavigationSplitViewVisibility.automatic
+    @State var columnVisibility = NavigationSplitViewVisibility.doubleColumn
     @State var selectedMeeting: Meeting?
     @State var selectedGroup: Group? = nil
     @State var selectedSession: Session?

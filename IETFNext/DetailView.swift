@@ -61,7 +61,7 @@ struct DetailView: View {
                     Button(action: {
                         switch (columnVisibility) {
                             case .detailOnly:
-                                columnVisibility = NavigationSplitViewVisibility.automatic
+                                columnVisibility = NavigationSplitViewVisibility.doubleColumn
 
                             default:
                                 columnVisibility = NavigationSplitViewVisibility.detailOnly

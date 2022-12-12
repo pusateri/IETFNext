@@ -33,6 +33,7 @@ struct GroupListRowView: View {
                     .font(Font.system(size: 32, weight: .bold))
                     .foregroundColor(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xf6c844))
             }
+            .buttonStyle(BorderlessButtonStyle())
             VStack(alignment: .leading) {
                 Text(group.acronym!)
                     .foregroundColor(.primary)
