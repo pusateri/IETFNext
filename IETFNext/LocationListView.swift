@@ -86,6 +86,7 @@ struct LocationListView: View {
             if let location = selectedLocation {
                 if let name = location.name {
                     if let level = location.level_name {
+                        // TODO: iPad landscape detail view is compat when all columns are shown
                         if sizeClass == .compact || level == "Uncategorized" {
                             title = name
                         } else {

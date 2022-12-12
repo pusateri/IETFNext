@@ -30,3 +30,7 @@ Screenshots:
 	1284x2778
 	1242x2208
 share symbol: square.and.arrow.up
+
+look at: .navigationSplitViewStyle(.balanced)
+
+crash: PlatformListViewBase has no ViewGraph, version 977faaa doesn't crash on iPad but version eb8343f does crash on iPad 12.9 6th gen simulator but fine on my iPad pro 11 

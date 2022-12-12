@@ -11,6 +11,7 @@
 		F80CA26729469B60002AD2C6 /* DownloadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26629469B60002AD2C6 /* DownloadListView.swift */; };
 		F80CA269294778FA002AD2C6 /* GroupListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA268294778FA002AD2C6 /* GroupListRowView.swift */; };
 		F80CA26B29477D85002AD2C6 /* GroupExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26A29477D85002AD2C6 /* GroupExtensions.swift */; };
+		F80CA26D2947BC73002AD2C6 /* SessionListLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26C2947BC73002AD2C6 /* SessionListLocationView.swift */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E127C0293EA7A4004A35E8 /* SessionListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */; };
@@ -57,6 +58,7 @@
 		F80CA26629469B60002AD2C6 /* DownloadListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadListView.swift; sourceTree = "<group>"; };
 		F80CA268294778FA002AD2C6 /* GroupListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListRowView.swift; sourceTree = "<group>"; };
 		F80CA26A29477D85002AD2C6 /* GroupExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupExtensions.swift; sourceTree = "<group>"; };
+		F80CA26C2947BC73002AD2C6 /* SessionListLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListLocationView.swift; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
 		F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListFilteredView.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */,
 				F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */,
 				F8E9BA162937EB2C00CA6F09 /* SessionListRowView.swift */,
+				F80CA26C2947BC73002AD2C6 /* SessionListLocationView.swift */,
 				F8E9BA142936B5FA00CA6F09 /* WebView.swift */,
 				F8E9B9CC2934295E00CA6F09 /* Load.swift */,
 				F8E9B9A52934101300CA6F09 /* Assets.xcassets */,
@@ -343,6 +346,7 @@
 				F8E9BA1329366A4000CA6F09 /* MeetingListRowView.swift in Sources */,
 				F8E9B9D32935070D00CA6F09 /* MeetingListView.swift in Sources */,
 				F80CA269294778FA002AD2C6 /* GroupListRowView.swift in Sources */,
+				F80CA26D2947BC73002AD2C6 /* SessionListLocationView.swift in Sources */,
 				F8E127C22940E254004A35E8 /* DetailView.swift in Sources */,
 				F8E9B99D2934101200CA6F09 /* IETFNextApp.swift in Sources */,
 				F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */,
@@ -511,7 +515,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IETFNext/IETFNext.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"IETFNext/Preview Content\"";
 				DEVELOPMENT_TEAM = H34JG5K6Q7;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -534,7 +538,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNext;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -552,7 +556,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = IETFNext/IETFNext.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"IETFNext/Preview Content\"";
 				DEVELOPMENT_TEAM = H34JG5K6Q7;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -575,7 +579,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNext;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
