@@ -82,8 +82,14 @@ struct GroupListFilteredView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("Groups")
-                    .font(.headline)
+                VStack {
+                    Text("Groups")
+                        .foregroundColor(.primary)
+                        .font(.headline)
+                    Text("\(groupFavorites ? "Filter: Favorites" : "")")
+                        .font(.footnote)
+                        .foregroundColor(.accentColor)
+                }
             }
             ToolbarItem(placement: .bottomBar) {
                 if let meeting = selectedMeeting {
