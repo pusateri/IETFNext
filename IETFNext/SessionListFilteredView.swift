@@ -23,39 +23,45 @@ struct SessionListFilteredView: View {
     @Binding var selectedSession: Session?
     @Binding var loadURL: URL?
     @Binding var title: String
-    @Binding var favoritesOnly: Bool
+    @Binding var scheduleFavorites: Bool
     @Binding var agendas: [Agenda]
 
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, favoritesOnly: Binding<Bool>, agendas: Binding<[Agenda]>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, scheduleFavorites: Binding<Bool>, agendas: Binding<[Agenda]>) {
+        var predicate: NSPredicate
 
-        if favoritesOnly.wrappedValue == false {
-            _fetchRequest = SectionedFetchRequest<String, Session> (
-                sectionIdentifier: \.day!,
-                sortDescriptors: [
-                    NSSortDescriptor(keyPath: \Session.start, ascending: true),
-                    NSSortDescriptor(keyPath: \Session.end, ascending: false),
-                ],
-                predicate: NSPredicate(format: "meeting.number = %@", selectedMeeting.wrappedValue?.number ?? "0"),
-                animation: .default
-            )
+        if scheduleFavorites.wrappedValue == false {
+            predicate = NSPredicate(format: "meeting.number = %@", selectedMeeting.wrappedValue?.number ?? "0")
         } else {
-            _fetchRequest = SectionedFetchRequest<String, Session> (
-                sectionIdentifier: \.day!,
-                sortDescriptors: [
-                    NSSortDescriptor(keyPath: \Session.start, ascending: true),
-                    NSSortDescriptor(keyPath: \Session.end, ascending: false),
-                ],
-                predicate: NSPredicate(format: "meeting.number = %@ AND favorite = %d", selectedMeeting.wrappedValue?.number ?? "0", true),
-                animation: .default
-            )
+            predicate = NSPredicate(format: "meeting.number = %@ AND favorite = %d", selectedMeeting.wrappedValue?.number ?? "0", true)
         }
+
+        _fetchRequest = SectionedFetchRequest<String, Session> (
+            sectionIdentifier: \.day!,
+            sortDescriptors: [
+                NSSortDescriptor(keyPath: \Session.start, ascending: true),
+                NSSortDescriptor(keyPath: \Session.end, ascending: false),
+            ],
+            predicate: predicate,
+            animation: .default
+        )
+
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
         self._loadURL = loadURL
         self._title = title
-        self._favoritesOnly = favoritesOnly
+        self._scheduleFavorites = scheduleFavorites
         self._agendas = agendas
+    }
+
+    private func updatePredicate() {
+        if let meeting = selectedMeeting {
+            if scheduleFavorites == false {
+                fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
+            } else {
+                fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@ AND favorite = %d", meeting.number!, true)
+            }
+        }
     }
 
     var body: some View {
@@ -75,7 +81,7 @@ struct SessionListFilteredView: View {
                     Text("Schedule")
                         .foregroundColor(.primary)
                         .font(.headline)
-                    Text("\(favoritesOnly ? "Filter: Favorites" : "")")
+                    Text("\(scheduleFavorites ? "Filter: Favorites" : "")")
                         .font(.footnote)
                         .foregroundColor(.accentColor)
                 }
@@ -94,11 +100,11 @@ struct SessionListFilteredView: View {
             ToolbarItem(placement: .primaryAction) {
                 Button(action: {
                     withAnimation {
-                        favoritesOnly.toggle()
+                        scheduleFavorites.toggle()
                         updatePredicate()
                     }
                 }) {
-                    Label("Filter", systemImage: favoritesOnly == true ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                    Label("Filter", systemImage: scheduleFavorites == true ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
                 }
             }
         }
@@ -132,16 +138,6 @@ struct SessionListFilteredView: View {
                         loadURL = URL(string: "about:blank")!
                     }
                 }
-            }
-        }
-    }
-    
-    func updatePredicate() {
-        if let meeting = selectedMeeting {
-            if favoritesOnly == false {
-                fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
-            } else {
-                fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@ AND favorite = %d", meeting.number!, true)
             }
         }
     }

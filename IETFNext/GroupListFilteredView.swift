@@ -17,16 +17,24 @@ struct GroupListFilteredView: View {
     @Binding var selectedSession: Session?
     @Binding var loadURL: URL?
     @Binding var title: String
+    @Binding var groupFavorites: Bool
     @State private var searchText = ""
 
-    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, groupFavorites: Binding<Bool>) {
+        var predicate: NSPredicate
+
+        if groupFavorites.wrappedValue == false {
+            predicate = NSPredicate(format: "ANY sessions.meeting.number = %@", selectedMeeting.wrappedValue?.number ?? "0")
+        } else {
+            predicate = NSPredicate(format: "(ANY sessions.meeting.number = %@) AND (ANY sessions.favorite = %d)", selectedMeeting.wrappedValue?.number ?? "0", true)
+        }
         _fetchRequest = SectionedFetchRequest<String, Group>(
             sectionIdentifier: \.areaKey!,
             sortDescriptors: [
                 NSSortDescriptor(keyPath: \Group.areaKey, ascending: true),
                 NSSortDescriptor(keyPath: \Group.acronym, ascending: true),
             ],
-            predicate: NSPredicate(format: "ANY sessions.meeting.number = %@", selectedMeeting.wrappedValue?.number ?? "0"),
+            predicate: predicate,
             animation: .default
         )
         self._selectedMeeting = selectedMeeting
@@ -34,6 +42,17 @@ struct GroupListFilteredView: View {
         self._selectedSession = selectedSession
         self._loadURL = loadURL
         self._title = title
+        self._groupFavorites = groupFavorites
+    }
+
+    private func updatePredicate() {
+        if let meeting = selectedMeeting {
+            if groupFavorites == false {
+                fetchRequest.nsPredicate = NSPredicate(format: "ANY sessions.meeting.number = %@", meeting.number!)
+            } else {
+                fetchRequest.nsPredicate = NSPredicate(format: "(ANY sessions.meeting.number = %@) AND (ANY sessions.favorite = %d)", meeting.number!, true)
+            }
+        }
     }
 
     var body: some View {
@@ -65,6 +84,16 @@ struct GroupListFilteredView: View {
                                 .foregroundColor(.accentColor)
                         }
                     }
+                }
+            }
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: {
+                    withAnimation {
+                        groupFavorites.toggle()
+                        updatePredicate()
+                    }
+                }) {
+                    Label("Filter", systemImage: groupFavorites == true ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
                 }
             }
         }

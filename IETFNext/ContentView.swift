@@ -34,7 +34,8 @@ struct ContentView: View {
     @State var loadURL: URL? = nil
     @State var html: String = ""
     @State var title: String = ""
-    @State var favoritesOnly: Bool = false
+    @State var scheduleFavorites: Bool = false
+    @State var groupFavorites: Bool = false
     @State var agendas: [Agenda] = []
 
     @ViewBuilder
@@ -50,14 +51,14 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List() {
                 Section(header: first_header) {
-                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, favoritesOnly: $favoritesOnly, agendas: $agendas)) {
+                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, scheduleFavorites: $scheduleFavorites, agendas: $agendas)) {
                         HStack {
                             Image(systemName: "calendar")
                                 .frame(width: 32, height: 32) // constant width left aligns text
                             Text("Schedule")
                         }
                     }
-                    NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, selectedSession: $selectedSession, loadURL: $loadURL, title: $title)) {
+                    NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, groupFavorites: $groupFavorites)) {
                         HStack {
                             Image(systemName: "person.3")
                                 .frame(width: 32, height: 32) // constant width left aligns text
@@ -89,7 +90,7 @@ struct ContentView: View {
                 }
             }
         } content: {
-            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, favoritesOnly: $favoritesOnly, agendas: $agendas)
+            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, scheduleFavorites: $scheduleFavorites, agendas: $agendas)
         } detail: {
             DetailView(
                 selectedMeeting:$selectedMeeting,
