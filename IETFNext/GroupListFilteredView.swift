@@ -48,9 +48,19 @@ struct GroupListFilteredView: View {
     private func updatePredicate() {
         if let meeting = selectedMeeting {
             if groupFavorites == false {
-                fetchRequest.nsPredicate = NSPredicate(format: "ANY sessions.meeting.number = %@", meeting.number!)
+                if searchText.isEmpty {
+                    fetchRequest.nsPredicate = NSPredicate(format: "ANY sessions.meeting.number = %@", meeting.number!)
+                } else {
+                    fetchRequest.nsPredicate = NSPredicate(
+                        format: "(ANY sessions.meeting.number = %@) AND ((name contains[cd] %@) OR (acronym contains[cd] %@) OR (state = [c] %@))", meeting.number!, searchText, searchText, searchText)
+                }
             } else {
-                fetchRequest.nsPredicate = NSPredicate(format: "(ANY sessions.meeting.number = %@) AND (ANY sessions.favorite = %d)", meeting.number!, true)
+                if searchText.isEmpty {
+                    fetchRequest.nsPredicate = NSPredicate(format: "(ANY sessions.meeting.number = %@) AND (ANY sessions.favorite = %d)", meeting.number!, true)
+                } else {
+                    fetchRequest.nsPredicate = NSPredicate(
+                        format: "(ANY sessions.meeting.number = %@) AND (ANY sessions.favorite = %d) AND ((name contains[cd] %@) OR (acronym contains[cd] %@) OR (state = [c] %@))", meeting.number!, true, searchText, searchText, searchText)
+                }
             }
         }
     }
@@ -66,7 +76,7 @@ struct GroupListFilteredView: View {
             .headerProminence(.increased)
         }
         .listStyle(.inset)
-        .searchable(text: $searchText)
+        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
         .keyboardType(.alphabet)
         .disableAutocorrection(true)
         .navigationBarTitleDisplayMode(.inline)
@@ -115,14 +125,7 @@ struct GroupListFilteredView: View {
             }
         }
         .onChange(of: searchText) { newValue in
-            if let meeting = selectedMeeting {
-                if newValue.isEmpty {
-                    fetchRequest.nsPredicate = NSPredicate(format: "ANY sessions.meeting.number = %@", meeting.number!)
-                } else {
-                    fetchRequest.nsPredicate = NSPredicate(
-                        format: "(ANY sessions.meeting.number = %@) AND ((name contains[cd] %@) OR (acronym contains[cd] %@) OR (state = [c] %@))", meeting.number!, newValue, newValue, newValue)
-                }
-            }
+            updatePredicate()
         }
     }
 }
