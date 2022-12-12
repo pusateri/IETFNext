@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F80CA26529469B38002AD2C6 /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26429469B38002AD2C6 /* Download.swift */; };
+		F80CA26729469B60002AD2C6 /* DownloadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26629469B60002AD2C6 /* DownloadListView.swift */; };
+		F80CA269294778FA002AD2C6 /* GroupListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA268294778FA002AD2C6 /* GroupListRowView.swift */; };
+		F80CA26B29477D85002AD2C6 /* GroupExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26A29477D85002AD2C6 /* GroupExtensions.swift */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E127C0293EA7A4004A35E8 /* SessionListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */; };
@@ -48,6 +52,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F80CA26329469780002AD2C6 /* IETFNext 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 2.xcdatamodel"; sourceTree = "<group>"; };
+		F80CA26429469B38002AD2C6 /* Download.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
+		F80CA26629469B60002AD2C6 /* DownloadListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadListView.swift; sourceTree = "<group>"; };
+		F80CA268294778FA002AD2C6 /* GroupListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListRowView.swift; sourceTree = "<group>"; };
+		F80CA26A29477D85002AD2C6 /* GroupExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupExtensions.swift; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
 		F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListFilteredView.swift; sourceTree = "<group>"; };
@@ -132,7 +141,11 @@
 				F8E9B9A32934101200CA6F09 /* ContentView.swift */,
 				F8E127C12940E254004A35E8 /* DetailView.swift */,
 				F8E127C52942BF18004A35E8 /* DocumentListView.swift */,
+				F80CA26429469B38002AD2C6 /* Download.swift */,
+				F80CA26629469B60002AD2C6 /* DownloadListView.swift */,
+				F80CA26A29477D85002AD2C6 /* GroupExtensions.swift */,
 				F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */,
+				F80CA268294778FA002AD2C6 /* GroupListRowView.swift */,
 				F8E9BA102935624100CA6F09 /* LocationListView.swift */,
 				F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */,
 				F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */,
@@ -329,16 +342,20 @@
 				F8E9BA112935624100CA6F09 /* LocationListView.swift in Sources */,
 				F8E9BA1329366A4000CA6F09 /* MeetingListRowView.swift in Sources */,
 				F8E9B9D32935070D00CA6F09 /* MeetingListView.swift in Sources */,
+				F80CA269294778FA002AD2C6 /* GroupListRowView.swift in Sources */,
 				F8E127C22940E254004A35E8 /* DetailView.swift in Sources */,
 				F8E9B99D2934101200CA6F09 /* IETFNextApp.swift in Sources */,
 				F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */,
 				F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */,
 				F8E127C0293EA7A4004A35E8 /* SessionListFilteredView.swift in Sources */,
+				F80CA26529469B38002AD2C6 /* Download.swift in Sources */,
 				F8E127C92943F13B004A35E8 /* Revision.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
 				F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */,
+				F80CA26B29477D85002AD2C6 /* GroupExtensions.swift in Sources */,
 				F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */,
 				F8E9BA172937EB2C00CA6F09 /* SessionListRowView.swift in Sources */,
+				F80CA26729469B60002AD2C6 /* DownloadListView.swift in Sources */,
 				F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */,
 				F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */,
 				F8E9BA152936B5FA00CA6F09 /* WebView.swift in Sources */,
@@ -704,9 +721,10 @@
 		F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F80CA26329469780002AD2C6 /* IETFNext 2.xcdatamodel */,
 				F8E9B9A12934101200CA6F09 /* IETFNext.xcdatamodel */,
 			);
-			currentVersion = F8E9B9A12934101200CA6F09 /* IETFNext.xcdatamodel */;
+			currentVersion = F80CA26329469780002AD2C6 /* IETFNext 2.xcdatamodel */;
 			path = IETFNext.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

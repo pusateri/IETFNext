@@ -42,7 +42,7 @@ struct SessionListRowView: View {
         }
     }
 
-    func saveFavorite() {
+    private func saveFavorite() {
         if viewContext.hasChanges {
             do {
                 try viewContext.save()

@@ -40,19 +40,8 @@ struct GroupListFilteredView: View {
         List(fetchRequest, selection: $selectedGroup) { section in
             Section(header: Text(section.id.uppercased()).foregroundColor(.accentColor)) {
                 ForEach(section, id: \.self) { group in
-                    HStack {
-                        Rectangle()
-                            .fill(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xf6c844))
-                            .frame(width: 8, height: 32)
-                        VStack(alignment: .leading) {
-                            Text(group.acronym!)
-                                .foregroundColor(.primary)
-                                .bold()
-                            Text(group.name!)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .listRowBackground(group.state == "bof" ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
+                    GroupListRowView(selectedMeeting:$selectedMeeting, group:group)
+                        .listRowBackground(group.state == "bof" ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
                 }
             }
             .headerProminence(.increased)
@@ -89,19 +78,20 @@ struct GroupListFilteredView: View {
             if let group = selectedGroup {
                 if let meeting = selectedMeeting {
                     viewContext.performAndWait {
-                        let sessions = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)
+                        let sessions = group.groupSessions(meeting: meeting)
+                        //let sessions = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)
                         selectedSession = sessions?.first ?? nil
                     }
                 }
             }
         }
         .onChange(of: searchText) { newValue in
-            if newValue.isEmpty {
-                fetchRequest.nsPredicate = nil
-            } else {
-                if let meeting = selectedMeeting {
+            if let meeting = selectedMeeting {
+                if newValue.isEmpty {
+                    fetchRequest.nsPredicate = NSPredicate(format: "ANY sessions.meeting.number = %@", meeting.number!)
+                } else {
                     fetchRequest.nsPredicate = NSPredicate(
-                        format: "(ANY sessions.meeting.number = %@) AND ((name contains[cd] %@) OR (acronym contains[cd] %@))", meeting.number!, newValue, newValue)
+                        format: "(ANY sessions.meeting.number = %@) AND ((name contains[cd] %@) OR (acronym contains[cd] %@) OR (state = [c] %@))", meeting.number!, newValue, newValue, newValue)
                 }
             }
         }
