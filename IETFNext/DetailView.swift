@@ -82,7 +82,8 @@ struct DetailView: View {
                         Button(action: {
                             if let meeting = selectedMeeting {
                                 let urlString = "https://www.ietf.org/proceedings/\(meeting.number!)/slides/\(p.name!)-\(p.rev!).pdf"
-                                loadURL = URL(string: urlString)!
+                                let url = URL(string: urlString)
+                                DownloadManager.shared.startDownload(url: url!)
                             }
                         }) {
                             Label(p.title!, systemImage: "square.stack")
@@ -139,8 +140,9 @@ struct DetailView: View {
                         if let session = selectedSession {
                             if let group = session.group?.acronym {
                                 if let rev = charterRequest.first?.rev {
-                                    loadURL = URL(string:
+                                    let url = URL(string:
                                                     "https://www.ietf.org/charter/charter-ietf-\(group)-\(rev).txt")
+                                    DownloadManager.shared.startDownload(url: url!)
                                 }
                             } else {
                                 loadURL = URL(string: "about:blank")!
