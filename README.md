@@ -1,6 +1,6 @@
 *** TODO ***
 
-1. Add other filter options like days, bofs
+1. Add schedule filter options for day of week or area
 2. core data background context
 3. Add related drafts: "https://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-%%5bA-Za-z0-9%%5d%%2a-%@-%%2a&type=draft&states__slug__contains=active", wg_abbr
 4. Add RFCs: "https://datatracker.ietf.org/api/v1/doc/docalias/?name__startswith=rfc&document__name__contains=%@&document__type=draft", wg_abbr
@@ -10,7 +10,7 @@
 8. Find a way to select session favorites from detail view
 9. print pdf version of drafts
 10. keep downloaded folder of drafts, slides that can be purged
-11. add settings when add local time
+11. add local time
 12. webview background loading
 13. detail view moving from open slides to try and open drafts gives error
 14. Add favorites to Rooms?
@@ -34,3 +34,12 @@ share symbol: square.and.arrow.up
 look at: .navigationSplitViewStyle(.balanced)
 
 crash: PlatformListViewBase has no ViewGraph, version 977faaa doesn't crash on iPad but version eb8343f does crash on iPad 12.9 6th gen simulator but fine on my iPad pro 11 
+
+filter out duplicate entries:
+
+extension Sequence where Iterator.Element: Hashable {
+    func unique() -> [Iterator.Element] {
+        var seen: Set<Iterator.Element> = []
+        return filter { seen.insert($0).inserted }
+    }
+}

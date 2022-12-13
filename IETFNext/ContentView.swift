@@ -16,6 +16,62 @@ extension Bundle {
         return infoDictionary?["CFBundleVersion"] as? String ?? "?"
     }
 }
+protocol CompoundEnum {
+    var image: String { get }
+    var label: String { get }
+    var short: String { get }
+}
+
+enum SessionFilterMode: String, CompoundEnum {
+    case favorites
+    case day
+    case now
+    case bofs
+    case none
+
+    var image: String {
+        switch(self) {
+        case .favorites:
+            return "star.fill"
+        case .day:
+            return "foo"
+        case .now:
+            return "exclamationmark.2"
+        case .bofs:
+            return "bird"
+        case .none:
+            return "circle.slash"
+        }
+    }
+    var label: String {
+        switch(self) {
+        case .favorites:
+            return "Show Favorites"
+        case .day:
+            return "Show by Day"
+        case .now:
+            return "Show Now"
+        case .bofs:
+            return "Show BoFs"
+        case .none:
+            return "No Filter"
+        }
+    }
+    var short: String {
+        switch(self) {
+        case .favorites:
+            return "Favorites"
+        case .day:
+            return "Day"
+        case .now:
+            return "Now"
+        case .bofs:
+            return "BoFs"
+        case .none:
+            return "None"
+        }
+    }
+}
 
 public struct Agenda: Identifiable, Hashable {
     public let id: Int32
@@ -34,7 +90,7 @@ struct ContentView: View {
     @State var loadURL: URL? = nil
     @State var html: String = ""
     @State var title: String = ""
-    @State var scheduleFavorites: Bool = false
+    @State var sessionFilterMode: SessionFilterMode = .none
     @State var groupFavorites: Bool = false
     @State var agendas: [Agenda] = []
 
@@ -51,7 +107,7 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List() {
                 Section(header: first_header) {
-                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, scheduleFavorites: $scheduleFavorites, agendas: $agendas)) {
+                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, sessionFilterMode: $sessionFilterMode, agendas: $agendas)) {
                         HStack {
                             Image(systemName: "calendar")
                                 .frame(width: 32, height: 32) // constant width left aligns text
@@ -90,7 +146,7 @@ struct ContentView: View {
                 }
             }
         } content: {
-            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, scheduleFavorites: $scheduleFavorites, agendas: $agendas)
+            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, sessionFilterMode: $sessionFilterMode, agendas: $agendas)
         } detail: {
             DetailView(
                 selectedMeeting:$selectedMeeting,

@@ -9,13 +9,6 @@ import SwiftUI
 import CoreData
 
 
-extension Sequence where Iterator.Element: Hashable {
-    func unique() -> [Iterator.Element] {
-        var seen: Set<Iterator.Element> = []
-        return filter { seen.insert($0).inserted }
-    }
-}
-
 struct SessionListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
@@ -23,17 +16,24 @@ struct SessionListFilteredView: View {
     @Binding var selectedSession: Session?
     @Binding var loadURL: URL?
     @Binding var title: String
-    @Binding var scheduleFavorites: Bool
+    @Binding var sessionFilterMode: SessionFilterMode
     @Binding var agendas: [Agenda]
 
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, scheduleFavorites: Binding<Bool>, agendas: Binding<[Agenda]>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, sessionFilterMode: Binding<SessionFilterMode>, agendas: Binding<[Agenda]>) {
         var predicate: NSPredicate
+        let number = selectedMeeting.wrappedValue?.number ?? "0"
+        let now = Date() as CVarArg
 
-        if scheduleFavorites.wrappedValue == false {
-            predicate = NSPredicate(format: "meeting.number = %@", selectedMeeting.wrappedValue?.number ?? "0")
-        } else {
-            predicate = NSPredicate(format: "meeting.number = %@ AND favorite = %d", selectedMeeting.wrappedValue?.number ?? "0", true)
+        switch(sessionFilterMode.wrappedValue) {
+        case .favorites:
+            predicate = NSPredicate(format: "meeting.number = %@ AND favorite = %d", number, true)
+        case .bofs:
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (is_bof = %d)", number, true)
+        case .now:
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (start > %@) AND (end < %@)", number, now, now)
+        case .day, .none:
+            predicate = NSPredicate(format: "meeting.number = %@", number)
         }
 
         _fetchRequest = SectionedFetchRequest<String, Session> (
@@ -50,18 +50,8 @@ struct SessionListFilteredView: View {
         self._selectedSession = selectedSession
         self._loadURL = loadURL
         self._title = title
-        self._scheduleFavorites = scheduleFavorites
+        self._sessionFilterMode = sessionFilterMode
         self._agendas = agendas
-    }
-
-    private func updatePredicate() {
-        if let meeting = selectedMeeting {
-            if scheduleFavorites == false {
-                fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
-            } else {
-                fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@ AND favorite = %d", meeting.number!, true)
-            }
-        }
     }
 
     var body: some View {
@@ -81,7 +71,7 @@ struct SessionListFilteredView: View {
                     Text("Schedule")
                         .foregroundColor(.primary)
                         .font(.headline)
-                    Text("\(scheduleFavorites ? "Filter: Favorites" : "")")
+                    Text("\(sessionFilterMode == .none ? "" : "Filter: \(sessionFilterMode.short)")")
                         .font(.footnote)
                         .foregroundColor(.accentColor)
                 }
@@ -98,13 +88,32 @@ struct SessionListFilteredView: View {
                 }
             }
             ToolbarItem(placement: .primaryAction) {
-                Button(action: {
-                    withAnimation {
-                        scheduleFavorites.toggle()
-                        updatePredicate()
+                Menu {
+                    Section("Session Filters") {
+                        Button(action: {
+                            sessionFilterMode = .favorites
+                        }) {
+                            Label(SessionFilterMode.favorites.label, systemImage: SessionFilterMode.favorites.image)
+                        }
+                        Button(action: {
+                            sessionFilterMode = .bofs
+                        }) {
+                            Label(SessionFilterMode.bofs.label, systemImage: SessionFilterMode.bofs.image)
+                        }
+                        Button(action: {
+                            sessionFilterMode = .now
+                        }) {
+                            Label(SessionFilterMode.now.label, systemImage: SessionFilterMode.now.image)
+                        }
+                        Button(action: {
+                            sessionFilterMode = .none
+                        }) {
+                            Label(SessionFilterMode.none.label, systemImage: SessionFilterMode.none.image)
+                        }
                     }
-                }) {
-                    Label("Filter", systemImage: scheduleFavorites == true ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                }
+                label: {
+                    Label("More", systemImage: sessionFilterMode == .none ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
                 }
             }
         }
