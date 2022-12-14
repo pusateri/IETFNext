@@ -8,37 +8,30 @@
 import Foundation
 
 @MainActor
-class DownloadForegroundViewModel: NSObject, ObservableObject {
-    let urlToDownloadFormat = "https://speed.hetzner.de/%1$@.bin"
-    let availableDownloadSizes = ["100MB", "1GB", "10GB", "ERR"]
-    var selectedDownloadSize: String = "100MB"
-    var fileToDownload: String {
-        get {
-            String(format: urlToDownloadFormat, selectedDownloadSize)
-        }
-    }
-
+class DownloadViewModel: NSObject, ObservableObject {
+    static let shared = DownloadViewModel()
     @Published private(set) var isBusy = false
     @Published private(set) var error: String? = nil
-    @Published private(set) var percentage: Int? = nil
+    @Published private(set) var fileType: String? = nil
     @Published private(set) var fileName: String? = nil
-    @Published private(set) var downloadedSize: UInt64? = nil
+    @Published private(set) var fileSize: UInt64? = nil
+    @Published private(set) var downloadDate: Date? = nil
 
     // https://developer.apple.com/documentation/foundation/url_loading_system/fetching_website_data_into_memory
-    func downloadInMemory() async {
+    func downloadInMemory(urlString: String) async {
         self.isBusy = true
         self.error = nil
-        self.percentage = 0
+        self.fileType = nil
         self.fileName = nil
-        self.downloadedSize = nil
+        self.fileSize = nil
 
         defer {
             self.isBusy = false
         }
 
         do {
-            let request = URLRequest(url: URL(string: fileToDownload)!)
-            let (data, response) = try await URLSession.shared.compatibilityData(for: request)
+            let request = URLRequest(url: URL(string: urlString)!)
+            let (data, response) = try await URLSession.shared.data(for: request)
             guard let httpResponse = response as? HTTPURLResponse else {
                 self.error = "No HTTP Result"
                 return
@@ -49,28 +42,26 @@ class DownloadForegroundViewModel: NSObject, ObservableObject {
             }
 
             self.error = nil
-            self.percentage = 100
             self.fileName = nil
-            self.downloadedSize = UInt64(data.count)
+            self.fileSize = UInt64(data.count)
         } catch {
             self.error = error.localizedDescription
         }
     }
 
     // https://developer.apple.com/documentation/foundation/url_loading_system/downloading_files_from_websites
-    func downloadToFile() async {
+    func downloadToFile(urlString: String) async {
         self.isBusy = true
         self.error = nil
-        self.percentage = 0
         self.fileName = nil
-        self.downloadedSize = nil
+        self.fileSize = nil
 
         defer {
             self.isBusy = false
         }
 
         do {
-            let (localURL, response) = try await URLSession.shared.compatibilityDownload(from: URL(string: fileToDownload)!)
+            let (localURL, response) = try await URLSession.shared.download(from: URL(string: urlString)!)
             guard let httpResponse = response as? HTTPURLResponse else {
                 self.error = "No HTTP Result"
                 return
@@ -81,14 +72,25 @@ class DownloadForegroundViewModel: NSObject, ObservableObject {
             }
 
             let attributes = try FileManager.default.attributesOfItem(atPath: localURL.path)
-            let fileSize = attributes[.size] as? UInt64
 
             self.error = nil
-            self.percentage = 100
             self.fileName = localURL.path
-            self.downloadedSize = fileSize
+            self.fileSize = attributes[.size] as! UInt64?
+            self.fileType = attributes[.type] as! String?
+            self.downloadDate = attributes[.creationDate] as! Date?
         } catch {
             self.error = error.localizedDescription
         }
+    }
+
+    func covertToFileString(with size: UInt64) -> String {
+        var convertedValue: Double = Double(size)
+        var multiplyFactor = 0
+        let tokens = ["bytes", "KB", "MB", "GB", "TB", "PB",  "EB",  "ZB", "YB"]
+        while convertedValue > 1024 {
+            convertedValue /= 1024
+            multiplyFactor += 1
+        }
+        return String(format: "%4.2f %@", convertedValue, tokens[multiplyFactor])
     }
 }

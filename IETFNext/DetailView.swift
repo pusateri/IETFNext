@@ -21,6 +21,7 @@ struct DetailView: View {
     @Binding var title: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
     @Binding var agendas: [Agenda]
+    @ObservedObject var model: DownloadViewModel
 
     init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, html: Binding<String>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
 
@@ -47,6 +48,7 @@ struct DetailView: View {
         self._html = html
         self._columnVisibility = columnVisibility
         self._agendas = agendas
+        self.model = DownloadViewModel.shared
     }
 
     var body: some View {
@@ -82,8 +84,9 @@ struct DetailView: View {
                         Button(action: {
                             if let meeting = selectedMeeting {
                                 let urlString = "https://www.ietf.org/proceedings/\(meeting.number!)/slides/\(p.name!)-\(p.rev!).pdf"
-                                let url = URL(string: urlString)
-                                DownloadManager.shared.startDownload(url: url!)
+                                Task {
+                                    await model.downloadToFile(urlString: urlString)
+                                }
                             }
                         }) {
                             Label(p.title!, systemImage: "square.stack")

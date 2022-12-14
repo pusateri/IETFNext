@@ -9,7 +9,7 @@ import Foundation
 import OSLog
 
 class DownloadManager: NSObject, ObservableObject {
-    static var shared = DownloadManager()
+    static let shared = DownloadManager()
 
     private var urlSession: URLSession!
     @Published var tasks: [URLSessionTask] = []
