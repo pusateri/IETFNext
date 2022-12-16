@@ -89,6 +89,7 @@ struct ContentView: View {
     @State var selectedLocation: Location?
     @State var loadURL: URL? = nil
     @State var html: String = ""
+    @State var fileURL: URL? = nil
     @State var title: String = ""
     @State var sessionFilterMode: SessionFilterMode = .none
     @State var groupFavorites: Bool = false
@@ -114,7 +115,7 @@ struct ContentView: View {
                             Text("Schedule")
                         }
                     }
-                    NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, selectedSession: $selectedSession, title: $title, groupFavorites: $groupFavorites)) {
+                    NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, selectedSession: $selectedSession, html: $html, title: $title, groupFavorites: $groupFavorites)) {
                         HStack {
                             Image(systemName: "person.3")
                                 .frame(width: 32, height: 32) // constant width left aligns text
@@ -130,7 +131,7 @@ struct ContentView: View {
                     }
                 }
                 Section(header: Text("Local")) {
-                    NavigationLink(destination: DownloadListView(html:$html, title:$title)) {
+                    NavigationLink(destination: DownloadListView(html:$html, fileURL:$fileURL, title:$title)) {
                         HStack {
                             Image(systemName: "arrow.down.circle")
                                 .frame(width: 32, height: 32) // constant width left aligns text
@@ -162,6 +163,7 @@ struct ContentView: View {
                 selectedSession:$selectedSession,
                 loadURL:$loadURL,
                 html:$html,
+                fileURL:$fileURL,
                 title:$title,
                 columnVisibility:$columnVisibility,
                 agendas: $agendas)

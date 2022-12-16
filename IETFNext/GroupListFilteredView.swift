@@ -15,11 +15,12 @@ struct GroupListFilteredView: View {
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
     @Binding var selectedSession: Session?
+    @Binding var html: String
     @Binding var title: String
     @Binding var groupFavorites: Bool
     @State private var searchText = ""
 
-    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, selectedSession: Binding<Session?>, title: Binding<String>, groupFavorites: Binding<Bool>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, selectedSession: Binding<Session?>, html: Binding<String>, title: Binding<String>, groupFavorites: Binding<Bool>) {
         var predicate: NSPredicate
 
         if groupFavorites.wrappedValue == false {
@@ -39,6 +40,7 @@ struct GroupListFilteredView: View {
         self._selectedMeeting = selectedMeeting
         self._selectedGroup = selectedGroup
         self._selectedSession = selectedSession
+        self._html = html
         self._title = title
         self._groupFavorites = groupFavorites
     }
@@ -120,6 +122,7 @@ struct GroupListFilteredView: View {
             searchText = ""
             if let group = selectedGroup {
                 if let meeting = selectedMeeting {
+                    html = BLANK
                     viewContext.performAndWait {
                         let sessions = group.groupSessions(meeting: meeting)
                         //let sessions = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)

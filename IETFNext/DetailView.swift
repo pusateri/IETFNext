@@ -8,7 +8,6 @@
 import SwiftUI
 
 
-
 struct DetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) var sizeClass
@@ -19,36 +18,37 @@ struct DetailView: View {
     @Binding var selectedSession: Session?
     @Binding var loadURL: URL?
     @Binding var html: String
+    @Binding var fileURL: URL?
     @Binding var title: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
     @Binding var agendas: [Agenda]
     @ObservedObject var model: DownloadViewModel
 
     func loadDownloadFile(from:Download) {
-        if from.mimeType == "application/pdf" {
-            if let filename = from.filename {
-                do {
-                    let documentsURL = try FileManager.default.url(for: .documentDirectory,
-                                                                   in: .userDomainMask,
-                                                                   appropriateFor: nil,
-                                                                   create: false)
-                    let url = documentsURL.appendingPathComponent(filename)
-                    html = ""
-                    loadURL = url
-                } catch {
-                    html = "Error reading pdf file: \(from.filename!)"
+        if let mimeType = from.mimeType {
+            if mimeType == "application/pdf" {
+                if let filename = from.filename {
+                    do {
+                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
+                                                                       in: .userDomainMask,
+                                                                       appropriateFor: nil,
+                                                                       create: false)
+                        fileURL = documentsURL.appendingPathComponent(filename)
+                    } catch {
+                        html = "Error reading pdf file: \(from.filename!)"
+                    }
                 }
-            }
-        } else {
-            if let contents = contents2Html(from:from) {
-                html = contents
             } else {
-                html = "Error reading \(from.filename!) error: \(String(describing: model.error))"
+                if let contents = contents2Html(from:from) {
+                    html = contents
+                } else {
+                    html = "Error reading \(from.filename!) error: \(String(describing: model.error))"
+                }
             }
         }
     }
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, html: Binding<String>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, html: Binding<String>, fileURL:Binding<URL?>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
 
         _presentationRequest = FetchRequest<Presentation>(
             sortDescriptors: [
@@ -69,15 +69,16 @@ struct DetailView: View {
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
         self._loadURL = loadURL
-        self._title = title
         self._html = html
+        self._fileURL = fileURL
+        self._title = title
         self._columnVisibility = columnVisibility
         self._agendas = agendas
         self.model = DownloadViewModel()
     }
 
     var body: some View {
-        WebView(url: $loadURL, html: $html)
+        WebView(loadURL:$loadURL, html:$html, fileURL:$fileURL)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {

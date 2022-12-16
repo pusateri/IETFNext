@@ -62,6 +62,7 @@ public func fetchDownload(context:NSManagedObjectContext, kind:DownloadKind, url
 struct DownloadListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Binding var html: String
+    @Binding var fileURL: URL?
     @Binding var title: String
     @State var selectedDownload: Download?
     @SectionedFetchRequest<String, Download>(
@@ -72,6 +73,30 @@ struct DownloadListView: View {
         ],
         animation: .default)
     private var downloads: SectionedFetchResults<String, Download>
+
+    func loadDownloadFile(from:Download) {
+        if let mimeType = from.mimeType {
+            if mimeType == "application/pdf" {
+                if let filename = from.filename {
+                    do {
+                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
+                                                                       in: .userDomainMask,
+                                                                       appropriateFor: nil,
+                                                                       create: false)
+                        fileURL = documentsURL.appendingPathComponent(filename)
+                    } catch {
+                        html = "Error reading pdf file: \(from.filename!)"
+                    }
+                }
+            } else {
+                if let contents = contents2Html(from:from) {
+                    html = contents
+                } else {
+                    html = "Error reading \(from.filename!)"
+                }
+            }
+        }
+    }
 
     func sizeString(_ size: Int64) -> String {
         var convertedValue: Double = Double(size)
@@ -106,10 +131,7 @@ struct DownloadListView: View {
         }
         .onChange(of: selectedDownload) { newValue in
             if let download = selectedDownload {
-                if let contents = contents2Html(from:download) {
-                    title = ""
-                    html = contents
-                }
+                loadDownloadFile(from: download)
             }
         }
     }

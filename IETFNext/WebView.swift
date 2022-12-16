@@ -17,8 +17,9 @@ extension WKWebView {
 }
 
 struct WebView: UIViewRepresentable {
-    @Binding var url: URL?
+    @Binding var loadURL: URL?
     @Binding var html: String
+    @Binding var fileURL: URL?
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -35,8 +36,13 @@ struct WebView: UIViewRepresentable {
         uiView.navigationDelegate = context.coordinator
         if html.count != 0 {
             uiView.loadHTMLString(html, baseURL: nil)
-        } else if let url = url {
+            html = ""
+        } else if let url = fileURL {
+            uiView.loadFileURL(url, allowingReadAccessTo:url)
+            fileURL = nil
+        } else if let url = loadURL {
             uiView.load(url)
+            loadURL = nil
         }
     }
 
@@ -51,6 +57,7 @@ struct WebView: UIViewRepresentable {
             if (url.host == "datatracker.ietf.org" &&
                     (url.path.starts(with: "/meeting") || url.path.starts(with: "/doc/html/"))) ||
                 (url.host == "www.ietf.org") ||
+                (url.scheme == "file") ||
                 (url.scheme == "about") {
                 decisionHandler(.allow)
                 return
