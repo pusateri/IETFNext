@@ -18,7 +18,6 @@ public enum DownloadKind: String {
 public func contents2Html(from: Download) -> String? {
     if let fullpathname = from.fullpathname {
         do {
-            print("contents: \(fullpathname)")
             let contents = try String(contentsOf: fullpathname, encoding: .utf8)
             if from.mimeType == "text/plain" {
                 return PLAIN_PRE + contents + PLAIN_POST

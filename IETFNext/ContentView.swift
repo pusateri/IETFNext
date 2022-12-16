@@ -107,7 +107,7 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List() {
                 Section(header: first_header) {
-                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, sessionFilterMode: $sessionFilterMode, agendas: $agendas)) {
+                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, html: $html, title: $title, sessionFilterMode: $sessionFilterMode, agendas: $agendas)) {
                         HStack {
                             Image(systemName: "calendar")
                                 .frame(width: 32, height: 32) // constant width left aligns text
@@ -121,16 +121,15 @@ struct ContentView: View {
                             Text("Working Groups")
                         }
                     }
-                    NavigationLink(destination: LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, loadURL: $loadURL, html:$html, title: $title)) {
+                    NavigationLink(destination: LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, html:$html, title: $title)) {
                         HStack {
                             Image(systemName: "map")
                                 .frame(width: 32, height: 32) // constant width left aligns text
                             Text("Venue & Room Locations")
                         }
                     }
-                    .padding(.bottom, 50)
                 }
-                Section(header: Text("System")) {
+                Section(header: Text("Local")) {
                     NavigationLink(destination: DownloadListView()) {
                         HStack {
                             Image(systemName: "arrow.down.circle")
@@ -156,7 +155,7 @@ struct ContentView: View {
                 }
             }
         } content: {
-            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, sessionFilterMode: $sessionFilterMode, agendas: $agendas)
+            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, html: $html, title: $title, sessionFilterMode: $sessionFilterMode, agendas: $agendas)
         } detail: {
             DetailView(
                 selectedMeeting:$selectedMeeting,

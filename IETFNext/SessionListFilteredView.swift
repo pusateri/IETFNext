@@ -14,13 +14,13 @@ struct SessionListFilteredView: View {
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
-    @Binding var loadURL: URL?
+    @Binding var html: String
     @Binding var title: String
     @Binding var sessionFilterMode: SessionFilterMode
     @Binding var agendas: [Agenda]
 
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, sessionFilterMode: Binding<SessionFilterMode>, agendas: Binding<[Agenda]>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, html: Binding<String>, title: Binding<String>, sessionFilterMode: Binding<SessionFilterMode>, agendas: Binding<[Agenda]>) {
         var predicate: NSPredicate
         let number = selectedMeeting.wrappedValue?.number ?? "0"
         let now = Date() as CVarArg
@@ -48,7 +48,7 @@ struct SessionListFilteredView: View {
 
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
-        self._loadURL = loadURL
+        self._html = html
         self._title = title
         self._sessionFilterMode = sessionFilterMode
         self._agendas = agendas
@@ -126,6 +126,8 @@ struct SessionListFilteredView: View {
             if let meeting = selectedMeeting {
                 if let session = selectedSession {
                     if let group = session.group {
+                        html = BLANK
+
                         // find all agendas for all sessions in the same group
                         viewContext.performAndWait {
                             let all_sessions = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)

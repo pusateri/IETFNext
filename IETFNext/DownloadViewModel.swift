@@ -13,12 +13,12 @@ import UniformTypeIdentifiers
 @MainActor
 class DownloadViewModel: NSObject, ObservableObject {
     @Published private(set) var isBusy = false
+    @Published private(set) var download: Download? = nil
     @Published private(set) var error: String? = nil
 
     // This should only be called if there's no Download state for the url
     // TODO: deal with an agenda changing from .md to .txt to .html (save and check Etag)
-    func downloadToFile(context: NSManagedObjectContext, url: URL, mtg: String, group: Group, kind:DownloadKind) async -> Download? {
-        var download: Download? = nil
+    func downloadToFile(context: NSManagedObjectContext, url: URL, mtg: String, group: Group, kind:DownloadKind) async {
 
         self.isBusy = true
         self.error = nil
@@ -42,25 +42,24 @@ class DownloadViewModel: NSObject, ObservableObject {
             let (localURL, response) = try await URLSession.shared.download(for: urlrequest)
             guard let httpResponse = response as? HTTPURLResponse else {
                 self.error = "No HTTP Result"
-                return nil
+                return
             }
             guard (200...299).contains(httpResponse.statusCode) else {
                 self.error = "Http Result: \(httpResponse.statusCode)"
-                return nil
+                return
             }
             if let suggested = response.suggestedFilename {
                 let savedURL = documentsURL.appendingPathComponent(suggested)
                 if FileManager.default.isReadableFile(atPath: savedURL.path) == false {
                     do {
-                        print("before move: \(savedURL)")
                         try FileManager.default.moveItem(at: localURL, to: savedURL)
                     } catch {
                         self.error = error.localizedDescription
-                        return nil
+                        return
                     }
 
                     context.performAndWait {
-                        download = createDownloadState(context:context, documentsURL:documentsURL, basename:basename, savedURL:savedURL, mimeType: httpResponse.mimeType, fileSize:httpResponse.expectedContentLength, mtg:mtg, group:group, kind:kind)
+                        self.download = createDownloadState(context:context, documentsURL:documentsURL, basename:basename, savedURL:savedURL, mimeType: httpResponse.mimeType, fileSize:httpResponse.expectedContentLength, mtg:mtg, group:group, kind:kind)
                     }
                 } else {
                     self.error = "file found with no Download state: \(basename)"
@@ -73,7 +72,6 @@ class DownloadViewModel: NSObject, ObservableObject {
         } catch {
             self.error = error.localizedDescription
         }
-        return download
     }
 
     func createDownloadState(context: NSManagedObjectContext, documentsURL: URL, basename:String, savedURL:URL, mimeType: String?, fileSize: Int64, mtg: String, group: Group, kind:DownloadKind) -> Download {

@@ -17,8 +17,8 @@
 15. add spinning circle when loading the sessions for a meeting
 16. In group list view, select, then filter, then select crashes
 17. Show sessions at each location
-18. contents from download don't always load the first time
-19. add drafts to downloads
+18. add drafts to downloads
+19. have main app handle background downloads (error when app moves to bg)
 
 IETF colors:
 	gray: 0xc0c0c0

@@ -33,10 +33,10 @@ struct WebView: UIViewRepresentable {
 
     func updateUIView(_ uiView : WKWebView , context : Context) {
         uiView.navigationDelegate = context.coordinator
-        if let url = url {
-            uiView.load(url)
-        } else if html.count != 0 {
+        if html.count != 0 {
             uiView.loadHTMLString(html, baseURL: nil)
+        } else if let url = url {
+            uiView.load(url)
         }
     }
 

@@ -28,7 +28,6 @@ struct DetailView: View {
         if from.mimeType == "application/pdf" {
             loadURL = from.fullpathname
         } else {
-            loadURL = nil
             if let contents = contents2Html(from:from) {
                 html = contents
             } else {
@@ -106,10 +105,7 @@ struct DetailView: View {
                                                 loadDownloadFile(from:download)
                                             } else {
                                                 Task {
-                                                    download = await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.presentation)
-                                                    if let download = download {
-                                                        loadDownloadFile(from:download)
-                                                    }
+                                                    await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.presentation)
                                                 }
                                             }
                                         }
@@ -146,10 +142,7 @@ struct DetailView: View {
                                             loadDownloadFile(from:download)
                                         } else {
                                             Task {
-                                                download = await model.downloadToFile(context:viewContext, url: agenda.url, mtg:meeting.number!, group:group, kind:.agenda)
-                                                if let download = download {
-                                                    loadDownloadFile(from:download)
-                                                }
+                                                await model.downloadToFile(context:viewContext, url: agenda.url, mtg:meeting.number!, group:group, kind:.agenda)
                                             }
                                         }
                                     }
@@ -169,14 +162,10 @@ struct DetailView: View {
                                             loadDownloadFile(from:download)
                                         } else {
                                             Task {
-                                                download = await model.downloadToFile(context:viewContext, url: minutes, mtg:meeting.number!, group:group, kind:.minutes)
-                                                if let download = download {
-                                                    loadDownloadFile(from:download)
-                                                }
+                                                await model.downloadToFile(context:viewContext, url: minutes, mtg:meeting.number!, group:group, kind:.minutes)
                                             }
                                         }
                                     } else {
-                                        loadURL = nil
                                         html = BLANK
                                     }
                                 }
@@ -204,18 +193,16 @@ struct DetailView: View {
                                         let urlString = "https://www.ietf.org/charter/charter-ietf-\(group.acronym!)-\(rev).txt"
                                         if let url = URL(string: urlString) {
                                             var download = fetchDownload(context:viewContext, kind:.charter, url:url)
-                                            if download == nil {
-                                                Task {
-                                                    download = await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.charter)
-                                                }
-                                            }
                                             if let download = download {
                                                 loadDownloadFile(from:download)
+                                            } else {
+                                                Task {
+                                                    await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.charter)
+                                                }
                                             }
                                         }
                                     }
                                 } else {
-                                    loadURL = nil
                                     html = BLANK
                                 }
                             }
@@ -234,7 +221,6 @@ struct DetailView: View {
                                 let url = URL(string: "https://mailarchive.ietf.org/arch/browse/\(group)/")!
                                 UIApplication.shared.open(url)
                             } else {
-                                loadURL = nil
                                 html = BLANK
                             }
                         }
@@ -256,12 +242,16 @@ struct DetailView: View {
             }
         }
         .onChange(of: selectedMeeting) { newValue in
-            loadURL = nil
             html = BLANK
         }
         .onChange(of: selectedSession) { newValue in
             if let session = selectedSession {
                 presentationRequest.nsPredicate = NSPredicate(format: "session = %@", session)
+            }
+        }
+        .onChange(of: model.download) { newValue in
+            if let download = model.download {
+                loadDownloadFile(from:download)
             }
         }
         .onChange(of: model.error) { newValue in
