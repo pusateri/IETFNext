@@ -141,11 +141,6 @@ struct SessionListFilteredView: View {
                             await loadCharterDocument(context:viewContext, group:group)
                         }
                     }
-                    if let agenda = session.agenda {
-                        loadURL = agenda
-                    } else {
-                        loadURL = URL(string: "about:blank")!
-                    }
                 }
             }
         }

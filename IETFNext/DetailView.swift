@@ -8,6 +8,7 @@
 import SwiftUI
 
 
+
 struct DetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) var sizeClass
@@ -22,6 +23,19 @@ struct DetailView: View {
     @Binding var columnVisibility: NavigationSplitViewVisibility
     @Binding var agendas: [Agenda]
     @ObservedObject var model: DownloadViewModel
+
+    func loadDownloadFile(from:Download) {
+        if from.mimeType == "application/pdf" {
+            loadURL = from.fullpathname
+        } else {
+            loadURL = nil
+            if let contents = contents2Html(from:from) {
+                html = contents
+            } else {
+                html = "Error reading \(from.fullpathname!) error: \(String(describing: model.error))"
+            }
+        }
+    }
 
     init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, html: Binding<String>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
 
@@ -48,7 +62,7 @@ struct DetailView: View {
         self._html = html
         self._columnVisibility = columnVisibility
         self._agendas = agendas
-        self.model = DownloadViewModel.shared
+        self.model = DownloadViewModel()
     }
 
     var body: some View {
@@ -83,9 +97,23 @@ struct DetailView: View {
                     ForEach(presentationRequest, id: \.self) { p in
                         Button(action: {
                             if let meeting = selectedMeeting {
-                                let urlString = "https://www.ietf.org/proceedings/\(meeting.number!)/slides/\(p.name!)-\(p.rev!).pdf"
-                                Task {
-                                    await model.downloadToFile(urlString: urlString)
+                                if let session = selectedSession {
+                                    if let group = session.group {
+                                        let urlString = "https://www.ietf.org/proceedings/\(meeting.number!)/slides/\(p.name!)-\(p.rev!).pdf"
+                                        if let url = URL(string: urlString) {
+                                            var download = fetchDownload(context:viewContext, kind:.presentation, url:url)
+                                            if let download = download {
+                                                loadDownloadFile(from:download)
+                                            } else {
+                                                Task {
+                                                    download = await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.presentation)
+                                                    if let download = download {
+                                                        loadDownloadFile(from:download)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }) {
@@ -110,17 +138,48 @@ struct DetailView: View {
                 Menu {
                     ForEach(agendas) { agenda in
                         Button(action: {
-                            loadURL = agenda.url
+                            if let meeting = selectedMeeting {
+                                if let session = selectedSession {
+                                    if let group = session.group {
+                                        var download = fetchDownload(context:viewContext, kind:.agenda, url:agenda.url)
+                                        if let download = download {
+                                            loadDownloadFile(from:download)
+                                        } else {
+                                            Task {
+                                                download = await model.downloadToFile(context:viewContext, url: agenda.url, mtg:meeting.number!, group:group, kind:.agenda)
+                                                if let download = download {
+                                                    loadDownloadFile(from:download)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }) {
                             Label("\(agenda.desc)", systemImage: "list.bullet.clipboard")
                         }
                     }
                     Button(action: {
-                        if let session = selectedSession {
-                            if let minutes = session.minutes {
-                                loadURL = minutes
-                            } else {
-                                loadURL = URL(string: "about:blank")!
+                        if let meeting = selectedMeeting {
+                            if let session = selectedSession {
+                                if let group = session.group {
+                                    if let minutes = session.minutes {
+                                        var download = fetchDownload(context:viewContext, kind:.minutes, url:minutes)
+                                        if let download = download {
+                                            loadDownloadFile(from:download)
+                                        } else {
+                                            Task {
+                                                download = await model.downloadToFile(context:viewContext, url: minutes, mtg:meeting.number!, group:group, kind:.minutes)
+                                                if let download = download {
+                                                    loadDownloadFile(from:download)
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        loadURL = nil
+                                        html = BLANK
+                                    }
+                                }
                             }
                         }
                     }) {
@@ -129,26 +188,36 @@ struct DetailView: View {
                     .disabled(selectedSession?.minutes == nil)
                     /*
                     Button(action: {
-                        loadURL = URL(string: "about:blank")!
                     }) {
                         Label("View Recording", systemImage: "play")
                     }
                     Button(action: {
-                        loadURL = URL(string: "about:blank")!
                     }) {
                         Label("Listen Audio", systemImage: "speaker.wave.3")
                     }
                      */
                     Button(action: {
-                        if let session = selectedSession {
-                            if let group = session.group?.acronym {
-                                if let rev = charterRequest.first?.rev {
-                                    let url = URL(string:
-                                                    "https://www.ietf.org/charter/charter-ietf-\(group)-\(rev).txt")
-                                    DownloadManager.shared.startDownload(url: url!)
+                        if let meeting = selectedMeeting {
+                            if let session = selectedSession {
+                                if let group = session.group {
+                                    if let rev = charterRequest.first?.rev {
+                                        let urlString = "https://www.ietf.org/charter/charter-ietf-\(group.acronym!)-\(rev).txt"
+                                        if let url = URL(string: urlString) {
+                                            var download = fetchDownload(context:viewContext, kind:.charter, url:url)
+                                            if download == nil {
+                                                Task {
+                                                    download = await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.charter)
+                                                }
+                                            }
+                                            if let download = download {
+                                                loadDownloadFile(from:download)
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    loadURL = nil
+                                    html = BLANK
                                 }
-                            } else {
-                                loadURL = URL(string: "about:blank")!
                             }
                         }
                     }) {
@@ -162,14 +231,17 @@ struct DetailView: View {
                     Button(action: {
                         if let session = selectedSession {
                             if let group = session.group?.acronym {
-                                loadURL = URL(string: "https://mailarchive.ietf.org/arch/browse/\(group)/")
+                                let url = URL(string: "https://mailarchive.ietf.org/arch/browse/\(group)/")!
+                                UIApplication.shared.open(url)
                             } else {
-                                loadURL = URL(string: "about:blank")!
+                                loadURL = nil
+                                html = BLANK
                             }
                         }
                     }) {
                         Label("Mailing List Archive", systemImage: "envelope")
                     }
+                    .disabled(selectedSession?.group == nil)
                 }
                 label: {
                     Label("More", systemImage: "ellipsis.circle")
@@ -184,11 +256,17 @@ struct DetailView: View {
             }
         }
         .onChange(of: selectedMeeting) { newValue in
-            loadURL = URL(string: "about:blank")!
+            loadURL = nil
+            html = BLANK
         }
         .onChange(of: selectedSession) { newValue in
             if let session = selectedSession {
                 presentationRequest.nsPredicate = NSPredicate(format: "session = %@", session)
+            }
+        }
+        .onChange(of: model.error) { newValue in
+            if let err = model.error {
+                print(err)
             }
         }
     }

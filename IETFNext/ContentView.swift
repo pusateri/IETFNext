@@ -121,11 +121,21 @@ struct ContentView: View {
                             Text("Working Groups")
                         }
                     }
-                    NavigationLink(destination: LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, loadURL: $loadURL, title: $title)) {
+                    NavigationLink(destination: LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, loadURL: $loadURL, html:$html, title: $title)) {
                         HStack {
                             Image(systemName: "map")
                                 .frame(width: 32, height: 32) // constant width left aligns text
                             Text("Venue & Room Locations")
+                        }
+                    }
+                    .padding(.bottom, 50)
+                }
+                Section(header: Text("System")) {
+                    NavigationLink(destination: DownloadListView()) {
+                        HStack {
+                            Image(systemName: "arrow.down.circle")
+                                .frame(width: 32, height: 32) // constant width left aligns text
+                            Text("Downloads")
                         }
                     }
                 }

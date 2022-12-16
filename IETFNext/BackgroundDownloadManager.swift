@@ -8,8 +8,10 @@
 import Foundation
 import OSLog
 
-class DownloadManager: NSObject, ObservableObject {
-    static let shared = DownloadManager()
+// usage: DownloadManager.shared.startDownload(url: url!)
+
+class BackgroundDownloadManager: NSObject, ObservableObject {
+    static let shared = BackgroundDownloadManager()
 
     private var urlSession: URLSession!
     @Published var tasks: [URLSessionTask] = []
@@ -42,7 +44,7 @@ class DownloadManager: NSObject, ObservableObject {
     }
 }
 
-extension DownloadManager: URLSessionDelegate, URLSessionDownloadDelegate {
+extension BackgroundDownloadManager: URLSessionDelegate, URLSessionDownloadDelegate {
     /*
     func urlSession(_: URLSession, downloadTask: URLSessionDownloadTask, didWriteData _: Int64, totalBytesWritten _: Int64, totalBytesExpectedToWrite _: Int64) {
         let log = Logger()

@@ -15,9 +15,11 @@ struct LocationListView: View {
     @Binding var selectedLocation: Location?
     @Binding var selectedMeeting: Meeting?
     @Binding var loadURL: URL?
+    @Binding var html: String
     @Binding var title: String
 
-    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>, loadURL: Binding<URL?>, title: Binding<String>) {
+
+    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>, loadURL: Binding<URL?>, html: Binding<String>, title: Binding<String>) {
         _fetchRequest = SectionedFetchRequest<String, Location>(
             sectionIdentifier: \.level_name!,
             sortDescriptors: [
@@ -30,6 +32,7 @@ struct LocationListView: View {
         self._selectedMeeting = selectedMeeting
         self._selectedLocation = selectedLocation
         self._loadURL = loadURL
+        self._html = html
         self._title = title
     }
 
@@ -95,14 +98,17 @@ struct LocationListView: View {
                     }
                 }
                 if let map = location.map {
-                    loadURL = map
+                    loadURL = nil
+                    html = IMAGE_PRE + "\(map)" + IMAGE_POST
                 } else {
-                    loadURL = URL(string: "about:blank")!
+                    loadURL = nil
+                    html = BLANK
                 }
             }
         }
         .onAppear {
-            loadURL = URL(string: "about:blank")!
+            loadURL = nil
+            html = BLANK
         }
     }
 }

@@ -18,7 +18,10 @@ struct DocumentListView: View {
 
     init(wg: String, loadURL: Binding<URL?>) {
         _documents = FetchRequest<Document>(
-            sortDescriptors: [NSSortDescriptor(keyPath: \Document.name, ascending: true)],
+            sortDescriptors: [
+                NSSortDescriptor(keyPath: \Document.name, ascending: true),
+                NSSortDescriptor(keyPath: \Document.rev, ascending: true),
+            ],
             predicate: NSPredicate(format: "(ANY group.acronym = %@) AND (type contains \"draft\")", wg),
             animation: .default)
         self.wg = wg
@@ -33,7 +36,7 @@ struct DocumentListView: View {
                         VStack(alignment: .leading) {
                             Text(d.title!)
                                 .foregroundColor(.primary)
-                            Text(d.name!)
+                            Text("\(d.name!)-\(d.rev!)")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
