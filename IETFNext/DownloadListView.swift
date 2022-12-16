@@ -11,6 +11,7 @@ import CoreData
 public enum DownloadKind: String {
     case agenda
     case charter
+    case draft
     case minutes
     case presentation
 }

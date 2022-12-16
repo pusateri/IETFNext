@@ -16,12 +16,13 @@ struct DetailView: View {
     @State private var showingDocuments = false
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
-    @Binding var loadURL: URL?
     @Binding var html: String
     @Binding var fileURL: URL?
     @Binding var title: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
     @Binding var agendas: [Agenda]
+
+    @State var draftURL: String? = nil
     @ObservedObject var model: DownloadViewModel
 
     func loadDownloadFile(from:Download) {
@@ -48,7 +49,7 @@ struct DetailView: View {
         }
     }
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, html: Binding<String>, fileURL:Binding<URL?>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, html: Binding<String>, fileURL:Binding<URL?>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
 
         _presentationRequest = FetchRequest<Presentation>(
             sortDescriptors: [
@@ -68,7 +69,6 @@ struct DetailView: View {
 
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
-        self._loadURL = loadURL
         self._html = html
         self._fileURL = fileURL
         self._title = title
@@ -78,7 +78,7 @@ struct DetailView: View {
     }
 
     var body: some View {
-        WebView(loadURL:$loadURL, html:$html, fileURL:$fileURL)
+        WebView(html:$html, fileURL:$fileURL)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -250,7 +250,7 @@ struct DetailView: View {
         .sheet(isPresented: $showingDocuments) {
             if let session = selectedSession {
                 if let wg = session.group?.acronym {
-                    DocumentListView(wg: wg, loadURL:$loadURL)
+                    DocumentListView(wg:wg, urlString:$draftURL)
                 }
             }
         }
@@ -269,7 +269,27 @@ struct DetailView: View {
         }
         .onChange(of: model.error) { newValue in
             if let err = model.error {
-                print(err)
+                html = err
+            }
+        }
+        .onChange(of:draftURL) { newValue in
+            if let draftURL = draftURL {
+                if let url = URL(string:draftURL) {
+                    let download = fetchDownload(context:viewContext, kind:.draft, url:url)
+                    if let download = download {
+                        loadDownloadFile(from:download)
+                    } else {
+                        if let meeting = selectedMeeting {
+                            if let session = selectedSession {
+                                if let group = session.group {
+                                    Task {
+                                        await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.draft)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

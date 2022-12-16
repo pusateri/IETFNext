@@ -14,9 +14,9 @@ struct DocumentListView: View {
     @FetchRequest<Document> var documents: FetchedResults<Document>
     var wg: String
     @State var selectedDocument: Document? = nil
-    @Binding var loadURL: URL?
+    @Binding var urlString: String?
 
-    init(wg: String, loadURL: Binding<URL?>) {
+    init(wg: String, urlString: Binding<String?>) {
         _documents = FetchRequest<Document>(
             sortDescriptors: [
                 NSSortDescriptor(keyPath: \Document.name, ascending: true),
@@ -25,7 +25,7 @@ struct DocumentListView: View {
             predicate: NSPredicate(format: "(ANY group.acronym = %@) AND (type contains \"draft\")", wg),
             animation: .default)
         self.wg = wg
-        self._loadURL = loadURL
+        self._urlString = urlString
     }
 
     var body: some View {
@@ -61,8 +61,7 @@ struct DocumentListView: View {
                 // htmlized
                 // let urlString = "https://datatracker.ietf.org/doc/html/\(d.name!)-\(d.rev!)"
                 // native html
-                let urlString = "https://www.ietf.org/archive/id/\(d.name!)-\(d.rev!).html"
-                loadURL = URL(string: urlString)!
+                urlString = "https://www.ietf.org/archive/id/\(d.name!)-\(d.rev!).html"
             }
         }
     }

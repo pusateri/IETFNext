@@ -8,16 +8,15 @@
 import SwiftUI
 import WebKit
 
-
+/*
 extension WKWebView {
     func load(_ url: URL) {
         let request = URLRequest(url: url)
         load(request)
     }
 }
-
+*/
 struct WebView: UIViewRepresentable {
-    @Binding var loadURL: URL?
     @Binding var html: String
     @Binding var fileURL: URL?
 
@@ -40,9 +39,6 @@ struct WebView: UIViewRepresentable {
         } else if let url = fileURL {
             uiView.loadFileURL(url, allowingReadAccessTo:url)
             fileURL = nil
-        } else if let url = loadURL {
-            uiView.load(url)
-            loadURL = nil
         }
     }
 

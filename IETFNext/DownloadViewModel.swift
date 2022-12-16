@@ -44,7 +44,7 @@ class DownloadViewModel: NSObject, ObservableObject {
                 return
             }
             guard (200...299).contains(httpResponse.statusCode) else {
-                self.error = "Http Result: \(httpResponse.statusCode)"
+                self.error = "Http Result \(httpResponse.statusCode): \(url.absoluteString)"
                 return
             }
             if let suggested = response.suggestedFilename {
@@ -97,6 +97,8 @@ class DownloadViewModel: NSObject, ObservableObject {
                 download.title = titleBase + "Agenda"
             case .charter:
                 download.title = "\(group.acronym!.uppercased()) Charter"
+            case .draft:
+                download.title = "\(group.acronym!.uppercased()) Internet-Draft"
             case .minutes:
                 download.title = titleBase + "Minutes"
             case .presentation:

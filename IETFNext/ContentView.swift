@@ -87,7 +87,6 @@ struct ContentView: View {
     @State var selectedGroup: Group? = nil
     @State var selectedSession: Session?
     @State var selectedLocation: Location?
-    @State var loadURL: URL? = nil
     @State var html: String = ""
     @State var fileURL: URL? = nil
     @State var title: String = ""
@@ -161,7 +160,6 @@ struct ContentView: View {
             DetailView(
                 selectedMeeting:$selectedMeeting,
                 selectedSession:$selectedSession,
-                loadURL:$loadURL,
                 html:$html,
                 fileURL:$fileURL,
                 title:$title,
