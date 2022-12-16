@@ -15,12 +15,11 @@ struct GroupListFilteredView: View {
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
     @Binding var selectedSession: Session?
-    @Binding var loadURL: URL?
     @Binding var title: String
     @Binding var groupFavorites: Bool
     @State private var searchText = ""
 
-    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, selectedSession: Binding<Session?>, loadURL: Binding<URL?>, title: Binding<String>, groupFavorites: Binding<Bool>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, selectedSession: Binding<Session?>, title: Binding<String>, groupFavorites: Binding<Bool>) {
         var predicate: NSPredicate
 
         if groupFavorites.wrappedValue == false {
@@ -40,7 +39,6 @@ struct GroupListFilteredView: View {
         self._selectedMeeting = selectedMeeting
         self._selectedGroup = selectedGroup
         self._selectedSession = selectedSession
-        self._loadURL = loadURL
         self._title = title
         self._groupFavorites = groupFavorites
     }
@@ -67,7 +65,7 @@ struct GroupListFilteredView: View {
 
     var body: some View {
         List(fetchRequest, selection: $selectedGroup) { section in
-            Section(header: Text(section.id.uppercased()).foregroundColor(.accentColor)) {
+            Section(header: Text(section.id).textCase(.uppercase).foregroundColor(.accentColor)) {
                 ForEach(section, id: \.self) { group in
                     GroupListRowView(selectedMeeting:$selectedMeeting, group:group)
                         .listRowBackground(group.state == "bof" ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))

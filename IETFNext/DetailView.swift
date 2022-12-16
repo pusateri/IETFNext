@@ -26,12 +26,24 @@ struct DetailView: View {
 
     func loadDownloadFile(from:Download) {
         if from.mimeType == "application/pdf" {
-            loadURL = from.fullpathname
+            if let filename = from.filename {
+                do {
+                    let documentsURL = try FileManager.default.url(for: .documentDirectory,
+                                                                   in: .userDomainMask,
+                                                                   appropriateFor: nil,
+                                                                   create: false)
+                    let url = documentsURL.appendingPathComponent(filename)
+                    html = ""
+                    loadURL = url
+                } catch {
+                    html = "Error reading pdf file: \(from.filename!)"
+                }
+            }
         } else {
             if let contents = contents2Html(from:from) {
                 html = contents
             } else {
-                html = "Error reading \(from.fullpathname!) error: \(String(describing: model.error))"
+                html = "Error reading \(from.filename!) error: \(String(describing: model.error))"
             }
         }
     }
@@ -100,7 +112,7 @@ struct DetailView: View {
                                     if let group = session.group {
                                         let urlString = "https://www.ietf.org/proceedings/\(meeting.number!)/slides/\(p.name!)-\(p.rev!).pdf"
                                         if let url = URL(string: urlString) {
-                                            var download = fetchDownload(context:viewContext, kind:.presentation, url:url)
+                                            let download = fetchDownload(context:viewContext, kind:.presentation, url:url)
                                             if let download = download {
                                                 loadDownloadFile(from:download)
                                             } else {
@@ -137,7 +149,7 @@ struct DetailView: View {
                             if let meeting = selectedMeeting {
                                 if let session = selectedSession {
                                     if let group = session.group {
-                                        var download = fetchDownload(context:viewContext, kind:.agenda, url:agenda.url)
+                                        let download = fetchDownload(context:viewContext, kind:.agenda, url:agenda.url)
                                         if let download = download {
                                             loadDownloadFile(from:download)
                                         } else {
@@ -157,7 +169,7 @@ struct DetailView: View {
                             if let session = selectedSession {
                                 if let group = session.group {
                                     if let minutes = session.minutes {
-                                        var download = fetchDownload(context:viewContext, kind:.minutes, url:minutes)
+                                        let download = fetchDownload(context:viewContext, kind:.minutes, url:minutes)
                                         if let download = download {
                                             loadDownloadFile(from:download)
                                         } else {
@@ -192,7 +204,7 @@ struct DetailView: View {
                                     if let rev = charterRequest.first?.rev {
                                         let urlString = "https://www.ietf.org/charter/charter-ietf-\(group.acronym!)-\(rev).txt"
                                         if let url = URL(string: urlString) {
-                                            var download = fetchDownload(context:viewContext, kind:.charter, url:url)
+                                            let download = fetchDownload(context:viewContext, kind:.charter, url:url)
                                             if let download = download {
                                                 loadDownloadFile(from:download)
                                             } else {

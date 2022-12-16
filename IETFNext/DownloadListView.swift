@@ -16,18 +16,27 @@ public enum DownloadKind: String {
 }
 
 public func contents2Html(from: Download) -> String? {
-    if let fullpathname = from.fullpathname {
+    if let filename = from.filename {
         do {
-            let contents = try String(contentsOf: fullpathname, encoding: .utf8)
-            if from.mimeType == "text/plain" {
-                return PLAIN_PRE + contents + PLAIN_POST
-            } else if from.mimeType == "text/markdown" {
-                return PLAIN_PRE + contents + PLAIN_POST
-            } else if from.mimeType == "text/html" {
-                return contents
+            let documentsURL = try FileManager.default.url(for: .documentDirectory,
+                                                           in: .userDomainMask,
+                                                           appropriateFor: nil,
+                                                           create: false)
+            let url = documentsURL.appendingPathComponent(filename)
+            do {
+                let contents = try String(contentsOf:url, encoding: .utf8)
+                if from.mimeType == "text/plain" {
+                    return PLAIN_PRE + contents + PLAIN_POST
+                } else if from.mimeType == "text/markdown" {
+                    return PLAIN_PRE + contents + PLAIN_POST
+                } else if from.mimeType == "text/html" {
+                    return contents
+                }
+            } catch {
+                return "Unable to read downloaded file: \(url.absoluteString)"
             }
         } catch {
-            return nil
+            return "Unable to download filename: \(filename)"
         }
     }
     return nil
@@ -52,11 +61,17 @@ public func fetchDownload(context:NSManagedObjectContext, kind:DownloadKind, url
 
 struct DownloadListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Binding var html: String
+    @Binding var title: String
     @State var selectedDownload: Download?
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Download.basename, ascending: true)],
+    @SectionedFetchRequest<String, Download>(
+        sectionIdentifier: \.kind!,
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \Download.kind, ascending: true),
+            NSSortDescriptor(keyPath: \Download.basename, ascending: true),
+        ],
         animation: .default)
-    private var downloads: FetchedResults<Download>
+    private var downloads: SectionedFetchResults<String, Download>
 
     func sizeString(_ size: Int64) -> String {
         var convertedValue: Double = Double(size)
@@ -70,25 +85,30 @@ struct DownloadListView: View {
     }
 
     var body: some View {
-        List(downloads, id: \.self, selection: $selectedDownload) { download in
-            VStack(alignment: .leading) {
-                Text(download.title!)
-                    .foregroundColor(.primary)
-                HStack {
-                    Text(download.fullpathname?.lastPathComponent ?? "path/absent")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text(sizeString(download.filesize))
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+        List(downloads, selection: $selectedDownload) { section in
+            Section(header: Text(section.id.capitalized).foregroundColor(.accentColor)) {
+                ForEach(section, id: \.self) { download in
+                    VStack(alignment: .leading) {
+                        Text(download.title!)
+                            .foregroundColor(.primary)
+                        HStack {
+                            Text(download.filename ?? "path/absent")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Text(sizeString(download.filesize))
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                    }
                 }
             }
         }
         .onChange(of: selectedDownload) { newValue in
             if let download = selectedDownload {
                 if let contents = contents2Html(from:download) {
-                    print(contents)
+                    title = ""
+                    html = contents
                 }
             }
         }

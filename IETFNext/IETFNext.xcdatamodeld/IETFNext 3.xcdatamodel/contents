@@ -43,8 +43,8 @@
         <attribute name="basename" optional="YES" attributeType="String"/>
         <attribute name="etag" optional="YES" attributeType="String"/>
         <attribute name="ext" attributeType="String"/>
+        <attribute name="filename" optional="YES" attributeType="String"/>
         <attribute name="filesize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="fullpathname" optional="YES" attributeType="URI"/>
         <attribute name="kind" attributeType="String"/>
         <attribute name="mimeType" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>

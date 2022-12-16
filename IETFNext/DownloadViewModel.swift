@@ -29,11 +29,10 @@ class DownloadViewModel: NSObject, ObservableObject {
 
         // see if the file was already downloaded
         do {
-            let documentsURL = try
-                FileManager.default.url(for: .documentDirectory,
-                                        in: .userDomainMask,
-                                        appropriateFor: nil,
-                                        create: false)
+            let documentsURL = try FileManager.default.url(for: .documentDirectory,
+                                                           in: .userDomainMask,
+                                                           appropriateFor: nil,
+                                                           create: false)
             let basename = url.lastPathComponent
             // if not already downloaded, download it now
 
@@ -59,7 +58,7 @@ class DownloadViewModel: NSObject, ObservableObject {
                     }
 
                     context.performAndWait {
-                        self.download = createDownloadState(context:context, documentsURL:documentsURL, basename:basename, savedURL:savedURL, mimeType: httpResponse.mimeType, fileSize:httpResponse.expectedContentLength, mtg:mtg, group:group, kind:kind)
+                        self.download = createDownloadState(context:context, basename:basename, filename:suggested, mimeType: httpResponse.mimeType, fileSize:httpResponse.expectedContentLength, mtg:mtg, group:group, kind:kind)
                     }
                 } else {
                     self.error = "file found with no Download state: \(basename)"
@@ -74,7 +73,7 @@ class DownloadViewModel: NSObject, ObservableObject {
         }
     }
 
-    func createDownloadState(context: NSManagedObjectContext, documentsURL: URL, basename:String, savedURL:URL, mimeType: String?, fileSize: Int64, mtg: String, group: Group, kind:DownloadKind) -> Download {
+    func createDownloadState(context: NSManagedObjectContext, basename:String, filename:String, mimeType: String?, fileSize: Int64, mtg: String, group: Group, kind:DownloadKind) -> Download {
 
         let fetchDownload: NSFetchRequest<Download> = Download.fetchRequest()
         fetchDownload.predicate = NSPredicate(format: "basename = %@", basename)
@@ -84,11 +83,12 @@ class DownloadViewModel: NSObject, ObservableObject {
 
         if results?.count == 0 {
             // here you are inserting
+            let name:NSString = filename as NSString
             download = Download(context: context)
             download.basename = basename
             download.mimeType = mimeType
-            download.fullpathname = savedURL
-            download.ext = savedURL.pathExtension
+            download.filename = filename
+            download.ext = name.pathExtension
             download.group = group
             download.kind = kind.rawValue
             let titleBase = "IETF \(mtg) \(group.acronym!.uppercased()) "
@@ -96,7 +96,7 @@ class DownloadViewModel: NSObject, ObservableObject {
             case .agenda:
                 download.title = titleBase + "Agenda"
             case .charter:
-                download.title = titleBase + "Charter"
+                download.title = "\(group.acronym!.uppercased()) Charter"
             case .minutes:
                 download.title = titleBase + "Minutes"
             case .presentation:

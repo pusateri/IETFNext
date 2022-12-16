@@ -114,7 +114,7 @@ struct ContentView: View {
                             Text("Schedule")
                         }
                     }
-                    NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, selectedSession: $selectedSession, loadURL: $loadURL, title: $title, groupFavorites: $groupFavorites)) {
+                    NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, selectedSession: $selectedSession, title: $title, groupFavorites: $groupFavorites)) {
                         HStack {
                             Image(systemName: "person.3")
                                 .frame(width: 32, height: 32) // constant width left aligns text
@@ -130,7 +130,7 @@ struct ContentView: View {
                     }
                 }
                 Section(header: Text("Local")) {
-                    NavigationLink(destination: DownloadListView()) {
+                    NavigationLink(destination: DownloadListView(html:$html, title:$title)) {
                         HStack {
                             Image(systemName: "arrow.down.circle")
                                 .frame(width: 32, height: 32) // constant width left aligns text
