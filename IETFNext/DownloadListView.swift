@@ -137,7 +137,7 @@ struct DownloadListView: View {
                             Text(download.title!)
                                 .foregroundColor(.primary)
                             Spacer()
-                            Text(download.encoding ?? "Unknown")
+                            Text(download.encoding ?? "")
                                 .foregroundColor(.secondary)
                         }
                         HStack {
