@@ -260,7 +260,7 @@ struct DetailView: View {
                     if let download = download {
                         loadDownloadFile(from:download)
                     } else {
-                        html = "onChange: DetailView selectedSession"
+                        html = "Error Loading."
                         if let meeting = selectedMeeting {
                             if let group = session.group {
                                 Task {
@@ -273,7 +273,6 @@ struct DetailView: View {
             }
         }
         .onChange(of: model.download) { newValue in
-            print("model.download")
             if let download = model.download {
                 loadDownloadFile(from:download)
             }
