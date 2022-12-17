@@ -22,6 +22,7 @@ class DownloadViewModel: NSObject, ObservableObject {
 
         self.isBusy = true
         self.error = nil
+        self.download = nil
 
         defer {
             self.isBusy = false
@@ -58,7 +59,7 @@ class DownloadViewModel: NSObject, ObservableObject {
                     }
 
                     context.performAndWait {
-                        self.download = createDownloadState(context:context, basename:basename, filename:suggested, mimeType: httpResponse.mimeType, fileSize:httpResponse.expectedContentLength, mtg:mtg, group:group, kind:kind)
+                        self.download = createDownloadState(context:context, basename:basename, filename:suggested, mimeType: httpResponse.mimeType, encoding: httpResponse.textEncodingName, fileSize:httpResponse.expectedContentLength, mtg:mtg, group:group, kind:kind)
                     }
                 } else {
                     self.error = "file found with no Download state: \(basename)"
@@ -73,7 +74,7 @@ class DownloadViewModel: NSObject, ObservableObject {
         }
     }
 
-    func createDownloadState(context: NSManagedObjectContext, basename:String, filename:String, mimeType: String?, fileSize: Int64, mtg: String, group: Group, kind:DownloadKind) -> Download {
+    func createDownloadState(context: NSManagedObjectContext, basename:String, filename:String, mimeType: String?, encoding: String?, fileSize: Int64, mtg: String, group: Group, kind:DownloadKind) -> Download {
 
         let fetchDownload: NSFetchRequest<Download> = Download.fetchRequest()
         fetchDownload.predicate = NSPredicate(format: "basename = %@", basename)
@@ -91,6 +92,7 @@ class DownloadViewModel: NSObject, ObservableObject {
             download.ext = name.pathExtension
             download.group = group
             download.kind = kind.rawValue
+            download.encoding = encoding
             let titleBase = "IETF \(mtg) \(group.acronym!.uppercased()) "
             switch(kind) {
             case .agenda:

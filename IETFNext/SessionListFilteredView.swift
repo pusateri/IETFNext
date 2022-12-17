@@ -126,7 +126,6 @@ struct SessionListFilteredView: View {
             if let meeting = selectedMeeting {
                 if let session = selectedSession {
                     if let group = session.group {
-                        html = BLANK
 
                         // find all agendas for all sessions in the same group
                         viewContext.performAndWait {

@@ -5,6 +5,7 @@
 //  Created by Tom Pusateri on 12/11/22.
 //
 
+import Foundation
 import SwiftUI
 import CoreData
 
@@ -16,6 +17,20 @@ public enum DownloadKind: String {
     case presentation
 }
 
+public func httpEcoding2StringEncoding(encoding: String?) -> String.Encoding {
+    if let encoding = encoding {
+        if encoding == "us-ascii" {
+            return .ascii
+        } else if encoding == "utf-8" {
+            return .utf8
+        } else if encoding == "iso-8859-1" {
+            //return .isoLatin1
+            return .macOSRoman
+        }
+    }
+    return .utf8
+}
+
 public func contents2Html(from: Download) -> String? {
     if let filename = from.filename {
         do {
@@ -25,7 +40,8 @@ public func contents2Html(from: Download) -> String? {
                                                            create: false)
             let url = documentsURL.appendingPathComponent(filename)
             do {
-                let contents = try String(contentsOf:url, encoding: .utf8)
+                let enc = httpEcoding2StringEncoding(encoding: from.encoding)
+                let contents = try String(contentsOf:url, encoding: enc)
                 if from.mimeType == "text/plain" {
                     return PLAIN_PRE + contents + PLAIN_POST
                 } else if from.mimeType == "text/markdown" {
@@ -44,18 +60,20 @@ public func contents2Html(from: Download) -> String? {
 }
 
 public func fetchDownload(context:NSManagedObjectContext, kind:DownloadKind, url:URL) -> Download? {
-    let download: Download?
+    var download: Download?
 
-    let fetchDownload: NSFetchRequest<Download> = Download.fetchRequest()
-    fetchDownload.predicate = NSPredicate(format: "basename = %@", url.lastPathComponent)
+    context.performAndWait {
+        let fetchDownload: NSFetchRequest<Download> = Download.fetchRequest()
+        fetchDownload.predicate = NSPredicate(format: "basename = %@", url.lastPathComponent)
 
-    let results = try? context.fetch(fetchDownload)
+        let results = try? context.fetch(fetchDownload)
 
-    if results?.count == 0 {
-        download = nil
-    } else {
+        if results?.count == 0 {
+            download = nil
+        } else {
             // here you are updating
-        download = results?.first
+            download = results?.first
+        }
     }
     return download
 }
@@ -115,8 +133,13 @@ struct DownloadListView: View {
             Section(header: Text(section.id.capitalized).foregroundColor(.accentColor)) {
                 ForEach(section, id: \.self) { download in
                     VStack(alignment: .leading) {
-                        Text(download.title!)
-                            .foregroundColor(.primary)
+                        HStack {
+                            Text(download.title!)
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Text(download.encoding ?? "Unknown")
+                                .foregroundColor(.secondary)
+                        }
                         HStack {
                             Text(download.filename ?? "path/absent")
                                 .font(.subheadline)

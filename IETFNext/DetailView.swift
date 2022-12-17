@@ -178,8 +178,6 @@ struct DetailView: View {
                                                 await model.downloadToFile(context:viewContext, url: minutes, mtg:meeting.number!, group:group, kind:.minutes)
                                             }
                                         }
-                                    } else {
-                                        html = BLANK
                                     }
                                 }
                             }
@@ -215,8 +213,6 @@ struct DetailView: View {
                                             }
                                         }
                                     }
-                                } else {
-                                    html = BLANK
                                 }
                             }
                         }
@@ -233,8 +229,6 @@ struct DetailView: View {
                             if let group = session.group?.acronym {
                                 let url = URL(string: "https://mailarchive.ietf.org/arch/browse/\(group)/")!
                                 UIApplication.shared.open(url)
-                            } else {
-                                html = BLANK
                             }
                         }
                     }) {
@@ -260,9 +254,26 @@ struct DetailView: View {
         .onChange(of: selectedSession) { newValue in
             if let session = selectedSession {
                 presentationRequest.nsPredicate = NSPredicate(format: "session = %@", session)
+
+                if let agenda = session.agenda {
+                    let download = fetchDownload(context:viewContext, kind:.agenda, url:agenda)
+                    if let download = download {
+                        loadDownloadFile(from:download)
+                    } else {
+                        html = "onChange: DetailView selectedSession"
+                        if let meeting = selectedMeeting {
+                            if let group = session.group {
+                                Task {
+                                    await model.downloadToFile(context:viewContext, url:agenda, mtg:meeting.number!, group:group, kind:.agenda)
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         .onChange(of: model.download) { newValue in
+            print("model.download")
             if let download = model.download {
                 loadDownloadFile(from:download)
             }

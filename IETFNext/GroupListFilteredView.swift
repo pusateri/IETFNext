@@ -122,7 +122,6 @@ struct GroupListFilteredView: View {
             searchText = ""
             if let group = selectedGroup {
                 if let meeting = selectedMeeting {
-                    html = BLANK
                     viewContext.performAndWait {
                         let sessions = group.groupSessions(meeting: meeting)
                         //let sessions = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)
