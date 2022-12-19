@@ -89,6 +89,12 @@ extension SectionedFetchResults where Result == Download {
     }
 }
 
+extension SectionedFetchResults.Section where Result == Download {
+    var sectionSize: Int64 {
+        self.reduce(0) { $0 + $1.filesize }
+    }
+}
+
 struct DownloadListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Binding var html: String
@@ -139,15 +145,15 @@ struct DownloadListView: View {
             multiplyFactor += 1
         }
         if multiplyFactor == 0 {
-            return String(format: "%4.0f%@", convertedValue, tokens[multiplyFactor])
+            return String(format: "%4.0f %@", convertedValue, tokens[multiplyFactor])
         } else {
-            return String(format: "%4.1f%@", convertedValue, tokens[multiplyFactor])
+            return String(format: "%4.1f %@", convertedValue, tokens[multiplyFactor])
         }
     }
 
     var body: some View {
         List(downloads, selection: $selectedDownload) { section in
-            Section(header: Text(section.id.capitalized).foregroundColor(.accentColor)) {
+            Section {
                 ForEach(section, id: \.self) { download in
                     VStack(alignment: .leading) {
                         HStack {
@@ -168,9 +174,18 @@ struct DownloadListView: View {
                         }
                     }
                 }
+            } header: {
+                HStack {
+                    Text(section.id.capitalized)
+                        .foregroundColor(.accentColor)
+                    Spacer()
+                    Text("\(sizeString(section.sectionSize))")
+                        .foregroundColor(.accentColor)
+                        .font(.subheadline)
+                }
             }
+            .headerProminence(.increased)
         }
-        //
         .toolbar {
             ToolbarItem(placement: .bottomBar) {
                 Text("Total: \(sizeString(downloads.totalSize))")
