@@ -89,6 +89,7 @@ class DownloadViewModel: NSObject, ObservableObject {
             download.basename = basename
             download.mimeType = mimeType
             download.filename = filename
+            download.filesize = fileSize
             download.ext = name.pathExtension
             download.group = group
             download.kind = kind.rawValue

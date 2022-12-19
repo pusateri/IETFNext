@@ -128,7 +128,11 @@ struct DownloadListView: View {
             convertedValue /= 1024
             multiplyFactor += 1
         }
-        return String(format: "%4.0f %@", convertedValue, tokens[multiplyFactor])
+        if multiplyFactor == 0 {
+            return String(format: "%4.0f%@", convertedValue, tokens[multiplyFactor])
+        } else {
+            return String(format: "%4.1f%@", convertedValue, tokens[multiplyFactor])
+        }
     }
 
     var body: some View {
