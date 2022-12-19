@@ -74,7 +74,7 @@ struct DetailView: View {
         self._title = title
         self._columnVisibility = columnVisibility
         self._agendas = agendas
-        self.model = DownloadViewModel()
+        self.model = DownloadViewModel.shared
     }
 
     var body: some View {
@@ -260,7 +260,7 @@ struct DetailView: View {
                     if let download = download {
                         loadDownloadFile(from:download)
                     } else {
-                        html = "Error Loading."
+                        html = BLANK
                         if let meeting = selectedMeeting {
                             if let group = session.group {
                                 Task {
@@ -279,7 +279,7 @@ struct DetailView: View {
         }
         .onChange(of: model.error) { newValue in
             if let err = model.error {
-                html = err
+                html = PLAIN_PRE + err + PLAIN_POST
             }
         }
         .onChange(of:draftURL) { newValue in
