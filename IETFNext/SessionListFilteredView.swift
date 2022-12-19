@@ -17,10 +17,11 @@ struct SessionListFilteredView: View {
     @Binding var html: String
     @Binding var title: String
     @Binding var sessionFilterMode: SessionFilterMode
+    @Binding var columnVisibility: NavigationSplitViewVisibility
     @Binding var agendas: [Agenda]
 
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, html: Binding<String>, title: Binding<String>, sessionFilterMode: Binding<SessionFilterMode>, agendas: Binding<[Agenda]>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, html: Binding<String>, title: Binding<String>, sessionFilterMode: Binding<SessionFilterMode>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
         var predicate: NSPredicate
         let number = selectedMeeting.wrappedValue?.number ?? "0"
         let now = Date() as CVarArg
@@ -51,6 +52,7 @@ struct SessionListFilteredView: View {
         self._html = html
         self._title = title
         self._sessionFilterMode = sessionFilterMode
+        self._columnVisibility = columnVisibility
         self._agendas = agendas
     }
 
@@ -143,6 +145,11 @@ struct SessionListFilteredView: View {
                         }
                     }
                 }
+            }
+        }
+        .onAppear() {
+            if columnVisibility == .all {
+                columnVisibility = .doubleColumn
             }
         }
     }

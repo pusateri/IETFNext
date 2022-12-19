@@ -86,6 +86,7 @@ struct DownloadListView: View {
     @Binding var html: String
     @Binding var fileURL: URL?
     @Binding var title: String
+    @Binding var columnVisibility: NavigationSplitViewVisibility
     @State var selectedDownload: Download?
     @SectionedFetchRequest<String, Download>(
         sectionIdentifier: \.kind!,
@@ -163,6 +164,11 @@ struct DownloadListView: View {
         .onChange(of: selectedDownload) { newValue in
             if let download = selectedDownload {
                 loadDownloadFile(from: download)
+            }
+        }
+        .onAppear() {
+            if columnVisibility == .all {
+                columnVisibility = .doubleColumn
             }
         }
     }

@@ -253,6 +253,7 @@ public func loadData(meeting: Meeting, context: NSManagedObjectContext) async {
                 }
             }
         } catch DecodingError.dataCorrupted(let context) {
+            print("schedule \(meeting.number!), ")
             print(context)
         } catch DecodingError.keyNotFound(let key, let context) {
             print("Key '\(key)' not found:", context.debugDescription)

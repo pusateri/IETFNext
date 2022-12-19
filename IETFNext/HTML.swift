@@ -39,6 +39,12 @@ let PLAIN_PRE = """
       :root {
           color-scheme: light dark;
       }
+      a:link {
+          color: #3A82F6;
+      }
+      a.visited {
+          color: #3A82F6;
+      }
       pre {
          font-family: -apple-system, "courier new", courier, monospace;
          font-size: 16px;
@@ -89,7 +95,10 @@ let IMAGE_POST = """
 """
 
 let MD_PRE = """
- <meta charset="UTF-8">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title></title>
@@ -99,6 +108,12 @@ let MD_PRE = """
       }
       body {
           font-family: -apple-system, "courier new", courier, monospace;
+      }
+      a:link {
+          color: #3A82F6;
+      }
+      a.visited {
+          color: #3A82F6;
       }
     </style>
   </head>

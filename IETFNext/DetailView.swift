@@ -89,10 +89,10 @@ struct DetailView: View {
                     Button(action: {
                         switch (columnVisibility) {
                             case .detailOnly:
-                                columnVisibility = NavigationSplitViewVisibility.doubleColumn
+                                columnVisibility = .doubleColumn
 
                             default:
-                                columnVisibility = NavigationSplitViewVisibility.detailOnly
+                                columnVisibility = .detailOnly
                         }
                     }) {
                         switch (columnVisibility) {
