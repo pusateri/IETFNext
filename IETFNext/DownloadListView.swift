@@ -5,9 +5,9 @@
 //  Created by Tom Pusateri on 12/11/22.
 //
 
-import Foundation
 import SwiftUI
 import CoreData
+import MarkdownKit
 
 public enum DownloadKind: String {
     case agenda
@@ -45,7 +45,10 @@ public func contents2Html(from: Download) -> String? {
                 if from.mimeType == "text/plain" {
                     return PLAIN_PRE + contents + PLAIN_POST
                 } else if from.mimeType == "text/markdown" {
-                    return PLAIN_PRE + contents + PLAIN_POST
+                    //return PLAIN_PRE + contents + PLAIN_POST
+                    let markdown = MarkdownParser.standard.parse(contents)
+
+                    return MD_PRE + HtmlGenerator.standard.generate(doc: markdown) + MD_POST
                 } else if from.mimeType == "text/html" {
                     return contents
                 }
