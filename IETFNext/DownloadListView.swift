@@ -81,12 +81,21 @@ public func fetchDownload(context:NSManagedObjectContext, kind:DownloadKind, url
     return download
 }
 
+extension SectionedFetchResults where Result == Download {
+    var totalSize: Int64 {
+        self.reduce(0) { sum, section in
+            section.reduce(into: sum) { $0 += $1.filesize }
+        }
+    }
+}
+
 struct DownloadListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Binding var html: String
     @Binding var fileURL: URL?
     @Binding var title: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
+
     @State var selectedDownload: Download?
     @SectionedFetchRequest<String, Download>(
         sectionIdentifier: \.kind!,
@@ -159,6 +168,14 @@ struct DownloadListView: View {
                         }
                     }
                 }
+            }
+        }
+        //
+        .toolbar {
+            ToolbarItem(placement: .bottomBar) {
+                Text("Total: \(sizeString(downloads.totalSize))")
+                    .font(.subheadline)
+                    .foregroundColor(.accentColor)
             }
         }
         .onChange(of: selectedDownload) { newValue in

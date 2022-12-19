@@ -102,6 +102,10 @@ struct ContentView: View {
             Text("IETF")
         }
     }
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Download.basename, ascending: true)],
+        animation: .default)
+    private var downloads: FetchedResults<Download>
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
@@ -134,7 +138,11 @@ struct ContentView: View {
                         HStack {
                             Image(systemName: "arrow.down.circle")
                                 .frame(width: 32, height: 32) // constant width left aligns text
-                            Text("Downloads")
+                            HStack {
+                                Text("Downloads")
+                                Spacer()
+                                Text("\(downloads.count)")
+                            }
                         }
                     }
                 }
