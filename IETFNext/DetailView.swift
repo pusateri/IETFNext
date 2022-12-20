@@ -187,16 +187,14 @@ struct DetailView: View {
                         Label("View Minutes", systemImage: "clock")
                     }
                     .disabled(selectedSession?.minutes == nil)
-                    /*
                     Button(action: {
+                        if let url = selectedSession?.recording {
+                            UIApplication.shared.open(url)
+                        }
                     }) {
                         Label("View Recording", systemImage: "play")
                     }
-                    Button(action: {
-                    }) {
-                        Label("Listen Audio", systemImage: "speaker.wave.3")
-                    }
-                     */
+                    .disabled(selectedSession?.recording == nil)
                     Button(action: {
                         if let meeting = selectedMeeting {
                             if let session = selectedSession {
@@ -269,6 +267,12 @@ struct DetailView: View {
                                 }
                             }
                         }
+                    }
+                }
+                // if we don't have a recording URL, go get one. We don't expect it to change once we have it
+                if session.recording == nil {
+                    Task {
+                        await loadRecordingDocument(context:viewContext, selectedSession:$selectedSession)
                     }
                 }
             }

@@ -5,7 +5,7 @@
 //  Created by Tom Pusateri on 11/27/22.
 //
 
-import Foundation
+import SwiftUI
 import CoreData
 
 extension String {
@@ -317,6 +317,73 @@ public func loadDrafts(context: NSManagedObjectContext, limit: Int32, offset: In
         }
     } catch {
         print("Unexpected Meeting format")
+    }
+}
+
+public func loadRecordingDocument(context: NSManagedObjectContext, selectedSession: Binding<Session?>) async {
+    if let session = selectedSession.wrappedValue {
+        if let meeting = session.meeting {
+            if let group = session.group {
+                let urlString = "https://datatracker.ietf.org/api/v1/doc/document/?name__contains=recording-\(meeting.number!)&external_url__contains=youtube&group__acronym=\(group.acronym!)"
+
+                guard let url = URL(string: urlString) else {
+                    print("Invalid URL: \(urlString)")
+                    return
+                }
+                do {
+                    // 2022-11-09 at 13:00:00
+                    let recFormatter = DateFormatter()
+                    recFormatter.locale = Locale(identifier: Locale.current.identifier)
+                    recFormatter.dateFormat = "yyyy-MM-dd' at 'HH:mm:ss"
+                    recFormatter.calendar = Calendar(identifier: .iso8601)
+                    recFormatter.timeZone = TimeZone(identifier: meeting.time_zone!)
+                    let matchTitle = String(format: "Video recording for \(group.acronym!.uppercased()) on \(recFormatter.string(from: session.start!))")
+                    let (data, _) = try await URLSession.shared.data(from: url)
+                    do {
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
+                        let json_docs = try decoder.decode(Documents.self, from: data)
+
+                        print(matchTitle)
+                        for obj in json_docs.objects {
+                            if obj.title == matchTitle {
+                                if let external_url = obj.external_url {
+                                    guard let recording_url = URL(string: external_url) else {
+                                        print("Invalid External recording URL: \(external_url)")
+                                        return
+                                    }
+                                    print("found match")
+                                    context.performAndWait {
+                                        session.recording = recording_url
+                                        do {
+                                            try context.save()
+                                        }
+                                        catch {
+                                            print("Unable to save recording in Session: \(session.name!)")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch DecodingError.dataCorrupted(let context) {
+                        print(context)
+                    } catch DecodingError.keyNotFound(let key, let context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch DecodingError.valueNotFound(let value, let context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch DecodingError.typeMismatch(let type, let context) {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
+                    }
+                } catch {
+                    print("Unexpected recording format")
+                }
+            }
+        }
     }
 }
 
