@@ -15,8 +15,9 @@ struct DocumentListView: View {
     var wg: String
     @State var selectedDocument: Document? = nil
     @Binding var urlString: String?
+    @Binding var titleString: String?
 
-    init(wg: String, urlString: Binding<String?>) {
+    init(wg: String, urlString: Binding<String?>, titleString: Binding<String?>) {
         _documents = FetchRequest<Document>(
             sortDescriptors: [
                 NSSortDescriptor(keyPath: \Document.name, ascending: true),
@@ -26,6 +27,7 @@ struct DocumentListView: View {
             animation: .default)
         self.wg = wg
         self._urlString = urlString
+        self._titleString = titleString
     }
 
     var body: some View {
@@ -61,7 +63,11 @@ struct DocumentListView: View {
                 // htmlized
                 // let urlString = "https://datatracker.ietf.org/doc/html/\(d.name!)-\(d.rev!)"
                 // native html
+
+                // set titleString before urlString since we are only acting on changes to urlString
+                titleString = d.title
                 urlString = "https://www.ietf.org/archive/id/\(d.name!)-\(d.rev!).html"
+
             }
         }
     }

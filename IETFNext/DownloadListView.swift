@@ -188,10 +188,10 @@ struct DownloadListView: View {
                 ForEach(section, id: \.self) { download in
                     VStack(alignment: .leading) {
                         HStack {
-                            Text(download.title!)
+                            Text("\(download.title ?? download.group?.acronym ?? "Unknown")")
                                 .foregroundColor(.primary)
                             Spacer()
-                            Text(download.encoding ?? "")
+                            Text(download.group?.acronym ?? "")
                                 .foregroundColor(.secondary)
                         }
                         HStack {
@@ -220,6 +220,7 @@ struct DownloadListView: View {
             }
             .headerProminence(.increased)
         }
+        .listStyle(.inset)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 EditButton()

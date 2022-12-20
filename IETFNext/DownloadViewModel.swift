@@ -19,7 +19,7 @@ class DownloadViewModel: NSObject, ObservableObject {
 
     // This should only be called if there's no Download state for the url
     // TODO: deal with an agenda changing from .md to .txt to .html (save and check Etag)
-    func downloadToFile(context: NSManagedObjectContext, url: URL, mtg: String, group: Group, kind:DownloadKind) async {
+    func downloadToFile(context: NSManagedObjectContext, url: URL, mtg: String, group: Group, kind:DownloadKind, title: String?) async {
 
         self.isBusy = true
         self.error = nil
@@ -60,7 +60,7 @@ class DownloadViewModel: NSObject, ObservableObject {
                     }
 
                     context.performAndWait {
-                        self.download = createDownloadState(context:context, basename:basename, filename:suggested, mimeType: httpResponse.mimeType, encoding: httpResponse.textEncodingName, fileSize:httpResponse.expectedContentLength, mtg:mtg, group:group, kind:kind)
+                        self.download = createDownloadState(context:context, basename:basename, filename:suggested, mimeType: httpResponse.mimeType, encoding: httpResponse.textEncodingName, fileSize:httpResponse.expectedContentLength, ETag: httpResponse.value(forHTTPHeaderField: "ETag"), mtg:mtg, group:group, kind:kind, title:title)
                     }
                 } else {
                     self.error = "file found with no Download state: \(basename)"
@@ -75,7 +75,7 @@ class DownloadViewModel: NSObject, ObservableObject {
         }
     }
 
-    func createDownloadState(context: NSManagedObjectContext, basename:String, filename:String, mimeType: String?, encoding: String?, fileSize: Int64, mtg: String, group: Group, kind:DownloadKind) -> Download {
+    func createDownloadState(context: NSManagedObjectContext, basename:String, filename:String, mimeType: String?, encoding: String?, fileSize: Int64, ETag: String?, mtg: String, group: Group, kind:DownloadKind, title: String?) -> Download {
 
         let fetchDownload: NSFetchRequest<Download> = Download.fetchRequest()
         fetchDownload.predicate = NSPredicate(format: "basename = %@", basename)
@@ -91,23 +91,12 @@ class DownloadViewModel: NSObject, ObservableObject {
             download.mimeType = mimeType
             download.filename = filename
             download.filesize = fileSize
+            download.etag = ETag
             download.ext = name.pathExtension
             download.group = group
             download.kind = kind.rawValue
             download.encoding = encoding
-            let titleBase = "IETF \(mtg) \(group.acronym!.uppercased()) "
-            switch(kind) {
-            case .agenda:
-                download.title = titleBase + "Agenda"
-            case .charter:
-                download.title = "\(group.acronym!.uppercased()) Charter"
-            case .draft:
-                download.title = "\(group.acronym!.uppercased()) Internet-Draft"
-            case .minutes:
-                download.title = titleBase + "Minutes"
-            case .presentation:
-                download.title = titleBase + "Presentation"
-            }
+            download.title = title
             do {
                 try context.save()
             }

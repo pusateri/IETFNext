@@ -23,6 +23,7 @@ struct DetailView: View {
     @Binding var agendas: [Agenda]
 
     @State var draftURL: String? = nil
+    @State var draftTitle: String? = nil
     @ObservedObject var model: DownloadViewModel
 
     func loadDownloadFile(from:Download) {
@@ -118,7 +119,7 @@ struct DetailView: View {
                                                 loadDownloadFile(from:download)
                                             } else {
                                                 Task {
-                                                    await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.presentation)
+                                                    await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.presentation, title: p.title)
                                                 }
                                             }
                                         }
@@ -155,7 +156,7 @@ struct DetailView: View {
                                             loadDownloadFile(from:download)
                                         } else {
                                             Task {
-                                                await model.downloadToFile(context:viewContext, url: agenda.url, mtg:meeting.number!, group:group, kind:.agenda)
+                                                await model.downloadToFile(context:viewContext, url: agenda.url, mtg:meeting.number!, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                                             }
                                         }
                                     }
@@ -175,7 +176,7 @@ struct DetailView: View {
                                             loadDownloadFile(from:download)
                                         } else {
                                             Task {
-                                                await model.downloadToFile(context:viewContext, url: minutes, mtg:meeting.number!, group:group, kind:.minutes)
+                                                await model.downloadToFile(context:viewContext, url: minutes, mtg:meeting.number!, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                                             }
                                         }
                                     }
@@ -208,7 +209,7 @@ struct DetailView: View {
                                                 loadDownloadFile(from:download)
                                             } else {
                                                 Task {
-                                                    await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.charter)
+                                                    await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.charter, title: "\(group.acronym!.uppercased()) Charter")
                                                 }
                                             }
                                         }
@@ -244,7 +245,7 @@ struct DetailView: View {
         .sheet(isPresented: $showingDocuments) {
             if let session = selectedSession {
                 if let wg = session.group?.acronym {
-                    DocumentListView(wg:wg, urlString:$draftURL)
+                    DocumentListView(wg:wg, urlString:$draftURL, titleString:$draftTitle)
                 }
             }
         }
@@ -264,7 +265,7 @@ struct DetailView: View {
                         if let meeting = selectedMeeting {
                             if let group = session.group {
                                 Task {
-                                    await model.downloadToFile(context:viewContext, url:agenda, mtg:meeting.number!, group:group, kind:.agenda)
+                                    await model.downloadToFile(context:viewContext, url:agenda, mtg:meeting.number!, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                                 }
                             }
                         }
@@ -293,7 +294,7 @@ struct DetailView: View {
                             if let session = selectedSession {
                                 if let group = session.group {
                                     Task {
-                                        await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.draft)
+                                        await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.draft, title:draftTitle)
                                     }
                                 }
                             }
