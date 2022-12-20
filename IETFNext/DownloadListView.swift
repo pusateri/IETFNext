@@ -151,6 +151,37 @@ struct DownloadListView: View {
         }
     }
 
+    func removeDownload(section: SectionedFetchResults<String, Download>.Section, indexset: IndexSet) {
+        viewContext.performAndWait {
+            for i in indexset {
+                let download: Download = section[i]
+                if let filename = download.filename {
+                    do {
+                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
+                                                                       in: .userDomainMask,
+                                                                       appropriateFor: nil,
+                                                                       create: false)
+                        
+                        let savedURL = documentsURL.appendingPathComponent(filename)
+                        do {
+                            try FileManager.default.removeItem(at: savedURL)
+                            viewContext.delete(download)
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    } catch {
+                        print("couldn't create fileURL to delete download: \(filename), error \(error.localizedDescription)")
+                    }
+                }
+            }
+            do {
+                try viewContext.save()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+
     var body: some View {
         List(downloads, selection: $selectedDownload) { section in
             Section {
@@ -174,6 +205,9 @@ struct DownloadListView: View {
                         }
                     }
                 }
+                .onDelete { indexSet in
+                    removeDownload(section: section, indexset: indexSet)
+                }
             } header: {
                 HStack {
                     Text(section.id.capitalized)
@@ -187,6 +221,9 @@ struct DownloadListView: View {
             .headerProminence(.increased)
         }
         .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                EditButton()
+            }
             ToolbarItem(placement: .bottomBar) {
                 Text("Total: \(sizeString(downloads.totalSize))")
                     .font(.subheadline)
