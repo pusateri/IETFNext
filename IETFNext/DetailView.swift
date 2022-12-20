@@ -57,7 +57,7 @@ struct DetailView: View {
                 NSSortDescriptor(keyPath: \Presentation.order, ascending: true),
             ],
             // placeholder predicate
-            predicate: NSPredicate(format: "session.group.acronym = %@", selectedSession.wrappedValue?.group?.acronym! ?? "0"),
+            predicate: NSPredicate(format: "(session.meeting.number = %@) AND (session.group.acronym = %@)", selectedSession.wrappedValue?.meeting?.number ?? "0", selectedSession.wrappedValue?.group?.acronym! ?? "0"),
             animation: .default
         )
         _charterRequest = FetchRequest<Document>(

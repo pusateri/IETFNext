@@ -17,7 +17,6 @@
 15. Show sessions at each location
 16. have main app handle background downloads (error when app moves to bg)
 17. pdf previews
-18. change meeting from 115 to 114 and then 115 slides show up under 114.
 
 
 IETF colors:
