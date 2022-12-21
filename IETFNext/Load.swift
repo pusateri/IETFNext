@@ -336,6 +336,11 @@ public func loadDrafts(context: NSManagedObjectContext, limit: Int32, offset: In
     }
 }
 
+// For when we add RFCs
+// This has some duplicates in it. Not sure why.
+// What we really want is "states": ["/api/v1/doc/state/3/",
+// http://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-ietf-ippm-*&type=draft&states__slug__contains=rfc&limit=85
+
 public func loadRelatedDrafts(context: NSManagedObjectContext, limit: Int32, offset: Int32, group: Group) async {
     let url: URL
     let urlString = "https://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-(?!ietf-\(group.acronym!))[A-Za-z0-9]*-\(group.acronym!)-*&type=draft&states__slug__contains=active"
