@@ -23,8 +23,8 @@ struct SessionListFilteredView: View {
 
     init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, html: Binding<String>, title: Binding<String>, sessionFilterMode: Binding<SessionFilterMode>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
         var predicate: NSPredicate
+        var now: Date
         let number = selectedMeeting.wrappedValue?.number ?? "0"
-        let now = Date() as CVarArg
 
         switch(sessionFilterMode.wrappedValue) {
         case .favorites:
@@ -32,9 +32,41 @@ struct SessionListFilteredView: View {
         case .bofs:
             predicate = NSPredicate(format: "(meeting.number = %@) AND (is_bof = %d)", number, true)
         case .now:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (start > %@) AND (end < %@)", number, now, now)
-        case .day, .none:
+            now = Date()
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (start > %@) AND (end < %@)", number, now as CVarArg, now as CVarArg)
+        case .today:
+            now = Date()
+            let calendar = Calendar.current
+            let begin = calendar.startOfDay(for: now)
+            let end = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: now)
+            if let end = end {
+                predicate = NSPredicate(format: "(meeting.number = %@) AND (start > %@) AND (end < %@)", number, begin as CVarArg, end as CVarArg)
+            } else {
+                // we should NEVER hit this case but we don't want it to crash unexpectedly
+                predicate = NSPredicate(format: "(meeting.number = %@) AND (start > %@)", number, begin as CVarArg)
+            }
+        case .none:
             predicate = NSPredicate(format: "meeting.number = %@", number)
+        case .area_art:
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "art")
+        case .area_gen:
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "gen")
+        case .area_iab:
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "iab")
+        case .area_ietf:
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "ietf")
+        case .area_int:
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "int")
+        case .area_irtf:
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "irtf")
+        case .area_ops:
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "ops")
+        case .area_rtg:
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "rtg")
+        case .area_sec:
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "sec")
+        case .area_tsv:
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "tsv")
         }
 
         _fetchRequest = SectionedFetchRequest<String, Session> (
@@ -91,7 +123,7 @@ struct SessionListFilteredView: View {
             }
             ToolbarItem(placement: .primaryAction) {
                 Menu {
-                    Section("Session Filters") {
+                    Section("Common Filters") {
                         Button(action: {
                             sessionFilterMode = .favorites
                         }) {
@@ -108,9 +140,57 @@ struct SessionListFilteredView: View {
                             Label(SessionFilterMode.now.label, systemImage: SessionFilterMode.now.image)
                         }
                         Button(action: {
+                            sessionFilterMode = .today
+                        }) {
+                            Label(SessionFilterMode.today.label, systemImage: SessionFilterMode.today.image)
+                        }
+                        Button(action: {
                             sessionFilterMode = .none
                         }) {
                             Label(SessionFilterMode.none.label, systemImage: SessionFilterMode.none.image)
+                        }
+                    }
+                    Section("Filter by Area") {
+                        Button(action: {
+                            sessionFilterMode = .area_art
+                        }) {
+                            Label(SessionFilterMode.area_art.label, systemImage: SessionFilterMode.area_art.image)
+                                .foregroundColor(.red)
+                        }
+                        Button(action: {
+                            sessionFilterMode = .area_gen
+                        }) {
+                            Label(SessionFilterMode.area_gen.label, systemImage: SessionFilterMode.area_gen.image)
+                        }
+                        Button(action: {
+                            sessionFilterMode = .area_int
+                        }) {
+                            Label(SessionFilterMode.area_int.label, systemImage: SessionFilterMode.area_int.image)
+                        }
+                        Button(action: {
+                            sessionFilterMode = .area_irtf
+                        }) {
+                            Label(SessionFilterMode.area_irtf.label, systemImage: SessionFilterMode.area_irtf.image)
+                        }
+                        Button(action: {
+                            sessionFilterMode = .area_ops
+                        }) {
+                            Label(SessionFilterMode.area_ops.label, systemImage: SessionFilterMode.area_ops.image)
+                        }
+                        Button(action: {
+                            sessionFilterMode = .area_rtg
+                        }) {
+                            Label(SessionFilterMode.area_rtg.label, systemImage: SessionFilterMode.area_rtg.image)
+                        }
+                        Button(action: {
+                            sessionFilterMode = .area_sec
+                        }) {
+                            Label(SessionFilterMode.area_sec.label, systemImage: SessionFilterMode.area_sec.image)
+                        }
+                        Button(action: {
+                            sessionFilterMode = .area_tsv
+                        }) {
+                            Label(SessionFilterMode.area_tsv.label, systemImage: SessionFilterMode.area_tsv.image)
                         }
                     }
                 }

@@ -23,52 +23,104 @@ protocol CompoundEnum {
 }
 
 enum SessionFilterMode: String, CompoundEnum {
-    case favorites
-    case day
-    case now
     case bofs
+    case favorites
     case none
+    case now
+    case today
+    case area_art
+    case area_gen
+    case area_iab
+    case area_ietf
+    case area_int
+    case area_irtf
+    case area_ops
+    case area_rtg
+    case area_sec
+    case area_tsv
 
     var image: String {
         switch(self) {
         case .favorites:
             return "star.fill"
-        case .day:
-            return "foo"
+        case .today:
+            return "clock"
         case .now:
             return "exclamationmark.2"
         case .bofs:
             return "bird"
         case .none:
             return "circle.slash"
+        default:
+            return "square.3.layers.3d.down.forward"
         }
     }
     var label: String {
         switch(self) {
         case .favorites:
             return "Show Favorites"
-        case .day:
-            return "Show by Day"
+        case .today:
+            return "Show Today"
         case .now:
             return "Show Now"
         case .bofs:
             return "Show BoFs"
         case .none:
             return "No Filter"
+        case .area_art:
+            return "ART Area"
+        case .area_gen:
+            return "GEN Area"
+        case .area_iab:
+            return "IAB"
+        case .area_ietf:
+            return "IETF"
+        case .area_int:
+            return "INT Area"
+        case .area_irtf:
+            return "IRTF"
+        case .area_ops:
+            return "OPS Area"
+        case .area_rtg:
+            return "RTG Area"
+        case .area_sec:
+            return "SEC Area"
+        case .area_tsv:
+            return "TSV Area"
         }
     }
     var short: String {
         switch(self) {
         case .favorites:
             return "Favorites"
-        case .day:
-            return "Day"
+        case .today:
+            return "Today"
         case .now:
             return "Now"
         case .bofs:
             return "BoFs"
         case .none:
             return "None"
+        case .area_art:
+            return "ART"
+        case .area_gen:
+            return "GEN"
+        case .area_iab:
+            return "IAB"
+        case .area_ietf:
+            return "IETF"
+        case .area_int:
+            return "INT"
+        case .area_irtf:
+            return "IRTF"
+        case .area_ops:
+            return "OPS"
+        case .area_rtg:
+            return "RTG"
+        case .area_sec:
+            return "SEC"
+        case .area_tsv:
+            return "TSV"
         }
     }
 }
