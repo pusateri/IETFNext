@@ -14,6 +14,7 @@ struct SessionListFilteredView: View {
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
+    @Binding var sessionsForGroup: [Session]?
     @Binding var html: String
     @Binding var title: String
     @Binding var sessionFilterMode: SessionFilterMode
@@ -21,7 +22,7 @@ struct SessionListFilteredView: View {
     @Binding var agendas: [Agenda]
 
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, html: Binding<String>, title: Binding<String>, sessionFilterMode: Binding<SessionFilterMode>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, sessionsForGroup: Binding<[Session]?>, html: Binding<String>, title: Binding<String>, sessionFilterMode: Binding<SessionFilterMode>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
         var predicate: NSPredicate
         var now: Date
         let number = selectedMeeting.wrappedValue?.number ?? "0"
@@ -81,6 +82,7 @@ struct SessionListFilteredView: View {
 
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
+        self._sessionsForGroup = sessionsForGroup
         self._html = html
         self._title = title
         self._sessionFilterMode = sessionFilterMode
@@ -211,8 +213,8 @@ struct SessionListFilteredView: View {
 
                         // find all agendas for all sessions in the same group
                         viewContext.performAndWait {
-                            let all_sessions = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)
-                            agendas = uniqueAgendasForSessions(sessions: all_sessions)
+                            sessionsForGroup = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)
+                            agendas = uniqueAgendasForSessions(sessions: sessionsForGroup)
                         }
 
                         if let wg = group.acronym {

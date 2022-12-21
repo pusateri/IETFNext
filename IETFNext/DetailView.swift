@@ -16,6 +16,7 @@ struct DetailView: View {
     @State private var showingDocuments = false
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
+    @Binding var sessionsForGroup: [Session]?
     @Binding var html: String
     @Binding var fileURL: URL?
     @Binding var title: String
@@ -50,7 +51,19 @@ struct DetailView: View {
         }
     }
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, html: Binding<String>, fileURL:Binding<URL?>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
+    func recordingSuffix(session: Session) -> String {
+        if let sessions = sessionsForGroup {
+            if sessions.count != 1 {
+                let idx = sessions.firstIndex(of: session)
+                if let idx = idx {
+                    return String(format: " \(idx + 1)")
+                }
+            }
+        }
+        return ""
+    }
+
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, sessionsForGroup: Binding<[Session]?>, html: Binding<String>, fileURL:Binding<URL?>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
 
         _presentationRequest = FetchRequest<Presentation>(
             sortDescriptors: [
@@ -70,6 +83,7 @@ struct DetailView: View {
 
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
+        self._sessionsForGroup = sessionsForGroup
         self._html = html
         self._fileURL = fileURL
         self._title = title
@@ -187,14 +201,16 @@ struct DetailView: View {
                         Label("View Minutes", systemImage: "clock")
                     }
                     .disabled(selectedSession?.minutes == nil)
-                    Button(action: {
-                        if let url = selectedSession?.recording {
-                            UIApplication.shared.open(url)
+                    ForEach(sessionsForGroup ?? []) { session in
+                        Button(action: {
+                            if let url = session.recording {
+                                UIApplication.shared.open(url)
+                            }
+                        }) {
+                            Label("View Recording\(recordingSuffix(session:session))", systemImage: "play")
                         }
-                    }) {
-                        Label("View Recording", systemImage: "play")
+                        .disabled(session.recording == nil)
                     }
-                    .disabled(selectedSession?.recording == nil)
                     Button(action: {
                         if let meeting = selectedMeeting {
                             if let session = selectedSession {

@@ -138,6 +138,7 @@ struct ContentView: View {
     @State var selectedMeeting: Meeting?
     @State var selectedGroup: Group? = nil
     @State var selectedSession: Session?
+    @State var sessionsForGroup: [Session]?
     @State var selectedLocation: Location?
     @State var html: String = ""
     @State var fileURL: URL? = nil
@@ -163,7 +164,7 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List() {
                 Section(header: first_header) {
-                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, html: $html, title: $title, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility, agendas: $agendas)) {
+                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionsForGroup:$sessionsForGroup, html: $html, title: $title, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility, agendas: $agendas)) {
                         HStack {
                             Image(systemName: "calendar")
                                 .frame(width: 32, height: 32) // constant width left aligns text
@@ -215,11 +216,12 @@ struct ContentView: View {
                 }
             }
         } content: {
-            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, html: $html, title: $title, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility, agendas: $agendas)
+            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionsForGroup:$sessionsForGroup, html: $html, title: $title, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility, agendas: $agendas)
         } detail: {
             DetailView(
                 selectedMeeting:$selectedMeeting,
                 selectedSession:$selectedSession,
+                sessionsForGroup:$sessionsForGroup,
                 html:$html,
                 fileURL:$fileURL,
                 title:$title,

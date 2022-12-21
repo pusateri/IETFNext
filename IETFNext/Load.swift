@@ -74,6 +74,21 @@ struct Parent: Decodable {
     let objtype: ObjectType
 }
 
+/*
+ * session status options:
+ * appr : Approved
+ * canceled : Cancelled
+ * canceledpa : Cancelled - Pre Announcement
+ * deleted : Deleted
+ * disappr : Disapproved
+ * notmeet : Not meeting
+ * resched : Rescheduled
+ * sched : Scheduled
+ * scheda : Scheduled - Announcement to be sent
+ * apprw : Waiting for Approval
+ * schedw : Waiting for Scheduling
+ */
+
 struct JSONSession: Decodable {
     let agenda: String?
     let duration: CustomTimeInterval
@@ -344,7 +359,6 @@ public func loadRecordingDocument(context: NSManagedObjectContext, selectedSessi
                         decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
                         let json_docs = try decoder.decode(Documents.self, from: data)
 
-                        print(matchTitle)
                         for obj in json_docs.objects {
                             if obj.title == matchTitle {
                                 if let external_url = obj.external_url {
@@ -352,7 +366,6 @@ public func loadRecordingDocument(context: NSManagedObjectContext, selectedSessi
                                         print("Invalid External recording URL: \(external_url)")
                                         return
                                     }
-                                    print("found match")
                                     context.performAndWait {
                                         session.recording = recording_url
                                         do {
