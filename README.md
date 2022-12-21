@@ -4,20 +4,22 @@
 2. Add related drafts: "https://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-%%5bA-Za-z0-9%%5d%%2a-%@-%%2a&type=draft&states__slug__contains=active", wg_abbr
 3. Add RFCs: "https://datatracker.ietf.org/api/v1/doc/docalias/?name__startswith=rfc&document__name__contains=%@&document__type=draft", wg_abbr
 4. enable @SceneStorage to keep track of where you last were
-5. keep track of all sessions per group
-6. Find a way to select session favorites from detail view
-7. print pdf version of drafts
-8. add local time
-9. detail view moving from open slides to try and open drafts gives error
-10. Add favorites to Rooms?
-11. More details for rooms (maybe room schedule)
-12. add spinning circle when loading the sessions for a meeting?
-13. In group list view, select, then filter, then select crashes
-14. Show sessions at each location
-15. have main app handle background downloads (error when app moves to bg)
-16. pdf previews
-17. fix recording menu item to show both recordings if there are two sessions
-18. group.documents isn't reset when re-read drafts
+5. print pdf version of drafts
+6. add local time
+7. detail view moving from open slides to try and open drafts gives error
+8. More details for rooms (maybe room schedule)
+9. In group list view, select, then filter, then select crashes
+10. Show sessions at each location
+11. have main app handle background downloads (error when app moves to bg)
+12. pdf previews
+13. fallback when no native HTML version of draft
+14. group.documents isn't reset when re-read drafts
+
+*** Maybe ***
+
+1. Add favorites to Rooms?
+2. add spinning circle when loading the sessions for a meeting?
+3. Find a way to select session favorites from detail view?
 
 
 IETF colors:
