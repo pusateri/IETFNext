@@ -16,37 +16,59 @@ struct DocumentListView: View {
     @State var selectedDocument: Document? = nil
     @Binding var urlString: String?
     @Binding var titleString: String?
+    var predicate: NSPredicate
+    @Binding var kind: DocumentKind
 
-    init(wg: String, urlString: Binding<String?>, titleString: Binding<String?>) {
+    init(wg: String, urlString: Binding<String?>, titleString: Binding<String?>, kind: Binding<DocumentKind>) {
+        self._kind = kind
+        self.wg = wg
+        self._urlString = urlString
+        self._titleString = titleString
+
+        switch(kind.wrappedValue) {
+        case .charter:
+            predicate = NSPredicate(value: false)
+        case .draft:
+            predicate = NSPredicate(format: "(ANY group.acronym = %@) AND (type contains \"draft\")", wg)
+        case .related:
+            predicate = NSPredicate(format: "(ANY relatedGroup.acronym = %@) AND (type contains \"draft\")", wg)
+        case .rfc:
+            predicate = NSPredicate(value: false)
+        }
+
         _documents = FetchRequest<Document>(
             sortDescriptors: [
                 NSSortDescriptor(keyPath: \Document.name, ascending: true),
                 NSSortDescriptor(keyPath: \Document.rev, ascending: true),
             ],
-            predicate: NSPredicate(format: "(ANY group.acronym = %@) AND (type contains \"draft\")", wg),
+            predicate: predicate,
             animation: .default)
-        self.wg = wg
-        self._urlString = urlString
-        self._titleString = titleString
     }
 
     var body: some View {
         NavigationView {
-            List(selection: $selectedDocument) {
-                Section("Drafts") {
-                    ForEach(documents, id: \.self) { d in
-                        VStack(alignment: .leading) {
-                            Text(d.title!)
-                                .foregroundColor(.primary)
-                            Text("\(d.name!)-\(d.rev!)")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
+            VStack(alignment: .center) {
+                Picker("Document Type", selection: $kind) {
+                    Text("Active Drafts").tag(DocumentKind.draft)
+                    Text("Related Drafts").tag(DocumentKind.related)
+                }
+                .pickerStyle(.segmented)
+                List(selection: $selectedDocument) {
+                    Section("Drafts") {
+                        ForEach(documents, id: \.self) { d in
+                            VStack(alignment: .leading) {
+                                Text(d.title!)
+                                    .foregroundColor(.primary)
+                                Text("\(d.name!)-\(d.rev!)")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
+                    .headerProminence(.increased)
                 }
-                .headerProminence(.increased)
+                .listStyle(.inset)
             }
-            .listStyle(.inset)
             .navigationTitle("\(wg)")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

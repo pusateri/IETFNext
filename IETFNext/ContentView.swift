@@ -16,6 +16,7 @@ extension Bundle {
         return infoDictionary?["CFBundleVersion"] as? String ?? "?"
     }
 }
+
 protocol CompoundEnum {
     var image: String { get }
     var label: String { get }
@@ -129,6 +130,14 @@ public struct Agenda: Identifiable, Hashable {
     public let id: Int32
     public let desc: String
     public let url: URL
+}
+
+// drafts downloaded are categorized by type and stored in one of three group relations
+enum DocumentKind {
+    case charter
+    case draft
+    case related
+    case rfc
 }
 
 struct ContentView: View {

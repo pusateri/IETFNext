@@ -25,6 +25,7 @@ struct DetailView: View {
 
     @State var draftURL: String? = nil
     @State var draftTitle: String? = nil
+    @State var kind: DocumentKind = .draft
     @ObservedObject var model: DownloadViewModel
 
     func loadDownloadFile(from:Download) {
@@ -259,7 +260,7 @@ struct DetailView: View {
         .sheet(isPresented: $showingDocuments) {
             if let session = selectedSession {
                 if let wg = session.group?.acronym {
-                    DocumentListView(wg:wg, urlString:$draftURL, titleString:$draftTitle)
+                    DocumentListView(wg:wg, urlString:$draftURL, titleString:$draftTitle, kind:$kind)
                 }
             }
         }

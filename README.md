@@ -1,25 +1,27 @@
 *** TODO ***
 
 1. core data background context
-2. Add related drafts: "https://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-%%5bA-Za-z0-9%%5d%%2a-%@-%%2a&type=draft&states__slug__contains=active", wg_abbr
-3. Add RFCs: "https://datatracker.ietf.org/api/v1/doc/docalias/?name__startswith=rfc&document__name__contains=%@&document__type=draft", wg_abbr
-4. enable @SceneStorage to keep track of where you last were
-5. print pdf version of drafts
-6. add local time
-7. detail view moving from open slides to try and open drafts gives error
-8. More details for rooms (maybe room schedule)
-9. In group list view, select, then filter, then select crashes
-10. Show sessions at each location
-11. have main app handle background downloads (error when app moves to bg)
-12. pdf previews
-13. fallback when no native HTML version of draft
-14. group.documents isn't reset when re-read drafts
+2. Add RFCs: "https://datatracker.ietf.org/api/v1/doc/docalias/?name__startswith=rfc&document__name__contains=%@&document__type=draft", wg_abbr
+3. enable @SceneStorage to keep track of where you last were
+4. print pdf version of drafts
+5. add local time
+6. detail view moving from open slides to try and open drafts gives error
+7. More details for rooms (maybe room schedule)
+8. In group list view, select, then filter, then select crashes
+9. Show sessions at each location
+10. have main app handle background downloads (error when app moves to bg)
+11. pdf previews
+12. fallback when no native HTML version of draft
+13. recording menu item isn't always active (observed object problem?)
+14. Add draft / presentation / charter / agenda date to download list
+15. Only gets the first 20 drafts right now
 
 *** Maybe ***
 
 1. Add favorites to Rooms?
 2. add spinning circle when loading the sessions for a meeting?
 3. Find a way to select session favorites from detail view?
+4. Add inactive drafts?
 
 
 IETF colors:

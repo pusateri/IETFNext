@@ -312,8 +312,60 @@ public func loadDrafts(context: NSManagedObjectContext, limit: Int32, offset: In
             let json_docs = try decoder.decode(Documents.self, from: data)
 
             context.performAndWait {
+                group.documents = Set<Group>() as NSSet
                 for obj in json_docs.objects {
-                    updateDocument(context:context, group:group, document:obj)
+                    updateDocument(context:context, group:group, kind:.draft, document:obj)
+                }
+            }
+        } catch DecodingError.dataCorrupted(let context) {
+            print(context)
+        } catch DecodingError.keyNotFound(let key, let context) {
+            print("Key '\(key)' not found:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch DecodingError.valueNotFound(let value, let context) {
+            print("Value '\(value)' not found:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch DecodingError.typeMismatch(let type, let context) {
+            print("Type '\(type)' mismatch:", context.debugDescription)
+            print("codingPath:", context.codingPath)
+        } catch {
+            print("error: ", error)
+        }
+    } catch {
+        print("Unexpected Meeting format")
+    }
+}
+
+public func loadRelatedDrafts(context: NSManagedObjectContext, limit: Int32, offset: Int32, group: Group) async {
+    let url: URL
+    let urlString = "https://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-(?!ietf-\(group.acronym!))[A-Za-z0-9]*-\(group.acronym!)-*&type=draft&states__slug__contains=active"
+
+    if offset == 0 {
+        guard let url0 = URL(string: urlString) else {
+            print("Invalid Related Draft URL")
+            return
+        }
+        url = url0
+    } else {
+        guard let url_offset = URL(string: urlString + "limit=\(limit)&offset=\(offset)") else {
+            print("Invalid Related Draft URL offset")
+            return
+        }
+        url = url_offset
+    }
+    do {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        do {
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
+            let json_docs = try decoder.decode(Documents.self, from: data)
+
+            context.performAndWait {
+                group.relatedDocs = Set<Group>() as NSSet
+                for obj in json_docs.objects {
+                    if !obj.name.starts(with: "draft-ietf-\(group.acronym!)") {
+                        updateDocument(context:context, group:group, kind:.related, document:obj)
+                    }
                 }
             }
         } catch DecodingError.dataCorrupted(let context) {
@@ -415,7 +467,7 @@ public func loadCharterDocument(context: NSManagedObjectContext, group: Group) a
             let json_doc = try decoder.decode(JSONDocument.self, from: data)
 
             context.performAndWait {
-                updateDocument(context:context, group:group, document:json_doc)
+                updateDocument(context:context, group:group, kind:.charter, document:json_doc)
             }
         } catch DecodingError.dataCorrupted(let context) {
             print(context)
@@ -436,7 +488,7 @@ public func loadCharterDocument(context: NSManagedObjectContext, group: Group) a
     }
 }
 
-private func updateDocument(context: NSManagedObjectContext, group: Group, document: JSONDocument) {
+private func updateDocument(context: NSManagedObjectContext, group: Group, kind: DocumentKind, document: JSONDocument) {
     let fetchDocument: NSFetchRequest<Document> = Document.fetchRequest()
     fetchDocument.predicate = NSPredicate(format: "id = %d", document.id)
 
@@ -587,10 +639,24 @@ private func updateDocument(context: NSManagedObjectContext, group: Group, docum
      */
 
     // associate document with working group
-    if doc.group != group {
-        doc.group = group
-        save = true
+    switch(kind) {
+    case .charter, .draft:
+        if doc.group != group {
+            doc.group = group
+            save = true
+        }
+    case .related:
+        if doc.relatedGroup != group {
+            doc.relatedGroup = group
+            save = true
+        }
+    case .rfc:
+        if doc.rfcGroup != group {
+            doc.rfcGroup = group
+            save = true
+        }
     }
+
     if save {
         do {
             try context.save()
