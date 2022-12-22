@@ -133,7 +133,7 @@ public struct Agenda: Identifiable, Hashable {
 }
 
 // drafts downloaded are categorized by type and stored in one of three group relations
-enum DocumentKind {
+enum DocumentKind: String {
     case charter
     case draft
     case related

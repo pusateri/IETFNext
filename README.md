@@ -16,7 +16,7 @@
 14. Recording tab (2nd) on Oauth doesn't always get activated.
 15. fix macOS popups and view sizes.
 16. Add keyboard shortcuts for iPad and maybe macOS
-17. reset drafts default to .drafts
+17. Got errors: Unable to save Document draft-ietf-netconf-...
 
 *** Maybe ***
 

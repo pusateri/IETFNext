@@ -687,7 +687,7 @@ class JSONLoader: NSObject {
                 try context.save()
             }
             catch {
-                print("Unable to save Document \(document.name)")
+                print("Unable to save Document \(document.name) kind: \(kind.rawValue)")
             }
         }
     }

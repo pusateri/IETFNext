@@ -304,7 +304,7 @@ struct DetailView: View {
         .onChange(of: selectedSession) { newValue in
             if let session = selectedSession {
                 presentationRequest.nsPredicate = NSPredicate(format: "session = %@", session)
-
+                kind = .draft
                 if let agenda = session.agenda {
                     let download = fetchDownload(kind:.agenda, url:agenda)
                     if let download = download {
