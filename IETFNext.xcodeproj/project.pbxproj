@@ -11,11 +11,9 @@
 		F80CA269294778FA002AD2C6 /* GroupListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA268294778FA002AD2C6 /* GroupListRowView.swift */; };
 		F80CA26B29477D85002AD2C6 /* GroupExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26A29477D85002AD2C6 /* GroupExtensions.swift */; };
 		F80CA26D2947BC73002AD2C6 /* SessionListLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26C2947BC73002AD2C6 /* SessionListLocationView.swift */; };
-		F80CA26F29492041002AD2C6 /* BackgroundDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26E29492041002AD2C6 /* BackgroundDownloadManager.swift */; };
 		F80CA271294920D9002AD2C6 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA270294920D9002AD2C6 /* DownloadViewModel.swift */; };
 		F80CA275294ABA24002AD2C6 /* HTML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA274294ABA24002AD2C6 /* HTML.swift */; };
 		F87E0F42294FD45800E1E1A8 /* MarkdownKit in Frameworks */ = {isa = PBXBuildFile; productRef = F87E0F41294FD45800E1E1A8 /* MarkdownKit */; };
-		F87E0F44294FD45800E1E1A8 /* MarkdownKitProcess in Frameworks */ = {isa = PBXBuildFile; productRef = F87E0F43294FD45800E1E1A8 /* MarkdownKitProcess */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E127C0293EA7A4004A35E8 /* SessionListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */; };
@@ -63,7 +61,6 @@
 		F80CA268294778FA002AD2C6 /* GroupListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListRowView.swift; sourceTree = "<group>"; };
 		F80CA26A29477D85002AD2C6 /* GroupExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupExtensions.swift; sourceTree = "<group>"; };
 		F80CA26C2947BC73002AD2C6 /* SessionListLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListLocationView.swift; sourceTree = "<group>"; };
-		F80CA26E29492041002AD2C6 /* BackgroundDownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundDownloadManager.swift; sourceTree = "<group>"; };
 		F80CA270294920D9002AD2C6 /* DownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewModel.swift; sourceTree = "<group>"; };
 		F80CA274294ABA24002AD2C6 /* HTML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTML.swift; sourceTree = "<group>"; };
 		F80CA276294B937B002AD2C6 /* IETFNext 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 3.xcdatamodel"; sourceTree = "<group>"; };
@@ -100,7 +97,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F87E0F44294FD45800E1E1A8 /* MarkdownKitProcess in Frameworks */,
 				F87E0F42294FD45800E1E1A8 /* MarkdownKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -150,7 +146,6 @@
 				F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */,
 				F8E9B99E2934101200CA6F09 /* Persistence.swift */,
 				F8E127BB293BFE1B004A35E8 /* AreaColors.swift */,
-				F80CA26E29492041002AD2C6 /* BackgroundDownloadManager.swift */,
 				F8E9B9A32934101200CA6F09 /* ContentView.swift */,
 				F8E127C12940E254004A35E8 /* DetailView.swift */,
 				F8E127C52942BF18004A35E8 /* DocumentListView.swift */,
@@ -220,7 +215,6 @@
 			name = IETFNext;
 			packageProductDependencies = (
 				F87E0F41294FD45800E1E1A8 /* MarkdownKit */,
-				F87E0F43294FD45800E1E1A8 /* MarkdownKitProcess */,
 			);
 			productName = IETFNext;
 			productReference = F8E9B9992934101200CA6F09 /* IETFNext.app */;
@@ -375,7 +369,6 @@
 				F8E127C92943F13B004A35E8 /* Revision.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
 				F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */,
-				F80CA26F29492041002AD2C6 /* BackgroundDownloadManager.swift in Sources */,
 				F80CA26B29477D85002AD2C6 /* GroupExtensions.swift in Sources */,
 				F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */,
 				F8E9BA172937EB2C00CA6F09 /* SessionListRowView.swift in Sources */,
@@ -545,7 +538,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"IETFNext/Preview Content\"";
 				DEVELOPMENT_TEAM = H34JG5K6Q7;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = IETFNext/Info.plist;
@@ -590,7 +583,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"IETFNext/Preview Content\"";
 				DEVELOPMENT_TEAM = H34JG5K6Q7;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = IETFNext/Info.plist;
@@ -772,11 +765,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F87E0F40294FD45800E1E1A8 /* XCRemoteSwiftPackageReference "swift-markdownkit" */;
 			productName = MarkdownKit;
-		};
-		F87E0F43294FD45800E1E1A8 /* MarkdownKitProcess */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F87E0F40294FD45800E1E1A8 /* XCRemoteSwiftPackageReference "swift-markdownkit" */;
-			productName = MarkdownKitProcess;
 		};
 /* End XCSwiftPackageProductDependency section */
 

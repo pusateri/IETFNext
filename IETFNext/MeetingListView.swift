@@ -63,7 +63,9 @@ struct MeetingListView: View {
                 MeetingListRowView(meeting: mtg)
             }
             .navigationTitle("IETF \(selectedMeeting?.number! ?? "Select Meeting")")
+#if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
+#endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel", role: .cancel) {

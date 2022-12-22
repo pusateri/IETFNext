@@ -9,12 +9,14 @@
 7. More details for rooms (maybe room schedule)
 8. In group list view, select, then filter, then select crashes
 9. Show sessions at each location
-10. have main app handle background downloads (error when app moves to bg)
-11. pdf previews
-12. fallback when no native HTML version of draft
-13. recording menu item isn't always active (observed object problem?)
-14. Add draft / presentation / charter / agenda date to download list
-15. Only gets the first 20 drafts right now
+10. pdf previews
+11. fallback when no native HTML version of draft
+12. recording menu item isn't always active (observed object problem?)
+13. Add draft / presentation / charter / agenda date to download list
+14. Only gets the first 20 drafts right now
+15. Recording tab (2nd) on Oauth doesn't always get activated.
+16. fix macOS popups and view sizes.
+17. Add keyboard shortcuts for iPad and maybe macOS
 
 *** Maybe ***
 

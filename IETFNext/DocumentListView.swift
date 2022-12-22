@@ -70,7 +70,9 @@ struct DocumentListView: View {
                 .listStyle(.inset)
             }
             .navigationTitle("\(wg)")
+#if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
+#endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel", role: .cancel) {

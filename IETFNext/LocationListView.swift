@@ -10,7 +10,9 @@ import CoreData
 
 struct LocationListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+#if !os(macOS)
     @Environment(\.horizontalSizeClass) var sizeClass
+#endif
     @SectionedFetchRequest<String, Location> var fetchRequest: SectionedFetchResults<String, Location>
     @Binding var selectedLocation: Location?
     @Binding var selectedMeeting: Meeting?
@@ -54,7 +56,9 @@ struct LocationListView: View {
             .headerProminence(.increased)
         }
         .listStyle(.inset)
+#if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
+#endif
         .toolbar {
             ToolbarItem(placement: .principal) {
                 if let meeting = selectedMeeting {
@@ -68,6 +72,7 @@ struct LocationListView: View {
                     }
                 }
             }
+#if !os(macOS)
             ToolbarItem(placement: .bottomBar) {
                 if let meeting = selectedMeeting {
                     if let number = meeting.number {
@@ -79,6 +84,7 @@ struct LocationListView: View {
                     }
                 }
             }
+#endif
         }
         .onChange(of: selectedMeeting) { newValue in
             if let meeting = newValue {
@@ -88,6 +94,9 @@ struct LocationListView: View {
         .onChange(of: selectedLocation) { newValue in
             if let location = selectedLocation {
                 if let name = location.name {
+                    /*
+                     * macOS doesn't have sizeClass.
+                     * TODO: level isn't showing up even on iOS
                     if let level = location.level_name {
                         // TODO: iPad landscape detail view is compat when all columns are shown
                         if sizeClass == .compact || level == "Uncategorized" {
@@ -96,6 +105,8 @@ struct LocationListView: View {
                             title = "\(level) - \(name)"
                         }
                     }
+                     */
+                    title = name
                 }
                 if let map = location.map {
                     html = IMAGE_PRE + "\(map)" + IMAGE_POST

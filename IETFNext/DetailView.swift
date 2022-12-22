@@ -10,7 +10,9 @@ import SwiftUI
 
 struct DetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
+#if os(iOS)
     @Environment(\.horizontalSizeClass) var sizeClass
+#endif
     @FetchRequest<Presentation> var presentationRequest: FetchedResults<Presentation>
     @FetchRequest<Document> var charterRequest: FetchedResults<Document>
     @State private var showingDocuments = false
@@ -95,11 +97,14 @@ struct DetailView: View {
 
     var body: some View {
         WebView(html:$html, fileURL:$fileURL)
+#if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
+#endif
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text(title).bold()
             }
+            #if !os(macOS)
             if sizeClass == .regular {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
@@ -120,6 +125,7 @@ struct DetailView: View {
                     }
                 }
             }
+            #endif
             ToolbarItem {
                 Menu {
                     ForEach(presentationRequest, id: \.self) { p in
@@ -205,7 +211,11 @@ struct DetailView: View {
                     ForEach(sessionsForGroup ?? []) { session in
                         Button(action: {
                             if let url = session.recording {
+                                #if os(macOS)
+                                NSWorkspace.shared.open(url)
+                                #else
                                 UIApplication.shared.open(url)
+                                #endif
                             }
                         }) {
                             Label("View Recording\(recordingSuffix(session:session))", systemImage: "play")
@@ -244,7 +254,11 @@ struct DetailView: View {
                         if let session = selectedSession {
                             if let group = session.group?.acronym {
                                 let url = URL(string: "https://mailarchive.ietf.org/arch/browse/\(group)/")!
+                                #if os(macOS)
+                                NSWorkspace.shared.open(url)
+                                #else
                                 UIApplication.shared.open(url)
+                                #endif
                             }
                         }
                     }) {

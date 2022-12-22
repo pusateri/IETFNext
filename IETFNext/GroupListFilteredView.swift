@@ -78,10 +78,12 @@ struct GroupListFilteredView: View {
             .headerProminence(.increased)
         }
         .listStyle(.inset)
+#if !os(macOS)
         .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
         .keyboardType(.alphabet)
-        .disableAutocorrection(true)
         .navigationBarTitleDisplayMode(.inline)
+#endif
+        .disableAutocorrection(true)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 VStack {
@@ -93,6 +95,7 @@ struct GroupListFilteredView: View {
                         .foregroundColor(.accentColor)
                 }
             }
+            #if !os(macOS)
             ToolbarItem(placement: .bottomBar) {
                 if let meeting = selectedMeeting {
                     if let number = meeting.number {
@@ -104,6 +107,7 @@ struct GroupListFilteredView: View {
                     }
                 }
             }
+            #endif
             ToolbarItem(placement: .primaryAction) {
                 Button(action: {
                     withAnimation {

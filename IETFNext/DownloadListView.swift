@@ -222,6 +222,7 @@ struct DownloadListView: View {
         }
         .listStyle(.inset)
         .toolbar {
+#if !os(macOS)
             ToolbarItem(placement: .primaryAction) {
                 EditButton()
             }
@@ -230,6 +231,7 @@ struct DownloadListView: View {
                     .font(.subheadline)
                     .foregroundColor(.accentColor)
             }
+#endif
         }
         .onChange(of: selectedDownload) { newValue in
             if let download = selectedDownload {

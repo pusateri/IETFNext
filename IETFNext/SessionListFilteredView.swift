@@ -100,7 +100,9 @@ struct SessionListFilteredView: View {
             }
         }
         .listStyle(.inset)
+#if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
+#endif
         .toolbar {
             ToolbarItem(placement: .principal) {
                 VStack {
@@ -112,6 +114,7 @@ struct SessionListFilteredView: View {
                         .foregroundColor(.accentColor)
                 }
             }
+#if !os(macOS)
             ToolbarItem(placement: .bottomBar) {
                 if let meeting = selectedMeeting {
                     if let number = meeting.number {
@@ -123,6 +126,7 @@ struct SessionListFilteredView: View {
                     }
                 }
             }
+#endif
             ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Section("Common Filters") {
