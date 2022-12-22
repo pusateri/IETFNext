@@ -62,25 +62,6 @@ public func contents2Html(from: Download) -> String? {
     return nil
 }
 
-public func fetchDownload(context:NSManagedObjectContext, kind:DownloadKind, url:URL) -> Download? {
-    var download: Download?
-
-    context.performAndWait {
-        let fetchDownload: NSFetchRequest<Download> = Download.fetchRequest()
-        fetchDownload.predicate = NSPredicate(format: "basename = %@", url.lastPathComponent)
-
-        let results = try? context.fetch(fetchDownload)
-
-        if results?.count == 0 {
-            download = nil
-        } else {
-            // here you are updating
-            download = results?.first
-        }
-    }
-    return download
-}
-
 extension SectionedFetchResults where Result == Download {
     var totalSize: Int64 {
         self.reduce(0) { sum, section in

@@ -142,6 +142,7 @@ enum DocumentKind {
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.loader) private var loader
     @State private var showingMeetings = false
     @State var columnVisibility: NavigationSplitViewVisibility = .doubleColumn
     @State var selectedMeeting: Meeting?
@@ -247,7 +248,7 @@ struct ContentView: View {
                 }
                 if let meeting = selectedMeeting {
                     Task {
-                        await loadData(meeting:meeting, context:viewContext)
+                        await loader?.loadData(meetingID: meeting.objectID)
                     }
                 }
             } else {

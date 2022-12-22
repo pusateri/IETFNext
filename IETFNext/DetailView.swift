@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
-
+import CoreData
 
 struct DetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.loader) private var loader
 #if os(iOS)
     @Environment(\.horizontalSizeClass) var sizeClass
 #endif
@@ -29,6 +30,25 @@ struct DetailView: View {
     @State var draftTitle: String? = nil
     @State var kind: DocumentKind = .draft
     @ObservedObject var model: DownloadViewModel
+
+    public func fetchDownload(kind:DownloadKind, url:URL) -> Download? {
+        var download: Download?
+
+        viewContext.performAndWait {
+            let fetch: NSFetchRequest<Download> = Download.fetchRequest()
+            fetch.predicate = NSPredicate(format: "basename = %@", url.lastPathComponent)
+
+            let results = try? viewContext.fetch(fetch)
+
+            if results?.count == 0 {
+                download = nil
+            } else {
+                // here you are updating
+                download = results?.first
+            }
+        }
+        return download
+    }
 
     func loadDownloadFile(from:Download) {
         if let mimeType = from.mimeType {
@@ -135,7 +155,7 @@ struct DetailView: View {
                                     if let group = session.group {
                                         let urlString = "https://www.ietf.org/proceedings/\(meeting.number!)/slides/\(p.name!)-\(p.rev!).pdf"
                                         if let url = URL(string: urlString) {
-                                            let download = fetchDownload(context:viewContext, kind:.presentation, url:url)
+                                            let download = fetchDownload(kind:.presentation, url:url)
                                             if let download = download {
                                                 loadDownloadFile(from:download)
                                             } else {
@@ -172,7 +192,7 @@ struct DetailView: View {
                             if let meeting = selectedMeeting {
                                 if let session = selectedSession {
                                     if let group = session.group {
-                                        let download = fetchDownload(context:viewContext, kind:.agenda, url:agenda.url)
+                                        let download = fetchDownload(kind:.agenda, url:agenda.url)
                                         if let download = download {
                                             loadDownloadFile(from:download)
                                         } else {
@@ -192,7 +212,7 @@ struct DetailView: View {
                             if let session = selectedSession {
                                 if let group = session.group {
                                     if let minutes = session.minutes {
-                                        let download = fetchDownload(context:viewContext, kind:.minutes, url:minutes)
+                                        let download = fetchDownload(kind:.minutes, url:minutes)
                                         if let download = download {
                                             loadDownloadFile(from:download)
                                         } else {
@@ -229,7 +249,7 @@ struct DetailView: View {
                                     if let rev = charterRequest.first?.rev {
                                         let urlString = "https://www.ietf.org/charter/charter-ietf-\(group.acronym!)-\(rev).txt"
                                         if let url = URL(string: urlString) {
-                                            let download = fetchDownload(context:viewContext, kind:.charter, url:url)
+                                            let download = fetchDownload(kind:.charter, url:url)
                                             if let download = download {
                                                 loadDownloadFile(from:download)
                                             } else {
@@ -286,7 +306,7 @@ struct DetailView: View {
                 presentationRequest.nsPredicate = NSPredicate(format: "session = %@", session)
 
                 if let agenda = session.agenda {
-                    let download = fetchDownload(context:viewContext, kind:.agenda, url:agenda)
+                    let download = fetchDownload(kind:.agenda, url:agenda)
                     if let download = download {
                         loadDownloadFile(from:download)
                     } else {
@@ -303,7 +323,7 @@ struct DetailView: View {
                 // if we don't have a recording URL, go get one. We don't expect it to change once we have it
                 if session.recording == nil {
                     Task {
-                        await loadRecordingDocument(context:viewContext, selectedSession:$selectedSession)
+                        await loader?.loadRecordingDocument(sessionID: session.objectID)
                     }
                 }
             }
@@ -321,7 +341,7 @@ struct DetailView: View {
         .onChange(of:draftURL) { newValue in
             if let draftURL = draftURL {
                 if let url = URL(string:draftURL) {
-                    let download = fetchDownload(context:viewContext, kind:.draft, url:url)
+                    let download = fetchDownload(kind:.draft, url:url)
                     if let download = download {
                         loadDownloadFile(from:download)
                     } else {

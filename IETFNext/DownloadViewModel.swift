@@ -77,11 +77,11 @@ class DownloadViewModel: NSObject, ObservableObject {
 
     func createDownloadState(context: NSManagedObjectContext, basename:String, filename:String, mimeType: String?, encoding: String?, fileSize: Int64, ETag: String?, mtg: String, group: Group, kind:DownloadKind, title: String?) -> Download {
 
-        let fetchDownload: NSFetchRequest<Download> = Download.fetchRequest()
-        fetchDownload.predicate = NSPredicate(format: "basename = %@", basename)
+        let fetch: NSFetchRequest<Download> = Download.fetchRequest()
+        fetch.predicate = NSPredicate(format: "basename = %@", basename)
 
         var download: Download!
-        let results = try? context.fetch(fetchDownload)
+        let results = try? context.fetch(fetch)
 
         if results?.count == 0 {
             // here you are inserting

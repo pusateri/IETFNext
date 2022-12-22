@@ -13,6 +13,7 @@
 		F80CA26D2947BC73002AD2C6 /* SessionListLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26C2947BC73002AD2C6 /* SessionListLocationView.swift */; };
 		F80CA271294920D9002AD2C6 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA270294920D9002AD2C6 /* DownloadViewModel.swift */; };
 		F80CA275294ABA24002AD2C6 /* HTML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA274294ABA24002AD2C6 /* HTML.swift */; };
+		F87DFD592954F5710023CF9F /* EnvironmentKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87DFD582954F5710023CF9F /* EnvironmentKeys.swift */; };
 		F87E0F42294FD45800E1E1A8 /* MarkdownKit in Frameworks */ = {isa = PBXBuildFile; productRef = F87E0F41294FD45800E1E1A8 /* MarkdownKit */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
@@ -64,6 +65,7 @@
 		F80CA270294920D9002AD2C6 /* DownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewModel.swift; sourceTree = "<group>"; };
 		F80CA274294ABA24002AD2C6 /* HTML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTML.swift; sourceTree = "<group>"; };
 		F80CA276294B937B002AD2C6 /* IETFNext 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 3.xcdatamodel"; sourceTree = "<group>"; };
+		F87DFD582954F5710023CF9F /* EnvironmentKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentKeys.swift; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
 		F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListFilteredView.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				F8E127C52942BF18004A35E8 /* DocumentListView.swift */,
 				F80CA26629469B60002AD2C6 /* DownloadListView.swift */,
 				F80CA270294920D9002AD2C6 /* DownloadViewModel.swift */,
+				F87DFD582954F5710023CF9F /* EnvironmentKeys.swift */,
 				F80CA26A29477D85002AD2C6 /* GroupExtensions.swift */,
 				F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */,
 				F80CA268294778FA002AD2C6 /* GroupListRowView.swift */,
@@ -374,6 +377,7 @@
 				F8E9BA172937EB2C00CA6F09 /* SessionListRowView.swift in Sources */,
 				F80CA26729469B60002AD2C6 /* DownloadListView.swift in Sources */,
 				F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */,
+				F87DFD592954F5710023CF9F /* EnvironmentKeys.swift in Sources */,
 				F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */,
 				F80CA275294ABA24002AD2C6 /* HTML.swift in Sources */,
 				F8E9BA152936B5FA00CA6F09 /* WebView.swift in Sources */,

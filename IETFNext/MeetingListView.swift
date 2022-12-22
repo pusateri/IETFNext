@@ -49,6 +49,7 @@ struct JSONMeeting: Decodable {
 
 struct MeetingListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.loader) private var loader
     @Environment(\.dismiss) var dismiss
     @Binding var selectedMeeting: Meeting?
 
@@ -77,7 +78,7 @@ struct MeetingListView: View {
                 if let meeting = selectedMeeting {
                     UserDefaults.standard.set(meeting.number!, forKey:"MeetingNumber")
                     Task {
-                        await loadData(meeting:meeting, context:viewContext)
+                        await loader?.loadData(meetingID: meeting.objectID)
                     }
                 }
                 dismiss()
@@ -123,10 +124,8 @@ private func loadMeetings(context: NSManagedObjectContext, limit: Int32, offset:
             decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
             let json_meetings = try decoder.decode(Meetings.self, from: data)
 
-            context.performAndWait {
-                for obj in json_meetings.objects {
-                    meetings.append(updateMeeting(context:context, meeting:obj))
-                }
+            for obj in json_meetings.objects {
+                meetings.append(updateMeeting(context:context, meeting:obj))
             }
         } catch DecodingError.dataCorrupted(let context) {
             print(context)

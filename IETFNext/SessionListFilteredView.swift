@@ -11,6 +11,7 @@ import CoreData
 
 struct SessionListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.loader) private var loader
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
@@ -88,6 +89,16 @@ struct SessionListFilteredView: View {
         self._sessionFilterMode = sessionFilterMode
         self._columnVisibility = columnVisibility
         self._agendas = agendas
+    }
+
+    private func findSessionsForGroup(meeting: Meeting, group: Group) -> [Session]? {
+
+        let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
+        fetchSession.predicate = NSPredicate(format: "meeting = %@ AND group = %@", meeting, group)
+        fetchSession.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Session.start, ascending: true)
+        ]
+        return try? viewContext.fetch(fetchSession)
     }
 
     var body: some View {
@@ -217,7 +228,7 @@ struct SessionListFilteredView: View {
 
                         // find all agendas for all sessions in the same group
                         viewContext.performAndWait {
-                            sessionsForGroup = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)
+                            sessionsForGroup = findSessionsForGroup(meeting:meeting, group:group)
                             agendas = uniqueAgendasForSessions(sessions: sessionsForGroup)
                         }
 
@@ -226,9 +237,9 @@ struct SessionListFilteredView: View {
                             title = wg
                         }
                         Task {
-                            await loadDrafts(context:viewContext, limit:0, offset:0, group:group)
-                            await loadCharterDocument(context:viewContext, group:group)
-                            await loadRelatedDrafts(context:viewContext, limit:0, offset:0, group:group)
+                            await loader?.loadDrafts(groupID:group.objectID, limit:0, offset:0)
+                            await loader?.loadCharterDocument(groupID:group.objectID)
+                            await loader?.loadRelatedDrafts(groupID:group.objectID, limit:0, offset:0)
                         }
                     }
                 }

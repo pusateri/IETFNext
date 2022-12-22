@@ -1,22 +1,22 @@
 *** TODO ***
 
-1. core data background context
-2. Add RFCs: "https://datatracker.ietf.org/api/v1/doc/docalias/?name__startswith=rfc&document__name__contains=%@&document__type=draft", wg_abbr
-3. enable @SceneStorage to keep track of where you last were
-4. print pdf version of drafts
-5. add local time
-6. detail view moving from open slides to try and open drafts gives error
-7. More details for rooms (maybe room schedule)
-8. In group list view, select, then filter, then select crashes
-9. Show sessions at each location
-10. pdf previews
-11. fallback when no native HTML version of draft
-12. recording menu item isn't always active (observed object problem?)
-13. Add draft / presentation / charter / agenda date to download list
-14. Only gets the first 20 drafts right now
-15. Recording tab (2nd) on Oauth doesn't always get activated.
-16. fix macOS popups and view sizes.
-17. Add keyboard shortcuts for iPad and maybe macOS
+1. Add RFCs: "https://datatracker.ietf.org/api/v1/doc/docalias/?name__startswith=rfc&document__name__contains=%@&document__type=draft", wg_abbr
+2. enable @SceneStorage to keep track of where you last were
+3. print pdf version of drafts
+4. add local time
+5. detail view moving from open slides to try and open drafts gives error
+6. More details for rooms (maybe room schedule)
+7. In group list view, select, then filter, then select crashes
+8. Show sessions at each location
+9. pdf previews
+10. fallback when no native HTML version of draft
+11. recording menu item isn't always active (observed object problem?)
+12. Add draft / presentation / charter / agenda date to download list
+13. Only gets the first 20 drafts right now
+14. Recording tab (2nd) on Oauth doesn't always get activated.
+15. fix macOS popups and view sizes.
+16. Add keyboard shortcuts for iPad and maybe macOS
+17. reset drafts default to .drafts
 
 *** Maybe ***
 
