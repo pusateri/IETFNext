@@ -141,7 +141,6 @@ enum DocumentKind: String {
 }
 
 public enum SidebarOption: String {
-    case none
     case schedule
     case groups
     case locations
@@ -154,18 +153,32 @@ struct Choice: Identifiable, Hashable {
     var imageName: String
 }
 
+struct SectionChoice: Identifiable, Hashable {
+    var id: String
+    var choices: [Choice]
+}
+
 extension Choice {
-    typealias ChoiceItem = (String, Choice)
-    static let sectionChoices: [ChoiceItem] = [
-        ("IETF", Choice(id: .schedule, text: "Schedule", imageName: "calendar")),
-        ("IETF", Choice(id: .groups, text: "Working Groups", imageName: "person.3")),
-        ("IETF", Choice(id: .locations, text: "Venue & Room Locations", imageName: "map")),
-        ("Local", Choice(id: .download, text: "Downloads", imageName: "arrow.down.circle")),
+    static let sectionChoices: [SectionChoice] = [
+        SectionChoice(
+            id: "IETF",
+            choices: [
+                Choice(id: .schedule, text: "Schedule", imageName: "calendar"),
+                Choice(id: .groups, text: "Working Groups", imageName: "person.3"),
+                Choice(id: .locations, text: "Venue & Room Locations", imageName: "map")
+                ]
+            ),
+        SectionChoice(
+            id: "Local",
+            choices: [
+                Choice(id: .download, text: "Downloads", imageName: "arrow.down.circle")
+                ]
+            )
     ]
 }
 
 private class ChoiceViewModel: ObservableObject {
-    @Published var choices: [Choice.ChoiceItem] = Choice.sectionChoices
+    @Published var sections: [SectionChoice] = Choice.sectionChoices
 }
 
 struct ContentView: View {
@@ -173,7 +186,7 @@ struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.loader) private var loader
     @State private var showingMeetings = false
-    @State var columnVisibility: NavigationSplitViewVisibility = .doubleColumn
+    @State var columnVisibility: NavigationSplitViewVisibility = .all
     @State var selectedMeeting: Meeting?
     @State var selectedGroup: Group? = nil
     @State var selectedSession: Session?
@@ -204,41 +217,13 @@ struct ContentView: View {
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            List() {
-                Section(header: first_header) {
-                    NavigationLink(value: SidebarOption.schedule) {
-                        Label("Schedule", systemImage: "calendar")
-                    }
-                    NavigationLink(value: SidebarOption.groups) {
-                        Label("Working Groups", systemImage: "person.3")
-                    }
-                    NavigationLink(value: SidebarOption.locations) {
-                        Label("Venue & Room Locations", systemImage: "map")
-                    }
-                }
-                Section(header: Text("Local")) {
-                    NavigationLink(value: SidebarOption.download) {
-                        HStack {
-                            Label("Downloads", systemImage: "arrow.down.circle")
-                            Spacer()
-                            Text("\(downloads.count)")
-                                .foregroundColor(.secondary)
+            List(viewModel.sections, selection: $sidebarOption) { section in
+                Section(header: Text(section.id)) {
+                    ForEach(section.choices, id:\.self) { choice in
+                        NavigationLink(value: choice.id) {
+                            Label(choice.text, systemImage: choice.imageName)
                         }
                     }
-                }
-            }
-            .navigationDestination(for: SidebarOption.self) { sidebar in
-                switch(sidebar) {
-                case .none:
-                    Text("Please go back and selection Menu option")
-                case .schedule:
-                    SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionsForGroup:$sessionsForGroup, html: $html, title: $title, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility, agendas: $agendas)
-                case .groups:
-                    GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, selectedSession: $selectedSession, html: $html, title: $title, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)
-                case .locations:
-                    LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, html:$html, title: $title, columnVisibility:$columnVisibility)
-                case .download:
-                    DownloadListView(html:$html, fileURL:$fileURL, title:$title, columnVisibility:$columnVisibility)
                 }
             }
             .toolbar {
@@ -257,7 +242,20 @@ struct ContentView: View {
                 }
             }
         } content: {
-            SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionsForGroup:$sessionsForGroup, html: $html, title: $title, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility, agendas: $agendas)
+            if let sidebar = sidebarOption {
+                switch(sidebar) {
+                    case .schedule:
+                        SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionsForGroup:$sessionsForGroup, html: $html, title: $title, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility, agendas: $agendas)
+                    case .groups:
+                        GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, selectedSession: $selectedSession, html: $html, title: $title, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)
+                    case .locations:
+                        LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, html:$html, title: $title, columnVisibility:$columnVisibility)
+                    case .download:
+                        DownloadListView(html:$html, fileURL:$fileURL, title:$title, columnVisibility:$columnVisibility)
+                }
+            } else {
+                EmptyView()
+            }
         } detail: {
             DetailView(
                 selectedMeeting:$selectedMeeting,
@@ -271,6 +269,11 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showingMeetings) {
             MeetingListView(selectedMeeting: $selectedMeeting)
+        }
+        .onChange(of: sidebarOption) { newValue in
+            // TODO: sidebarOption is being set to nil when you select a group or session
+            // Will need to track sidebarOption sceneStorage separate from List selection
+            print(newValue)
         }
         .onAppear {
             if let number = UserDefaults.standard.string(forKey:"MeetingNumber") {
