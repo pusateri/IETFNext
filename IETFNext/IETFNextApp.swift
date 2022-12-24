@@ -9,7 +9,6 @@ import SwiftUI
 
 @main
 struct IETFNextApp: App {
-    @Environment(\.scenePhase) var scenePhase
     let persistenceController = PersistenceController.shared
     var jsonLoader: JSONLoader
 

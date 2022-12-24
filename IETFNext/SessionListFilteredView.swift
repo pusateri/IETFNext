@@ -237,6 +237,7 @@ struct SessionListFilteredView: View {
                             title = wg
                         }
                         Task {
+                            // TODO: this is getting called twice on selection but not sure why
                             await loader?.loadDrafts(groupID:group.objectID, limit:0, offset:0)
                             await loader?.loadCharterDocument(groupID:group.objectID)
                             await loader?.loadRelatedDrafts(groupID:group.objectID, limit:0, offset:0)

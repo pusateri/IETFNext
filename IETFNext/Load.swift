@@ -440,11 +440,13 @@ class JSONLoader: NSObject {
                                             return
                                         }
                                         session.recording = recording_url
-                                        do {
-                                            try context.save()
-                                        }
-                                        catch {
-                                            print("Unable to save recording in Session: \(session.name!)")
+                                        context.performAndWait {
+                                            do {
+                                                try context.save()
+                                            }
+                                            catch {
+                                                print("Unable to save recording in Session: \(session.name!)")
+                                            }
                                         }
                                     }
                                 }
@@ -681,13 +683,16 @@ class JSONLoader: NSObject {
                 save = true
             }
         }
-
         if save {
-            do {
-                try context.save()
-            }
-            catch {
-                print("Unable to save Document \(document.name) kind: \(kind.rawValue)")
+            context.performAndWait {
+                do {
+                    try context.save()
+                }
+                catch {
+                    print("Unable to save Document \(document.name)")
+                    let nsError = error as NSError
+                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                }
             }
         }
     }
@@ -770,13 +775,14 @@ class JSONLoader: NSObject {
                 save = true
             }
         }
-
         if save {
-            do {
-                try context.save()
-            }
-            catch {
-                print("Unable to save Location \(location.name)")
+            context.performAndWait {
+                do {
+                    try context.save()
+                }
+                catch {
+                    print("Unable to save Location \(location.name)")
+                }
             }
         }
     }
@@ -812,13 +818,14 @@ class JSONLoader: NSObject {
             area.modified = parent.modified
             save = true
         }
-
         if save {
-            do {
-                try context.save()
-            }
-            catch {
-                print("Unable to save Area \(area.name!)")
+            context.performAndWait {
+                do {
+                    try context.save()
+                }
+                catch {
+                    print("Unable to save Area \(area.name!)")
+                }
             }
         }
     }
@@ -1028,13 +1035,15 @@ class JSONLoader: NSObject {
         s.presentations = new as NSSet
 
         if save {
-            do {
-                try context.save()
-            }
-            catch {
-                print("Unable to save Session or Group \(String(describing: s.name)), \(String(describing: group_obj?.acronym))")
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            context.performAndWait {
+                do {
+                    try context.save()
+                }
+                catch {
+                    print("Unable to save Session or Group \(String(describing: s.name)), \(String(describing: group_obj?.acronym))")
+                    let nsError = error as NSError
+                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                }
             }
         }
     }

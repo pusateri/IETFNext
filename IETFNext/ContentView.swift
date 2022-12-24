@@ -140,8 +140,37 @@ enum DocumentKind: String {
     case rfc
 }
 
+public enum SidebarOption: String {
+    case none
+    case schedule
+    case groups
+    case locations
+    case download
+}
+
+struct Choice: Identifiable, Hashable {
+    var id: SidebarOption
+    var text: String
+    var imageName: String
+}
+
+extension Choice {
+    typealias ChoiceItem = (String, Choice)
+    static let sectionChoices: [ChoiceItem] = [
+        ("IETF", Choice(id: .schedule, text: "Schedule", imageName: "calendar")),
+        ("IETF", Choice(id: .groups, text: "Working Groups", imageName: "person.3")),
+        ("IETF", Choice(id: .locations, text: "Venue & Room Locations", imageName: "map")),
+        ("Local", Choice(id: .download, text: "Downloads", imageName: "arrow.down.circle")),
+    ]
+}
+
+private class ChoiceViewModel: ObservableObject {
+    @Published var choices: [Choice.ChoiceItem] = Choice.sectionChoices
+}
+
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.scenePhase) var scenePhase
     @Environment(\.loader) private var loader
     @State private var showingMeetings = false
     @State var columnVisibility: NavigationSplitViewVisibility = .doubleColumn
@@ -157,6 +186,8 @@ struct ContentView: View {
     @State var groupFavorites: Bool = false
     @State var agendas: [Agenda] = []
 
+    @SceneStorage("ContentView.sidebarPath") private var sidebarOption: SidebarOption?
+
     @ViewBuilder
     var first_header: some View {
         if let m = selectedMeeting {
@@ -169,45 +200,45 @@ struct ContentView: View {
         sortDescriptors: [NSSortDescriptor(keyPath: \Download.basename, ascending: true)],
         animation: .default)
     private var downloads: FetchedResults<Download>
+    @StateObject fileprivate var viewModel = ChoiceViewModel()
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List() {
                 Section(header: first_header) {
-                    NavigationLink(destination: SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionsForGroup:$sessionsForGroup, html: $html, title: $title, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility, agendas: $agendas)) {
-                        HStack {
-                            Image(systemName: "calendar")
-                                .frame(width: 32, height: 32) // constant width left aligns text
-                            Text("Schedule")
-                        }
+                    NavigationLink(value: SidebarOption.schedule) {
+                        Label("Schedule", systemImage: "calendar")
                     }
-                    NavigationLink(destination: GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, selectedSession: $selectedSession, html: $html, title: $title, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)) {
-                        HStack {
-                            Image(systemName: "person.3")
-                                .frame(width: 32, height: 32) // constant width left aligns text
-                            Text("Working Groups")
-                        }
+                    NavigationLink(value: SidebarOption.groups) {
+                        Label("Working Groups", systemImage: "person.3")
                     }
-                    NavigationLink(destination: LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, html:$html, title: $title, columnVisibility:$columnVisibility)) {
-                        HStack {
-                            Image(systemName: "map")
-                                .frame(width: 32, height: 32) // constant width left aligns text
-                            Text("Venue & Room Locations")
-                        }
+                    NavigationLink(value: SidebarOption.locations) {
+                        Label("Venue & Room Locations", systemImage: "map")
                     }
                 }
                 Section(header: Text("Local")) {
-                    NavigationLink(destination: DownloadListView(html:$html, fileURL:$fileURL, title:$title, columnVisibility:$columnVisibility)) {
+                    NavigationLink(value: SidebarOption.download) {
                         HStack {
-                            Image(systemName: "arrow.down.circle")
-                                .frame(width: 32, height: 32) // constant width left aligns text
-                            HStack {
-                                Text("Downloads")
-                                Spacer()
-                                Text("\(downloads.count)")
-                            }
+                            Label("Downloads", systemImage: "arrow.down.circle")
+                            Spacer()
+                            Text("\(downloads.count)")
+                                .foregroundColor(.secondary)
                         }
                     }
+                }
+            }
+            .navigationDestination(for: SidebarOption.self) { sidebar in
+                switch(sidebar) {
+                case .none:
+                    Text("Please go back and selection Menu option")
+                case .schedule:
+                    SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionsForGroup:$sessionsForGroup, html: $html, title: $title, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility, agendas: $agendas)
+                case .groups:
+                    GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, selectedSession: $selectedSession, html: $html, title: $title, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)
+                case .locations:
+                    LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, html:$html, title: $title, columnVisibility:$columnVisibility)
+                case .download:
+                    DownloadListView(html:$html, fileURL:$fileURL, title:$title, columnVisibility:$columnVisibility)
                 }
             }
             .toolbar {
