@@ -188,7 +188,6 @@ struct ContentView: View {
     @State private var showingMeetings = false
     @State var columnVisibility: NavigationSplitViewVisibility = .all
     @State var selectedMeeting: Meeting?
-    @State var selectedGroup: Group? = nil
     @State var selectedSession: Session?
     @State var sessionsForGroup: [Session]?
     @State var selectedLocation: Location?
@@ -199,7 +198,7 @@ struct ContentView: View {
     @State var groupFavorites: Bool = false
     @State var agendas: [Agenda] = []
 
-    @SceneStorage("ContentView.sidebarPath") private var sidebarOption: SidebarOption?
+    @State var selection: SidebarOption? = nil
 
     @ViewBuilder
     var first_header: some View {
@@ -217,7 +216,7 @@ struct ContentView: View {
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            List(viewModel.sections, selection: $sidebarOption) { section in
+            List(viewModel.sections, selection: $selection) { section in
                 Section(header: Text(section.id)) {
                     ForEach(section.choices, id:\.self) { choice in
                         NavigationLink(value: choice.id) {
@@ -242,19 +241,19 @@ struct ContentView: View {
                 }
             }
         } content: {
-            if let sidebar = sidebarOption {
-                switch(sidebar) {
+            if let selection = selection {
+                switch(selection) {
                     case .schedule:
-                        SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionsForGroup:$sessionsForGroup, html: $html, title: $title, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility, agendas: $agendas)
+                    SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility)
                     case .groups:
-                        GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, selectedSession: $selectedSession, html: $html, title: $title, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)
+                        GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)
                     case .locations:
                         LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, html:$html, title: $title, columnVisibility:$columnVisibility)
                     case .download:
                         DownloadListView(html:$html, fileURL:$fileURL, title:$title, columnVisibility:$columnVisibility)
                 }
             } else {
-                EmptyView()
+                SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility)
             }
         } detail: {
             DetailView(
@@ -269,11 +268,6 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showingMeetings) {
             MeetingListView(selectedMeeting: $selectedMeeting)
-        }
-        .onChange(of: sidebarOption) { newValue in
-            // TODO: sidebarOption is being set to nil when you select a group or session
-            // Will need to track sidebarOption sceneStorage separate from List selection
-            print(newValue)
         }
         .onAppear {
             if let number = UserDefaults.standard.string(forKey:"MeetingNumber") {

@@ -13,15 +13,13 @@ struct GroupListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @SectionedFetchRequest<String, Group> var fetchRequest: SectionedFetchResults<String, Group>
     @Binding var selectedMeeting: Meeting?
-    @Binding var selectedGroup: Group?
+    @State var selectedGroup: Group?
     @Binding var selectedSession: Session?
-    @Binding var html: String
-    @Binding var title: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
     @Binding var groupFavorites: Bool
     @State private var searchText = ""
 
-    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, selectedSession: Binding<Session?>, html: Binding<String>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, groupFavorites: Binding<Bool>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, columnVisibility: Binding<NavigationSplitViewVisibility>, groupFavorites: Binding<Bool>) {
         var predicate: NSPredicate
 
         if groupFavorites.wrappedValue == false {
@@ -39,10 +37,7 @@ struct GroupListFilteredView: View {
             animation: .default
         )
         self._selectedMeeting = selectedMeeting
-        self._selectedGroup = selectedGroup
         self._selectedSession = selectedSession
-        self._html = html
-        self._title = title
         self._columnVisibility = columnVisibility
         self._groupFavorites = groupFavorites
     }
@@ -130,7 +125,6 @@ struct GroupListFilteredView: View {
                 if let meeting = selectedMeeting {
                     viewContext.performAndWait {
                         let sessions = group.groupSessions(meeting: meeting)
-                        //let sessions = findSessionsForGroup(context:viewContext, meeting:meeting, group:group)
                         selectedSession = sessions?.first ?? nil
                     }
                 }

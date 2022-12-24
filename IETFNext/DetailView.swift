@@ -86,6 +86,44 @@ struct DetailView: View {
         return ""
     }
 
+    private func findSessionsForGroup(meeting: Meeting, group: Group) -> [Session]? {
+
+        let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
+        fetchSession.predicate = NSPredicate(format: "meeting = %@ AND group = %@", meeting, group)
+        fetchSession.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Session.start, ascending: true)
+        ]
+        return try? viewContext.fetch(fetchSession)
+    }
+
+    // build a list of agenda items, number them only if more than 1
+    private func uniqueAgendasForSessions(sessions: [Session]?) -> [Agenda] {
+        var agendas: [Agenda] = []
+        var seen: Set<String> = []
+        var index: Int32 = 1
+        for session in sessions ?? [] {
+            if let agendaURL = session.agenda {
+                seen.insert(agendaURL.absoluteString)
+            }
+        }
+        let numbered = seen.count > 1
+        seen = []
+        for session in sessions ?? [] {
+            if let agendaURL = session.agenda {
+                if !seen.contains(agendaURL.absoluteString) {
+                    seen.insert(agendaURL.absoluteString)
+                    var desc: String = "View Agenda"
+                    if numbered {
+                        desc = "View Agenda \(index)"
+                    }
+                    agendas.append(Agenda(id:index, desc:desc, url:agendaURL))
+                    index += 1
+                }
+            }
+        }
+        return agendas
+    }
+
     init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, sessionsForGroup: Binding<[Session]?>, html: Binding<String>, fileURL:Binding<URL?>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
 
         _presentationRequest = FetchRequest<Presentation>(
@@ -302,28 +340,43 @@ struct DetailView: View {
             html = BLANK
         }
         .onChange(of: selectedSession) { newValue in
-            if let session = selectedSession {
-                presentationRequest.nsPredicate = NSPredicate(format: "session = %@", session)
-                kind = .draft
-                if let agenda = session.agenda {
-                    let download = fetchDownload(kind:.agenda, url:agenda)
-                    if let download = download {
-                        loadDownloadFile(from:download)
-                    } else {
-                        html = BLANK
-                        if let meeting = selectedMeeting {
-                            if let group = session.group {
+            if let meeting = selectedMeeting {
+                if let session = selectedSession {
+                    presentationRequest.nsPredicate = NSPredicate(format: "session = %@", session)
+                    if let group = session.group {
+
+                        // find all agendas for all sessions in the same group
+                        viewContext.performAndWait {
+                            sessionsForGroup = findSessionsForGroup(meeting:meeting, group:group)
+                            agendas = uniqueAgendasForSessions(sessions: sessionsForGroup)
+                        }
+
+                        if let wg = group.acronym {
+                            // update the title and load the corresponding documents
+                            title = wg
+                        }
+                        if let agenda = session.agenda {
+                            let download = fetchDownload(kind:.agenda, url:agenda)
+                            if let download = download {
+                                loadDownloadFile(from:download)
+                            } else {
+                                html = BLANK
                                 Task {
                                     await model.downloadToFile(context:viewContext, url:agenda, mtg:meeting.number!, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                                 }
                             }
                         }
+                        Task {
+                            await loader?.loadDrafts(groupID:group.objectID, limit:0, offset:0)
+                            await loader?.loadCharterDocument(groupID:group.objectID)
+                            await loader?.loadRelatedDrafts(groupID:group.objectID, limit:0, offset:0)
+                        }
                     }
-                }
-                // if we don't have a recording URL, go get one. We don't expect it to change once we have it
-                if session.recording == nil {
-                    Task {
-                        await loader?.loadRecordingDocument(sessionID: session.objectID)
+                    // if we don't have a recording URL, go get one. We don't expect it to change once we have it
+                    if session.recording == nil {
+                        Task {
+                            await loader?.loadRecordingDocument(sessionID: session.objectID)
+                        }
                     }
                 }
             }

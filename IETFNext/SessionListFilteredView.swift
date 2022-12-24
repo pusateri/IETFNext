@@ -15,15 +15,11 @@ struct SessionListFilteredView: View {
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
-    @Binding var sessionsForGroup: [Session]?
-    @Binding var html: String
-    @Binding var title: String
     @Binding var sessionFilterMode: SessionFilterMode
     @Binding var columnVisibility: NavigationSplitViewVisibility
-    @Binding var agendas: [Agenda]
 
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, sessionsForGroup: Binding<[Session]?>, html: Binding<String>, title: Binding<String>, sessionFilterMode: Binding<SessionFilterMode>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, sessionFilterMode: Binding<SessionFilterMode>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
         var predicate: NSPredicate
         var now: Date
         let number = selectedMeeting.wrappedValue?.number ?? "0"
@@ -83,22 +79,8 @@ struct SessionListFilteredView: View {
 
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
-        self._sessionsForGroup = sessionsForGroup
-        self._html = html
-        self._title = title
         self._sessionFilterMode = sessionFilterMode
         self._columnVisibility = columnVisibility
-        self._agendas = agendas
-    }
-
-    private func findSessionsForGroup(meeting: Meeting, group: Group) -> [Session]? {
-
-        let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
-        fetchSession.predicate = NSPredicate(format: "meeting = %@ AND group = %@", meeting, group)
-        fetchSession.sortDescriptors = [
-            NSSortDescriptor(keyPath: \Session.start, ascending: true)
-        ]
-        return try? viewContext.fetch(fetchSession)
     }
 
     var body: some View {
@@ -221,64 +203,11 @@ struct SessionListFilteredView: View {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
             }
         }
-        .onChange(of: selectedSession) { newValue in
-            if let meeting = selectedMeeting {
-                if let session = selectedSession {
-                    if let group = session.group {
-
-                        // find all agendas for all sessions in the same group
-                        viewContext.performAndWait {
-                            sessionsForGroup = findSessionsForGroup(meeting:meeting, group:group)
-                            agendas = uniqueAgendasForSessions(sessions: sessionsForGroup)
-                        }
-
-                        if let wg = group.acronym {
-                            // update the title and load the corresponding documents
-                            title = wg
-                        }
-                        Task {
-                            // TODO: this is getting called twice on selection but not sure why
-                            await loader?.loadDrafts(groupID:group.objectID, limit:0, offset:0)
-                            await loader?.loadCharterDocument(groupID:group.objectID)
-                            await loader?.loadRelatedDrafts(groupID:group.objectID, limit:0, offset:0)
-                        }
-                    }
-                }
-            }
-        }
         .onAppear() {
             if columnVisibility == .all {
                 columnVisibility = .doubleColumn
             }
         }
-    }
-
-    // build a list of agenda items, number them only if more than 1
-    func uniqueAgendasForSessions(sessions: [Session]?) -> [Agenda] {
-        var agendas: [Agenda] = []
-        var seen: Set<String> = []
-        var index: Int32 = 1
-        for session in sessions ?? [] {
-            if let agendaURL = session.agenda {
-                seen.insert(agendaURL.absoluteString)
-            }
-        }
-        let numbered = seen.count > 1
-        seen = []
-        for session in sessions ?? [] {
-            if let agendaURL = session.agenda {
-                if !seen.contains(agendaURL.absoluteString) {
-                    seen.insert(agendaURL.absoluteString)
-                    var desc: String = "View Agenda"
-                    if numbered {
-                        desc = "View Agenda \(index)"
-                    }
-                    agendas.append(Agenda(id:index, desc:desc, url:agendaURL))
-                    index += 1
-                }
-            }
-        }
-        return agendas
     }
 }
 
