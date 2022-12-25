@@ -217,10 +217,20 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List(viewModel.sections, selection: $selection) { section in
-                Section(header: Text(section.id)) {
-                    ForEach(section.choices, id:\.self) { choice in
-                        NavigationLink(value: choice.id) {
-                            Label(choice.text, systemImage: choice.imageName)
+                if section.id == "IETF" {
+                    Section(header: first_header) {
+                        ForEach(section.choices, id:\.self) { choice in
+                            NavigationLink(value: choice.id) {
+                                Label(choice.text, systemImage: choice.imageName)
+                            }
+                        }
+                    }
+                } else {
+                    Section(header: Text(section.id)) {
+                        ForEach(section.choices, id:\.self) { choice in
+                            NavigationLink(value: choice.id) {
+                                Label(choice.text, systemImage: choice.imageName)
+                            }
                         }
                     }
                 }
