@@ -9,6 +9,9 @@ import SwiftUI
 
 struct LocationDetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @Environment(\.verticalSizeClass) var sizeClass
+
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedLocation: Location?
@@ -42,35 +45,46 @@ struct LocationDetailView: View {
                         case .empty:
                             ProgressView()
                         case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFit()
+                            if colorScheme == .light {
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .transition(.scale)
+                            } else if colorScheme == .dark {
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .transition(.scale)
+                                    .colorInvert()
+                            }
                         case .failure(_):
                             EmptyView()
                         @unknown default:
                             EmptyView()
                     }
                 }
-                List(fetchRequest) { section in
-                    Section(header: Text(section.id).foregroundColor(.accentColor)) {
-                        ForEach(section, id: \.self) { session in
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Text("\(session.timerange!)")
-                                        .foregroundColor(.primary)
-                                    Spacer()
-                                    Text("\(session.group?.acronym ?? "")")
-                                        .foregroundColor(.primary)
+                if sizeClass != .compact {
+                    List(fetchRequest) { section in
+                        Section(header: Text(section.id).foregroundColor(.accentColor)) {
+                            ForEach(section, id: \.self) { session in
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Text("\(session.timerange!)")
+                                            .foregroundColor(.primary)
+                                        Spacer()
+                                        Text("\(session.group?.acronym ?? "")")
+                                            .foregroundColor(.primary)
+                                            .font(.subheadline)
+                                    }
+                                    Text(session.name!)
+                                        .foregroundColor(.secondary)
                                         .font(.subheadline)
                                 }
-                                Text(session.name!)
-                                    .foregroundColor(.secondary)
-                                    .font(.subheadline)
                             }
                         }
                     }
+                    .listStyle(.inset)
                 }
-                .listStyle(.inset)
             }
 #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
