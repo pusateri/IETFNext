@@ -162,7 +162,7 @@ struct DetailView: View {
             ToolbarItem(placement: .principal) {
                 Text(title).bold()
             }
-            #if !os(macOS)
+#if !os(macOS)
             if sizeClass == .regular {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
@@ -183,7 +183,7 @@ struct DetailView: View {
                     }
                 }
             }
-            #endif
+#endif
             ToolbarItem {
                 Menu {
                     ForEach(presentationRequest, id: \.self) { p in

@@ -266,15 +266,22 @@ struct ContentView: View {
                 SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility)
             }
         } detail: {
-            DetailView(
-                selectedMeeting:$selectedMeeting,
-                selectedSession:$selectedSession,
-                sessionsForGroup:$sessionsForGroup,
-                html:$html,
-                fileURL:$fileURL,
-                title:$title,
-                columnVisibility:$columnVisibility,
-                agendas: $agendas)
+            if let selection = selection {
+                switch(selection) {
+                    case .locations:
+                        LocationDetailView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)
+                    default:
+                        DetailView(
+                            selectedMeeting:$selectedMeeting,
+                            selectedSession:$selectedSession,
+                            sessionsForGroup:$sessionsForGroup,
+                            html:$html,
+                            fileURL:$fileURL,
+                            title:$title,
+                            columnVisibility:$columnVisibility,
+                            agendas: $agendas)
+                }
+            }
         }
         .sheet(isPresented: $showingMeetings) {
             MeetingListView(selectedMeeting: $selectedMeeting)

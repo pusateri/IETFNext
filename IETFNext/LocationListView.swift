@@ -91,30 +91,6 @@ struct LocationListView: View {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
             }
         }
-        .onChange(of: selectedLocation) { newValue in
-            if let location = selectedLocation {
-                if let name = location.name {
-                    /*
-                     * macOS doesn't have sizeClass.
-                     * TODO: level isn't showing up even on iOS
-                    if let level = location.level_name {
-                        // TODO: iPad landscape detail view is compat when all columns are shown
-                        if sizeClass == .compact || level == "Uncategorized" {
-                            title = name
-                        } else {
-                            title = "\(level) - \(name)"
-                        }
-                    }
-                     */
-                    title = name
-                }
-                if let map = location.map {
-                    html = IMAGE_PRE + "\(map)" + IMAGE_POST
-                } else {
-                    html = BLANK
-                }
-            }
-        }
         .onAppear {
             html = BLANK
             if columnVisibility == .all {

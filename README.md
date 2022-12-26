@@ -5,18 +5,14 @@
 3. print pdf version of drafts
 4. add local time
 5. detail view moving from open slides to try and open drafts gives error
-6. More details for rooms (maybe room schedule)
-7. In group list view, select, then filter, then select crashes
-8. Show sessions at each location
-9. pdf previews
-10. fallback when no native HTML version of draft
-11. recording menu item isn't always active (observed object problem?)
-12. Add draft / presentation / charter / agenda date to download list
-13. Only gets the first 20 drafts right now
-14. Recording tab (2nd) on Oauth doesn't always get activated.
-15. fix macOS popups and view sizes.
-16. Add keyboard shortcuts for iPad and maybe macOS
-17. Got errors: Unable to save Document draft-ietf-netconf-...
+6. In group list view, select, then filter, then select crashes
+7. pdf previews
+8. fallback when no native HTML version of draft
+9. Add draft / presentation / charter / agenda date to download list
+10. Only gets the first 20 drafts right now
+11. Recording tab (2nd) on Oauth doesn't always get activated.
+    recording menu item isn't always active (observed object problem?)
+12. fix macOS popups and view sizes.
 
 *** Maybe ***
 
@@ -24,6 +20,7 @@
 2. add spinning circle when loading the sessions for a meeting?
 3. Find a way to select session favorites from detail view?
 4. Add inactive drafts?
+5. Add keyboard shortcuts for iPad and maybe macOS
 
 
 IETF colors:
