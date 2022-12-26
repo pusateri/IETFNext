@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+let venuePhotos = [
+    "116": "https://www.pacifico.co.jp/Portals/0/images/en/index/kv/kv_01re.jpg",
+    "115": "https://weekender-hotel-api-2.imgix.net/hotel-images/20170206-LONMETW-hotel-banner-1.jpg",
+    "114": "https://cache.marriott.com/content/dam/marriott-renditions/PHLWS/phlws-exterior-0091-hor-clsc.jpg",
+    "113": "https://www.hilton.com/im/en/VIEHITW/14562339/hilton-vienna-exterior.jpg?impolicy=crop&cw=4517&ch=2540&gravity=NorthWest&xposition=0&yposition=229&rw=1214&rh=683",
+    "106": "https://d2e5ushqwiltxm.cloudfront.net/wp-content/uploads/sites/203/2019/11/08031528/fairmont-singapore-night-view.jpg",
+]
+
 struct LocationDetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.colorScheme) var colorScheme: ColorScheme
@@ -96,6 +104,19 @@ struct LocationDetailView: View {
                     }
                     .listStyle(.inset)
                 }
+            } else {
+                if let meeting = selectedMeeting {
+                    if let urlString = venuePhotos[meeting.number!] {
+                        AsyncImage(url: URL(string: urlString)) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .transition(.scale)
+                        } placeholder: {
+                            ProgressView()
+                        }
+                    }
+                }
             }
         }
 #if !os(macOS)
@@ -105,10 +126,25 @@ struct LocationDetailView: View {
             ToolbarItem(placement: .principal) {
                 if let location = selectedLocation {
                     Text("\(location.name!)").bold()
+                } else {
+                    if let meeting = selectedMeeting {
+                        if let venue = meeting.venue_name {
+                            Text("\(venue)").bold()
+                        }
+                    }
                 }
             }
             ToolbarItem {
                 Menu {
+                    if let meeting = selectedMeeting {
+                        if let _ = venuePhotos[meeting.number!] {
+                            Button(action: {
+                                selectedLocation = nil
+                            }) {
+                                Label("Show Venue Photo", systemImage: "photo")
+                            }
+                        }
+                    }
                     Button(action: {
                         if let meeting = selectedMeeting {
                             if let addr = escapedAddress(meeting: meeting) {
@@ -127,7 +163,7 @@ struct LocationDetailView: View {
                     }) {
                         Label("Show Venue on Map", systemImage: "mappin.and.ellipse")
                     }
-                    .disabled(selectedMeeting?.venue_addr == nil)
+                    .disabled(selectedMeeting?.venue_addr?.isEmpty ?? true)
                     Button(action: {
                         if let meeting = selectedMeeting {
                             if let addr = escapedAddress(meeting: meeting) {
@@ -146,7 +182,7 @@ struct LocationDetailView: View {
                     }) {
                         Label("Directions to Venue", systemImage: "mappin.and.ellipse")
                     }
-                    .disabled(selectedMeeting?.venue_addr == nil)
+                    .disabled(selectedMeeting?.venue_addr?.isEmpty ?? true)
                 }
                 label: {
                     Label("More", systemImage: "ellipsis.circle")
