@@ -269,11 +269,27 @@ struct DetailView: View {
                     ForEach(sessionsForGroup ?? []) { session in
                         Button(action: {
                             if let url = session.recording {
-                                #if os(macOS)
-                                NSWorkspace.shared.open(url)
-                                #else
-                                UIApplication.shared.open(url)
-                                #endif
+#if os(macOS)
+                                if NSWorkspace.shared.canOpenURL(url) {
+                                    NSWorkspace.shared.open(url)
+                                } else{
+                                    if let youtubeID = url.host {
+                                        if let youtube = URL(string: "https://www.youtube.com/embed/\(youtubeID)") {
+                                            UIApplication.shared.open(youtube)
+                                        }
+                                    }
+                                }
+#else
+                                if UIApplication.shared.canOpenURL(url) {
+                                    UIApplication.shared.open(url)
+                                } else {
+                                    if let youtubeID = url.host {
+                                        if let youtube = URL(string: "https://www.youtube.com/embed/\(youtubeID)") {
+                                            UIApplication.shared.open(youtube)
+                                        }
+                                    }
+                                }
+#endif
                             }
                         }) {
                             Label("View Recording\(recordingSuffix(session:session))", systemImage: "play")
@@ -410,6 +426,9 @@ struct DetailView: View {
                     }
                 }
             }
+        }
+        .task {
+            html = BLANK
         }
     }
 }

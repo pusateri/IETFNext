@@ -263,7 +263,7 @@ struct ContentView: View {
                         DownloadListView(html:$html, fileURL:$fileURL, title:$title, columnVisibility:$columnVisibility)
                 }
             } else {
-                SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility)
+                Text("Select View in Sidebar")
             }
         } detail: {
             if let selection = selection {

@@ -435,17 +435,30 @@ class JSONLoader: NSObject {
                             for obj in json_docs.objects {
                                 if obj.title == matchTitle {
                                     if let external_url = obj.external_url {
-                                        guard let recording_url = URL(string: external_url) else {
-                                            print("Invalid External recording URL: \(external_url)")
-                                            return
-                                        }
-                                        session.recording = recording_url
-                                        context.performAndWait {
-                                            do {
-                                                try context.save()
-                                            }
-                                            catch {
-                                                print("Unable to save recording in Session: \(session.name!)")
+                                        let components = URLComponents(string: external_url)
+                                        if let components = components, components.host == "www.youtube.com" {
+                                            if let query = components.query {
+                                                let pairs = query.components(separatedBy: "&")
+                                                for pair in pairs {
+                                                    let kv = pair.components(separatedBy: "=")
+                                                    if kv.count == 2 && kv.first == "v" {
+                                                        if let youtubeID = kv.last {
+                                                            guard let youtubeUrl = URL(string: "youtube://\(youtubeID)") else {
+                                                                print("Invalid External recording URL: \(external_url)")
+                                                                return
+                                                            }
+                                                            session.recording = youtubeUrl
+                                                            context.performAndWait {
+                                                                do {
+                                                                    try context.save()
+                                                                }
+                                                                catch {
+                                                                    print("Unable to save recording in Session: \(session.name!)")
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }

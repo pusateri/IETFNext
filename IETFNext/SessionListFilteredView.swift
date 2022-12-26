@@ -26,45 +26,45 @@ struct SessionListFilteredView: View {
 
         switch(sessionFilterMode.wrappedValue) {
         case .favorites:
-            predicate = NSPredicate(format: "meeting.number = %@ AND favorite = %d", number, true)
+            predicate = NSPredicate(format: "meeting.number = %@ AND favorite = %d AND (status != \"canceled\")", number, true)
         case .bofs:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (is_bof = %d)", number, true)
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (is_bof = %d) AND (status != \"canceled\")", number, true)
         case .now:
             now = Date()
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (start > %@) AND (end < %@)", number, now as CVarArg, now as CVarArg)
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (start > %@) AND (end < %@) AND (status != \"canceled\")", number, now as CVarArg, now as CVarArg)
         case .today:
             now = Date()
             let calendar = Calendar.current
             let begin = calendar.startOfDay(for: now)
             let end = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: now)
             if let end = end {
-                predicate = NSPredicate(format: "(meeting.number = %@) AND (start > %@) AND (end < %@)", number, begin as CVarArg, end as CVarArg)
+                predicate = NSPredicate(format: "(meeting.number = %@) AND (start > %@) AND (end < %@) AND (status != \"canceled\")", number, begin as CVarArg, end as CVarArg)
             } else {
                 // we should NEVER hit this case but we don't want it to crash unexpectedly
                 predicate = NSPredicate(format: "(meeting.number = %@) AND (start > %@)", number, begin as CVarArg)
             }
         case .none:
-            predicate = NSPredicate(format: "meeting.number = %@", number)
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (status != \"canceled\")", number)
         case .area_art:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "art")
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "art")
         case .area_gen:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "gen")
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "gen")
         case .area_iab:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "iab")
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "iab")
         case .area_ietf:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "ietf")
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "ietf")
         case .area_int:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "int")
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "int")
         case .area_irtf:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "irtf")
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "irtf")
         case .area_ops:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "ops")
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "ops")
         case .area_rtg:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "rtg")
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "rtg")
         case .area_sec:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "sec")
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "sec")
         case .area_tsv:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@)", number, "tsv")
+            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "tsv")
         }
 
         _fetchRequest = SectionedFetchRequest<String, Session> (
@@ -72,6 +72,7 @@ struct SessionListFilteredView: View {
             sortDescriptors: [
                 NSSortDescriptor(keyPath: \Session.start, ascending: true),
                 NSSortDescriptor(keyPath: \Session.end, ascending: false),
+                NSSortDescriptor(keyPath: \Session.name, ascending: true),
             ],
             predicate: predicate,
             animation: .default

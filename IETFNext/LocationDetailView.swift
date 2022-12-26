@@ -26,7 +26,7 @@ struct LocationDetailView: View {
                 NSSortDescriptor(keyPath: \Session.start, ascending: true),
                 NSSortDescriptor(keyPath: \Session.end, ascending: false),
             ],
-            predicate: NSPredicate(format: "(meeting.number = %@) AND (location.name = %@)", number, location_name),
+            predicate: NSPredicate(format: "(meeting.number = %@) AND (location.name = %@) AND (status != \"canceled\")", number, location_name),
             animation: .default
         )
 
@@ -34,33 +34,44 @@ struct LocationDetailView: View {
         self._selectedLocation = selectedLocation
     }
 
+    private func escapedAddress(meeting: Meeting) -> String? {
+        if let venue_addr = meeting.venue_addr {
+            return venue_addr
+                .replacingOccurrences(of: "\r\n", with: ",")
+                .replacingOccurrences(of: " ,", with: ",")
+                .addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        } else {
+            return nil
+        }
+    }
+
     var body: some View {
-        if let location = selectedLocation {
-            VStack() {
+        VStack() {
+            if let location = selectedLocation {
                 Text("\(location.level_name!)")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 AsyncImage(url: location.map, transaction: Transaction(animation: .spring())) { phase in
                     switch phase {
-                        case .empty:
-                            ProgressView()
-                        case .success(let image):
-                            if colorScheme == .light {
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                                    .transition(.scale)
-                            } else if colorScheme == .dark {
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                                    .transition(.scale)
-                                    .colorInvert()
-                            }
-                        case .failure(_):
-                            EmptyView()
-                        @unknown default:
-                            EmptyView()
+                    case .empty:
+                        ProgressView()
+                    case .success(let image):
+                        if colorScheme == .light {
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .transition(.scale)
+                        } else if colorScheme == .dark {
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .transition(.scale)
+                                .colorInvert()
+                        }
+                    case .failure(_):
+                        EmptyView()
+                    @unknown default:
+                        EmptyView()
                     }
                 }
                 if sizeClass != .compact {
@@ -86,12 +97,59 @@ struct LocationDetailView: View {
                     .listStyle(.inset)
                 }
             }
+        }
 #if !os(macOS)
-            .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.inline)
 #endif
-            .toolbar {
-                ToolbarItem(placement: .principal) {
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                if let location = selectedLocation {
                     Text("\(location.name!)").bold()
+                }
+            }
+            ToolbarItem {
+                Menu {
+                    Button(action: {
+                        if let meeting = selectedMeeting {
+                            if let addr = escapedAddress(meeting: meeting) {
+                                let urlString = "https://maps.apple.com/?address=\(addr)"
+                                guard let url = URL(string: urlString) else {
+                                    print("Invalid venue address URL: \(urlString)")
+                                    return
+                                }
+#if os(macOS)
+                                NSWorkspace.shared.open(url)
+#else
+                                UIApplication.shared.open(url)
+#endif
+                            }
+                        }
+                    }) {
+                        Label("Show Venue on Map", systemImage: "mappin.and.ellipse")
+                    }
+                    .disabled(selectedMeeting?.venue_addr == nil)
+                    Button(action: {
+                        if let meeting = selectedMeeting {
+                            if let addr = escapedAddress(meeting: meeting) {
+                                let urlString = "https://maps.apple.com/?daddr=\(addr)"
+                                guard let url = URL(string: urlString) else {
+                                    print("Invalid venue address URL: \(urlString)")
+                                    return
+                                }
+#if os(macOS)
+                                NSWorkspace.shared.open(url)
+#else
+                                UIApplication.shared.open(url)
+#endif
+                            }
+                        }
+                    }) {
+                        Label("Directions to Venue", systemImage: "mappin.and.ellipse")
+                    }
+                    .disabled(selectedMeeting?.venue_addr == nil)
+                }
+                label: {
+                    Label("More", systemImage: "ellipsis.circle")
                 }
             }
         }
