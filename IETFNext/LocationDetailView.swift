@@ -37,12 +37,19 @@ struct LocationDetailView: View {
                 Text("\(location.level_name!)")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-                AsyncImage(url: location.map) { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                } placeholder: {
-                    ProgressView()
+                AsyncImage(url: location.map, transaction: Transaction(animation: .spring())) { phase in
+                    switch phase {
+                        case .empty:
+                            ProgressView()
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFit()
+                        case .failure(_):
+                            EmptyView()
+                        @unknown default:
+                            EmptyView()
+                    }
                 }
                 List(fetchRequest) { section in
                     Section(header: Text(section.id).foregroundColor(.accentColor)) {
@@ -54,6 +61,7 @@ struct LocationDetailView: View {
                                     Spacer()
                                     Text("\(session.group?.acronym ?? "")")
                                         .foregroundColor(.primary)
+                                        .font(.subheadline)
                                 }
                                 Text(session.name!)
                                     .foregroundColor(.secondary)

@@ -40,20 +40,22 @@ struct LocationListView: View {
 
     var body: some View {
         List(fetchRequest, selection: $selectedLocation) { section in
-            Section(header: Text(section.id)) {
+            Section(header: Text(section.id).foregroundColor(.accentColor)) {
                 ForEach(section, id: \.self) { location in
                     HStack {
                         Text(location.name ?? "Unknown")
+                            .foregroundColor(.primary)
                         Spacer()
                         if location.sessions?.count ?? 0 == 1 {
                             Text("1 Session")
+                                .foregroundColor(.secondary)
                         } else {
                             Text("\(location.sessions?.count ?? 0) Sessions")
+                                .foregroundColor(.secondary)
                         }
                     }
                 }
             }
-            .headerProminence(.increased)
         }
         .listStyle(.inset)
 #if !os(macOS)
