@@ -49,7 +49,6 @@ struct JSONMeeting: Decodable {
 
 struct MeetingListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(\.loader) private var loader
     @Environment(\.dismiss) var dismiss
     @Binding var selectedMeeting: Meeting?
 
@@ -78,7 +77,7 @@ struct MeetingListView: View {
                 if let meeting = selectedMeeting {
                     UserDefaults.standard.set(meeting.number!, forKey:"MeetingNumber")
                     Task {
-                        await loader?.loadData(meetingID: meeting.objectID)
+                        await loadData(context: viewContext, meeting: meeting)
                     }
                 }
                 dismiss()

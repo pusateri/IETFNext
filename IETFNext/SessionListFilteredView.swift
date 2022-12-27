@@ -21,7 +21,6 @@ extension UIDevice {
 
 struct SessionListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(\.loader) private var loader
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?

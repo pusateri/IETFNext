@@ -184,7 +184,6 @@ private class ChoiceViewModel: ObservableObject {
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.scenePhase) var scenePhase
-    @Environment(\.loader) private var loader
     @State private var showingMeetings = false
     @State var columnVisibility: NavigationSplitViewVisibility = .doubleColumn
     @State var selectedMeeting: Meeting?
@@ -314,7 +313,7 @@ struct ContentView: View {
                 }
                 if let meeting = selectedMeeting {
                     Task {
-                        await loader?.loadData(meetingID: meeting.objectID)
+                        await loadData(context: viewContext, meeting: meeting)
                     }
                 }
             } else {

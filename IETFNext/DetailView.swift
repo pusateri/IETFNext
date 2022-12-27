@@ -10,7 +10,6 @@ import CoreData
 
 struct DetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(\.loader) private var loader
 #if os(iOS)
     @Environment(\.horizontalSizeClass) var sizeClass
 #endif
@@ -383,15 +382,15 @@ struct DetailView: View {
                             }
                         }
                         Task {
-                            await loader?.loadDrafts(groupID:group.objectID, limit:0, offset:0)
-                            await loader?.loadCharterDocument(groupID:group.objectID)
-                            await loader?.loadRelatedDrafts(groupID:group.objectID, limit:0, offset:0)
+                            await loadDrafts(context: viewContext, group: group, limit:0, offset:0)
+                            await loadCharterDocument(context: viewContext, group: group)
+                            await loadRelatedDrafts(context: viewContext, group: group, limit:0, offset:0)
                         }
                     }
                     // if we don't have a recording URL, go get one. We don't expect it to change once we have it
                     if session.recording == nil {
                         Task {
-                            await loader?.loadRecordingDocument(sessionID: session.objectID)
+                            await loadRecordingDocument(context: viewContext, session: session)
                         }
                     }
                 }
