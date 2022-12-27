@@ -18,6 +18,16 @@ struct SessionListFilteredView: View {
     @Binding var sessionFilterMode: SessionFilterMode
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
+    @SceneStorage("schedule.selection") var sessionID: Int?
+
+    private func fetchSession(session_id: Int32) -> Session? {
+        let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
+        fetchSession.predicate = NSPredicate(format: "id = %d", session_id)
+
+        let results = try? viewContext.fetch(fetchSession)
+
+        return results?.first
+    }
 
     init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, sessionFilterMode: Binding<SessionFilterMode>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
         var predicate: NSPredicate
@@ -204,9 +214,17 @@ struct SessionListFilteredView: View {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
             }
         }
+        .onChange(of: selectedSession) { newValue in
+            if let session = selectedSession {
+                sessionID = Int(session.id)
+            }
+        }
         .onAppear() {
             if columnVisibility == .all {
                 columnVisibility = .doubleColumn
+            }
+            if let session_id = sessionID {
+                selectedSession = fetchSession(session_id: Int32(session_id))
             }
         }
     }

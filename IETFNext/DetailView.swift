@@ -427,8 +427,5 @@ struct DetailView: View {
                 }
             }
         }
-        .task {
-            html = BLANK
-        }
     }
 }

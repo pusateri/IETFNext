@@ -1,18 +1,17 @@
 *** TODO ***
 
 1. Add RFCs: "https://datatracker.ietf.org/api/v1/doc/docalias/?name__startswith=rfc&document__name__contains=%@&document__type=draft", wg_abbr
-2. enable @SceneStorage to keep track of where you last were
-3. print pdf version of drafts
-4. add local time
-5. detail view moving from open slides to try and open drafts gives error
-6. In group list view, select, then filter, then select crashes
-7. pdf previews
-8. fallback when no native HTML version of draft
-9. Add draft / presentation / charter / agenda date to download list
-10. Only gets the first 20 drafts right now
-11. Recording tab (2nd) on Oauth doesn't always get activated.
+2. print pdf version of drafts
+3. add local time
+4. detail view moving from open slides to try and open drafts gives error
+5. In group list view, select, then filter, then select crashes
+6. pdf previews
+7. fallback when no native HTML version of draft
+8. Add draft / presentation / charter / agenda date to download list
+9. Only gets the first 20 drafts right now
+10. Recording tab (2nd) on Oauth doesn't always get activated.
     recording menu item isn't always active (observed object problem?)
-12. fix macOS popups and view sizes.
+11. fix macOS popups and view sizes.
 
 *** Maybe ***
 
