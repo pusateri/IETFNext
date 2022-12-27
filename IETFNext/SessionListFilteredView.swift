@@ -217,6 +217,8 @@ struct SessionListFilteredView: View {
         .onChange(of: selectedSession) { newValue in
             if let session = selectedSession {
                 sessionID = Int(session.id)
+            } else {
+                sessionID = nil
             }
         }
         .onAppear() {

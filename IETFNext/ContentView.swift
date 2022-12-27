@@ -230,7 +230,15 @@ struct ContentView: View {
                     Section(header: Text(section.id)) {
                         ForEach(section.choices, id:\.self) { choice in
                             NavigationLink(value: choice.id) {
-                                Label(choice.text, systemImage: choice.imageName)
+                                Label {
+                                    HStack {
+                                        Text(choice.text)
+                                        Spacer()
+                                        Text("\(downloads.count)")
+                                    }
+                                } icon: {
+                                    Image(systemName: choice.imageName)
+                                }
                             }
                         }
                     }
