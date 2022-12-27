@@ -222,7 +222,12 @@ struct ContentView: View {
                     Section(header: first_header) {
                         ForEach(section.choices, id:\.self) { choice in
                             NavigationLink(value: choice.id) {
-                                Label(choice.text, systemImage: choice.imageName)
+                                Label {
+                                    Text(choice.text)
+                                        .foregroundColor(.primary)
+                                } icon: {
+                                    Image(systemName: choice.imageName)
+                                }
                             }
                         }
                     }
@@ -233,8 +238,10 @@ struct ContentView: View {
                                 Label {
                                     HStack {
                                         Text(choice.text)
+                                            .foregroundColor(.primary)
                                         Spacer()
                                         Text("\(downloads.count)")
+                                            .foregroundColor(.secondary)
                                     }
                                 } icon: {
                                     Image(systemName: choice.imageName)
