@@ -40,7 +40,8 @@ class MapSize: ObservableObject {
 struct LocationDetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-    @Environment(\.verticalSizeClass) var sizeClass
+    @Environment(\.verticalSizeClass) var vSizeClass
+    @Environment(\.horizontalSizeClass) var hSizeClass
 
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
     @Binding var selectedMeeting: Meeting?
@@ -155,7 +156,7 @@ struct LocationDetailView: View {
                      */
                     //}
                 }
-                if sizeClass != .compact {
+                if vSizeClass != .compact {
                     List(fetchRequest) { section in
                         Section(header: Text(section.id).foregroundColor(.accentColor)) {
                             ForEach(section, id: \.self) { session in
@@ -211,10 +212,12 @@ struct LocationDetailView: View {
                 Menu {
                     if let meeting = selectedMeeting {
                         if let _ = venuePhotos[meeting.number!] {
-                            Button(action: {
-                                selectedLocation = nil
-                            }) {
-                                Label("Show Venue Photo", systemImage: "photo")
+                            if hSizeClass != .compact {
+                                Button(action: {
+                                    selectedLocation = nil
+                                }) {
+                                    Label("Show Venue Photo", systemImage: "photo")
+                                }
                             }
                         }
                     }
