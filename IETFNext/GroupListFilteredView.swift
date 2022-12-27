@@ -20,7 +20,7 @@ struct GroupListFilteredView: View {
     @State private var searchText = ""
 
     init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, columnVisibility: Binding<NavigationSplitViewVisibility>, groupFavorites: Binding<Bool>) {
-        var predicate: NSPredicate
+        var predicate = NSPredicate(value: false)
 
         if groupFavorites.wrappedValue == false {
             predicate = NSPredicate(format: "ANY sessions.meeting.number = %@", selectedMeeting.wrappedValue?.number ?? "0")
