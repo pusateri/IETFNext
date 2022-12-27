@@ -186,7 +186,7 @@ struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.loader) private var loader
     @State private var showingMeetings = false
-    @State var columnVisibility: NavigationSplitViewVisibility = .doubleColumn
+    @State var columnVisibility: NavigationSplitViewVisibility = .all
     @State var selectedMeeting: Meeting?
     @State var selectedSession: Session?
     @State var sessionsForGroup: [Session]?
@@ -198,8 +198,7 @@ struct ContentView: View {
     @State var groupFavorites: Bool = false
     @State var agendas: [Agenda] = []
 
-    @State var listSelection: SidebarOption? = nil
-    @SceneStorage("top.detailSelection") var detailSelection: SidebarOption?
+    @State var selection: SidebarOption? = nil
 
     @ViewBuilder
     var first_header: some View {
@@ -217,7 +216,7 @@ struct ContentView: View {
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            List(viewModel.sections, selection: $listSelection) { section in
+            List(viewModel.sections, selection: $selection) { section in
                 if section.id == "IETF" {
                     Section(header: first_header) {
                         ForEach(section.choices, id:\.self) { choice in
@@ -252,8 +251,8 @@ struct ContentView: View {
                 }
             }
         } content: {
-            if let ds = detailSelection {
-                switch(ds) {
+            if let selection = selection {
+                switch(selection) {
                     case .schedule:
                     SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility)
                     case .groups:
@@ -267,8 +266,8 @@ struct ContentView: View {
                 Text("Select View in Sidebar")
             }
         } detail: {
-            if let ds = detailSelection {
-                switch(ds) {
+            if let selection = selection {
+                switch(selection) {
                     case .locations:
                         LocationDetailView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)
                     default:
@@ -287,11 +286,6 @@ struct ContentView: View {
         .sheet(isPresented: $showingMeetings) {
             MeetingListView(selectedMeeting: $selectedMeeting)
         }
-        .onChange(of: listSelection) { newValue in
-            if let ls = listSelection {
-                detailSelection = ls
-            }
-        }
         .onAppear {
             if let number = UserDefaults.standard.string(forKey:"MeetingNumber") {
                 viewContext.performAndWait {
@@ -304,9 +298,6 @@ struct ContentView: View {
                 }
             } else {
                 showingMeetings.toggle()
-            }
-            if detailSelection == nil {
-                columnVisibility = .all
             }
         }
     }
