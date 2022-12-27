@@ -45,9 +45,9 @@ struct LocationDetailView: View {
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedLocation: Location?
-    @State private var pulse = false
+    //@State private var pulse = false
 
-    @ObservedObject private var map: MapSize
+    //@ObservedObject private var map: MapSize
 
     init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>) {
         var predicate = NSPredicate(value: false)
@@ -60,7 +60,7 @@ struct LocationDetailView: View {
                 predicate = NSPredicate(format: "(meeting.number = %@) AND (location.name = %@) AND (status != \"canceled\")", meeting.number!, loc.name!)
             }
         }
-        map = MapSize(url: selectedLocation.wrappedValue?.map)
+        //map = MapSize(url: selectedLocation.wrappedValue?.map)
 
         _fetchRequest = SectionedFetchRequest<String, Session> (
             sectionIdentifier: \.day!,
@@ -109,7 +109,7 @@ struct LocationDetailView: View {
                         .foregroundColor(.secondary)
                 }
                 if let url = location.map {
-                    GeometryReader { geo in
+                    //GeometryReader { geo in
                         AsyncImage(url: url, transaction: Transaction(animation: .spring())) { phase in
                             switch phase {
                             case .empty:
@@ -133,6 +133,7 @@ struct LocationDetailView: View {
                                 EmptyView()
                             }
                         }
+                    /*
                         .overlay(
                             Image(systemName: "mappin.and.ellipse")
                                 .foregroundColor(.red)
@@ -151,7 +152,8 @@ struct LocationDetailView: View {
                                     }
                                 }
                         )
-                    }
+                     */
+                    //}
                 }
                 if sizeClass != .compact {
                     List(fetchRequest) { section in

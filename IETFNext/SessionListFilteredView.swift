@@ -9,6 +9,16 @@ import SwiftUI
 import CoreData
 
 
+extension UIDevice {
+    static var isIPad: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad
+    }
+
+    static var isIPhone: Bool {
+        UIDevice.current.userInterfaceIdiom == .phone
+    }
+}
+
 struct SessionListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.loader) private var loader
@@ -218,10 +228,13 @@ struct SessionListFilteredView: View {
             if let session = selectedSession {
                 sessionID = Int(session.id)
             } else {
-                sessionID = nil
+                if UIDevice.isIPhone {
+                    sessionID = nil
+                }
+
             }
         }
-        .onAppear() {
+        .onAppear {
             if columnVisibility == .all {
                 columnVisibility = .doubleColumn
             }
