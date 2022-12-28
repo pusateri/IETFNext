@@ -50,6 +50,16 @@ public func contents2Html(from: Download) -> String? {
 
                     return MD_PRE + HtmlGenerator.standard.generate(doc: markdown) + MD_POST
                 } else if from.mimeType == "text/html" {
+                    if !contents.contains("<style") {
+                        if let regex = try? NSRegularExpression(pattern: "<head>", options: .dotMatchesLineSeparators) {
+                            let range = NSRange(contents.startIndex..., in: contents)
+                            let subrange = regex.rangeOfFirstMatch(in: contents, options: [], range: range)
+                            if subrange.location != NSNotFound {
+                                let fixedString = (contents as NSString).replacingCharacters(in: subrange, with: "<head> " + STYLE)
+                                return fixedString
+                            }
+                        }
+                    }
                     return contents
                 }
             } catch {

@@ -124,3 +124,20 @@ let MD_POST = """
   </body>
 </html>
 """
+
+let STYLE = """
+<style type="text/css" media="screen">
+    :root {
+        color-scheme: light dark;
+    }
+    body {
+        font-family: -apple-system, "courier new", courier, monospace;
+    }
+    a:link {
+        color: #3A82F6;
+    }
+    a.visited {
+        color: #3A82F6;
+    }
+</style>
+"""
