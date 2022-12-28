@@ -6,13 +6,12 @@
 4. detail view moving from open slides to try and open drafts gives error
 5. In group list view, select, then filter, then select crashes
 6. pdf previews
-7. fallback when no native HTML version of draft
-8. Add draft / presentation / charter / agenda date to download list
-9. Only gets the first 20 drafts right now
-10. Recording tab (2nd) on Oauth doesn't always get activated.
+7. Add draft / presentation / charter / agenda date to download list
+8. Only gets the first 20 drafts right now
+9. Recording tab (2nd) on Oauth doesn't always get activated.
     recording menu item isn't always active (observed object problem?)
-11. fix macOS popups and view sizes.
-12. Show venue photo on iPhone closes window
+10. fix macOS popups and view sizes.
+11. Show venue photo on iPhone closes window
 
 *** Maybe ***
 

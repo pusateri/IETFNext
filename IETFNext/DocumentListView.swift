@@ -86,10 +86,12 @@ struct DocumentListView: View {
                 dismiss()
                 // htmlized
                 // let urlString = "https://datatracker.ietf.org/doc/html/\(d.name!)-\(d.rev!)"
-                // native html
+                // txt format
+                // let urlString = "https://www.ietf.org/archive/id/\(d.name!)-\(d.rev!).txt"
 
                 // set titleString before urlString since we are only acting on changes to urlString
                 titleString = d.title
+                // native html
                 urlString = "https://www.ietf.org/archive/id/\(d.name!)-\(d.rev!).html"
 
             }

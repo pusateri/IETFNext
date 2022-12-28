@@ -407,7 +407,15 @@ struct DetailView: View {
         }
         .onChange(of: model.error) { newValue in
             if let err = model.error {
-                html = PLAIN_PRE + err + PLAIN_POST
+                if err.starts(with: "Http Result 404:") {
+                    if let urlString = draftURL as? NSString {
+                        if urlString.pathExtension == "html" {
+                            draftURL = urlString.replacingOccurrences(of: "https://www.ietf.org/archive/id", with: "https://datatracker.ietf.org/doc/html")
+                        }
+                    }
+                } else {
+                    html = PLAIN_PRE + err + PLAIN_POST
+                }
             }
         }
         .onChange(of:draftURL) { newValue in
