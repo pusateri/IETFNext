@@ -94,5 +94,8 @@ struct DocumentListView: View {
 
             }
         }
+        .onAppear {
+            kind = .draft
+        }
     }
 }

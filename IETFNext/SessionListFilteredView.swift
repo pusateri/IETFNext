@@ -25,6 +25,7 @@ struct SessionListFilteredView: View {
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
     @Binding var sessionFilterMode: SessionFilterMode
+    @Binding var html: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @SceneStorage("schedule.selection") var sessionID: Int?
@@ -38,7 +39,7 @@ struct SessionListFilteredView: View {
         return results?.first
     }
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, sessionFilterMode: Binding<SessionFilterMode>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, sessionFilterMode: Binding<SessionFilterMode>, html: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
         var predicate: NSPredicate
         var now: Date
         let number = selectedMeeting.wrappedValue?.number ?? "0"
@@ -100,6 +101,7 @@ struct SessionListFilteredView: View {
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
         self._sessionFilterMode = sessionFilterMode
+        self._html = html
         self._columnVisibility = columnVisibility
     }
 
@@ -234,6 +236,7 @@ struct SessionListFilteredView: View {
             }
         }
         .onAppear {
+            html = BLANK
             if columnVisibility == .all {
                 columnVisibility = .doubleColumn
             }

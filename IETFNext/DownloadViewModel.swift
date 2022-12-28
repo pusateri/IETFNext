@@ -63,9 +63,13 @@ class DownloadViewModel: NSObject, ObservableObject {
                         self.download = createDownloadState(context:context, basename:basename, filename:suggested, mimeType: httpResponse.mimeType, encoding: httpResponse.textEncodingName, fileSize:httpResponse.expectedContentLength, ETag: httpResponse.value(forHTTPHeaderField: "ETag"), mtg:mtg, group:group, kind:kind, title:title)
                     }
                 } else {
-                    self.error = "file found with no Download state: \(basename)"
                     // This shouldn't happen but the moveItem will fail if there's something already there
-                    // TODO: delete the file since we won't have enough info to create Download state
+                    self.error = "file found with no Download state, removing: \(basename)"
+                    do {
+                        try FileManager.default.removeItem(at: savedURL)
+                    } catch {
+                        self.error = "error with file: \(basename)"
+                    }
                 }
             } else {
                 self.error = "no suggested filename from download for: \(basename)"

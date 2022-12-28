@@ -16,10 +16,11 @@ struct GroupListFilteredView: View {
     @State var selectedGroup: Group?
     @Binding var selectedSession: Session?
     @Binding var columnVisibility: NavigationSplitViewVisibility
+    @Binding var html: String
     @Binding var groupFavorites: Bool
     @State private var searchText = ""
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, columnVisibility: Binding<NavigationSplitViewVisibility>, groupFavorites: Binding<Bool>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, html: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, groupFavorites: Binding<Bool>) {
         var predicate = NSPredicate(value: false)
 
         if groupFavorites.wrappedValue == false {
@@ -38,6 +39,7 @@ struct GroupListFilteredView: View {
         )
         self._selectedMeeting = selectedMeeting
         self._selectedSession = selectedSession
+        self._html = html
         self._columnVisibility = columnVisibility
         self._groupFavorites = groupFavorites
     }
@@ -134,6 +136,7 @@ struct GroupListFilteredView: View {
             updatePredicate()
         }
         .onAppear() {
+            selectedSession = nil
             if columnVisibility == .all {
                 columnVisibility = .doubleColumn
             }

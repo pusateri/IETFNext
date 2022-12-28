@@ -269,9 +269,9 @@ struct ContentView: View {
             if let ds = detailSelection {
                 switch(ds) {
                     case .schedule:
-                    SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionFilterMode: $sessionFilterMode, columnVisibility:$columnVisibility)
+                    SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionFilterMode: $sessionFilterMode, html:$html, columnVisibility:$columnVisibility)
                     case .groups:
-                        GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)
+                        GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, html:$html, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)
                     case .locations:
                         LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, html:$html, title: $title, columnVisibility:$columnVisibility)
                     case .download:

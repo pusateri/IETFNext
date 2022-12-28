@@ -223,124 +223,126 @@ struct DetailView: View {
                 }
             }
             ToolbarItem {
-                Menu {
-                    ForEach(agendas) { agenda in
-                        Button(action: {
-                            if let meeting = selectedMeeting {
-                                if let session = selectedSession {
-                                    if let group = session.group {
-                                        let download = fetchDownload(kind:.agenda, url:agenda.url)
-                                        if let download = download {
-                                            loadDownloadFile(from:download)
-                                        } else {
-                                            Task {
-                                                await model.downloadToFile(context:viewContext, url: agenda.url, mtg:meeting.number!, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }) {
-                            Label("\(agenda.desc)", systemImage: "list.bullet.clipboard")
-                        }
-                    }
-                    Button(action: {
-                        if let meeting = selectedMeeting {
-                            if let session = selectedSession {
-                                if let group = session.group {
-                                    if let minutes = session.minutes {
-                                        let download = fetchDownload(kind:.minutes, url:minutes)
-                                        if let download = download {
-                                            loadDownloadFile(from:download)
-                                        } else {
-                                            Task {
-                                                await model.downloadToFile(context:viewContext, url: minutes, mtg:meeting.number!, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }) {
-                        Label("View Minutes", systemImage: "clock")
-                    }
-                    .disabled(selectedSession?.minutes == nil)
-                    ForEach(sessionsForGroup ?? []) { session in
-                        Button(action: {
-                            if let url = session.recording {
-#if os(macOS)
-                                if NSWorkspace.shared.canOpenURL(url) {
-                                    NSWorkspace.shared.open(url)
-                                } else{
-                                    if let youtubeID = url.host {
-                                        if let youtube = URL(string: "https://www.youtube.com/embed/\(youtubeID)") {
-                                            UIApplication.shared.open(youtube)
-                                        }
-                                    }
-                                }
-#else
-                                if UIApplication.shared.canOpenURL(url) {
-                                    UIApplication.shared.open(url)
-                                } else {
-                                    if let youtubeID = url.host {
-                                        if let youtube = URL(string: "https://www.youtube.com/embed/\(youtubeID)") {
-                                            UIApplication.shared.open(youtube)
-                                        }
-                                    }
-                                }
-#endif
-                            }
-                        }) {
-                            Label("View Recording\(recordingSuffix(session:session))", systemImage: "play")
-                        }
-                        .disabled(session.recording == nil)
-                    }
-                    Button(action: {
-                        if let meeting = selectedMeeting {
-                            if let session = selectedSession {
-                                if let group = session.group {
-                                    if let rev = charterRequest.first?.rev {
-                                        let urlString = "https://www.ietf.org/charter/charter-ietf-\(group.acronym!)-\(rev).txt"
-                                        if let url = URL(string: urlString) {
-                                            let download = fetchDownload(kind:.charter, url:url)
+                if let _ = selectedSession {
+                    Menu {
+                        ForEach(agendas) { agenda in
+                            Button(action: {
+                                if let meeting = selectedMeeting {
+                                    if let session = selectedSession {
+                                        if let group = session.group {
+                                            let download = fetchDownload(kind:.agenda, url:agenda.url)
                                             if let download = download {
                                                 loadDownloadFile(from:download)
                                             } else {
                                                 Task {
-                                                    await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.charter, title: "\(group.acronym!.uppercased()) Charter")
+                                                    await model.downloadToFile(context:viewContext, url: agenda.url, mtg:meeting.number!, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }) {
+                                Label("\(agenda.desc)", systemImage: "list.bullet.clipboard")
+                            }
+                        }
+                        Button(action: {
+                            if let meeting = selectedMeeting {
+                                if let session = selectedSession {
+                                    if let group = session.group {
+                                        if let minutes = session.minutes {
+                                            let download = fetchDownload(kind:.minutes, url:minutes)
+                                            if let download = download {
+                                                loadDownloadFile(from:download)
+                                            } else {
+                                                Task {
+                                                    await model.downloadToFile(context:viewContext, url: minutes, mtg:meeting.number!, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                                                 }
                                             }
                                         }
                                     }
                                 }
                             }
+                        }) {
+                            Label("View Minutes", systemImage: "clock")
                         }
-                    }) {
-                        if let rev = charterRequest.first?.rev {
-                            Label("View Charter (v\(rev))", systemImage: "pencil")
-                        } else {
-                            Label("View Charter", systemImage: "pencil")
+                        .disabled(selectedSession?.minutes == nil)
+                        ForEach(sessionsForGroup ?? []) { session in
+                            Button(action: {
+                                if let url = session.recording {
+#if os(macOS)
+                                    if NSWorkspace.shared.canOpenURL(url) {
+                                        NSWorkspace.shared.open(url)
+                                    } else{
+                                        if let youtubeID = url.host {
+                                            if let youtube = URL(string: "https://www.youtube.com/embed/\(youtubeID)") {
+                                                UIApplication.shared.open(youtube)
+                                            }
+                                        }
+                                    }
+#else
+                                    if UIApplication.shared.canOpenURL(url) {
+                                        UIApplication.shared.open(url)
+                                    } else {
+                                        if let youtubeID = url.host {
+                                            if let youtube = URL(string: "https://www.youtube.com/embed/\(youtubeID)") {
+                                                UIApplication.shared.open(youtube)
+                                            }
+                                        }
+                                    }
+#endif
+                                }
+                            }) {
+                                Label("View Recording\(recordingSuffix(session:session))", systemImage: "play")
+                            }
+                            .disabled(session.recording == nil)
                         }
-                    }
-                    .disabled(charterRequest.first == nil)
-                    Button(action: {
-                        if let session = selectedSession {
-                            if let group = session.group?.acronym {
-                                let url = URL(string: "https://mailarchive.ietf.org/arch/browse/\(group)/")!
-                                #if os(macOS)
-                                NSWorkspace.shared.open(url)
-                                #else
-                                UIApplication.shared.open(url)
-                                #endif
+                        Button(action: {
+                            if let meeting = selectedMeeting {
+                                if let session = selectedSession {
+                                    if let group = session.group {
+                                        if let rev = charterRequest.first?.rev {
+                                            let urlString = "https://www.ietf.org/charter/charter-ietf-\(group.acronym!)-\(rev).txt"
+                                            if let url = URL(string: urlString) {
+                                                let download = fetchDownload(kind:.charter, url:url)
+                                                if let download = download {
+                                                    loadDownloadFile(from:download)
+                                                } else {
+                                                    Task {
+                                                        await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.charter, title: "\(group.acronym!.uppercased()) Charter")
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }) {
+                            if let rev = charterRequest.first?.rev {
+                                Label("View Charter (v\(rev))", systemImage: "pencil")
+                            } else {
+                                Label("View Charter", systemImage: "pencil")
                             }
                         }
-                    }) {
-                        Label("Mailing List Archive", systemImage: "envelope")
+                        .disabled(charterRequest.first == nil)
+                        Button(action: {
+                            if let session = selectedSession {
+                                if let group = session.group?.acronym {
+                                    let url = URL(string: "https://mailarchive.ietf.org/arch/browse/\(group)/")!
+#if os(macOS)
+                                    NSWorkspace.shared.open(url)
+#else
+                                    UIApplication.shared.open(url)
+#endif
+                                }
+                            }
+                        }) {
+                            Label("Mailing List Archive", systemImage: "envelope")
+                        }
+                        .disabled(selectedSession?.group == nil)
                     }
-                    .disabled(selectedSession?.group == nil)
-                }
-                label: {
-                    Label("More", systemImage: "ellipsis.circle")
+                    label: {
+                        Label("More", systemImage: "ellipsis.circle")
+                    }
                 }
             }
         }
@@ -355,6 +357,7 @@ struct DetailView: View {
             html = BLANK
         }
         .onChange(of: selectedSession) { newValue in
+            html = BLANK
             if let meeting = selectedMeeting {
                 if let session = selectedSession {
                     presentationRequest.nsPredicate = NSPredicate(format: "session = %@", session)
@@ -375,7 +378,6 @@ struct DetailView: View {
                             if let download = download {
                                 loadDownloadFile(from:download)
                             } else {
-                                html = BLANK
                                 Task {
                                     await model.downloadToFile(context:viewContext, url:agenda, mtg:meeting.number!, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                                 }
@@ -393,6 +395,8 @@ struct DetailView: View {
                             await loadRecordingDocument(context: viewContext, session: session)
                         }
                     }
+                } else {
+                    title = ""
                 }
             }
         }

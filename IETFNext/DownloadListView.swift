@@ -220,6 +220,8 @@ struct DownloadListView: View {
             }
         }
         .onAppear() {
+            title = ""
+            html = BLANK
             if columnVisibility == .all {
                 columnVisibility = .doubleColumn
             }
