@@ -410,7 +410,7 @@ struct DetailView: View {
                 if err.starts(with: "Http Result 404:") {
                     if let urlString = draftURL as? NSString {
                         if urlString.pathExtension == "html" {
-                            draftURL = urlString.replacingOccurrences(of: "https://www.ietf.org/archive/id", with: "https://datatracker.ietf.org/doc/html")
+                            draftURL = urlString.replacingOccurrences(of: ".html", with: ".txt")
                         }
                     }
                 } else {

@@ -136,7 +136,6 @@ struct GroupListFilteredView: View {
             updatePredicate()
         }
         .onAppear() {
-            selectedSession = nil
             if columnVisibility == .all {
                 columnVisibility = .doubleColumn
             }
