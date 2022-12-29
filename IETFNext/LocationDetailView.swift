@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-let venuePhotos = [
-    "116": "https://www.pacifico.co.jp/Portals/0/images/en/index/kv/kv_01re.jpg",
-    "115": "https://weekender-hotel-api-2.imgix.net/hotel-images/20170206-LONMETW-hotel-banner-1.jpg?auto=format&q=50&w=1200&dpr=1.5",
-    "114": "https://cache.marriott.com/content/dam/marriott-renditions/PHLWS/phlws-exterior-0091-hor-clsc.jpg",
-    "113": "https://www.hilton.com/im/en/VIEHITW/14562339/hilton-vienna-exterior.jpg?impolicy=crop&cw=4517&ch=2540&gravity=NorthWest&xposition=0&yposition=229&rw=1214&rh=683",
-    "106": "https://d2e5ushqwiltxm.cloudfront.net/wp-content/uploads/sites/203/2019/11/08031528/fairmont-singapore-night-view.jpg",
-]
 
 class MapSize: ObservableObject {
     @Published var size: CGSize
@@ -41,7 +34,6 @@ struct LocationDetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Environment(\.verticalSizeClass) var vSizeClass
-    @Environment(\.horizontalSizeClass) var hSizeClass
 
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
     @Binding var selectedMeeting: Meeting?
@@ -72,17 +64,6 @@ struct LocationDetailView: View {
             predicate: predicate,
             animation: .default
         )
-    }
-
-    private func escapedAddress(meeting: Meeting) -> String? {
-        if let venue_addr = meeting.venue_addr {
-            return venue_addr
-                .replacingOccurrences(of: "\r\n", with: ",")
-                .replacingOccurrences(of: " ,", with: ",")
-                .addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-        } else {
-            return nil
-        }
     }
 
     private func pinXPosition(size: CGSize, geom: GeometryProxy, location: Location) -> CGFloat {
@@ -206,62 +187,6 @@ struct LocationDetailView: View {
                             Text("\(venue)").bold()
                         }
                     }
-                }
-            }
-            ToolbarItem {
-                Menu {
-                    if let meeting = selectedMeeting {
-                        if let _ = venuePhotos[meeting.number!] {
-                            if hSizeClass != .compact {
-                                Button(action: {
-                                    selectedLocation = nil
-                                }) {
-                                    Label("Show Venue Photo", systemImage: "photo")
-                                }
-                            }
-                        }
-                    }
-                    Button(action: {
-                        if let meeting = selectedMeeting {
-                            if let addr = escapedAddress(meeting: meeting) {
-                                let urlString = "https://maps.apple.com/?address=\(addr)"
-                                guard let url = URL(string: urlString) else {
-                                    print("Invalid venue address URL: \(urlString)")
-                                    return
-                                }
-#if os(macOS)
-                                NSWorkspace.shared.open(url)
-#else
-                                UIApplication.shared.open(url)
-#endif
-                            }
-                        }
-                    }) {
-                        Label("Show Venue on Map", systemImage: "mappin.and.ellipse")
-                    }
-                    .disabled(selectedMeeting?.venue_addr?.isEmpty ?? true)
-                    Button(action: {
-                        if let meeting = selectedMeeting {
-                            if let addr = escapedAddress(meeting: meeting) {
-                                let urlString = "https://maps.apple.com/?daddr=\(addr)"
-                                guard let url = URL(string: urlString) else {
-                                    print("Invalid venue address URL: \(urlString)")
-                                    return
-                                }
-#if os(macOS)
-                                NSWorkspace.shared.open(url)
-#else
-                                UIApplication.shared.open(url)
-#endif
-                            }
-                        }
-                    }) {
-                        Label("Directions to Venue", systemImage: "mappin.and.ellipse")
-                    }
-                    .disabled(selectedMeeting?.venue_addr?.isEmpty ?? true)
-                }
-                label: {
-                    Label("More", systemImage: "ellipsis.circle")
                 }
             }
         }

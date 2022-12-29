@@ -273,7 +273,7 @@ struct ContentView: View {
                     case .groups:
                         GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, html:$html, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)
                     case .locations:
-                        LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, html:$html, title: $title, columnVisibility:$columnVisibility)
+                    LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, html: $html, title: $title, columnVisibility: $columnVisibility)
                     case .download:
                         DownloadListView(html:$html, fileURL:$fileURL, title:$title, columnVisibility:$columnVisibility)
                 }
@@ -284,7 +284,7 @@ struct ContentView: View {
             if let ds = detailSelection {
                 switch(ds) {
                     case .locations:
-                        LocationDetailView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)
+                    LocationDetailView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)
                     default:
                         DetailView(
                             selectedMeeting:$selectedMeeting,

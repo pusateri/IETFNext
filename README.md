@@ -11,7 +11,6 @@
 9. Recording tab (2nd) on Oauth doesn't always get activated.
     recording menu item isn't always active (observed object problem?)
 10. fix macOS popups and view sizes.
-11. Show venue photo on iPhone closes window
 
 *** Maybe ***
 
