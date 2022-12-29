@@ -123,6 +123,16 @@ struct DetailView: View {
         return agendas
     }
 
+    private func saveFavorite(session: Session) {
+        if viewContext.hasChanges {
+            do {
+                try viewContext.save()
+            } catch {
+                print("Unable to save Session favorite \(session.name!)")
+            }
+        }
+    }
+
     init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, sessionsForGroup: Binding<[Session]?>, html: Binding<String>, fileURL:Binding<URL?>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, agendas: Binding<[Agenda]>) {
 
         _presentationRequest = FetchRequest<Presentation>(
@@ -183,6 +193,18 @@ struct DetailView: View {
                 }
             }
 #endif
+            ToolbarItem {
+                if let session = selectedSession {
+                    Button(action: {
+                        session.favorite.toggle()
+                        saveFavorite(session: session)
+                    }) {
+                        Image(systemName: session.favorite == true ? "star.fill" : "star")
+                            .foregroundColor(Color(hex: areaColors[session.group?.areaKey ?? "ietf"] ?? 0xf6c844))
+                    }
+                    .buttonStyle(BorderlessButtonStyle())
+                }
+            }
             ToolbarItem {
                 Menu {
                     ForEach(presentationRequest, id: \.self) { p in
