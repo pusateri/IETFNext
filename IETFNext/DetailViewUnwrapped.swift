@@ -358,17 +358,22 @@ struct DetailViewUnwrapped: View {
                         .disabled(charterRequest.first == nil)
                         Button(action: {
                             if let group = session.group {
+                                var url: URL? = nil
                                 // rewrite acronym for some working groups mailing lists
-                                var acronym = group.acronym!
-                                if acronym == "6man" {
-                                    acronym = "ipv6"
+                                if group.acronym! == "httpbis" {
+                                    url = URL(string: "https://lists.w3.org/Archives/Public/ietf-http-wg/")
+                                } else if group.acronym! == "6man" {
+                                    url = URL(string: "https://mailarchive.ietf.org/arch/browse/ipv6/")
+                                } else {
+                                    url = URL(string: "https://mailarchive.ietf.org/arch/browse/\(group.acronym!)/")
                                 }
-                                let url = URL(string: "https://mailarchive.ietf.org/arch/browse/\(acronym)/")!
+                                if let url = url {
 #if os(macOS)
-                                NSWorkspace.shared.open(url)
+                                    NSWorkspace.shared.open(url)
 #else
-                                UIApplication.shared.open(url)
+                                    UIApplication.shared.open(url)
 #endif
+                                }
                             }
                         }) {
                             Label("Mailing List Archive", systemImage: "envelope")

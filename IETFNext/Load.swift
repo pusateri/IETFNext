@@ -341,7 +341,12 @@ public func loadRelatedDrafts(context: NSManagedObjectContext, group: Group?, li
     let url: URL
 
     if let group = group {
-        let urlString = "https://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-(?!ietf-\(group.acronym!))[A-Za-z0-9]*-\(group.acronym!)-*&type=draft&states__slug__contains=active"
+        var urlString: String = "https://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-(?!ietf-\(group.acronym!))[A-Za-z0-9]*-\(group.acronym!)-*&type=draft&states__slug__contains=active"
+        if let area = group.area {
+            if area.name == "irtf" {
+                urlString = "https://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-(?!irtf-\(group.acronym!))[A-Za-z0-9]*-\(group.acronym!)-*&type=draft&states__slug__contains=active"
+            }
+        }
 
         if offset == 0 {
             guard let url0 = URL(string: urlString) else {
