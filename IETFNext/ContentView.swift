@@ -188,14 +188,11 @@ struct ContentView: View {
     @State var columnVisibility: NavigationSplitViewVisibility = .doubleColumn
     @State var selectedMeeting: Meeting?
     @State var selectedSession: Session?
-    @State var sessionsForGroup: [Session]?
     @State var selectedLocation: Location?
     @State var html: String = ""
     @State var fileURL: URL? = nil
-    @State var title: String = ""
     @State var sessionFilterMode: SessionFilterMode = .none
     @State var groupFavorites: Bool = false
-    @State var agendas: [Agenda] = []
 
     @State var listSelection: SidebarOption? = nil
     @SceneStorage("top.detailSelection") var detailSelection: SidebarOption?
@@ -273,9 +270,9 @@ struct ContentView: View {
                     case .groups:
                         GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, html:$html, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)
                     case .locations:
-                    LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, html: $html, title: $title, columnVisibility: $columnVisibility)
+                    LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, columnVisibility: $columnVisibility)
                     case .download:
-                        DownloadListView(html:$html, fileURL:$fileURL, title:$title, columnVisibility:$columnVisibility)
+                        DownloadListView(html:$html, fileURL:$fileURL, columnVisibility:$columnVisibility)
                 }
             } else {
                 Text("Select View in Sidebar")
@@ -289,12 +286,9 @@ struct ContentView: View {
                         DetailView(
                             selectedMeeting:$selectedMeeting,
                             selectedSession:$selectedSession,
-                            sessionsForGroup:$sessionsForGroup,
                             html:$html,
                             fileURL:$fileURL,
-                            title:$title,
-                            columnVisibility:$columnVisibility,
-                            agendas: $agendas)
+                            columnVisibility:$columnVisibility)
                 }
             }
         }

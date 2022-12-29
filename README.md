@@ -8,17 +8,15 @@
 6. pdf previews
 7. Add draft / presentation / charter / agenda date to download list
 8. Only gets the first 20 drafts right now
-9. Recording tab (2nd) on Oauth doesn't always get activated.
-    recording menu item isn't always active (observed object problem?)
-10. fix macOS popups and view sizes.
+9. fix macOS popups and view sizes.
+10. IRTF drafts and related don't match
 
 *** Maybe ***
 
 1. Add favorites to Rooms?
 2. add spinning circle when loading the sessions for a meeting?
-3. Find a way to select session favorites from detail view?
-4. Add inactive drafts?
-5. Add keyboard shortcuts for iPad and maybe macOS
+3. Add inactive drafts?
+4. Add keyboard shortcuts for iPad and maybe macOS
 
 
 IETF colors:

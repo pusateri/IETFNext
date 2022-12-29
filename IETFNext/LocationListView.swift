@@ -26,12 +26,10 @@ struct LocationListView: View {
     @SectionedFetchRequest<String, Location> var fetchRequest: SectionedFetchResults<String, Location>
     @Binding var selectedLocation: Location?
     @Binding var selectedMeeting: Meeting?
-    @Binding var html: String
-    @Binding var title: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
 
-    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>, html: Binding<String>, title: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
         _fetchRequest = SectionedFetchRequest<String, Location>(
             sectionIdentifier: \.level_name!,
             sortDescriptors: [
@@ -43,8 +41,6 @@ struct LocationListView: View {
         )
         self._selectedMeeting = selectedMeeting
         self._selectedLocation = selectedLocation
-        self._html = html
-        self._title = title
         self._columnVisibility = columnVisibility
     }
 
@@ -171,7 +167,6 @@ struct LocationListView: View {
             }
         }
         .onAppear {
-            html = BLANK
             if columnVisibility == .all {
                 columnVisibility = .doubleColumn
             }

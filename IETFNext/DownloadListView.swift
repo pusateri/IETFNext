@@ -90,7 +90,6 @@ struct DownloadListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Binding var html: String
     @Binding var fileURL: URL?
-    @Binding var title: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @State var selectedDownload: Download?
@@ -230,7 +229,6 @@ struct DownloadListView: View {
             }
         }
         .onAppear() {
-            title = ""
             html = BLANK
             if columnVisibility == .all {
                 columnVisibility = .doubleColumn
