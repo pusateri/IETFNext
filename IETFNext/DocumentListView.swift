@@ -48,24 +48,24 @@ struct DocumentListView: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .center) {
-                Picker("Document Type", selection: $kind) {
-                    Text("Active Drafts").tag(DocumentKind.draft)
-                    Text("Related Drafts").tag(DocumentKind.related)
+                Picker("", selection: $kind) {
+                    Text("Active Drafts")
+                        .tag(DocumentKind.draft)
+                    Text("Related Drafts")
+                        .tag(DocumentKind.related)
                 }
                 .pickerStyle(.segmented)
+                .padding()
                 List(selection: $selectedDocument) {
-                    Section("Drafts") {
-                        ForEach(documents, id: \.self) { d in
-                            VStack(alignment: .leading) {
-                                Text(d.title!)
-                                    .foregroundColor(.primary)
-                                Text("\(d.name!)-\(d.rev!)")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
+                    ForEach(documents, id: \.self) { d in
+                        VStack(alignment: .leading) {
+                            Text(d.title!)
+                                .foregroundColor(.primary)
+                            Text("\(d.name!)-\(d.rev!)")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
                         }
                     }
-                    .headerProminence(.increased)
                 }
                 .listStyle(.inset)
             }
@@ -81,6 +81,9 @@ struct DocumentListView: View {
                 }
             }
         }
+#if os(macOS)
+        .frame(width: 600, height: 740)
+#endif
         .onChange(of: selectedDocument) { newValue in
             if let d = selectedDocument {
                 dismiss()

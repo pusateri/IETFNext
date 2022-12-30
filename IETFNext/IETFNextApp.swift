@@ -16,6 +16,10 @@ struct IETFNextApp: App {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
+#if os(macOS)
+        .windowToolbarStyle(UnifiedCompactWindowToolbarStyle(showsTitle: false))
+        //.windowStyle(HiddenTitleBarWindowStyle())
+#endif
         .commands {
             SidebarCommands()
         }

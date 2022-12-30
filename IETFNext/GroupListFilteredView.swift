@@ -44,7 +44,7 @@ struct GroupListFilteredView: View {
         self._groupFavorites = groupFavorites
     }
 
-    private func updatePredicate() {
+    private func updateGroupPredicate() {
         if let meeting = selectedMeeting {
             if groupFavorites == false {
                 if searchText.isEmpty {
@@ -69,6 +69,7 @@ struct GroupListFilteredView: View {
             Section(header: Text(section.id).textCase(.uppercase).foregroundColor(.accentColor)) {
                 ForEach(section, id: \.self) { group in
                     GroupListRowView(selectedMeeting:$selectedMeeting, group:group)
+                        .listRowSeparator(.visible)
                         .listRowBackground(group.state == "bof" ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
                 }
             }
@@ -82,17 +83,20 @@ struct GroupListFilteredView: View {
 #endif
         .disableAutocorrection(true)
         .toolbar {
-            ToolbarItem(placement: .principal) {
-                VStack {
-                    Text("Groups")
-                        .foregroundColor(.primary)
-                        .font(.headline)
-                    Text("\(groupFavorites ? "Filter: Favorites" : "")")
-                        .font(.footnote)
-                        .foregroundColor(.accentColor)
-                }
+#if os(macOS)
+            ToolbarItem(placement: .navigation) {
+                GroupListTitleView(groupFavorites: $groupFavorites)
             }
-            #if !os(macOS)
+            ToolbarItem(placement: .navigation) {
+                GroupFilterMenu(groupFavorites: $groupFavorites)
+            }
+#else
+            ToolbarItem(placement: .principal) {
+                GroupListTitleView(groupFavorites: $groupFavorites)
+            }
+            ToolbarItem(placement: .primaryAction) {
+                GroupFilterMenu(groupFavorites: $groupFavorites)
+            }
             ToolbarItem(placement: .bottomBar) {
                 if let meeting = selectedMeeting {
                     if let number = meeting.number {
@@ -104,17 +108,10 @@ struct GroupListFilteredView: View {
                     }
                 }
             }
-            #endif
-            ToolbarItem(placement: .primaryAction) {
-                Button(action: {
-                    withAnimation {
-                        groupFavorites.toggle()
-                        updatePredicate()
-                    }
-                }) {
-                    Label("Filter", systemImage: groupFavorites == true ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
-                }
-            }
+#endif
+        }
+        .onChange(of: groupFavorites) { newValue in
+            updateGroupPredicate()
         }
         .onChange(of: selectedMeeting) { newValue in
             if let meeting = newValue {
@@ -133,7 +130,7 @@ struct GroupListFilteredView: View {
             }
         }
         .onChange(of: searchText) { newValue in
-            updatePredicate()
+            updateGroupPredicate()
         }
         .onAppear() {
             if columnVisibility == .all {

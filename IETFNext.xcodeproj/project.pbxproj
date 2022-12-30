@@ -15,11 +15,15 @@
 		F80CA275294ABA24002AD2C6 /* HTML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA274294ABA24002AD2C6 /* HTML.swift */; };
 		F85D55C0295E05F900569A77 /* DetailViewUnwrapped.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55BF295E05F900569A77 /* DetailViewUnwrapped.swift */; };
 		F85D55C2295E72B100569A77 /* MacOSCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C1295E72B100569A77 /* MacOSCompat.swift */; };
+		F85D55C4295F71DB00569A77 /* SessionFilterMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */; };
+		F85D55C6295F7A7500569A77 /* SessionListTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C5295F7A7500569A77 /* SessionListTitleView.swift */; };
+		F85D55C8295F85B200569A77 /* GroupListTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C7295F85B200569A77 /* GroupListTitleView.swift */; };
+		F85D55CA295F86DC00569A77 /* GroupFilterMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C9295F86DC00569A77 /* GroupFilterMenu.swift */; };
 		F865B9F2295930AB00C3DB13 /* LocationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F865B9F1295930AB00C3DB13 /* LocationDetailView.swift */; };
 		F87E0F42294FD45800E1E1A8 /* MarkdownKit in Frameworks */ = {isa = PBXBuildFile; productRef = F87E0F41294FD45800E1E1A8 /* MarkdownKit */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
-		F8E127C0293EA7A4004A35E8 /* SessionListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */; };
+		F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListView.swift */; };
 		F8E127C22940E254004A35E8 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127C12940E254004A35E8 /* DetailView.swift */; };
 		F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127C52942BF18004A35E8 /* DocumentListView.swift */; };
 		F8E127C92943F13B004A35E8 /* Revision.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127C82943F13B004A35E8 /* Revision.swift */; };
@@ -69,10 +73,14 @@
 		F80CA276294B937B002AD2C6 /* IETFNext 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 3.xcdatamodel"; sourceTree = "<group>"; };
 		F85D55BF295E05F900569A77 /* DetailViewUnwrapped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewUnwrapped.swift; sourceTree = "<group>"; };
 		F85D55C1295E72B100569A77 /* MacOSCompat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacOSCompat.swift; sourceTree = "<group>"; };
+		F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFilterMenu.swift; sourceTree = "<group>"; };
+		F85D55C5295F7A7500569A77 /* SessionListTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListTitleView.swift; sourceTree = "<group>"; };
+		F85D55C7295F85B200569A77 /* GroupListTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListTitleView.swift; sourceTree = "<group>"; };
+		F85D55C9295F86DC00569A77 /* GroupFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupFilterMenu.swift; sourceTree = "<group>"; };
 		F865B9F1295930AB00C3DB13 /* LocationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailView.swift; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
-		F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListFilteredView.swift; sourceTree = "<group>"; };
+		F8E127BF293EA7A4004A35E8 /* SessionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListView.swift; sourceTree = "<group>"; };
 		F8E127C12940E254004A35E8 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		F8E127C52942BF18004A35E8 /* DocumentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListView.swift; sourceTree = "<group>"; };
 		F8E127C82943F13B004A35E8 /* Revision.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Revision.swift; sourceTree = SOURCE_ROOT; };
@@ -159,7 +167,9 @@
 				F80CA26629469B60002AD2C6 /* DownloadListView.swift */,
 				F80CA270294920D9002AD2C6 /* DownloadViewModel.swift */,
 				F80CA26A29477D85002AD2C6 /* GroupExtensions.swift */,
+				F85D55C9295F86DC00569A77 /* GroupFilterMenu.swift */,
 				F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */,
+				F85D55C7295F85B200569A77 /* GroupListTitleView.swift */,
 				F80CA268294778FA002AD2C6 /* GroupListRowView.swift */,
 				F80CA274294ABA24002AD2C6 /* HTML.swift */,
 				F8E9B9CC2934295E00CA6F09 /* Load.swift */,
@@ -167,10 +177,12 @@
 				F865B9F1295930AB00C3DB13 /* LocationDetailView.swift */,
 				F85D55C1295E72B100569A77 /* MacOSCompat.swift */,
 				F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */,
+				F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */,
 				F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */,
-				F8E127BF293EA7A4004A35E8 /* SessionListFilteredView.swift */,
 				F8E9BA162937EB2C00CA6F09 /* SessionListRowView.swift */,
 				F80CA26C2947BC73002AD2C6 /* SessionListLocationView.swift */,
+				F8E127BF293EA7A4004A35E8 /* SessionListView.swift */,
+				F85D55C5295F7A7500569A77 /* SessionListTitleView.swift */,
 				F8E9BA142936B5FA00CA6F09 /* WebView.swift */,
 				F8E9B9A52934101300CA6F09 /* Assets.xcassets */,
 				F8E9B9A72934101300CA6F09 /* IETFNext.entitlements */,
@@ -365,10 +377,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				F80CA271294920D9002AD2C6 /* DownloadViewModel.swift in Sources */,
+				F85D55C6295F7A7500569A77 /* SessionListTitleView.swift in Sources */,
 				F8E9BA112935624100CA6F09 /* LocationListView.swift in Sources */,
 				F865B9F2295930AB00C3DB13 /* LocationDetailView.swift in Sources */,
 				F8E9BA1329366A4000CA6F09 /* MeetingListRowView.swift in Sources */,
 				F85D55C2295E72B100569A77 /* MacOSCompat.swift in Sources */,
+				F85D55C4295F71DB00569A77 /* SessionFilterMenu.swift in Sources */,
 				F8E9B9D32935070D00CA6F09 /* MeetingListView.swift in Sources */,
 				F80CA269294778FA002AD2C6 /* GroupListRowView.swift in Sources */,
 				F80CA26D2947BC73002AD2C6 /* SessionListLocationView.swift in Sources */,
@@ -376,13 +390,15 @@
 				F8E9B99D2934101200CA6F09 /* IETFNextApp.swift in Sources */,
 				F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */,
 				F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */,
-				F8E127C0293EA7A4004A35E8 /* SessionListFilteredView.swift in Sources */,
+				F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */,
 				F8E127C92943F13B004A35E8 /* Revision.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
 				F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */,
 				F80CA26B29477D85002AD2C6 /* GroupExtensions.swift in Sources */,
 				F85D55C0295E05F900569A77 /* DetailViewUnwrapped.swift in Sources */,
 				F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */,
+				F85D55C8295F85B200569A77 /* GroupListTitleView.swift in Sources */,
+				F85D55CA295F86DC00569A77 /* GroupFilterMenu.swift in Sources */,
 				F8E9BA172937EB2C00CA6F09 /* SessionListRowView.swift in Sources */,
 				F80CA26729469B60002AD2C6 /* DownloadListView.swift in Sources */,
 				F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */,

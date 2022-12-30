@@ -59,15 +59,20 @@ struct LocationListView: View {
                     HStack {
                         Text(location.name ?? "Unknown")
                             .foregroundColor(.primary)
+                            .font(.title3)
+                            .padding(.all, 2)
                         Spacer()
                         if location.sessions?.count ?? 0 == 1 {
                             Text("1 Session")
                                 .foregroundColor(.secondary)
+                                .padding(.all, 2)
                         } else {
                             Text("\(location.sessions?.count ?? 0) Sessions")
                                 .foregroundColor(.secondary)
+                                .padding(.all, 2)
                         }
                     }
+                    .listRowSeparator(.visible)
                 }
             }
         }
@@ -76,6 +81,20 @@ struct LocationListView: View {
         .navigationBarTitleDisplayMode(.inline)
 #endif
         .toolbar {
+#if os(macOS)
+            ToolbarItem(placement: .navigation) {
+                if let meeting = selectedMeeting {
+                    if let venue = meeting.venue_name {
+                        VStack {
+                            Text("Rooms")
+                                .font(.headline)
+                            Text(venue)
+                                .font(.subheadline)
+                        }
+                    }
+                }
+            }
+#else
             ToolbarItem(placement: .principal) {
                 if let meeting = selectedMeeting {
                     if let venue = meeting.venue_name {
@@ -88,6 +107,7 @@ struct LocationListView: View {
                     }
                 }
             }
+#endif
             ToolbarItem {
                 Menu {
 #if os(macOS)

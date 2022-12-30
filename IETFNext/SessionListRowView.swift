@@ -18,7 +18,8 @@ struct SessionListRowView: View {
                 saveFavorite()
             }) {
                 Image(systemName: session.favorite == true ? "star.fill" : "star")
-                    .font(Font.system(size: 32, weight: .bold))
+                    .font(Font.system(size: 24, weight: .bold))
+                    .imageScale(.large)
                     .foregroundColor(Color(hex: areaColors[session.group?.areaKey ?? "ietf"] ?? 0xf6c844))
             }
             .buttonStyle(BorderlessButtonStyle())

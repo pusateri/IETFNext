@@ -7,37 +7,6 @@
 
 import SwiftUI
 
-
-class MapSize: ObservableObject {
-    @Published var size: CGSize
-    var url: URL?
-
-    init(url: URL?) {
-        self.url = url
-        self.size = CGSize()
-
-        DispatchQueue.global().async {
-            if let url = url {
-                if let data = try? Data(contentsOf: url) {
-#if os(macOS)
-                    if let image = NSImage(data: data) {
-                        DispatchQueue.main.async {
-                            self.size = image.size
-                        }
-                    }
-#else
-                    if let image = UIImage(data: data) {
-                        DispatchQueue.main.async {
-                            self.size = image.size
-                        }
-                    }
-#endif
-                }
-            }
-        }
-    }
-}
-
 struct LocationDetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.colorScheme) var colorScheme: ColorScheme
@@ -46,9 +15,6 @@ struct LocationDetailView: View {
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedLocation: Location?
-    //@State private var pulse = false
-
-    //@ObservedObject private var map: MapSize
 
     init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>) {
         var predicate = NSPredicate(value: false)
@@ -61,7 +27,6 @@ struct LocationDetailView: View {
                 predicate = NSPredicate(format: "(meeting.number = %@) AND (location.name = %@) AND (status != \"canceled\")", meeting.number!, loc.name!)
             }
         }
-        //map = MapSize(url: selectedLocation.wrappedValue?.map)
 
         _fetchRequest = SectionedFetchRequest<String, Session> (
             sectionIdentifier: \.day!,
@@ -74,76 +39,39 @@ struct LocationDetailView: View {
         )
     }
 
-    private func pinXPosition(size: CGSize, geom: GeometryProxy, location: Location) -> CGFloat {
-        var x: CGFloat = 0.0
-        if size.width > 0.0 {
-            x = CGFloat(location.x) * geom.size.width / size.width
-        }
-        return x
-    }
-
-    private func pinYPosition(size: CGSize, geom: GeometryProxy, location: Location) -> CGFloat {
-        var y: CGFloat = 0.0
-        if size.height > 0.0 {
-            y = CGFloat(location.y) * geom.size.height / size.height
-        }
-        return y
-    }
-
     var body: some View {
         VStack() {
             if let location = selectedLocation {
                 if let level = location.level_name, level != "Uncategorized" {
                     Text("\(location.level_name!)")
-                        .font(.subheadline)
+                        .font(.title2)
                         .foregroundColor(.secondary)
+                        .padding(.top)
                 }
                 if let url = location.map {
-                    //GeometryReader { geo in
-                        AsyncImage(url: url, transaction: Transaction(animation: .spring())) { phase in
-                            switch phase {
-                            case .empty:
-                                ProgressView()
-                            case .success(let image):
-                                if colorScheme == .light {
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                        .transition(.scale)
-                                } else if colorScheme == .dark {
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                        .transition(.scale)
-                                        .colorInvert()
-                                }
-                            case .failure(_):
-                                EmptyView()
-                            @unknown default:
-                                EmptyView()
+                    AsyncImage(url: url, transaction: Transaction(animation: .spring())) { phase in
+                        switch phase {
+                        case .empty:
+                            ProgressView()
+                        case .success(let image):
+                            if colorScheme == .light {
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .transition(.scale)
+                            } else if colorScheme == .dark {
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .transition(.scale)
+                                    .colorInvert()
                             }
+                        case .failure(_):
+                            EmptyView()
+                        @unknown default:
+                            EmptyView()
                         }
-                    /*
-                        .overlay(
-                            Image(systemName: "mappin.and.ellipse")
-                                .foregroundColor(.red)
-                                .position(
-                                    x: pinXPosition(size: map.size, geom: geo, location: location),
-                                    y: pinYPosition(size: map.size, geom: geo, location: location)
-                                )
-                                .offset(x: 0, y: pulse ? -7 : -20)
-                                .onAppear {
-                                    withAnimation(
-                                        .easeInOut(duration: 1.0)
-                                        .repeatForever(autoreverses: true)
-                                        .speed(1.5)
-                                    ) {
-                                        pulse.toggle()
-                                    }
-                                }
-                        )
-                     */
-                    //}
+                    }
                 }
                 if vSizeClass != .compact {
                     List(fetchRequest) { section in
@@ -152,16 +80,22 @@ struct LocationDetailView: View {
                                 VStack(alignment: .leading) {
                                     HStack {
                                         Text("\(session.timerange!)")
+                                            .font(.title3)
                                             .foregroundColor(.primary)
                                         Spacer()
                                         Text("\(session.group?.acronym ?? "")")
                                             .foregroundColor(.primary)
                                             .font(.subheadline)
                                     }
+                                    .padding(.all, 2)
                                     Text(session.name!)
                                         .foregroundColor(.secondary)
                                         .font(.subheadline)
+#if os(macOS)
+                                        .padding(.bottom, 5)
+#endif
                                 }
+                                .listRowSeparator(.visible)
                             }
                         }
                     }
@@ -182,6 +116,7 @@ struct LocationDetailView: View {
                 }
             }
         }
+        .background(colorScheme == .light ? .white : .black)
 #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif

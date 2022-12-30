@@ -247,6 +247,9 @@ struct ContentView: View {
                     }
                 }
             }
+#if os(macOS)
+            .navigationSplitViewColumnWidth(min: 200, ideal: 220, max: 270)
+#else
             .toolbar {
                 ToolbarItem {
                     Menu {
@@ -262,17 +265,22 @@ struct ContentView: View {
                     }
                 }
             }
+#endif
         } content: {
             if let ds = detailSelection {
                 switch(ds) {
                     case .schedule:
                     SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionFilterMode: $sessionFilterMode, html:$html, columnVisibility:$columnVisibility)
+                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                     case .groups:
                         GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, html:$html, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)
+                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                     case .locations:
                     LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, columnVisibility: $columnVisibility)
+                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                     case .download:
                         DownloadListView(html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
+                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 }
             } else {
                 Text("Select View in Sidebar")
@@ -292,6 +300,16 @@ struct ContentView: View {
                 }
             }
         }
+#if os(macOS)
+        .frame(
+            minWidth: 1200,
+            idealWidth: 1800,
+            maxWidth: .infinity,
+            minHeight: 800,
+            idealHeight: 1500,
+            maxHeight: .infinity
+        )
+#endif
         .sheet(isPresented: $showingMeetings) {
             MeetingListView(selectedMeeting: $selectedMeeting)
         }
@@ -317,12 +335,5 @@ struct ContentView: View {
                 columnVisibility = .all
             }
         }
-    }
-}
-
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

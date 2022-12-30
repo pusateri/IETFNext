@@ -185,6 +185,7 @@ struct DownloadListView: View {
                             Text(download.group?.acronym ?? "")
                                 .foregroundColor(.secondary)
                         }
+                        .padding(.all, 2)
                         HStack {
                             Text(download.filename ?? "path/absent")
                                 .font(.subheadline)
@@ -194,11 +195,13 @@ struct DownloadListView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
+                        .padding(.all, 2)
                     }
                 }
                 .onDelete { indexSet in
                     removeDownload(section: section, indexset: indexSet)
                 }
+                .listRowSeparator(.visible)
             } header: {
                 HStack {
                     Text(section.id.capitalized)

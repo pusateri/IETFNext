@@ -228,6 +228,13 @@ struct DetailViewUnwrapped: View {
                 }) {
                     Image(systemName: session.favorite == true ? "star.fill" : "star")
                         .foregroundColor(Color(hex: areaColors[session.group?.areaKey ?? "ietf"] ?? 0xf6c844))
+#if os(macOS)
+                        .overlay {
+                            Image(systemName: "star")
+                                .imageScale(.large)
+                                .foregroundColor(.black)
+                        }
+#endif
                 }
                 .buttonStyle(BorderlessButtonStyle())
             }
