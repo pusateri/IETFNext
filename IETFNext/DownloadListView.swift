@@ -55,7 +55,7 @@ public func contents2Html(from: Download) -> String? {
                             let range = NSRange(contents.startIndex..., in: contents)
                             let subrange = regex.rangeOfFirstMatch(in: contents, options: [], range: range)
                             if subrange.location != NSNotFound {
-                                let fixedString = (contents as NSString).replacingCharacters(in: subrange, with: "<head> " + STYLE)
+                                let fixedString = (contents as NSString).replacingCharacters(in: subrange, with: "<head> " + HTML_INSERT_STYLE)
                                 return fixedString
                             }
                         }
@@ -89,7 +89,7 @@ extension SectionedFetchResults.Section where Result == Download {
 struct DownloadListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Binding var html: String
-    @Binding var fileURL: URL?
+    @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @State var selectedDownload: Download?
@@ -111,7 +111,8 @@ struct DownloadListView: View {
                                                                        in: .userDomainMask,
                                                                        appropriateFor: nil,
                                                                        create: false)
-                        fileURL = documentsURL.appendingPathComponent(filename)
+                        html = ""
+                        localFileURL = documentsURL.appendingPathComponent(filename)
                     } catch {
                         html = "Error reading pdf file: \(from.filename!)"
                     }

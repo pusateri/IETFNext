@@ -11,13 +11,13 @@ struct DetailView: View {
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedSession: Session?
     @Binding var html: String
-    @Binding var fileURL: URL?
+    @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     var body: some View {
         if let meeting = selectedMeeting {
             if let session = selectedSession {
-                DetailViewUnwrapped(meeting: meeting, session: session, html: $html, fileURL: $fileURL, columnVisibility:$columnVisibility)
+                DetailViewUnwrapped(meeting: meeting, session: session, html: $html, localFileURL: $localFileURL, columnVisibility:$columnVisibility)
             }
         }
     }

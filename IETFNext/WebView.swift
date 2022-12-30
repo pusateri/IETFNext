@@ -11,7 +11,7 @@ import WebKit
 #if os(macOS)
 struct WebView: NSViewRepresentable {
     @Binding var html: String
-    @Binding var fileURL: URL?
+    @Binding var localFileURL: URL?
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -25,10 +25,8 @@ struct WebView: NSViewRepresentable {
         nsView.navigationDelegate = context.coordinator
         if html.count != 0 {
             nsView.loadHTMLString(html, baseURL: nil)
-            html = ""
-        } else if let url = fileURL {
+        } else if let url = localFileURL {
             nsView.loadFileURL(url, allowingReadAccessTo:url)
-            fileURL = nil
         }
     }
 
@@ -56,7 +54,7 @@ struct WebView: NSViewRepresentable {
 #else
 struct WebView: UIViewRepresentable {
     @Binding var html: String
-    @Binding var fileURL: URL?
+    @Binding var localFileURL: URL?
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -73,10 +71,8 @@ struct WebView: UIViewRepresentable {
         uiView.navigationDelegate = context.coordinator
         if html.count != 0 {
             uiView.loadHTMLString(html, baseURL: nil)
-            html = ""
-        } else if let url = fileURL {
+        } else if let url = localFileURL {
             uiView.loadFileURL(url, allowingReadAccessTo:url)
-            fileURL = nil
         }
     }
 

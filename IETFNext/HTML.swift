@@ -15,7 +15,7 @@ let BLANK = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Blank</title>
-    <style type="text/css" mdedia="screen">
+    <style type="text/css" media="screen">
       :root {
           color-scheme: light dark;
       }
@@ -35,7 +35,7 @@ let PLAIN_PRE = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title></title>
-    <style type="text/css" mdedia="screen">
+    <style type="text/css" media="screen">
       :root {
           color-scheme: light dark;
       }
@@ -46,8 +46,7 @@ let PLAIN_PRE = """
           color: #3A82F6;
       }
       pre {
-         font-family: -apple-system, "courier new", courier, monospace;
-         font-size: 16px;
+         font-family: monospace;
          white-space: pre-wrap;
       }
     </style>
@@ -69,7 +68,7 @@ let IMAGE_PRE = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <style type="text/css" mdedia="screen">
+    <style type="text/css" media="screen">
       :root {
           color-scheme: light dark;
       }
@@ -102,7 +101,7 @@ let MD_PRE = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title></title>
-    <style type="text/css" mdedia="screen">
+    <style type="text/css" media="screen">
       :root {
           color-scheme: light dark;
       }
@@ -125,7 +124,7 @@ let MD_POST = """
 </html>
 """
 
-let STYLE = """
+let HTML_INSERT_STYLE = """
 <style type="text/css" media="screen">
     :root {
         color-scheme: light dark;

@@ -190,7 +190,7 @@ struct ContentView: View {
     @State var selectedSession: Session?
     @State var selectedLocation: Location?
     @State var html: String = ""
-    @State var fileURL: URL? = nil
+    @State var localFileURL: URL? = nil
     @State var sessionFilterMode: SessionFilterMode = .none
     @State var groupFavorites: Bool = false
 
@@ -272,7 +272,7 @@ struct ContentView: View {
                     case .locations:
                     LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, columnVisibility: $columnVisibility)
                     case .download:
-                        DownloadListView(html:$html, fileURL:$fileURL, columnVisibility:$columnVisibility)
+                        DownloadListView(html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
                 }
             } else {
                 Text("Select View in Sidebar")
@@ -287,7 +287,7 @@ struct ContentView: View {
                             selectedMeeting:$selectedMeeting,
                             selectedSession:$selectedSession,
                             html:$html,
-                            fileURL:$fileURL,
+                            localFileURL:$localFileURL,
                             columnVisibility:$columnVisibility)
                 }
             }

@@ -19,11 +19,19 @@ class MapSize: ObservableObject {
         DispatchQueue.global().async {
             if let url = url {
                 if let data = try? Data(contentsOf: url) {
+#if os(macOS)
+                    if let image = NSImage(data: data) {
+                        DispatchQueue.main.async {
+                            self.size = image.size
+                        }
+                    }
+#else
                     if let image = UIImage(data: data) {
                         DispatchQueue.main.async {
                             self.size = image.size
                         }
                     }
+#endif
                 }
             }
         }

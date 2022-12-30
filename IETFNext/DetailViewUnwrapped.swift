@@ -12,15 +12,14 @@ struct DetailViewUnwrapped: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.presentationMode) var presentation
-#if os(iOS)
     @Environment(\.horizontalSizeClass) var sizeClass
-#endif
+
     @FetchRequest<Presentation> var presentationRequest: FetchedResults<Presentation>
     @FetchRequest<Document> var charterRequest: FetchedResults<Document>
     @ObservedObject var meeting: Meeting
     @ObservedObject var session: Session
     @Binding var html: String
-    @Binding var fileURL: URL?
+    @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @State var sessionsForGroup: [Session]? = nil
@@ -32,13 +31,13 @@ struct DetailViewUnwrapped: View {
     @State var kind: DocumentKind = .draft
     @ObservedObject var model: DownloadViewModel = DownloadViewModel.shared
 
-    init(meeting: Meeting, session: Session, html: Binding<String>, fileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+    init(meeting: Meeting, session: Session, html: Binding<String>, localFileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
 
         self.meeting = meeting
         self.session = session
 
         self._html = html
-        self._fileURL = fileURL
+        self._localFileURL = localFileURL
         self._columnVisibility = columnVisibility
 
         _presentationRequest = FetchRequest<Presentation>(
@@ -85,7 +84,8 @@ struct DetailViewUnwrapped: View {
                                                                        in: .userDomainMask,
                                                                        appropriateFor: nil,
                                                                        create: false)
-                        fileURL = documentsURL.appendingPathComponent(filename)
+                        html = ""
+                        localFileURL = documentsURL.appendingPathComponent(filename)
                     } catch {
                         html = "Error reading pdf file: \(from.filename!)"
                     }
@@ -194,10 +194,7 @@ struct DetailViewUnwrapped: View {
     }
 
     var body: some View {
-        WebView(html:$html, fileURL:$fileURL)
-#if !os(macOS)
-        .navigationBarTitleDisplayMode(.inline)
-#endif
+        WebView(html:$html, localFileURL:$localFileURL)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text(banner).bold()
@@ -306,13 +303,9 @@ struct DetailViewUnwrapped: View {
                             Button(action: {
                                 if let url = session.recording {
 #if os(macOS)
-                                    if NSWorkspace.shared.canOpenURL(url) {
-                                        NSWorkspace.shared.open(url)
-                                    } else{
-                                        if let youtubeID = url.host {
-                                            if let youtube = URL(string: "https://www.youtube.com/embed/\(youtubeID)") {
-                                                UIApplication.shared.open(youtube)
-                                            }
+                                    if let youtubeID = url.host {
+                                        if let youtube = URL(string: "https://www.youtube.com/embed/\(youtubeID)") {
+                                            NSWorkspace.shared.open(youtube)
                                         }
                                     }
 #else

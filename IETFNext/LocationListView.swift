@@ -20,9 +20,6 @@ let venuePhotos = [
 
 struct LocationListView: View {
     @Environment(\.managedObjectContext) private var viewContext
-#if !os(macOS)
-    @Environment(\.horizontalSizeClass) var hSizeClass
-#endif
     @SectionedFetchRequest<String, Location> var fetchRequest: SectionedFetchResults<String, Location>
     @Binding var selectedLocation: Location?
     @Binding var selectedMeeting: Meeting?
@@ -93,6 +90,17 @@ struct LocationListView: View {
             }
             ToolbarItem {
                 Menu {
+#if os(macOS)
+                    if let meeting = selectedMeeting {
+                        if let _ = venuePhotos[meeting.number!] {
+                            Button(action: {
+                                selectedLocation = nil
+                            }) {
+                                Label("Show Venue Photo", systemImage: "photo")
+                            }
+                        }
+                    }
+#else
                     if !UIDevice.isIPhone {
                         if let meeting = selectedMeeting {
                             if let _ = venuePhotos[meeting.number!] {
@@ -104,6 +112,7 @@ struct LocationListView: View {
                             }
                         }
                     }
+#endif
                     Button(action: {
                         if let meeting = selectedMeeting {
                             if let addr = escapedAddress(meeting: meeting) {

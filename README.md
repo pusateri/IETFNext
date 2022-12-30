@@ -5,18 +5,25 @@
 3. add local time
 4. detail view moving from open slides to try and open drafts gives error
 5. In group list view, select, then filter, then select crashes
-6. pdf previews
+6. pdf thumbnails
 7. Add draft / presentation / charter / agenda date to download list
 8. Only gets the first 20 drafts right now
 9. fix macOS popups and view sizes.
-10. IRTF drafts and related don't match
+10. in group list view, favoriting session doesn't show up in group list
+11. Jump between session and location and back
+12. Load basename document to support useractivity
+13. save group selection across restarts
+
 
 *** Maybe ***
 
 1. Add favorites to Rooms?
 2. add spinning circle when loading the sessions for a meeting?
 3. Add inactive drafts?
-4. Add keyboard shortcuts for iPad and maybe macOS
+4. Use notes app yellow?
+5. Choice of drafts formats
+6. Add keyboard shortcuts for iPad and maybe macOS
+7. Drop pin on room map?
 
 
 IETF colors:

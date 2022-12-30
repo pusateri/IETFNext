@@ -9,6 +9,7 @@ import SwiftUI
 import CoreData
 
 
+#if !os(macOS)
 extension UIDevice {
     static var isIPad: Bool {
         UIDevice.current.userInterfaceIdiom == .pad
@@ -18,6 +19,7 @@ extension UIDevice {
         UIDevice.current.userInterfaceIdiom == .phone
     }
 }
+#endif
 
 struct SessionListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -229,10 +231,11 @@ struct SessionListFilteredView: View {
             if let session = selectedSession {
                 sessionID = Int(session.id)
             } else {
+#if !os(macOS)
                 if UIDevice.isIPhone {
                     sessionID = nil
                 }
-
+#endif
             }
         }
         .onAppear {
