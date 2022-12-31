@@ -143,6 +143,7 @@ struct GroupListFilteredView: View {
 #if !os(macOS)
                 if UIDevice.isIPhone {
                     groupShort = nil
+                    selectedSession = nil
                 }
 #endif
             }
