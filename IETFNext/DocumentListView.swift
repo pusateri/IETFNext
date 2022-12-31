@@ -60,11 +60,20 @@ struct DocumentListView: View {
                     ForEach(documents, id: \.self) { d in
                         VStack(alignment: .leading) {
                             Text(d.title!)
+                                .font(.title2)
                                 .foregroundColor(.primary)
+#if os(macOS)
+                                .padding(.all, 3)
+#endif
                             Text("\(d.name!)-\(d.rev!)")
-                                .font(.subheadline)
+                                .font(.headline)
                                 .foregroundColor(.secondary)
+#if os(macOS)
+                                .padding(.bottom, 3)
+#endif
                         }
+
+                        .listRowSeparator(.visible)
                     }
                 }
                 .listStyle(.inset)

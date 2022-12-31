@@ -61,6 +61,7 @@ struct MeetingListView: View {
         NavigationView {
             List(meetings, id: \.self, selection: $selectedMeeting) { mtg in
                 MeetingListRowView(meeting: mtg)
+                    .listRowSeparator(.visible)
             }
             .navigationTitle("IETF \(selectedMeeting?.number! ?? "Select Meeting")")
 #if !os(macOS)
@@ -86,6 +87,9 @@ struct MeetingListView: View {
                 await loadMeetings(context:viewContext, limit:0, offset:0)
             }
         }
+#if os(macOS)
+        .frame(width: 600, height: 740)
+#endif
     }
 }
 

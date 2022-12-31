@@ -151,6 +151,7 @@ struct Choice: Identifiable, Hashable {
     var id: SidebarOption
     var text: String
     var imageName: String
+    var key: String
 }
 
 struct SectionChoice: Identifiable, Hashable {
@@ -163,15 +164,15 @@ extension Choice {
         SectionChoice(
             id: "IETF",
             choices: [
-                Choice(id: .schedule, text: "Schedule", imageName: "calendar"),
-                Choice(id: .groups, text: "Working Groups", imageName: "person.3"),
-                Choice(id: .locations, text: "Venue & Room Locations", imageName: "map")
+                Choice(id: .schedule, text: "Schedule", imageName: "calendar", key: "s"),
+                Choice(id: .groups, text: "Working Groups", imageName: "person.3", key: "g"),
+                Choice(id: .locations, text: "Venue & Room Locations", imageName: "map", key: "r")
                 ]
             ),
         SectionChoice(
             id: "Local",
             choices: [
-                Choice(id: .download, text: "Downloads", imageName: "arrow.down.circle")
+                Choice(id: .download, text: "Downloads", imageName: "arrow.down.circle", key: "d")
                 ]
             )
     ]
@@ -184,7 +185,8 @@ private class ChoiceViewModel: ObservableObject {
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.scenePhase) var scenePhase
-    @State private var showingMeetings = false
+    @Binding var showingMeetings: Bool
+
     @State var columnVisibility: NavigationSplitViewVisibility = .doubleColumn
     @State var selectedMeeting: Meeting?
     @State var selectedSession: Session?
@@ -243,6 +245,7 @@ struct ContentView: View {
                                     Image(systemName: choice.imageName)
                                 }
                             }
+                            //.keyboardShortcut(choice.key)
                         }
                     }
                 }
