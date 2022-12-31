@@ -312,7 +312,7 @@ struct ContentView: View {
             MeetingListView(selectedMeeting: $selectedMeeting)
         }
         .onChange(of: listSelection) { newValue in
-            if let ls = listSelection {
+            if let ls = newValue {
                 detailSelection = ls
             }
         }

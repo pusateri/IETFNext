@@ -401,12 +401,12 @@ struct DetailViewUnwrapped: View {
             updateFor(session: newValue)
         }
         .onChange(of: model.download) { newValue in
-            if let download = model.download {
+            if let download = newValue {
                 loadDownloadFile(from:download)
             }
         }
         .onChange(of: model.error) { newValue in
-            if let err = model.error {
+            if let err = newValue {
                 if err.starts(with: "Http Result 404:") {
                     if let urlString = draftURL as? NSString {
                         if urlString.pathExtension == "html" {
@@ -419,8 +419,8 @@ struct DetailViewUnwrapped: View {
             }
         }
         .onChange(of:draftURL) { newValue in
-            if let draftURL = draftURL {
-                if let url = URL(string:draftURL) {
+            if let urlString = newValue {
+                if let url = URL(string:urlString) {
                     let download = fetchDownload(kind:.draft, url:url)
                     if let download = download {
                         loadDownloadFile(from:download)

@@ -155,7 +155,7 @@ struct SessionListFilteredView: View {
             }
         }
         .onChange(of: selectedSession) { newValue in
-            if let session = selectedSession {
+            if let session = newValue {
                 sessionID = Int(session.id)
             } else {
 #if !os(macOS)

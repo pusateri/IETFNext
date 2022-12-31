@@ -75,7 +75,7 @@ struct MeetingListView: View {
                 }
             }
             .onChange(of: selectedMeeting) { newValue in
-                if let meeting = selectedMeeting {
+                if let meeting = newValue {
                     UserDefaults.standard.set(meeting.number!, forKey:"MeetingNumber")
                     Task {
                         await loadData(context: viewContext, meeting: meeting)
@@ -203,10 +203,4 @@ public func selectMeeting(context: NSManagedObjectContext, number: String?) -> M
         print("selectMeeting: no number")
     }
     return nil
-}
-
-struct MeetingListView_Previews: PreviewProvider {
-    static var previews: some View {
-        MeetingListView(selectedMeeting: .constant(nil))
-    }
 }

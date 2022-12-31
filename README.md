@@ -8,11 +8,9 @@
 6. pdf thumbnails
 7. Add draft / presentation / charter / agenda date to download list
 8. Only gets the first 20 drafts right now
-9. fix macOS popups and view sizes.
-10. in group list view, favoriting session doesn't show up in group list
-11. Jump between session and location and back
-12. Load basename document to support useractivity
-13. save group selection across restarts
+9. in group list view, favoriting session doesn't show up in group list
+10. Jump between session and location and back
+11. Load basename document to support useractivity
 
 
 *** Maybe ***
@@ -22,8 +20,7 @@
 3. Add inactive drafts?
 4. Use notes app yellow?
 5. Choice of drafts formats
-6. Add keyboard shortcuts for iPad and maybe macOS
-7. Drop pin on room map?
+6. Add keyboard shortcuts for iPad
 
 
 IETF colors:

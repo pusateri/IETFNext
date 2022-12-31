@@ -20,6 +20,8 @@ struct GroupListFilteredView: View {
     @Binding var groupFavorites: Bool
     @State private var searchText = ""
 
+    @SceneStorage("group.selection") var groupShort: String?
+
     init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, html: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, groupFavorites: Binding<Bool>) {
         var predicate = NSPredicate(value: false)
 
@@ -42,6 +44,15 @@ struct GroupListFilteredView: View {
         self._html = html
         self._columnVisibility = columnVisibility
         self._groupFavorites = groupFavorites
+    }
+
+    private func fetchGroup(short: String) -> Group? {
+        let fetchGroup: NSFetchRequest<Group> = Group.fetchRequest()
+        fetchGroup.predicate = NSPredicate(format: "acronym = %@", short)
+
+        let results = try? viewContext.fetch(fetchGroup)
+
+        return results?.first
     }
 
     private func updateGroupPredicate() {
@@ -120,13 +131,20 @@ struct GroupListFilteredView: View {
         }
         .onChange(of: selectedGroup) { newValue in
             searchText = ""
-            if let group = selectedGroup {
+            if let group = newValue {
                 if let meeting = selectedMeeting {
                     viewContext.performAndWait {
                         let sessions = group.groupSessions(meeting: meeting)
                         selectedSession = sessions?.first ?? nil
                     }
                 }
+                groupShort = group.acronym!
+            } else {
+#if !os(macOS)
+                if UIDevice.isIPhone {
+                    groupShort = nil
+                }
+#endif
             }
         }
         .onChange(of: searchText) { newValue in
@@ -135,6 +153,9 @@ struct GroupListFilteredView: View {
         .onAppear() {
             if columnVisibility == .all {
                 columnVisibility = .doubleColumn
+            }
+            if let short = groupShort {
+                selectedGroup = fetchGroup(short: short)
             }
         }
     }

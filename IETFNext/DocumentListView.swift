@@ -94,7 +94,7 @@ struct DocumentListView: View {
         .frame(width: 600, height: 740)
 #endif
         .onChange(of: selectedDocument) { newValue in
-            if let d = selectedDocument {
+            if let d = newValue {
                 dismiss()
                 // htmlized
                 // let urlString = "https://datatracker.ietf.org/doc/html/\(d.name!)-\(d.rev!)"
