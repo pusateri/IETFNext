@@ -16,70 +16,82 @@ struct SessionFilterMenu: View {
                 Button(action: {
                     sessionFilterMode = .favorites
                 }) {
-                    Label(SessionFilterMode.favorites.label, systemImage: SessionFilterMode.favorites.image)
+                    Text(SessionFilterMode.favorites.label)
+                    Image(systemName: SessionFilterMode.favorites.image)
                 }
                 Button(action: {
                     sessionFilterMode = .bofs
                 }) {
-                    Label(SessionFilterMode.bofs.label, systemImage: SessionFilterMode.bofs.image)
+                    Text(SessionFilterMode.bofs.label)
+                    Image(systemName: SessionFilterMode.bofs.image)
                 }
                 Button(action: {
                     sessionFilterMode = .now
                 }) {
-                    Label(SessionFilterMode.now.label, systemImage: SessionFilterMode.now.image)
+                    Text(SessionFilterMode.now.label)
+                    Image(systemName: SessionFilterMode.now.image)
                 }
                 Button(action: {
                     sessionFilterMode = .today
                 }) {
-                    Label(SessionFilterMode.today.label, systemImage: SessionFilterMode.today.image)
+                    Text(SessionFilterMode.today.label)
+                    Image(systemName: SessionFilterMode.today.image)
                 }
                 Button(action: {
                     sessionFilterMode = .none
                 }) {
-                    Label(SessionFilterMode.none.label, systemImage: SessionFilterMode.none.image)
+                    Text(SessionFilterMode.none.label)
+                    Image(systemName: SessionFilterMode.none.image)
                 }
             }
             Section("Filter by Area") {
                 Button(action: {
                     sessionFilterMode = .area_art
                 }) {
-                    Label(SessionFilterMode.area_art.label, systemImage: SessionFilterMode.area_art.image)
-                        .foregroundColor(.red)
+                    Text(SessionFilterMode.area_art.label)
+                    Image(systemName: SessionFilterMode.area_art.image)
                 }
                 Button(action: {
                     sessionFilterMode = .area_gen
                 }) {
-                    Label(SessionFilterMode.area_gen.label, systemImage: SessionFilterMode.area_gen.image)
+                    Text(SessionFilterMode.area_gen.label)
+                    Image(systemName: SessionFilterMode.area_gen.image)
                 }
                 Button(action: {
                     sessionFilterMode = .area_int
                 }) {
-                    Label(SessionFilterMode.area_int.label, systemImage: SessionFilterMode.area_int.image)
+                    Text(SessionFilterMode.area_int.label)
+                    Image(systemName: SessionFilterMode.area_int.image)
                 }
                 Button(action: {
                     sessionFilterMode = .area_irtf
                 }) {
-                    Label(SessionFilterMode.area_irtf.label, systemImage: SessionFilterMode.area_irtf.image)
+                    Text(SessionFilterMode.area_irtf.label)
+                    Image(systemName: SessionFilterMode.area_irtf.image)
                 }
                 Button(action: {
                     sessionFilterMode = .area_ops
                 }) {
-                    Label(SessionFilterMode.area_ops.label, systemImage: SessionFilterMode.area_ops.image)
+                    Text(SessionFilterMode.area_ops.label)
+                    Image(systemName: SessionFilterMode.area_ops.image)
                 }
                 Button(action: {
                     sessionFilterMode = .area_rtg
                 }) {
-                    Label(SessionFilterMode.area_rtg.label, systemImage: SessionFilterMode.area_rtg.image)
+                    Text(SessionFilterMode.area_rtg.label)
+                    Image(systemName: SessionFilterMode.area_rtg.image)
                 }
                 Button(action: {
                     sessionFilterMode = .area_sec
                 }) {
-                    Label(SessionFilterMode.area_sec.label, systemImage: SessionFilterMode.area_sec.image)
+                    Text(SessionFilterMode.area_sec.label)
+                    Image(systemName: SessionFilterMode.area_sec.image)
                 }
                 Button(action: {
                     sessionFilterMode = .area_tsv
                 }) {
-                    Label(SessionFilterMode.area_tsv.label, systemImage: SessionFilterMode.area_tsv.image)
+                    Text(SessionFilterMode.area_tsv.label)
+                    Image(systemName: SessionFilterMode.area_tsv.image)
                 }
             }
         }

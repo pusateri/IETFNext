@@ -21,6 +21,7 @@
 		F85D55CA295F86DC00569A77 /* GroupFilterMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C9295F86DC00569A77 /* GroupFilterMenu.swift */; };
 		F865B9F2295930AB00C3DB13 /* LocationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F865B9F1295930AB00C3DB13 /* LocationDetailView.swift */; };
 		F87E0F42294FD45800E1E1A8 /* MarkdownKit in Frameworks */ = {isa = PBXBuildFile; productRef = F87E0F41294FD45800E1E1A8 /* MarkdownKit */; };
+		F88B7E5C2960931B00F770C9 /* LocationPhotoMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88B7E5B2960931B00F770C9 /* LocationPhotoMenuView.swift */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListView.swift */; };
@@ -78,6 +79,7 @@
 		F85D55C7295F85B200569A77 /* GroupListTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListTitleView.swift; sourceTree = "<group>"; };
 		F85D55C9295F86DC00569A77 /* GroupFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupFilterMenu.swift; sourceTree = "<group>"; };
 		F865B9F1295930AB00C3DB13 /* LocationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailView.swift; sourceTree = "<group>"; };
+		F88B7E5B2960931B00F770C9 /* LocationPhotoMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPhotoMenuView.swift; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
 		F8E127BF293EA7A4004A35E8 /* SessionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListView.swift; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 				F8E9B9CC2934295E00CA6F09 /* Load.swift */,
 				F8E9BA102935624100CA6F09 /* LocationListView.swift */,
 				F865B9F1295930AB00C3DB13 /* LocationDetailView.swift */,
+				F88B7E5B2960931B00F770C9 /* LocationPhotoMenuView.swift */,
 				F85D55C1295E72B100569A77 /* MacOSCompat.swift */,
 				F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */,
 				F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */,
@@ -401,6 +404,7 @@
 				F85D55CA295F86DC00569A77 /* GroupFilterMenu.swift in Sources */,
 				F8E9BA172937EB2C00CA6F09 /* SessionListRowView.swift in Sources */,
 				F80CA26729469B60002AD2C6 /* DownloadListView.swift in Sources */,
+				F88B7E5C2960931B00F770C9 /* LocationPhotoMenuView.swift in Sources */,
 				F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */,
 				F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */,
 				F80CA275294ABA24002AD2C6 /* HTML.swift in Sources */,

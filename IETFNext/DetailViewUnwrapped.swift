@@ -256,7 +256,8 @@ struct DetailViewUnwrapped: View {
                                 }
                             }
                         }) {
-                            Label(p.title!, systemImage: "square.stack")
+                            Text(p.title!)
+                            Image(systemName: "square.stack")
                         }
                     }
                 }
@@ -286,7 +287,8 @@ struct DetailViewUnwrapped: View {
                                     }
                                 }
                             }) {
-                                Label("\(agenda.desc)", systemImage: "list.bullet.clipboard")
+                                Text("\(agenda.desc)")
+                                Image(systemName: "list.bullet.clipboard")
                             }
                         }
                         Button(action: {
@@ -303,7 +305,8 @@ struct DetailViewUnwrapped: View {
                                 }
                             }
                         }) {
-                            Label("View Minutes", systemImage: "clock")
+                            Text("View Minutes")
+                            Image(systemName: "clock")
                         }
                         .disabled(session.minutes == nil)
                         ForEach(sessionsForGroup ?? []) { session in
@@ -328,7 +331,8 @@ struct DetailViewUnwrapped: View {
 #endif
                                 }
                             }) {
-                                Label("View Recording\(recordingSuffix(session:session))", systemImage: "play")
+                                Text("View Recording\(recordingSuffix(session:session))")
+                                Image(systemName: "play")
                             }
                             .disabled(session.recording == nil)
                         }
@@ -350,10 +354,11 @@ struct DetailViewUnwrapped: View {
                             }
                         }) {
                             if let rev = charterRequest.first?.rev {
-                                Label("View Charter (v\(rev))", systemImage: "pencil")
+                                Text("View Charter (v\(rev))")
                             } else {
-                                Label("View Charter", systemImage: "pencil")
+                                Text("View Charter")
                             }
+                            Image(systemName: "pencil")
                         }
                         .disabled(charterRequest.first == nil)
                         Button(action: {
@@ -376,7 +381,8 @@ struct DetailViewUnwrapped: View {
                                 }
                             }
                         }) {
-                            Label("Mailing List Archive", systemImage: "envelope")
+                            Text("Mailing List Archive")
+                            Image(systemName: "envelope")
                         }
                     }
                     label: {

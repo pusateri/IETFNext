@@ -140,13 +140,6 @@ enum DocumentKind: String {
     case rfc
 }
 
-public enum SidebarOption: String {
-    case schedule
-    case groups
-    case locations
-    case download
-}
-
 struct Choice: Identifiable, Hashable {
     var id: SidebarOption
     var text: String
@@ -186,6 +179,7 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.scenePhase) var scenePhase
     @Binding var showingMeetings: Bool
+    @Binding var menuSidebarOption: SidebarOption?
 
     @State var columnVisibility: NavigationSplitViewVisibility = .doubleColumn
     @State var selectedMeeting: Meeting?
@@ -251,7 +245,7 @@ struct ContentView: View {
                 }
             }
 #if os(macOS)
-            .navigationSplitViewColumnWidth(min: 200, ideal: 220, max: 270)
+            .navigationSplitViewColumnWidth(min: 220, ideal: 250, max: 270)
 #else
             .toolbar {
                 ToolbarItem {
@@ -261,6 +255,7 @@ struct ContentView: View {
                         }) {
                             Label("Change Meeting", systemImage: "airplane.departure")
                         }
+                        .keyboardShortcut("l")
                         Label("Version \(Bundle.main.releaseVersionNumber).\(Bundle.main.buildVersionNumber) (\(Git.kRevisionNumber))", systemImage: "v.circle")
                     }
                     label: {
@@ -320,6 +315,9 @@ struct ContentView: View {
             if let ls = listSelection {
                 detailSelection = ls
             }
+        }
+        .onChange(of: menuSidebarOption) { newValue in
+            detailSelection = newValue
         }
         .onAppear {
             if let number = UserDefaults.standard.string(forKey:"MeetingNumber") {

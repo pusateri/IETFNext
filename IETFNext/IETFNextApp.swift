@@ -7,14 +7,22 @@
 
 import SwiftUI
 
+public enum SidebarOption: String {
+    case schedule
+    case groups
+    case locations
+    case download
+}
+
 @main
 struct IETFNextApp: App {
     @State private var showingMeetings = false
+    @State var menuSidebarOption: SidebarOption? = nil
     let persistenceController = PersistenceController.shared
 
     var body: some Scene {
         WindowGroup {
-            ContentView(showingMeetings: $showingMeetings)
+            ContentView(showingMeetings: $showingMeetings, menuSidebarOption: $menuSidebarOption)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
 #if os(macOS)
@@ -57,29 +65,33 @@ struct IETFNextApp: App {
             }
             CommandMenu("Go") {
                 Button(action: {
-                    print("schedule")
-                    //showingMeetings.toggle()
+                    menuSidebarOption = .schedule
                 }) {
                     Image(systemName: "calendar")
                     Text("Schedule")
                 }
                 .keyboardShortcut("s")
                 Button(action: {
-                    print("Working Groups")
-                    //showingMeetings.toggle()
+                    menuSidebarOption = .groups
                 }) {
                     Image(systemName: "person.3")
                     Text("Working Groups")
                 }
                 .keyboardShortcut("g")
                 Button(action: {
-                    print("Venue & Room Locations")
-                    //showingMeetings.toggle()
+                    menuSidebarOption = .locations
                 }) {
                     Image(systemName: "map")
                     Text("Venue & Room Locations")
                 }
                 .keyboardShortcut("r")
+                Button(action: {
+                    menuSidebarOption = .download
+                }) {
+                    Image(systemName: "arrow.down.circle")
+                    Text("Downloads")
+                }
+                .keyboardShortcut("d")
             }
 #endif
         }

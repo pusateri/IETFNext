@@ -111,26 +111,10 @@ struct LocationListView: View {
             ToolbarItem {
                 Menu {
 #if os(macOS)
-                    if let meeting = selectedMeeting {
-                        if let _ = venuePhotos[meeting.number!] {
-                            Button(action: {
-                                selectedLocation = nil
-                            }) {
-                                Label("Show Venue Photo", systemImage: "photo")
-                            }
-                        }
-                    }
+                    LocationPhotoMenuView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)
 #else
                     if !UIDevice.isIPhone {
-                        if let meeting = selectedMeeting {
-                            if let _ = venuePhotos[meeting.number!] {
-                                Button(action: {
-                                    selectedLocation = nil
-                                }) {
-                                    Label("Show Venue Photo", systemImage: "photo")
-                                }
-                            }
-                        }
+                        LocationPhotoMenuView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)
                     }
 #endif
                     Button(action: {
@@ -149,7 +133,8 @@ struct LocationListView: View {
                             }
                         }
                     }) {
-                        Label("Show Venue on Map", systemImage: "mappin.and.ellipse")
+                        Text("Show Venue on Map")
+                        Image(systemName: "mappin.and.ellipse")
                     }
                     .disabled(selectedMeeting?.venue_addr?.isEmpty ?? true)
                     Button(action: {
@@ -168,7 +153,8 @@ struct LocationListView: View {
                             }
                         }
                     }) {
-                        Label("Directions to Venue", systemImage: "mappin.and.ellipse")
+                        Text("Directions to Venue")
+                        Image(systemName: "mappin.and.ellipse")
                     }
                     .disabled(selectedMeeting?.venue_addr?.isEmpty ?? true)
                 }
