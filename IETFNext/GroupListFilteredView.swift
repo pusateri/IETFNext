@@ -13,8 +13,7 @@ struct GroupListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @SectionedFetchRequest<String, Group> var fetchRequest: SectionedFetchResults<String, Group>
     @Binding var selectedMeeting: Meeting?
-    @State var selectedGroup: Group?
-    @Binding var selectedSession: Session?
+    @Binding var selectedGroup: Group?
     @Binding var columnVisibility: NavigationSplitViewVisibility
     @Binding var html: String
     @Binding var groupFavorites: Bool
@@ -22,7 +21,7 @@ struct GroupListFilteredView: View {
 
     @SceneStorage("group.selection") var groupShort: String?
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, html: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, groupFavorites: Binding<Bool>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, html: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, groupFavorites: Binding<Bool>) {
         var predicate = NSPredicate(value: false)
 
         if groupFavorites.wrappedValue == false {
@@ -40,7 +39,7 @@ struct GroupListFilteredView: View {
             animation: .default
         )
         self._selectedMeeting = selectedMeeting
-        self._selectedSession = selectedSession
+        self._selectedGroup = selectedGroup
         self._html = html
         self._columnVisibility = columnVisibility
         self._groupFavorites = groupFavorites
@@ -66,10 +65,10 @@ struct GroupListFilteredView: View {
                 }
             } else {
                 if searchText.isEmpty {
-                    fetchRequest.nsPredicate = NSPredicate(format: "(ANY sessions.meeting.number = %@) AND (ANY sessions.favorite = %d)", meeting.number!, true)
+                    fetchRequest.nsPredicate = NSPredicate(format: "(ANY sessions.meeting.number = %@) AND (favorite = %d)", meeting.number!, true)
                 } else {
                     fetchRequest.nsPredicate = NSPredicate(
-                        format: "(ANY sessions.meeting.number = %@) AND (ANY sessions.favorite = %d) AND ((name contains[cd] %@) OR (acronym contains[cd] %@) OR (state = [c] %@))", meeting.number!, true, searchText, searchText, searchText)
+                        format: "(ANY sessions.meeting.number = %@) AND (favorite = %d) AND ((name contains[cd] %@) OR (acronym contains[cd] %@) OR (state = [c] %@))", meeting.number!, true, searchText, searchText, searchText)
                 }
             }
         }
@@ -79,7 +78,7 @@ struct GroupListFilteredView: View {
         List(fetchRequest, selection: $selectedGroup) { section in
             Section(header: Text(section.id).textCase(.uppercase).foregroundColor(.accentColor)) {
                 ForEach(section, id: \.self) { group in
-                    GroupListRowView(selectedMeeting:$selectedMeeting, group:group)
+                    GroupListRowView(group:group)
                         .listRowSeparator(.visible)
                         .listRowBackground(group.state == "bof" ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
                 }
@@ -132,18 +131,11 @@ struct GroupListFilteredView: View {
         .onChange(of: selectedGroup) { newValue in
             searchText = ""
             if let group = newValue {
-                if let meeting = selectedMeeting {
-                    viewContext.performAndWait {
-                        let sessions = group.groupSessions(meeting: meeting)
-                        selectedSession = sessions?.first ?? nil
-                    }
-                }
                 groupShort = group.acronym!
             } else {
 #if !os(macOS)
                 if UIDevice.isIPhone {
                     groupShort = nil
-                    selectedSession = nil
                 }
 #endif
             }

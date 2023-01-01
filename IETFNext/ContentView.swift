@@ -183,7 +183,7 @@ struct ContentView: View {
 
     @State var columnVisibility: NavigationSplitViewVisibility = .doubleColumn
     @State var selectedMeeting: Meeting?
-    @State var selectedSession: Session?
+    @State var selectedGroup: Group?
     @State var selectedLocation: Location?
     @State var html: String = ""
     @State var localFileURL: URL? = nil
@@ -268,10 +268,10 @@ struct ContentView: View {
             if let ds = detailSelection {
                 switch(ds) {
                     case .schedule:
-                    SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, sessionFilterMode: $sessionFilterMode, html:$html, columnVisibility:$columnVisibility)
+                    SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, sessionFilterMode: $sessionFilterMode, html:$html, columnVisibility:$columnVisibility)
                         .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                     case .groups:
-                        GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedSession: $selectedSession, html:$html, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)
+                        GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, html:$html, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)
                         .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                     case .locations:
                     LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, columnVisibility: $columnVisibility)
@@ -291,7 +291,7 @@ struct ContentView: View {
                     default:
                         DetailView(
                             selectedMeeting:$selectedMeeting,
-                            selectedSession:$selectedSession,
+                            selectedGroup:$selectedGroup,
                             html:$html,
                             localFileURL:$localFileURL,
                             columnVisibility:$columnVisibility)
@@ -328,6 +328,8 @@ struct ContentView: View {
                     Task {
                         await loadData(context: viewContext, meeting: meeting)
                     }
+                } else {
+                    showingMeetings.toggle()
                 }
             } else {
                 showingMeetings.toggle()

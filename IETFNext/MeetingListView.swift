@@ -194,13 +194,9 @@ public func selectMeeting(context: NSManagedObjectContext, number: String?) -> M
 
         let results = try? context.fetch(fetchMeeting)
 
-        if results?.count == 0 {
-            print("selectMeeting: \(number) not found")
-        } else {
-            return results?.first
+        if let meetings = results, meetings.count > 0 {
+            return meetings.first
         }
-    } else {
-        print("selectMeeting: no number")
     }
     return nil
 }

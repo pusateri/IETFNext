@@ -8,9 +8,9 @@
 6. pdf thumbnails
 7. Add draft / presentation / charter / agenda date to download list
 8. Only gets the first 20 drafts right now
-9. in group list view, favoriting session doesn't show up in group list
-10. Jump between session and location and back
-11. Load basename document to support useractivity
+9. Jump between session and location and back
+10. Load basename document to support useractivity
+11. On startup, downloads doesn't load documents until after schedule loads
 
 
 *** Maybe ***

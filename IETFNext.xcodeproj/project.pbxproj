@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		F80CA26729469B60002AD2C6 /* DownloadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26629469B60002AD2C6 /* DownloadListView.swift */; };
 		F80CA269294778FA002AD2C6 /* GroupListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA268294778FA002AD2C6 /* GroupListRowView.swift */; };
-		F80CA26B29477D85002AD2C6 /* GroupExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26A29477D85002AD2C6 /* GroupExtensions.swift */; };
 		F80CA26D2947BC73002AD2C6 /* SessionListLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26C2947BC73002AD2C6 /* SessionListLocationView.swift */; };
 		F80CA271294920D9002AD2C6 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA270294920D9002AD2C6 /* DownloadViewModel.swift */; };
 		F80CA275294ABA24002AD2C6 /* HTML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA274294ABA24002AD2C6 /* HTML.swift */; };
@@ -67,11 +66,11 @@
 		F80CA26329469780002AD2C6 /* IETFNext 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 2.xcdatamodel"; sourceTree = "<group>"; };
 		F80CA26629469B60002AD2C6 /* DownloadListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadListView.swift; sourceTree = "<group>"; };
 		F80CA268294778FA002AD2C6 /* GroupListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListRowView.swift; sourceTree = "<group>"; };
-		F80CA26A29477D85002AD2C6 /* GroupExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupExtensions.swift; sourceTree = "<group>"; };
 		F80CA26C2947BC73002AD2C6 /* SessionListLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListLocationView.swift; sourceTree = "<group>"; };
 		F80CA270294920D9002AD2C6 /* DownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewModel.swift; sourceTree = "<group>"; };
 		F80CA274294ABA24002AD2C6 /* HTML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTML.swift; sourceTree = "<group>"; };
 		F80CA276294B937B002AD2C6 /* IETFNext 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 3.xcdatamodel"; sourceTree = "<group>"; };
+		F82FFEA329621B0B007AA54A /* IETFNext 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 5.xcdatamodel"; sourceTree = "<group>"; };
 		F85D55BF295E05F900569A77 /* DetailViewUnwrapped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewUnwrapped.swift; sourceTree = "<group>"; };
 		F85D55C1295E72B100569A77 /* MacOSCompat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacOSCompat.swift; sourceTree = "<group>"; };
 		F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFilterMenu.swift; sourceTree = "<group>"; };
@@ -168,7 +167,6 @@
 				F8E127C52942BF18004A35E8 /* DocumentListView.swift */,
 				F80CA26629469B60002AD2C6 /* DownloadListView.swift */,
 				F80CA270294920D9002AD2C6 /* DownloadViewModel.swift */,
-				F80CA26A29477D85002AD2C6 /* GroupExtensions.swift */,
 				F85D55C9295F86DC00569A77 /* GroupFilterMenu.swift */,
 				F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */,
 				F85D55C7295F85B200569A77 /* GroupListTitleView.swift */,
@@ -397,7 +395,6 @@
 				F8E127C92943F13B004A35E8 /* Revision.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
 				F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */,
-				F80CA26B29477D85002AD2C6 /* GroupExtensions.swift in Sources */,
 				F85D55C0295E05F900569A77 /* DetailViewUnwrapped.swift in Sources */,
 				F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */,
 				F85D55C8295F85B200569A77 /* GroupListTitleView.swift in Sources */,
@@ -808,12 +805,13 @@
 		F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F82FFEA329621B0B007AA54A /* IETFNext 5.xcdatamodel */,
 				F80633BF29523631006D69AD /* IETFNext 4.xcdatamodel */,
 				F80CA276294B937B002AD2C6 /* IETFNext 3.xcdatamodel */,
 				F80CA26329469780002AD2C6 /* IETFNext 2.xcdatamodel */,
 				F8E9B9A12934101200CA6F09 /* IETFNext.xcdatamodel */,
 			);
-			currentVersion = F80633BF29523631006D69AD /* IETFNext 4.xcdatamodel */;
+			currentVersion = F82FFEA329621B0B007AA54A /* IETFNext 5.xcdatamodel */;
 			path = IETFNext.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -17,7 +17,7 @@ struct DetailViewUnwrapped: View {
     @FetchRequest<Presentation> var presentationRequest: FetchedResults<Presentation>
     @FetchRequest<Document> var charterRequest: FetchedResults<Document>
     @ObservedObject var meeting: Meeting
-    @ObservedObject var session: Session
+    @ObservedObject var group: Group
     @Binding var html: String
     @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
@@ -31,10 +31,10 @@ struct DetailViewUnwrapped: View {
     @State var kind: DocumentKind = .draft
     @ObservedObject var model: DownloadViewModel = DownloadViewModel.shared
 
-    init(meeting: Meeting, session: Session, html: Binding<String>, localFileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+    init(meeting: Meeting, group: Group, html: Binding<String>, localFileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
 
         self.meeting = meeting
-        self.session = session
+        self.group = group
 
         self._html = html
         self._localFileURL = localFileURL
@@ -44,14 +44,14 @@ struct DetailViewUnwrapped: View {
             sortDescriptors: [
                 NSSortDescriptor(keyPath: \Presentation.order, ascending: true),
             ],
-            predicate: NSPredicate(format: "(session.meeting.number = %@) AND (session.group.acronym = %@)", meeting.number!, session.group?.acronym ?? ""),
+            predicate: NSPredicate(format: "(session.meeting.number = %@) AND (session.group.acronym = %@)", meeting.number!, group.acronym!),
             animation: .default
         )
         _charterRequest = FetchRequest<Document>(
             sortDescriptors: [
                 NSSortDescriptor(keyPath: \Document.time, ascending: false),
             ],
-            predicate: NSPredicate(format: "(name contains %@) AND (type contains \"charter\")", session.group?.acronym ?? ""),
+            predicate: NSPredicate(format: "(name contains %@) AND (type contains \"charter\")", group.acronym!),
             animation: .default
         )
     }
@@ -150,43 +150,42 @@ struct DetailViewUnwrapped: View {
         return agendas
     }
 
-    private func saveFavorite(session: Session) {
+    private func saveFavorite(group: Group) {
         if viewContext.hasChanges {
             do {
                 try viewContext.save()
             } catch {
-                print("Unable to save Session favorite \(session.name!)")
+                print("Unable to save Session favorite \(group.acronym!)")
             }
         }
     }
 
-    private func updateFor(session: Session) {
-        if let group = session.group {
-            banner = group.acronym!
-            sessionsForGroup = findSessionsForGroup(meeting:meeting, group:group)
-            agendas = uniqueAgendasForSessions(sessions: sessionsForGroup)
-            if let agenda = session.agenda {
-                let download = fetchDownload(kind:.agenda, url:agenda)
-                if let download = download {
-                    loadDownloadFile(from:download)
-                } else {
-                    Task {
-                        await model.downloadToFile(context:viewContext, url:agenda, mtg:meeting.number!, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
-                    }
+    private func updateFor(group: Group) {
+        banner = group.acronym!
+        sessionsForGroup = findSessionsForGroup(meeting:meeting, group:group)
+        agendas = uniqueAgendasForSessions(sessions: sessionsForGroup)
+        // TODO: don't always load first agenda, load selected session agenda
+        if let agenda = agendas.first {
+            let download = fetchDownload(kind:.agenda, url:agenda.url)
+            if let download = download {
+                loadDownloadFile(from:download)
+            } else {
+                Task {
+                    await model.downloadToFile(context:viewContext, url:agenda.url, mtg:meeting.number!, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                 }
             }
-            Task {
-                await loadDrafts(context: viewContext, group: group, limit:0, offset:0)
-                await loadCharterDocument(context: viewContext, group: group)
-                await loadRelatedDrafts(context: viewContext, group: group, limit:0, offset:0)
-            }
-            // if we don't have a recording URL, go get one. We don't expect it to change once we have it
-            if let allSessions = sessionsForGroup {
-                for s in allSessions {
-                    if s.recording == nil {
-                        Task {
-                            await loadRecordingDocument(context: viewContext, session: s)
-                        }
+        }
+        Task {
+            await loadDrafts(context: viewContext, group: group, limit:0, offset:0)
+            await loadCharterDocument(context: viewContext, group: group)
+            await loadRelatedDrafts(context: viewContext, group: group, limit:0, offset:0)
+        }
+        // if we don't have a recording URL, go get one. We don't expect it to change once we have it
+        if let allSessions = sessionsForGroup {
+            for s in allSessions {
+                if s.recording == nil {
+                    Task {
+                        await loadRecordingDocument(context: viewContext, session: s)
                     }
                 }
             }
@@ -224,11 +223,11 @@ struct DetailViewUnwrapped: View {
             ToolbarItemGroup {
                 Spacer()
                 Button(action: {
-                    session.favorite.toggle()
-                    saveFavorite(session: session)
+                    group.favorite.toggle()
+                    saveFavorite(group: group)
                 }) {
-                    Image(systemName: session.favorite == true ? "star.fill" : "star")
-                        .foregroundColor(Color(hex: areaColors[session.group?.areaKey ?? "ietf"] ?? 0xf6c844))
+                    Image(systemName: group.favorite == true ? "star.fill" : "star")
+                        .foregroundColor(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xf6c844))
 #if os(macOS)
                         .overlay {
                             Image(systemName: "star")
@@ -248,10 +247,8 @@ struct DetailViewUnwrapped: View {
                                 if let download = download {
                                     loadDownloadFile(from:download)
                                 } else {
-                                    if let group = session.group {
-                                        Task {
-                                            await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.presentation, title: p.title)
-                                        }
+                                    Task {
+                                        await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.presentation, title: p.title)
                                     }
                                 }
                             }
@@ -278,10 +275,8 @@ struct DetailViewUnwrapped: View {
                             if let download = download {
                                 loadDownloadFile(from:download)
                             } else {
-                                if let group = session.group {
-                                    Task {
-                                        await model.downloadToFile(context:viewContext, url: agenda.url, mtg:meeting.number!, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
-                                    }
+                                Task {
+                                    await model.downloadToFile(context:viewContext, url: agenda.url, mtg:meeting.number!, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                                 }
                             }
                         }) {
@@ -290,23 +285,24 @@ struct DetailViewUnwrapped: View {
                         }
                     }
                     Button(action: {
-                        if let minutes = session.minutes {
+                        // TODO: Should be only one minutes for all sessions, but check on this
+                        if let session = sessionsForGroup?.first {
+                            if let minutes = session.minutes {
                             let download = fetchDownload(kind:.minutes, url:minutes)
                             if let download = download {
                                 loadDownloadFile(from:download)
                             } else {
-                                if let group = session.group {
-                                    Task {
-                                        await model.downloadToFile(context:viewContext, url: minutes, mtg:meeting.number!, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
-                                    }
+                                Task {
+                                    await model.downloadToFile(context:viewContext, url: minutes, mtg:meeting.number!, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                                 }
                             }
                         }
+                    }
                     }) {
                         Text("View Minutes")
                         Image(systemName: "clock")
                     }
-                    .disabled(session.minutes == nil)
+                    .disabled(sessionsForGroup?.first?.minutes == nil)
                     ForEach(sessionsForGroup ?? []) { session in
                         Button(action: {
                             if let url = session.recording {
@@ -336,16 +332,14 @@ struct DetailViewUnwrapped: View {
                     }
                     Button(action: {
                         if let rev = charterRequest.first?.rev {
-                            if let group = session.group {
-                                let urlString = "https://www.ietf.org/charter/charter-ietf-\(group.acronym!)-\(rev).txt"
-                                if let url = URL(string: urlString) {
-                                    let download = fetchDownload(kind:.charter, url:url)
-                                    if let download = download {
-                                        loadDownloadFile(from:download)
-                                    } else {
-                                        Task {
-                                            await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.charter, title: "\(group.acronym!.uppercased()) Charter")
-                                        }
+                            let urlString = "https://www.ietf.org/charter/charter-ietf-\(group.acronym!)-\(rev).txt"
+                            if let url = URL(string: urlString) {
+                                let download = fetchDownload(kind:.charter, url:url)
+                                if let download = download {
+                                    loadDownloadFile(from:download)
+                                } else {
+                                    Task {
+                                        await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.charter, title: "\(group.acronym!.uppercased()) Charter")
                                     }
                                 }
                             }
@@ -360,23 +354,21 @@ struct DetailViewUnwrapped: View {
                     }
                     .disabled(charterRequest.first == nil)
                     Button(action: {
-                        if let group = session.group {
-                            var url: URL? = nil
-                            // rewrite acronym for some working groups mailing lists
-                            if group.acronym! == "httpbis" {
-                                url = URL(string: "https://lists.w3.org/Archives/Public/ietf-http-wg/")
-                            } else if group.acronym! == "6man" {
-                                url = URL(string: "https://mailarchive.ietf.org/arch/browse/ipv6/")
-                            } else {
-                                url = URL(string: "https://mailarchive.ietf.org/arch/browse/\(group.acronym!)/")
-                            }
-                            if let url = url {
+                        var url: URL? = nil
+                        // rewrite acronym for some working groups mailing lists
+                        if group.acronym! == "httpbis" {
+                            url = URL(string: "https://lists.w3.org/Archives/Public/ietf-http-wg/")
+                        } else if group.acronym! == "6man" {
+                            url = URL(string: "https://mailarchive.ietf.org/arch/browse/ipv6/")
+                        } else {
+                            url = URL(string: "https://mailarchive.ietf.org/arch/browse/\(group.acronym!)/")
+                        }
+                        if let url = url {
 #if os(macOS)
-                                NSWorkspace.shared.open(url)
+                            NSWorkspace.shared.open(url)
 #else
-                                UIApplication.shared.open(url)
+                            UIApplication.shared.open(url)
 #endif
-                            }
                         }
                     }) {
                         Text("Mailing List Archive")
@@ -389,16 +381,14 @@ struct DetailViewUnwrapped: View {
             }
         }
         .sheet(isPresented: $showingDocuments) {
-            if let group = session.group {
-                DocumentListView(wg:group.acronym!, urlString:$draftURL, titleString:$draftTitle, kind:$kind)
-            }
+            DocumentListView(wg:group.acronym!, urlString:$draftURL, titleString:$draftTitle, kind:$kind)
         }
         .onChange(of: meeting) { newValue in
             html = BLANK
         }
-        .onChange(of: session) { newValue in
+        .onChange(of: group) { newValue in
             presentationRequest.nsPredicate = NSPredicate(format: "session = %@", newValue)
-            updateFor(session: newValue)
+            updateFor(group: newValue)
         }
         .onChange(of: model.download) { newValue in
             if let download = newValue {
@@ -425,10 +415,8 @@ struct DetailViewUnwrapped: View {
                     if let download = download {
                         loadDownloadFile(from:download)
                     } else {
-                        if let group = session.group {
-                            Task {
-                                await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.draft, title:draftTitle)
-                            }
+                        Task {
+                            await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.draft, title:draftTitle)
                         }
                     }
                 }
@@ -436,11 +424,11 @@ struct DetailViewUnwrapped: View {
         }
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .active {
-                updateFor(session: session)
+                updateFor(group: group)
             }
         }
         .onAppear {
-            updateFor(session: session)
+            updateFor(group: group)
         }
     }
 }

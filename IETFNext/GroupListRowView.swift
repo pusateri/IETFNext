@@ -10,26 +10,16 @@ import SwiftUI
 
 struct GroupListRowView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @Binding var selectedMeeting: Meeting?
-    var group: Group
-    @State var mode: FavoriteMode
+    @ObservedObject var group: Group
 
-    init(selectedMeeting: Binding<Meeting?>, group: Group) {
-        self._selectedMeeting = selectedMeeting
-        self.group = group
-        self.mode = group.favoriteSymbolMode(meeting:selectedMeeting.wrappedValue)
-    }
 
     var body: some View {
         HStack {
             Button(action: {
-                if let meeting = selectedMeeting {
-                    group.updateFavoriteSymbolMode(meeting:meeting)
-                    saveFavorites()
-                    mode = group.favoriteSymbolMode(meeting:meeting)
-                }
+                group.favorite.toggle()
+                saveFavorites()
             }) {
-                Image(systemName: group.favoriteSymbol(mode:mode))
+                Image(systemName: group.favorite ? "star.fill" : "star")
                     .font(Font.system(size: 32, weight: .bold))
                     .foregroundColor(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xf6c844))
             }
@@ -49,7 +39,7 @@ struct GroupListRowView: View {
             do {
                 try viewContext.save()
             } catch {
-                print("Unable to save Group favorites")
+                print("Unable to save Group \(group.acronym!) favorite")
             }
         }
     }

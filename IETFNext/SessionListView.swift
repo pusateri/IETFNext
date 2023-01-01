@@ -25,11 +25,12 @@ struct SessionListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
     @Binding var selectedMeeting: Meeting?
-    @Binding var selectedSession: Session?
+    @Binding var selectedGroup: Group?
     @Binding var sessionFilterMode: SessionFilterMode
     @Binding var html: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
+    @State var selected: Session? = nil
     @SceneStorage("schedule.selection") var sessionID: Int?
 
     private func fetchSession(session_id: Int32) -> Session? {
@@ -41,14 +42,14 @@ struct SessionListFilteredView: View {
         return results?.first
     }
 
-    init(selectedMeeting: Binding<Meeting?>, selectedSession: Binding<Session?>, sessionFilterMode: Binding<SessionFilterMode>, html: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, sessionFilterMode: Binding<SessionFilterMode>, html: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
         var predicate: NSPredicate
         var now: Date
         let number = selectedMeeting.wrappedValue?.number ?? "0"
 
         switch(sessionFilterMode.wrappedValue) {
         case .favorites:
-            predicate = NSPredicate(format: "meeting.number = %@ AND favorite = %d AND (status != \"canceled\")", number, true)
+            predicate = NSPredicate(format: "meeting.number = %@ AND group.favorite = %d AND (status != \"canceled\")", number, true)
         case .bofs:
             predicate = NSPredicate(format: "(meeting.number = %@) AND (is_bof = %d) AND (status != \"canceled\")", number, true)
         case .now:
@@ -101,19 +102,21 @@ struct SessionListFilteredView: View {
         )
 
         self._selectedMeeting = selectedMeeting
-        self._selectedSession = selectedSession
+        self._selectedGroup = selectedGroup
         self._sessionFilterMode = sessionFilterMode
         self._html = html
         self._columnVisibility = columnVisibility
     }
 
     var body: some View {
-        List(fetchRequest, selection: $selectedSession) { section in
+        List(fetchRequest, selection: $selected) { section in
             Section(header: Text(section.id).foregroundColor(.primary)) {
                 ForEach(section, id: \.self) { session in
-                    SessionListRowView(session: session)
-                        .listRowSeparator(.visible)
-                        .listRowBackground(session.is_bof ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
+                    if let session_group = session.group {
+                        SessionListRowView(session: session, group: session_group)
+                            .listRowSeparator(.visible)
+                            .listRowBackground(session.is_bof ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
+                    }
                 }
             }
         }
@@ -154,9 +157,10 @@ struct SessionListFilteredView: View {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
             }
         }
-        .onChange(of: selectedSession) { newValue in
+        .onChange(of: selected) { newValue in
             if let session = newValue {
                 sessionID = Int(session.id)
+                selectedGroup = session.group
             } else {
 #if !os(macOS)
                 if UIDevice.isIPhone {
@@ -171,7 +175,7 @@ struct SessionListFilteredView: View {
                 columnVisibility = .doubleColumn
             }
             if let session_id = sessionID {
-                selectedSession = fetchSession(session_id: Int32(session_id))
+                selected = fetchSession(session_id: Int32(session_id))
             }
         }
     }
