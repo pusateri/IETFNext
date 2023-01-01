@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct GroupListTitleView: View {
-    @Binding var groupFavorites: Bool
+    @Binding var groupFilterMode: GroupFilterMode
 
     var body: some View {
         VStack {
             Text("Groups")
                 .foregroundColor(.primary)
                 .font(.headline)
-            if groupFavorites {
+            if groupFilterMode == .favorites {
                 Text("\("Filter: Favorites")")
                     .font(.footnote)
                     .foregroundColor(.accentColor)

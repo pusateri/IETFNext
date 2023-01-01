@@ -4,13 +4,12 @@
 2. print pdf version of drafts
 3. add local time
 4. detail view moving from open slides to try and open drafts gives error
-5. In group list view, select, then filter, then select crashes
-6. pdf thumbnails
-7. Add draft / presentation / charter / agenda date to download list
-8. Only gets the first 20 drafts right now
-9. Jump between session and location and back
-10. Load basename document to support useractivity
-11. On startup, downloads doesn't load documents until after schedule loads
+5. pdf thumbnails
+6. Add draft / presentation / charter / agenda date to download list
+7. Only gets the first 20 drafts right now
+8. Jump between session and location and back
+9. Load basename document to support useractivity
+10. On startup, downloads doesn't load documents until after schedule loads
 
 
 *** Maybe ***
@@ -21,6 +20,7 @@
 4. Use notes app yellow?
 5. Choice of drafts formats
 6. Add keyboard shortcuts for iPad
+7. In group list view, select, then filter, then select crashes?
 
 
 IETF colors:

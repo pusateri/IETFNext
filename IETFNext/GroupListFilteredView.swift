@@ -14,21 +14,24 @@ struct GroupListFilteredView: View {
     @SectionedFetchRequest<String, Group> var fetchRequest: SectionedFetchResults<String, Group>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
+    @Binding var groupFilterMode: GroupFilterMode
     @Binding var columnVisibility: NavigationSplitViewVisibility
     @Binding var html: String
-    @Binding var groupFavorites: Bool
+
     @State private var searchText = ""
 
     @SceneStorage("group.selection") var groupShort: String?
 
-    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, html: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>, groupFavorites: Binding<Bool>) {
-        var predicate = NSPredicate(value: false)
+    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, groupFilterMode: Binding<GroupFilterMode>, html: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+        var predicate: NSPredicate
 
-        if groupFavorites.wrappedValue == false {
+        switch(groupFilterMode.wrappedValue) {
+        case .favorites:
+            predicate = NSPredicate(format: "(ANY sessions.meeting.number = %@) AND (favorite = %d)", selectedMeeting.wrappedValue?.number ?? "0", true)
+        case .none:
             predicate = NSPredicate(format: "ANY sessions.meeting.number = %@", selectedMeeting.wrappedValue?.number ?? "0")
-        } else {
-            predicate = NSPredicate(format: "(ANY sessions.meeting.number = %@) AND (ANY sessions.favorite = %d)", selectedMeeting.wrappedValue?.number ?? "0", true)
         }
+
         _fetchRequest = SectionedFetchRequest<String, Group>(
             sectionIdentifier: \.areaKey!,
             sortDescriptors: [
@@ -40,9 +43,9 @@ struct GroupListFilteredView: View {
         )
         self._selectedMeeting = selectedMeeting
         self._selectedGroup = selectedGroup
+        self._groupFilterMode = groupFilterMode
         self._html = html
         self._columnVisibility = columnVisibility
-        self._groupFavorites = groupFavorites
     }
 
     private func fetchGroup(short: String) -> Group? {
@@ -56,14 +59,15 @@ struct GroupListFilteredView: View {
 
     private func updateGroupPredicate() {
         if let meeting = selectedMeeting {
-            if groupFavorites == false {
+            switch(groupFilterMode) {
+            case .none:
                 if searchText.isEmpty {
                     fetchRequest.nsPredicate = NSPredicate(format: "ANY sessions.meeting.number = %@", meeting.number!)
                 } else {
                     fetchRequest.nsPredicate = NSPredicate(
                         format: "(ANY sessions.meeting.number = %@) AND ((name contains[cd] %@) OR (acronym contains[cd] %@) OR (state = [c] %@))", meeting.number!, searchText, searchText, searchText)
                 }
-            } else {
+            case .favorites:
                 if searchText.isEmpty {
                     fetchRequest.nsPredicate = NSPredicate(format: "(ANY sessions.meeting.number = %@) AND (favorite = %d)", meeting.number!, true)
                 } else {
@@ -95,17 +99,17 @@ struct GroupListFilteredView: View {
         .toolbar {
 #if os(macOS)
             ToolbarItem(placement: .navigation) {
-                GroupListTitleView(groupFavorites: $groupFavorites)
+                GroupListTitleView(groupFilterMode: $groupFilterMode)
             }
             ToolbarItem(placement: .navigation) {
-                GroupFilterMenu(groupFavorites: $groupFavorites)
+                GroupFilterMenu(groupFilterMode: $groupFilterMode)
             }
 #else
             ToolbarItem(placement: .principal) {
-                GroupListTitleView(groupFavorites: $groupFavorites)
+                GroupListTitleView(groupFilterMode: $groupFilterMode)
             }
             ToolbarItem(placement: .primaryAction) {
-                GroupFilterMenu(groupFavorites: $groupFavorites)
+                GroupFilterMenu(groupFilterMode: $groupFilterMode)
             }
             ToolbarItem(placement: .bottomBar) {
                 if let meeting = selectedMeeting {
@@ -120,7 +124,7 @@ struct GroupListFilteredView: View {
             }
 #endif
         }
-        .onChange(of: groupFavorites) { newValue in
+        .onChange(of: groupFilterMode) { newValue in
             updateGroupPredicate()
         }
         .onChange(of: selectedMeeting) { newValue in

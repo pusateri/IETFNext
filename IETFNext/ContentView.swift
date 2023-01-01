@@ -23,6 +23,11 @@ protocol CompoundEnum {
     var short: String { get }
 }
 
+enum GroupFilterMode: String {
+    case favorites
+    case none
+}
+
 enum SessionFilterMode: String, CompoundEnum {
     case bofs
     case favorites
@@ -188,7 +193,7 @@ struct ContentView: View {
     @State var html: String = ""
     @State var localFileURL: URL? = nil
     @State var sessionFilterMode: SessionFilterMode = .none
-    @State var groupFavorites: Bool = false
+    @State var groupFilterMode: GroupFilterMode = .none
 
     @State var listSelection: SidebarOption? = nil
     @SceneStorage("top.detailSelection") var detailSelection: SidebarOption?
@@ -271,7 +276,7 @@ struct ContentView: View {
                     SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, sessionFilterMode: $sessionFilterMode, html:$html, columnVisibility:$columnVisibility)
                         .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                     case .groups:
-                        GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, html:$html, columnVisibility:$columnVisibility, groupFavorites: $groupFavorites)
+                        GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, groupFilterMode: $groupFilterMode, html:$html, columnVisibility:$columnVisibility)
                         .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                     case .locations:
                     LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, columnVisibility: $columnVisibility)

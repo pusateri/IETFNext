@@ -8,15 +8,19 @@
 import SwiftUI
 
 struct GroupFilterMenu: View {
-    @Binding var groupFavorites: Bool
+    @Binding var groupFilterMode: GroupFilterMode
 
     var body: some View {
         Button(action: {
             withAnimation {
-                groupFavorites.toggle()
+                if groupFilterMode == .none {
+                    groupFilterMode = .favorites
+                } else {
+                    groupFilterMode = .none
+                }
             }
         }) {
-            Label("Filter", systemImage: groupFavorites == true ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+            Label("Filter", systemImage: groupFilterMode == .favorites ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
         }
     }
 }

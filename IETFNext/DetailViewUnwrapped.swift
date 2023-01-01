@@ -387,7 +387,8 @@ struct DetailViewUnwrapped: View {
             html = BLANK
         }
         .onChange(of: group) { newValue in
-            presentationRequest.nsPredicate = NSPredicate(format: "session = %@", newValue)
+            // TODO: slides are combined into the group and all slides are shown for all sessions of group
+            presentationRequest.nsPredicate = NSPredicate(format: "session.group = %@", newValue)
             updateFor(group: newValue)
         }
         .onChange(of: model.download) { newValue in
