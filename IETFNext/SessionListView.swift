@@ -109,73 +109,81 @@ struct SessionListFilteredView: View {
     }
 
     var body: some View {
-        List(fetchRequest, selection: $selected) { section in
-            Section(header: Text(section.id).foregroundColor(.primary)) {
-                ForEach(section, id: \.self) { session in
-                    if let session_group = session.group {
-                        SessionListRowView(session: session, group: session_group)
-                            .listRowSeparator(.visible)
-                            .listRowBackground(session.is_bof ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
-                    }
-                }
-            }
-        }
-        .listStyle(.inset)
-#if !os(macOS)
-        .navigationBarTitleDisplayMode(.inline)
-#endif
-        .toolbar {
-#if os(macOS)
-            ToolbarItem(placement: .navigation) {
-                SessionListTitleView(sessionFilterMode: $sessionFilterMode)
-            }
-            ToolbarItem(placement: .navigation) {
-                SessionFilterMenu(sessionFilterMode: $sessionFilterMode)
-            }
-#else
-            ToolbarItem(placement: .principal) {
-                SessionListTitleView(sessionFilterMode: $sessionFilterMode)
-            }
-            ToolbarItem(placement: .primaryAction) {
-                SessionFilterMenu(sessionFilterMode: $sessionFilterMode)
-            }
-            ToolbarItem(placement: .bottomBar) {
-                if let meeting = selectedMeeting {
-                    if let number = meeting.number {
-                        if let city = meeting.city {
-                            Text("IETF \(number) (\(city))")
-                                .font(.subheadline)
-                                .foregroundColor(.accentColor)
+        ScrollViewReader { scrollViewReader in
+            List(fetchRequest, selection: $selected) { section in
+                Section(header: Text(section.id).foregroundColor(.primary)) {
+                    ForEach(section, id: \.self) { session in
+                        if let session_group = session.group {
+                            SessionListRowView(session: session, group: session_group)
+                                .listRowSeparator(.visible)
+                                //.listRowBackground(session.is_bof ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
                         }
                     }
                 }
             }
-#endif
-        }
-        .onChange(of: selectedMeeting) { newValue in
-            if let meeting = newValue {
-                fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
-            }
-        }
-        .onChange(of: selected) { newValue in
-            if let session = newValue {
-                sessionID = Int(session.id)
-                selectedGroup = session.group
-            } else {
+            .listStyle(.inset)
 #if !os(macOS)
-                if UIDevice.isIPhone {
-                    sessionID = nil
+            .navigationBarTitleDisplayMode(.inline)
+#endif
+            .toolbar {
+#if os(macOS)
+                ToolbarItem(placement: .navigation) {
+                    SessionListTitleView(sessionFilterMode: $sessionFilterMode)
+                }
+                ToolbarItem(placement: .navigation) {
+                    SessionFilterMenu(sessionFilterMode: $sessionFilterMode)
+                }
+#else
+                ToolbarItem(placement: .principal) {
+                    SessionListTitleView(sessionFilterMode: $sessionFilterMode)
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    SessionFilterMenu(sessionFilterMode: $sessionFilterMode)
+                }
+                ToolbarItem(placement: .bottomBar) {
+                    if let meeting = selectedMeeting {
+                        if let number = meeting.number {
+                            if let city = meeting.city {
+                                Text("IETF \(number) (\(city))")
+                                    .font(.subheadline)
+                                    .foregroundColor(.accentColor)
+                            }
+                        }
+                    }
                 }
 #endif
             }
-        }
-        .onAppear {
-            html = BLANK
-            if columnVisibility == .all {
-                columnVisibility = .doubleColumn
+            .onChange(of: selectedMeeting) { newValue in
+                if let meeting = newValue {
+                    fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
+                }
             }
-            if let session_id = sessionID {
-                selected = fetchSession(session_id: Int32(session_id))
+            .onChange(of: selected) { newValue in
+                if let session = newValue {
+                    sessionID = Int(session.id)
+                    selectedGroup = session.group
+                } else {
+#if !os(macOS)
+                    if UIDevice.isIPhone {
+                        sessionID = nil
+                    }
+#endif
+                }
+            }
+            .onAppear {
+                if columnVisibility == .all {
+                    columnVisibility = .doubleColumn
+                }
+                if let session_id = sessionID {
+                    selected = fetchSession(session_id: Int32(session_id))
+                }
+                if let session = selected {
+                    withAnimation {
+                        scrollViewReader.scrollTo(session)
+                    }
+                } else {
+                    html = BLANK
+                }
             }
         }
     }

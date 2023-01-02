@@ -190,6 +190,7 @@ struct ContentView: View {
     @State var selectedMeeting: Meeting?
     @State var selectedGroup: Group?
     @State var selectedLocation: Location?
+    @State var selectedDownload: Download?
     @State var html: String = ""
     @State var localFileURL: URL? = nil
     @State var sessionFilterMode: SessionFilterMode = .none
@@ -272,18 +273,18 @@ struct ContentView: View {
         } content: {
             if let ds = detailSelection {
                 switch(ds) {
-                    case .schedule:
+                case .schedule:
                     SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, sessionFilterMode: $sessionFilterMode, html:$html, columnVisibility:$columnVisibility)
-                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
-                    case .groups:
-                        GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, groupFilterMode: $groupFilterMode, html:$html, columnVisibility:$columnVisibility)
-                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
-                    case .locations:
+                    .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
+                case .groups:
+                    GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, groupFilterMode: $groupFilterMode, html:$html, columnVisibility:$columnVisibility)
+                    .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
+                case .locations:
                     LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, columnVisibility: $columnVisibility)
-                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
-                    case .download:
-                        DownloadListView(html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
-                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
+                    .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
+                case .download:
+                    DownloadListView(selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
+                    .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 }
             } else {
                 Text("Select View in Sidebar")
@@ -291,15 +292,17 @@ struct ContentView: View {
         } detail: {
             if let ds = detailSelection {
                 switch(ds) {
-                    case .locations:
+                case .locations:
                     LocationDetailView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)
-                    default:
-                        DetailView(
-                            selectedMeeting:$selectedMeeting,
-                            selectedGroup:$selectedGroup,
-                            html:$html,
-                            localFileURL:$localFileURL,
-                            columnVisibility:$columnVisibility)
+                case .download:
+                    DownloadDetailView(selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
+                default:
+                    DetailView(
+                        selectedMeeting:$selectedMeeting,
+                        selectedGroup:$selectedGroup,
+                        html:$html,
+                        localFileURL:$localFileURL,
+                        columnVisibility:$columnVisibility)
                 }
             }
         }

@@ -9,7 +9,6 @@
 7. Only gets the first 20 drafts right now
 8. Jump between session and location and back
 9. Load basename document to support useractivity
-10. On startup, downloads doesn't load documents until after schedule loads
 
 
 *** Maybe ***

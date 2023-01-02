@@ -79,80 +79,89 @@ struct GroupListFilteredView: View {
     }
 
     var body: some View {
-        List(fetchRequest, selection: $selectedGroup) { section in
-            Section(header: Text(section.id).textCase(.uppercase).foregroundColor(.accentColor)) {
-                ForEach(section, id: \.self) { group in
-                    GroupListRowView(group:group)
-                        .listRowSeparator(.visible)
-                        .listRowBackground(group.state == "bof" ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
+        ScrollViewReader { scrollViewReader in
+            List(fetchRequest, selection: $selectedGroup) { section in
+                Section(header: Text(section.id).textCase(.uppercase).foregroundColor(.accentColor)) {
+                    ForEach(section, id: \.self) { group in
+                        GroupListRowView(group:group)
+                            .listRowSeparator(.visible)
+                            //.listRowBackground(group.state == "bof" ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
+                    }
                 }
+                .headerProminence(.increased)
             }
-            .headerProminence(.increased)
-        }
-        .listStyle(.inset)
+            .listStyle(.inset)
 #if !os(macOS)
-        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
-        .keyboardType(.alphabet)
-        .navigationBarTitleDisplayMode(.inline)
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
+            .keyboardType(.alphabet)
+            .navigationBarTitleDisplayMode(.inline)
 #endif
-        .disableAutocorrection(true)
-        .toolbar {
+            .disableAutocorrection(true)
+            .toolbar {
 #if os(macOS)
-            ToolbarItem(placement: .navigation) {
-                GroupListTitleView(groupFilterMode: $groupFilterMode)
-            }
-            ToolbarItem(placement: .navigation) {
-                GroupFilterMenu(groupFilterMode: $groupFilterMode)
-            }
+                ToolbarItem(placement: .navigation) {
+                    GroupListTitleView(groupFilterMode: $groupFilterMode)
+                }
+                ToolbarItem(placement: .navigation) {
+                    GroupFilterMenu(groupFilterMode: $groupFilterMode)
+                }
 #else
-            ToolbarItem(placement: .principal) {
-                GroupListTitleView(groupFilterMode: $groupFilterMode)
-            }
-            ToolbarItem(placement: .primaryAction) {
-                GroupFilterMenu(groupFilterMode: $groupFilterMode)
-            }
-            ToolbarItem(placement: .bottomBar) {
-                if let meeting = selectedMeeting {
-                    if let number = meeting.number {
-                        if let city = meeting.city {
-                            Text("IETF \(number) (\(city))")
-                                .font(.subheadline)
-                                .foregroundColor(.accentColor)
+                ToolbarItem(placement: .principal) {
+                    GroupListTitleView(groupFilterMode: $groupFilterMode)
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    GroupFilterMenu(groupFilterMode: $groupFilterMode)
+                }
+                ToolbarItem(placement: .bottomBar) {
+                    if let meeting = selectedMeeting {
+                        if let number = meeting.number {
+                            if let city = meeting.city {
+                                Text("IETF \(number) (\(city))")
+                                    .font(.subheadline)
+                                    .foregroundColor(.accentColor)
+                            }
                         }
                     }
                 }
-            }
 #endif
-        }
-        .onChange(of: groupFilterMode) { newValue in
-            updateGroupPredicate()
-        }
-        .onChange(of: selectedMeeting) { newValue in
-            if let meeting = newValue {
-                fetchRequest.nsPredicate = NSPredicate(format: "ANY sessions.meeting.number = %@", meeting.number!)
             }
-        }
-        .onChange(of: selectedGroup) { newValue in
-            searchText = ""
-            if let group = newValue {
-                groupShort = group.acronym!
-            } else {
-#if !os(macOS)
-                if UIDevice.isIPhone {
-                    groupShort = nil
+            .onChange(of: groupFilterMode) { newValue in
+                updateGroupPredicate()
+            }
+            .onChange(of: selectedMeeting) { newValue in
+                if let meeting = newValue {
+                    fetchRequest.nsPredicate = NSPredicate(format: "ANY sessions.meeting.number = %@", meeting.number!)
                 }
+            }
+            .onChange(of: selectedGroup) { newValue in
+                searchText = ""
+                if let group = newValue {
+                    groupShort = group.acronym!
+                } else {
+#if !os(macOS)
+                    if UIDevice.isIPhone {
+                        groupShort = nil
+                    }
 #endif
+                }
             }
-        }
-        .onChange(of: searchText) { newValue in
-            updateGroupPredicate()
-        }
-        .onAppear() {
-            if columnVisibility == .all {
-                columnVisibility = .doubleColumn
+            .onChange(of: searchText) { newValue in
+                updateGroupPredicate()
             }
-            if let short = groupShort {
-                selectedGroup = fetchGroup(short: short)
+            .onAppear() {
+                if columnVisibility == .all {
+                    columnVisibility = .doubleColumn
+                }
+                if let short = groupShort {
+                    selectedGroup = fetchGroup(short: short)
+                }
+                if let group = selectedGroup {
+                    withAnimation {
+                        scrollViewReader.scrollTo(group)
+                    }
+                } else {
+                    html = BLANK
+                }
             }
         }
     }

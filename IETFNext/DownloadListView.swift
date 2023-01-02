@@ -88,11 +88,11 @@ extension SectionedFetchResults.Section where Result == Download {
 
 struct DownloadListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Binding var selectedDownload: Download?
     @Binding var html: String
     @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
-    @State var selectedDownload: Download?
     @SectionedFetchRequest<String, Download>(
         sectionIdentifier: \.kind!,
         sortDescriptors: [
@@ -174,68 +174,77 @@ struct DownloadListView: View {
     }
 
     var body: some View {
-        List(downloads, selection: $selectedDownload) { section in
-            Section {
-                ForEach(section, id: \.self) { download in
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text("\(download.title ?? download.group?.acronym ?? "Unknown")")
-                                .foregroundColor(.primary)
-                            Spacer()
-                            Text(download.group?.acronym ?? "")
-                                .foregroundColor(.secondary)
+        ScrollViewReader { scrollViewReader in
+            List(downloads, selection: $selectedDownload) { section in
+                Section {
+                    ForEach(section, id: \.self) { download in
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text("\(download.title ?? download.group?.acronym ?? "Unknown")")
+                                    .foregroundColor(.primary)
+                                Spacer()
+                                Text(download.group?.acronym ?? "")
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.all, 2)
+                            HStack {
+                                Text(download.filename ?? "path/absent")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                                Text(sizeString(download.filesize))
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.all, 2)
                         }
-                        .padding(.all, 2)
-                        HStack {
-                            Text(download.filename ?? "path/absent")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(sizeString(download.filesize))
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.all, 2)
+                    }
+                    .onDelete { indexSet in
+                        removeDownload(section: section, indexset: indexSet)
+                    }
+                    .listRowSeparator(.visible)
+                } header: {
+                    HStack {
+                        Text(section.id.capitalized)
+                            .foregroundColor(.accentColor)
+                        Spacer()
+                        Text("\(sizeString(section.sectionSize))")
+                            .foregroundColor(.accentColor)
+                            .font(.subheadline)
                     }
                 }
-                .onDelete { indexSet in
-                    removeDownload(section: section, indexset: indexSet)
-                }
-                .listRowSeparator(.visible)
-            } header: {
-                HStack {
-                    Text(section.id.capitalized)
-                        .foregroundColor(.accentColor)
-                    Spacer()
-                    Text("\(sizeString(section.sectionSize))")
-                        .foregroundColor(.accentColor)
-                        .font(.subheadline)
-                }
+                .headerProminence(.increased)
             }
-            .headerProminence(.increased)
-        }
-        .listStyle(.inset)
-        .toolbar {
+            .listStyle(.inset)
+            .toolbar {
 #if !os(macOS)
-            ToolbarItem(placement: .primaryAction) {
-                EditButton()
-            }
-            ToolbarItem(placement: .bottomBar) {
-                Text("Total: \(sizeString(downloads.totalSize))")
-                    .font(.subheadline)
-                    .foregroundColor(.accentColor)
-            }
+                ToolbarItem(placement: .primaryAction) {
+                    EditButton()
+                }
+                ToolbarItem(placement: .bottomBar) {
+                    Text("Total: \(sizeString(downloads.totalSize))")
+                        .font(.subheadline)
+                        .foregroundColor(.accentColor)
+                }
 #endif
-        }
-        .onChange(of: selectedDownload) { newValue in
-            if let download = newValue {
-                loadDownloadFile(from: download)
             }
-        }
-        .onAppear() {
-            html = BLANK
-            if columnVisibility == .all {
-                columnVisibility = .doubleColumn
+            .onChange(of: selectedDownload) { newValue in
+                if let download = newValue {
+                    loadDownloadFile(from: download)
+                }
+            }
+            .onAppear() {
+                if let download = selectedDownload {
+                    withAnimation {
+                        scrollViewReader.scrollTo(download)
+                    }
+                    loadDownloadFile(from: download)
+                } else {
+                    html = BLANK
+                }
+                if columnVisibility == .all {
+                    columnVisibility = .doubleColumn
+                }
             }
         }
     }
