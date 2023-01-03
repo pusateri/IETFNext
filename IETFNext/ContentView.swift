@@ -346,5 +346,8 @@ struct ContentView: View {
                 columnVisibility = .all
             }
         }
+        .task {
+            await RFCParser().loadRFCindex()
+        }
     }
 }
