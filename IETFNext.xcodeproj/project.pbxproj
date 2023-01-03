@@ -13,8 +13,8 @@
 		F80CA271294920D9002AD2C6 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA270294920D9002AD2C6 /* DownloadViewModel.swift */; };
 		F80CA275294ABA24002AD2C6 /* HTML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA274294ABA24002AD2C6 /* HTML.swift */; };
 		F82FFEA529624ED1007AA54A /* DownloadDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FFEA429624ED1007AA54A /* DownloadDetailView.swift */; };
-		F82FFEA72963D6C2007AA54A /* RFCParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FFEA62963D6C2007AA54A /* RFCParser.swift */; };
 		F82FFEAA2964C73C007AA54A /* SwiftyXMLParser in Frameworks */ = {isa = PBXBuildFile; productRef = F82FFEA92964C73C007AA54A /* SwiftyXMLParser */; };
+		F82FFEAC2964C8FF007AA54A /* RFCParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FFEAB2964C8FE007AA54A /* RFCParser.swift */; };
 		F85D55C0295E05F900569A77 /* DetailViewUnwrapped.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55BF295E05F900569A77 /* DetailViewUnwrapped.swift */; };
 		F85D55C2295E72B100569A77 /* MacOSCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C1295E72B100569A77 /* MacOSCompat.swift */; };
 		F85D55C4295F71DB00569A77 /* SessionFilterMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */; };
@@ -75,7 +75,7 @@
 		F80CA276294B937B002AD2C6 /* IETFNext 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 3.xcdatamodel"; sourceTree = "<group>"; };
 		F82FFEA329621B0B007AA54A /* IETFNext 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 5.xcdatamodel"; sourceTree = "<group>"; };
 		F82FFEA429624ED1007AA54A /* DownloadDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadDetailView.swift; sourceTree = "<group>"; };
-		F82FFEA62963D6C2007AA54A /* RFCParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCParser.swift; sourceTree = SOURCE_ROOT; };
+		F82FFEAB2964C8FE007AA54A /* RFCParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RFCParser.swift; sourceTree = "<group>"; };
 		F85D55BF295E05F900569A77 /* DetailViewUnwrapped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewUnwrapped.swift; sourceTree = "<group>"; };
 		F85D55C1295E72B100569A77 /* MacOSCompat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacOSCompat.swift; sourceTree = "<group>"; };
 		F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFilterMenu.swift; sourceTree = "<group>"; };
@@ -186,7 +186,7 @@
 				F85D55C1295E72B100569A77 /* MacOSCompat.swift */,
 				F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */,
 				F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */,
-				F82FFEA62963D6C2007AA54A /* RFCParser.swift */,
+				F82FFEAB2964C8FE007AA54A /* RFCParser.swift */,
 				F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */,
 				F8E9BA162937EB2C00CA6F09 /* SessionListRowView.swift */,
 				F80CA26C2947BC73002AD2C6 /* SessionListLocationView.swift */,
@@ -387,7 +387,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F82FFEA72963D6C2007AA54A /* RFCParser.swift in Sources */,
+				F82FFEAC2964C8FF007AA54A /* RFCParser.swift in Sources */,
 				F80CA271294920D9002AD2C6 /* DownloadViewModel.swift in Sources */,
 				F85D55C6295F7A7500569A77 /* SessionListTitleView.swift in Sources */,
 				F8E9BA112935624100CA6F09 /* LocationListView.swift in Sources */,
