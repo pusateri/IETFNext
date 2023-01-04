@@ -63,6 +63,7 @@ struct MeetingListView: View {
                 MeetingListRowView(meeting: mtg)
                     .listRowSeparator(.visible)
             }
+            .listRowInsets(EdgeInsets())
             .navigationTitle("IETF \(selectedMeeting?.number! ?? "Select Meeting")")
 #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)

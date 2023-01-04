@@ -8,10 +8,11 @@
 import SwiftUI
 
 public enum SidebarOption: String {
-    case schedule
+    case download
     case groups
     case locations
-    case download
+    case rfc
+    case schedule
 }
 
 @main
@@ -61,7 +62,7 @@ struct IETFNextApp: App {
                     Image(systemName: "airplane.departure")
                     Text("Change Meeting Location")
                 }
-                .keyboardShortcut("l")
+                .keyboardShortcut("a")
             }
             CommandMenu("Go") {
                 Button(action: {
@@ -84,7 +85,7 @@ struct IETFNextApp: App {
                     Image(systemName: "map")
                     Text("Venue & Room Locations")
                 }
-                .keyboardShortcut("r")
+                .keyboardShortcut("l")
                 Button(action: {
                     menuSidebarOption = .download
                 }) {

@@ -164,7 +164,13 @@ extension Choice {
             choices: [
                 Choice(id: .schedule, text: "Schedule", imageName: "calendar", key: "s"),
                 Choice(id: .groups, text: "Working Groups", imageName: "person.3", key: "g"),
-                Choice(id: .locations, text: "Venue & Room Locations", imageName: "map", key: "r")
+                Choice(id: .locations, text: "Venue & Room Locations", imageName: "map", key: "l")
+                ]
+            ),
+        SectionChoice(
+            id: "Standards",
+            choices: [
+                Choice(id: .rfc, text: "RFCs", imageName: "doc.plaintext", key: "r")
                 ]
             ),
         SectionChoice(
@@ -238,8 +244,10 @@ struct ContentView: View {
                                         Text(choice.text)
                                             .foregroundColor(.primary)
                                         Spacer()
-                                        Text("\(downloads.count)")
-                                            .foregroundColor(.secondary)
+                                        if choice.text == "Downloads" {
+                                            Text("\(downloads.count)")
+                                                .foregroundColor(.secondary)
+                                        }
                                     }
                                 } icon: {
                                     Image(systemName: choice.imageName)
@@ -282,6 +290,9 @@ struct ContentView: View {
                 case .locations:
                     LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, columnVisibility: $columnVisibility)
                     .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
+                case .rfc:
+                    RFCListView(columnVisibility: $columnVisibility)
+                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 case .download:
                     DownloadListView(selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
                     .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
@@ -346,8 +357,10 @@ struct ContentView: View {
                 columnVisibility = .all
             }
         }
+        /*
         .task {
-            await RFCParser().loadRFCindex()
+            await loadRFCindex(context: viewContext)
         }
+         */
     }
 }

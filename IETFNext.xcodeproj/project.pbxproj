@@ -15,6 +15,7 @@
 		F82FFEA529624ED1007AA54A /* DownloadDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FFEA429624ED1007AA54A /* DownloadDetailView.swift */; };
 		F82FFEAA2964C73C007AA54A /* SwiftyXMLParser in Frameworks */ = {isa = PBXBuildFile; productRef = F82FFEA92964C73C007AA54A /* SwiftyXMLParser */; };
 		F82FFEAC2964C8FF007AA54A /* RFCParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FFEAB2964C8FE007AA54A /* RFCParser.swift */; };
+		F82FFEAF2965D897007AA54A /* RFCListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FFEAE2965D897007AA54A /* RFCListView.swift */; };
 		F85D55C0295E05F900569A77 /* DetailViewUnwrapped.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55BF295E05F900569A77 /* DetailViewUnwrapped.swift */; };
 		F85D55C2295E72B100569A77 /* MacOSCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C1295E72B100569A77 /* MacOSCompat.swift */; };
 		F85D55C4295F71DB00569A77 /* SessionFilterMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */; };
@@ -76,6 +77,8 @@
 		F82FFEA329621B0B007AA54A /* IETFNext 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 5.xcdatamodel"; sourceTree = "<group>"; };
 		F82FFEA429624ED1007AA54A /* DownloadDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadDetailView.swift; sourceTree = "<group>"; };
 		F82FFEAB2964C8FE007AA54A /* RFCParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RFCParser.swift; sourceTree = "<group>"; };
+		F82FFEAD2964D0DA007AA54A /* IETFNext 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 6.xcdatamodel"; sourceTree = "<group>"; };
+		F82FFEAE2965D897007AA54A /* RFCListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCListView.swift; sourceTree = "<group>"; };
 		F85D55BF295E05F900569A77 /* DetailViewUnwrapped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewUnwrapped.swift; sourceTree = "<group>"; };
 		F85D55C1295E72B100569A77 /* MacOSCompat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacOSCompat.swift; sourceTree = "<group>"; };
 		F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFilterMenu.swift; sourceTree = "<group>"; };
@@ -186,6 +189,7 @@
 				F85D55C1295E72B100569A77 /* MacOSCompat.swift */,
 				F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */,
 				F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */,
+				F82FFEAE2965D897007AA54A /* RFCListView.swift */,
 				F82FFEAB2964C8FE007AA54A /* RFCParser.swift */,
 				F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */,
 				F8E9BA162937EB2C00CA6F09 /* SessionListRowView.swift */,
@@ -417,6 +421,7 @@
 				F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */,
 				F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */,
 				F80CA275294ABA24002AD2C6 /* HTML.swift in Sources */,
+				F82FFEAF2965D897007AA54A /* RFCListView.swift in Sources */,
 				F8E9BA152936B5FA00CA6F09 /* WebView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -575,7 +580,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"IETFNext/Preview Content\"";
 				DEVELOPMENT_TEAM = H34JG5K6Q7;
@@ -600,7 +605,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 0.6;
+				MARKETING_VERSION = 0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNext;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -622,7 +627,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"IETFNext/Preview Content\"";
 				DEVELOPMENT_TEAM = H34JG5K6Q7;
@@ -647,7 +652,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 0.6;
+				MARKETING_VERSION = 0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNext;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -830,13 +835,14 @@
 		F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F82FFEAD2964D0DA007AA54A /* IETFNext 6.xcdatamodel */,
 				F82FFEA329621B0B007AA54A /* IETFNext 5.xcdatamodel */,
 				F80633BF29523631006D69AD /* IETFNext 4.xcdatamodel */,
 				F80CA276294B937B002AD2C6 /* IETFNext 3.xcdatamodel */,
 				F80CA26329469780002AD2C6 /* IETFNext 2.xcdatamodel */,
 				F8E9B9A12934101200CA6F09 /* IETFNext.xcdatamodel */,
 			);
-			currentVersion = F82FFEA329621B0B007AA54A /* IETFNext 5.xcdatamodel */;
+			currentVersion = F82FFEAD2964D0DA007AA54A /* IETFNext 6.xcdatamodel */;
 			path = IETFNext.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

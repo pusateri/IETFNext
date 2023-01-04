@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import SwiftyXMLParser
 
 
 enum RFCFormat: String {
@@ -15,169 +16,271 @@ enum RFCFormat: String {
     case XML
 }
 
-struct RFC {
-    init(details: [String: Any]) {
-        docid = details["doc-id"] as? String ?? ""
-        title = details["title"] as? String ?? ""
-        authors = []
-        published = Date()
-        formats = []
-        pageCount = details["page-count"] as? Int ?? 0
-        curStatus = details["current-status"] as? String ?? ""
-        pubStatus = details["publication-status"] as? String ?? ""
-        stream = details["stream"] as? String ?? ""
-        doi = details["doi"] as? String ?? ""
-    }
-
-    let docid: String
-    let title: String
-    let authors: [String]
-    let published: Date
-    let formats: Set<RFCFormat>
-    let pageCount: Int
-    let curStatus: String
-    let pubStatus: String
-    let stream: String
-    let doi: String
-}
-enum EntryType {
-    case bcp
-    case child
-    case fyi
-    case rfc
-    case rfc_not_issued
-    case std
-    case unknown
+private extension DateFormatter {
+    static let monthYearFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM yyyy"
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
+    static let monthFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM"
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
 }
 
-enum Entry {
-    case bcp(RFC)
-    case fyi(RFC)
-    case rfc(RFC)
-    case rfc_not_issued(RFC)
-    case std(RFC)
-    case unknown
-}
+private func updateAuthor(context: NSManagedObjectContext, name: String?) -> Author? {
+    if let name = name {
+        let a: Author!
 
-class RFCParser: NSObject, XMLParserDelegate {
-    var parentType: EntryType = .unknown
-    var xmlDict = [String: Any]()
-    var xmlChildDict = [String: Any]()
-    var xmlDictArr = [[String: Any]]()
-    var currentElement = ""
+        let fetchAuthor: NSFetchRequest<Author> = Author.fetchRequest()
+        fetchAuthor.predicate = NSPredicate(format: "name = %@", name)
 
-    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        var type: EntryType = .child
+        let results = try? context.fetch(fetchAuthor)
 
-        switch(elementName) {
-        case "bcp-entry":
-            type = .bcp
-        case "fyi-entry":
-            type = .fyi
-        case "rfc-entry":
-            type = .rfc
-        case "rfc-not-issued-entry":
-            type = .rfc_not_issued
-        case "std-entry":
-            type = .std
-
-        default:
-            if elementName.contains("-entry") {
-                // unknown new top level entry
-                type = .unknown
-            }
-        }
-        xmlDict = ["type": type]
-
-        if type == .child {
-            currentElement = elementName
-            xmlChildDict = [:]
+        if results?.count == 0 {
+            // here you are inserting
+            a = Author(context: context)
+            a.name = name
         } else {
-            parentType = type
+            // here you are updating
+            a = results?.first
         }
+
+        return a
+    }
+    return nil
+}
+
+private func updateFormat(context: NSManagedObjectContext, format: String?) -> DocFormat? {
+    if let format = format {
+        let f: DocFormat!
+
+        let fetchFormat: NSFetchRequest<DocFormat> = DocFormat.fetchRequest()
+        fetchFormat.predicate = NSPredicate(format: "format = %@", format)
+
+        let results = try? context.fetch(fetchFormat)
+
+        if results?.count == 0 {
+            // here you are inserting
+            f = DocFormat(context: context)
+            f.format = format
+        } else {
+            // here you are updating
+            f = results?.first
+        }
+
+        return f
+    }
+    return nil
+}
+
+private func updateKeyword(context: NSManagedObjectContext, key: String?) -> Keyword? {
+    if let key = key {
+        let k: Keyword!
+
+        let fetchKeyword: NSFetchRequest<Keyword> = Keyword.fetchRequest()
+        fetchKeyword.predicate = NSPredicate(format: "key = %@", key)
+
+        let results = try? context.fetch(fetchKeyword)
+
+        if results?.count == 0 {
+            // here you are inserting
+            k = Keyword(context: context)
+            k.key = key
+        } else {
+            // here you are updating
+            k = results?.first
+        }
+
+        return k
+    }
+    return nil
+}
+func updateRFC(context: NSManagedObjectContext, xml: XML.Accessor) {
+    let fetchRFC: NSFetchRequest<RFC> = RFC.fetchRequest()
+    fetchRFC.predicate = NSPredicate(format: "name = %@", xml["doc-id"].text!)
+
+    print(xml["doc-id"].text!)
+    var rfc: RFC!
+    var save = false
+    let results = try? context.fetch(fetchRFC)
+
+    if results?.count == 0 {
+        // here you are inserting
+        rfc = RFC(context: context)
+        rfc.name = xml["doc-id"].text!
+        save = true
+    } else {
+        // here you are updating
+        rfc = results?.first
     }
 
-    func parser(_ parser: XMLParser, foundCharacters string: String) {
-        if !string.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            if parentType != .child {
-                if xmlDict[currentElement] == nil {
-                    xmlDict.updateValue(string, forKey: currentElement)
+    // TODO: need to add obsoletes, updates, obsoleted-by, updated-by, see-also
+    for author in xml["author"] {
+        if let author_obj = updateAuthor(context: context, name:author["name"].text) {
+            if rfc.authors?.contains(author_obj) != nil {
+                rfc.addToAuthors(author_obj)
+                save = true
+            }
+        }
+    }
+    for format in xml["format"]["file-format"] {
+        if let format_obj = updateFormat(context: context, format: format.text) {
+            if rfc.formats?.contains(format_obj) != nil {
+                rfc.addToFormats(format_obj)
+                save = true
+            }
+        }
+    }
+    for keyword in xml["keywords"]["kw"] {
+        if let kw_obj = updateKeyword(context: context, key: keyword.text) {
+            if rfc.keywords?.contains(kw_obj) != nil {
+                rfc.addToKeywords(kw_obj)
+                save = true
+            }
+        }
+    }
+    // create a date object from month and year
+    // and also keep them separate as int objects for section sorting
+    if let month = xml["date"]["month"].text {
+        if let year = xml["date"]["year"].text {
+            if let pubDate = DateFormatter.monthYearFormatter.date(from: month + " " + year) {
+                if rfc.published != pubDate {
+                    rfc.published = pubDate
+                    save = true
                 }
-            } else {
-                // TODO: handle array
-                if xmlChildDict[currentElement] == nil {
-                    xmlChildDict.updateValue(string, forKey: currentElement)
+                let number = DateFormatter.monthFormatter.string(from: pubDate)
+                if let number = Int16(number) {
+                    if rfc.month != number {
+                        rfc.month = number
+                        save = true
+                    }
+                }
+                if rfc.year != year {
+                    rfc.year = year
+                    save = true
                 }
             }
         }
     }
+    // make sure rfc.published is set
+    if rfc.published == nil {
+        return
+    }
 
-    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-        switch(elementName) {
-        case "bcp-entry", "fyi-entry", "rfc-entry", "rfc-not-issued-entry", "std-entry":
-            xmlDictArr.append(xmlDict)
-        default:
-            if elementName.contains("-entry") {
-                // unknown new top level entry
-                xmlDictArr.append(xmlDict)
-                print("New top level element type in RFC Index: \(elementName)")
-            } else {
-                xmlDict.updateValue(xmlChildDict, forKey: elementName)
+    if let abstract = xml.abstract.text {
+        if rfc.abstract != abstract {
+            rfc.abstract = abstract
+            save = true
+        }
+    }
+    if let area = xml.area.text {
+        if rfc.area != area {
+            rfc.area = area
+            save = true
+        }
+    }
+    if let status = xml["current-status"].text {
+        if rfc.currentStatus != status {
+            rfc.currentStatus = status
+            save = true
+        }
+    }
+    if let doi = xml.doi.text {
+        if rfc.doi != doi {
+            rfc.doi = doi
+            save = true
+        }
+    }
+    if let draft = xml.draft.text {
+        if rfc.draft != draft {
+            rfc.draft = draft
+            save = true
+        }
+    }
+    if let errata = xml["errata-url"].text {
+        if let url = URL(string: errata) {
+            if rfc.errata != url {
+                rfc.errata = url
+                save = true
             }
         }
     }
-
-    func parserDidEndDocument(_ parser: XMLParser) {
-        for d in self.xmlDictArr {
-            if d["type"] as? EntryType == .bcp {
-                print(d.keys.sorted())
-            }
+    if let pages = xml["page-count"].int {
+        if rfc.pageCount != pages {
+            rfc.pageCount = Int32(pages)
+            save = true
         }
-        /*
-        let entries: [Entry] = self.xmlDictArr.map {
-            switch($0["type"] as? String) {
-            case "rfc-entry":
-                return Entry.rfc(RFC(details: $0))
-            default:
-                return Entry.unknown
-            }
-        }
-         */
     }
-
-    func loadRFCindex(/*context: NSManagedObjectContext*/) async {
-
-        /*
-        let backgroundQueue = DispatchQueue(label: "com.bangj.queue",
-                                                    qos: .background,
-                                                    target: nil)
-        backgroundQueue.async {
-            //call to 'parse' function of XMLParser
-            DispatchQueue.main.async {
-                //pass parsing result to UI on main thread
-            }
+    if let status = xml["publication-status"].text {
+        if rfc.publicationStatus != status {
+            rfc.publicationStatus = status
+            save = true
         }
-         */
-        let urlString = "https://www.rfc-editor.org/rfc-index.xml"
-
-        guard let url = URL(string: urlString) else {
-            print("Invalid URL: \(urlString)")
-            return
+    }
+    if let stream = xml.stream.text {
+        if rfc.stream != stream {
+            rfc.stream = stream
+            save = true
         }
-        var urlrequest = URLRequest(url: url)
-        urlrequest.addValue("gzip", forHTTPHeaderField: "Accept-Encoding")
+    }
+    if let title = xml.title.text {
+        if rfc.title != title {
+            rfc.title = title
+            save = true
+        }
+    }
+    if let wg = xml.wg_acronym.text {
+        if rfc.acronym != wg {
+            rfc.acronym = wg
+            save = true
+        }
+    }
+    if save {
         do {
-            let (data, _) = try await URLSession.shared.data(for: urlrequest)
-            let parser = XMLParser(data: data)
-            parser.delegate = self
-            let success = parser.parse()
-            if success {
-                print("done")
-            } else {
-                print("error \(parser.parserError!)")
-            }
-        } catch {
-            print("Unable to download rfc index")
+            try context.save()
         }
+        catch {
+            print("Unable to save RFC \(xml["doc-id"].text!)")
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+}
+
+func loadRFCindex(context: NSManagedObjectContext) async {
+
+    let urlString = "https://www.rfc-editor.org/rfc-index.xml"
+
+    guard let url = URL(string: urlString) else {
+        print("Invalid URL: \(urlString)")
+        return
+    }
+    var urlrequest = URLRequest(url: url)
+    urlrequest.addValue("gzip", forHTTPHeaderField: "Accept-Encoding")
+    do {
+        let (data, _) = try await URLSession.shared.data(for: urlrequest)
+        let string = String(decoding: data, as: UTF8.self)
+        do {
+            let xml = try XML.parse(string)
+            context.performAndWait {
+                for rfc in xml["rfc-index"]["rfc-entry"] {
+                    updateRFC(context: context, xml:rfc)
+                }
+            }
+        } catch XMLError.interruptedParseError {
+            print("XML parse of RFC index failed: invalid character")
+        } catch {
+            print("XML parse of RFC index failed")
+        }
+    } catch {
+        print("Unable to download rfc index")
     }
 }
