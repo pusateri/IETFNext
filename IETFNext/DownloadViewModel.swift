@@ -19,7 +19,7 @@ class DownloadViewModel: NSObject, ObservableObject {
 
     // This should only be called if there's no Download state for the url
     // TODO: deal with an agenda changing from .md to .txt to .html (save and check Etag)
-    func downloadToFile(context: NSManagedObjectContext, url: URL, mtg: String, group: Group, kind:DownloadKind, title: String?) async {
+    func downloadToFile(context: NSManagedObjectContext, url: URL, group: Group?, kind:DownloadKind, title: String?) async {
 
         self.isBusy = true
         self.error = nil
@@ -60,7 +60,7 @@ class DownloadViewModel: NSObject, ObservableObject {
                     }
 
                     context.performAndWait {
-                        self.download = createDownloadState(context:context, basename:basename, filename:suggested, mimeType: httpResponse.mimeType, encoding: httpResponse.textEncodingName, fileSize:httpResponse.expectedContentLength, ETag: httpResponse.value(forHTTPHeaderField: "ETag"), mtg:mtg, group:group, kind:kind, title:title)
+                        self.download = createDownloadState(context:context, basename:basename, filename:suggested, mimeType: httpResponse.mimeType, encoding: httpResponse.textEncodingName, fileSize:httpResponse.expectedContentLength, ETag: httpResponse.value(forHTTPHeaderField: "ETag"), group:group, kind:kind, title:title)
                     }
                 } else {
                     // This shouldn't happen but the moveItem will fail if there's something already there
@@ -79,7 +79,7 @@ class DownloadViewModel: NSObject, ObservableObject {
         }
     }
 
-    func createDownloadState(context: NSManagedObjectContext, basename:String, filename:String, mimeType: String?, encoding: String?, fileSize: Int64, ETag: String?, mtg: String, group: Group, kind:DownloadKind, title: String?) -> Download {
+    func createDownloadState(context: NSManagedObjectContext, basename:String, filename:String, mimeType: String?, encoding: String?, fileSize: Int64, ETag: String?, group: Group?, kind:DownloadKind, title: String?) -> Download {
 
         let fetch: NSFetchRequest<Download> = Download.fetchRequest()
         fetch.predicate = NSPredicate(format: "basename = %@", basename)

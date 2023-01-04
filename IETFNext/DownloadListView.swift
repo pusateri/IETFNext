@@ -15,6 +15,7 @@ public enum DownloadKind: String {
     case draft
     case minutes
     case presentation
+    case rfc
 }
 
 public func httpEcoding2StringEncoding(encoding: String?) -> String.Encoding {
@@ -205,7 +206,7 @@ struct DownloadListView: View {
                     .listRowSeparator(.visible)
                 } header: {
                     HStack {
-                        Text(section.id.capitalized)
+                        Text(section.id == "rfc" ? "RFC" : section.id.capitalized)
                             .foregroundColor(.accentColor)
                         Spacer()
                         Text("\(sizeString(section.sectionSize))")

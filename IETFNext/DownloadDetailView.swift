@@ -19,7 +19,7 @@ struct DownloadDetailView: View {
         .toolbar {
             if hSizeClass == .regular {
                 ToolbarItem(placement: .principal) {
-                    Text(selectedDownload?.title ?? "Downloads")
+                    Text(selectedDownload?.title ?? "")
                 }
             }
 #if !os(macOS)

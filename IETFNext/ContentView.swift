@@ -197,6 +197,7 @@ struct ContentView: View {
     @State var selectedGroup: Group?
     @State var selectedLocation: Location?
     @State var selectedDownload: Download?
+    @State var selectedRFC: RFC? = nil
     @State var html: String = ""
     @State var localFileURL: URL? = nil
     @State var sessionFilterMode: SessionFilterMode = .none
@@ -291,7 +292,7 @@ struct ContentView: View {
                     LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, columnVisibility: $columnVisibility)
                     .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 case .rfc:
-                    RFCListView(columnVisibility: $columnVisibility)
+                    RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
                         .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 case .download:
                     DownloadListView(selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
@@ -305,7 +306,7 @@ struct ContentView: View {
                 switch(ds) {
                 case .locations:
                     LocationDetailView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)
-                case .download:
+                case .download, .rfc:
                     DownloadDetailView(selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
                 default:
                     DetailView(
@@ -357,10 +358,10 @@ struct ContentView: View {
                 columnVisibility = .all
             }
         }
-        /*
+/*
         .task {
             await loadRFCindex(context: viewContext)
         }
-         */
+*/
     }
 }

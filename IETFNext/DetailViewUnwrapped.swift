@@ -171,7 +171,7 @@ struct DetailViewUnwrapped: View {
                 loadDownloadFile(from:download)
             } else {
                 Task {
-                    await model.downloadToFile(context:viewContext, url:agenda.url, mtg:meeting.number!, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
+                    await model.downloadToFile(context:viewContext, url:agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                 }
             }
         }
@@ -248,7 +248,7 @@ struct DetailViewUnwrapped: View {
                                     loadDownloadFile(from:download)
                                 } else {
                                     Task {
-                                        await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.presentation, title: p.title)
+                                        await model.downloadToFile(context:viewContext, url:url, group:group, kind:.presentation, title: p.title)
                                     }
                                 }
                             }
@@ -276,7 +276,7 @@ struct DetailViewUnwrapped: View {
                                 loadDownloadFile(from:download)
                             } else {
                                 Task {
-                                    await model.downloadToFile(context:viewContext, url: agenda.url, mtg:meeting.number!, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
+                                    await model.downloadToFile(context:viewContext, url: agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                                 }
                             }
                         }) {
@@ -293,7 +293,7 @@ struct DetailViewUnwrapped: View {
                                 loadDownloadFile(from:download)
                             } else {
                                 Task {
-                                    await model.downloadToFile(context:viewContext, url: minutes, mtg:meeting.number!, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
+                                    await model.downloadToFile(context:viewContext, url: minutes, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                                 }
                             }
                         }
@@ -339,7 +339,7 @@ struct DetailViewUnwrapped: View {
                                     loadDownloadFile(from:download)
                                 } else {
                                     Task {
-                                        await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.charter, title: "\(group.acronym!.uppercased()) Charter")
+                                        await model.downloadToFile(context:viewContext, url:url, group:group, kind:.charter, title: "\(group.acronym!.uppercased()) Charter")
                                     }
                                 }
                             }
@@ -417,7 +417,7 @@ struct DetailViewUnwrapped: View {
                         loadDownloadFile(from:download)
                     } else {
                         Task {
-                            await model.downloadToFile(context:viewContext, url:url, mtg:meeting.number!, group:group, kind:.draft, title:draftTitle)
+                            await model.downloadToFile(context:viewContext, url:url, group:group, kind:.draft, title:draftTitle)
                         }
                     }
                 }
