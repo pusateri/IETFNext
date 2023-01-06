@@ -11,7 +11,7 @@ import CoreData
 private extension DateFormatter {
     static let simpleFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM"
+        formatter.dateFormat = "MM/YY"
         formatter.calendar = Calendar(identifier: .gregorian)
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
         formatter.locale = Locale(identifier: Locale.current.identifier)
@@ -106,6 +106,30 @@ struct RFCListView: View {
         }
     }
 
+    private func colorForStatus(status: String?) -> Color {
+        if let status = status {
+            switch(status) {
+            case "BEST CURRENT PRACTICE":
+                return Color(hex: 0x795548) // brown
+            case "DRAFT STANDARD":
+                return Color(hex: 0xf44336) // red
+            case "EXPERIMENTAL":
+                return Color(hex: 0x9c27b0) // magenta
+            case "HISTORIC":
+                return Color(hex: 0x607d8b) // blue gray
+            case "INFORMATIONAL":
+                return Color(hex: 0x009688) // green
+            case "INTERNET STANDARD":
+                return Color(hex: 0x673ab7) // purple
+            case "PROPOSED STANDARD":
+                return Color(hex: 0x3f51b5) // dark blue
+            default:
+                return Color.secondary
+            }
+        }
+        return Color.secondary
+    }
+
     private func shortenStatus(status: String?) -> String {
         if let status = status {
             switch(status) {
@@ -158,18 +182,35 @@ struct RFCListView: View {
     var body: some View {
         ScrollViewReader { scrollViewReader in
             List(rfcs, id: \.self, selection: $selectedRFC) { rfc in
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("\(makeSpace(rfc: rfc.name))")
-                            .foregroundColor(.primary)
-                            .font(.title3.bold())
-                        Spacer()
-                        Text("\(shortenStatus(status: rfc.currentStatus)) \(shortenStream(stream: rfc.stream))")
-                            .foregroundColor(.secondary)
+                HStack {
+                    Rectangle()
+                        .fill(colorForStatus(status: rfc.currentStatus))
+                        .frame(width: 8, height: 42)
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("\(makeSpace(rfc: rfc.name))")
+                                .font(.title3.bold())
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Text("\(shortenStatus(status: rfc.currentStatus)) \(shortenStream(stream: rfc.stream))")
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                        }
+                        HStack {
+                            Text("\(rfc.title!)")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            VStack {
+                                Text("\(DateFormatter.simpleFormatter.string(from: rfc.published!))")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    //.padding(.bottom)
+                                //Image(systemName: "arrow.triangle.pull")
+                                    //.foregroundColor(colorForStatus(status: rfc.currentStatus))
+                            }
+                        }
                     }
-                    Text("\(rfc.title!)")
-                        .foregroundColor(.secondary)
-                    // future arrow.triangle.pull
                 }
                 .listRowSeparator(.visible)
             }
@@ -201,10 +242,10 @@ struct RFCListView: View {
             }
             .onAppear {
                 if let doc = selectedRFC {
-                    withAnimation {
-                        scrollViewReader.scrollTo(doc)
-                    }
                     loadRFC(doc: doc)
+                    withAnimation {
+                        scrollViewReader.scrollTo(doc, anchor: .center)
+                    }
                 } else {
                     html = BLANK
                 }

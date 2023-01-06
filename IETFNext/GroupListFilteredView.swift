@@ -154,12 +154,13 @@ struct GroupListFilteredView: View {
                 }
                 if let short = groupShort {
                     selectedGroup = fetchGroup(short: short)
-                }
-                if let group = selectedGroup {
-                    withAnimation {
-                        scrollViewReader.scrollTo(group)
+                    if let group = selectedGroup {
+                        withAnimation {
+                            scrollViewReader.scrollTo(group, anchor: .center)
+                        }
                     }
-                } else {
+                }
+                if selectedGroup == nil {
                     html = BLANK
                 }
             }

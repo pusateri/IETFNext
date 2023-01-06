@@ -212,6 +212,13 @@ public func loadData(context: NSManagedObjectContext, meeting: Meeting?) async {
             print("Invalid URL")
             return
         }
+
+        var urlrequest = URLRequest(url: url)
+        urlrequest.addValue("gzip", forHTTPHeaderField: "Accept-Encoding")
+        if let lastEtag = meeting.etag {
+            urlrequest.addValue(lastEtag, forHTTPHeaderField: "If-None-Match")
+            urlrequest.cachePolicy = .reloadIgnoringLocalCacheData
+        }
         do {
             let dayFormatter = DateFormatter()
             dayFormatter.locale = Locale(identifier: Locale.current.identifier)
@@ -225,7 +232,22 @@ public func loadData(context: NSManagedObjectContext, meeting: Meeting?) async {
             rangeFormatter.calendar = Calendar(identifier: .iso8601)
             rangeFormatter.timeZone = TimeZone(identifier: meeting.time_zone!)
 
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await URLSession.shared.data(for: urlrequest)
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("No HTTP Result")
+                return
+            }
+            guard (200...299).contains(httpResponse.statusCode) else {
+                print("Http Result \(httpResponse.statusCode): \(url.absoluteString)")
+                return
+            }
+            print(httpResponse.statusCode)
+            if let etag = httpResponse.value(forHTTPHeaderField: "ETag") {
+                meeting.etag = etag
+            }
+            if let modified = httpResponse.value(forHTTPHeaderField: "Last-Modified") {
+                meeting.lastModified = modified
+            }
             do {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
@@ -284,7 +306,6 @@ public func loadDrafts(context: NSManagedObjectContext, group: Group?, limit: In
 
     if let group = group {
         let urlString = "https://datatracker.ietf.org/api/v1/doc/document/?group__acronym=\(group.acronym!)&type=draft&states__slug__contains=active"
-
 
         if offset == 0 {
             guard let url0 = URL(string: urlString) else {

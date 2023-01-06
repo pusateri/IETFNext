@@ -116,7 +116,7 @@ struct SessionListFilteredView: View {
                         if let session_group = session.group {
                             SessionListRowView(session: session, group: session_group)
                                 .listRowSeparator(.visible)
-                                //.listRowBackground(session.is_bof ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
+                            //.listRowBackground(session.is_bof ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
                         }
                     }
                 }
@@ -176,10 +176,10 @@ struct SessionListFilteredView: View {
                 }
                 if let session_id = sessionID {
                     selected = fetchSession(session_id: Int32(session_id))
-                }
-                if let session = selected {
-                    withAnimation {
-                        scrollViewReader.scrollTo(session)
+                    if let session = selected {
+                        withAnimation {
+                            scrollViewReader.scrollTo(session, anchor: .center)
+                        }
                     }
                 } else {
                     html = BLANK

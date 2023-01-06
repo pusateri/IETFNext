@@ -5,7 +5,7 @@
 //  Created by Tom Pusateri on 1/2/23.
 //
 
-import Foundation
+import SwiftUI
 import CoreData
 import SwiftyXMLParser
 
@@ -52,7 +52,21 @@ private func updateAuthor(context: NSManagedObjectContext, name: String?) -> Aut
             // here you are updating
             a = results?.first
         }
+        /*
+         * this is too naive
 
+        let parts = name.components(separatedBy: " ")
+        if a.firstInitial != parts[0] {
+            a.firstInitial = parts[0]
+        }
+        if a.surname != parts[1] {
+            a.surname = parts[1]
+        }
+        let sName = "\(parts[1]), \(parts[0])"
+        if a.sortName != sName {
+            a.sortName = sName
+        }
+         */
         return a
     }
     return nil
@@ -107,7 +121,6 @@ func updateRFC(context: NSManagedObjectContext, xml: XML.Accessor) {
     let fetchRFC: NSFetchRequest<RFC> = RFC.fetchRequest()
     fetchRFC.predicate = NSPredicate(format: "name = %@", xml["doc-id"].text!)
 
-    print(xml["doc-id"].text!)
     var rfc: RFC!
     var save = false
     let results = try? context.fetch(fetchRFC)
@@ -118,8 +131,9 @@ func updateRFC(context: NSManagedObjectContext, xml: XML.Accessor) {
         rfc.name = xml["doc-id"].text!
         save = true
     } else {
-        // here you are updating
-        rfc = results?.first
+        // Since older entries don't change, we just return if we have a match
+        // rfc = results?.first
+        return
     }
 
     // TODO: need to add obsoletes, updates, obsoleted-by, updated-by, see-also
@@ -265,8 +279,28 @@ func loadRFCindex(context: NSManagedObjectContext) async {
     }
     var urlrequest = URLRequest(url: url)
     urlrequest.addValue("gzip", forHTTPHeaderField: "Accept-Encoding")
+    if let lastEtag = UserDefaults.standard.string(forKey:"rfcIndexEtag") {
+        urlrequest.addValue(lastEtag, forHTTPHeaderField: "If-None-Match")
+        urlrequest.cachePolicy = .reloadIgnoringLocalCacheData
+    }
+
     do {
-        let (data, _) = try await URLSession.shared.data(for: urlrequest)
+        let (data, response) = try await URLSession.shared.data(for: urlrequest)
+        guard let httpResponse = response as? HTTPURLResponse else {
+            print("No HTTP Result")
+            return
+        }
+        guard (200...299).contains(httpResponse.statusCode) else {
+            print("Http Result \(httpResponse.statusCode): \(url.absoluteString)")
+            return
+        }
+        if let etag = httpResponse.value(forHTTPHeaderField: "ETag") {
+            let newEtag = etag.replacingOccurrences(of: "-gzip", with: "")
+            UserDefaults.standard.set(newEtag, forKey:"rfcIndexEtag")
+        }
+        if let modified = httpResponse.value(forHTTPHeaderField: "Last-Modified") {
+            UserDefaults.standard.set(modified, forKey:"rfcIndexLastModified")
+        }
         let string = String(decoding: data, as: UTF8.self)
         do {
             let xml = try XML.parse(string)

@@ -236,13 +236,14 @@ struct DownloadListView: View {
             }
             .onAppear() {
                 if let download = selectedDownload {
-                    withAnimation {
-                        scrollViewReader.scrollTo(download)
-                    }
                     loadDownloadFile(from: download)
+                    withAnimation {
+                        scrollViewReader.scrollTo(download, anchor: .center)
+                    }
                 } else {
                     html = BLANK
                 }
+
                 if columnVisibility == .all {
                     columnVisibility = .doubleColumn
                 }

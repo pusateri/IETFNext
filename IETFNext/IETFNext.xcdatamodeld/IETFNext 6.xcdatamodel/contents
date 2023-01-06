@@ -8,7 +8,11 @@
         <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Group" inverseName="area" inverseEntity="Group"/>
     </entity>
     <entity name="Author" representedClassName="Author" syncable="YES" codeGenerationType="class">
+        <attribute name="firstInitial" optional="YES" attributeType="String"/>
+        <attribute name="given" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="sortName" optional="YES" attributeType="String"/>
+        <attribute name="surname" optional="YES" attributeType="String"/>
         <relationship name="rfcs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="authors" inverseEntity="RFC"/>
     </entity>
     <entity name="DocFormat" representedClassName="DocFormat" syncable="YES" codeGenerationType="class">
@@ -101,6 +105,8 @@
         <attribute name="city" optional="YES" attributeType="String"/>
         <attribute name="country" optional="YES" attributeType="String"/>
         <attribute name="date" optional="YES" attributeType="String"/>
+        <attribute name="etag" optional="YES" attributeType="String"/>
+        <attribute name="lastModified" optional="YES" attributeType="String"/>
         <attribute name="number" attributeType="String"/>
         <attribute name="time_zone" optional="YES" attributeType="String"/>
         <attribute name="updated_at" optional="YES" attributeType="Date" usesScalarValueType="NO"/>

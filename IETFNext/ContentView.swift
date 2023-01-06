@@ -218,6 +218,12 @@ struct ContentView: View {
         sortDescriptors: [NSSortDescriptor(keyPath: \Download.basename, ascending: true)],
         animation: .default)
     private var downloads: FetchedResults<Download>
+
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \RFC.name, ascending: false)],
+        animation: .default)
+    private var rfcs: FetchedResults<RFC>
+
     @StateObject fileprivate var viewModel = ChoiceViewModel()
 
     var body: some View {
@@ -245,9 +251,15 @@ struct ContentView: View {
                                         Text(choice.text)
                                             .foregroundColor(.primary)
                                         Spacer()
-                                        if choice.text == "Downloads" {
+                                        switch(choice.id) {
+                                        case .download:
                                             Text("\(downloads.count)")
                                                 .foregroundColor(.secondary)
+                                        case .rfc:
+                                            Text("\(rfcs.count)")
+                                                .foregroundColor(.secondary)
+                                        default:
+                                            Text("")
                                         }
                                     }
                                 } icon: {
@@ -270,7 +282,7 @@ struct ContentView: View {
                         }) {
                             Label("Change Meeting", systemImage: "airplane.departure")
                         }
-                        .keyboardShortcut("l")
+                        .keyboardShortcut("a")
                         Label("Version \(Bundle.main.releaseVersionNumber).\(Bundle.main.buildVersionNumber) (\(Git.kRevisionNumber))", systemImage: "v.circle")
                     }
                     label: {
@@ -284,18 +296,23 @@ struct ContentView: View {
                 switch(ds) {
                 case .schedule:
                     SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, sessionFilterMode: $sessionFilterMode, html:$html, columnVisibility:$columnVisibility)
-                    .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
+                        .keyboardShortcut("s")
+                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 case .groups:
                     GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, groupFilterMode: $groupFilterMode, html:$html, columnVisibility:$columnVisibility)
-                    .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
+                        .keyboardShortcut("g")
+                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 case .locations:
                     LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, columnVisibility: $columnVisibility)
+                        .keyboardShortcut("l")
                     .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 case .rfc:
                     RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
+                        .keyboardShortcut("r")
                         .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 case .download:
                     DownloadListView(selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
+                        .keyboardShortcut("d")
                     .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 }
             } else {
@@ -358,10 +375,10 @@ struct ContentView: View {
                 columnVisibility = .all
             }
         }
-/*
+
         .task {
             await loadRFCindex(context: viewContext)
         }
-*/
+
     }
 }

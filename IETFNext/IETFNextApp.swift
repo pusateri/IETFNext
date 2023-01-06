@@ -60,7 +60,7 @@ struct IETFNextApp: App {
                     showingMeetings.toggle()
                 }) {
                     Image(systemName: "airplane.departure")
-                    Text("Change Meeting Location")
+                    Text("Change Meeting")
                 }
                 .keyboardShortcut("a")
             }
@@ -86,6 +86,13 @@ struct IETFNextApp: App {
                     Text("Venue & Room Locations")
                 }
                 .keyboardShortcut("l")
+                Button(action: {
+                    menuSidebarOption = .rfc
+                }) {
+                    Image(systemName: "doc.plaintext")
+                    Text("RFCs")
+                }
+                .keyboardShortcut("r")
                 Button(action: {
                     menuSidebarOption = .download
                 }) {
