@@ -35,7 +35,6 @@
 		F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127C52942BF18004A35E8 /* DocumentListView.swift */; };
 		F8E127C92943F13B004A35E8 /* Revision.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127C82943F13B004A35E8 /* Revision.swift */; };
 		F8E9B99D2934101200CA6F09 /* IETFNextApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */; };
-		F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B99E2934101200CA6F09 /* Persistence.swift */; };
 		F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */; };
 		F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9B9A32934101200CA6F09 /* ContentView.swift */; };
 		F8E9B9A62934101300CA6F09 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8E9B9A52934101300CA6F09 /* Assets.xcassets */; };
@@ -102,7 +101,6 @@
 		F8E127CA29450ED7004A35E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F8E9B9992934101200CA6F09 /* IETFNext.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IETFNext.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextApp.swift; sourceTree = "<group>"; };
-		F8E9B99E2934101200CA6F09 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		F8E9B9A12934101200CA6F09 /* IETFNext.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = IETFNext.xcdatamodel; sourceTree = "<group>"; };
 		F8E9B9A32934101200CA6F09 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F8E9B9A52934101300CA6F09 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -174,7 +172,6 @@
 				F8E127CA29450ED7004A35E8 /* Info.plist */,
 				F8E127C82943F13B004A35E8 /* Revision.swift */,
 				F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */,
-				F8E9B99E2934101200CA6F09 /* Persistence.swift */,
 				F8E127BB293BFE1B004A35E8 /* AreaColors.swift */,
 				F8E9B9A32934101200CA6F09 /* ContentView.swift */,
 				F8E127C12940E254004A35E8 /* DetailView.swift */,
@@ -430,7 +427,6 @@
 				F8E9BA172937EB2C00CA6F09 /* SessionListRowView.swift in Sources */,
 				F80CA26729469B60002AD2C6 /* DownloadListView.swift in Sources */,
 				F88B7E5C2960931B00F770C9 /* LocationPhotoMenuView.swift in Sources */,
-				F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */,
 				F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */,
 				F80CA275294ABA24002AD2C6 /* HTML.swift in Sources */,
 				F82FFEAF2965D897007AA54A /* RFCListView.swift in Sources */,
