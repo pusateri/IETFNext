@@ -22,6 +22,11 @@
 		F85D55C6295F7A7500569A77 /* SessionListTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C5295F7A7500569A77 /* SessionListTitleView.swift */; };
 		F85D55C8295F85B200569A77 /* GroupListTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C7295F85B200569A77 /* GroupListTitleView.swift */; };
 		F85D55CA295F86DC00569A77 /* GroupFilterMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C9295F86DC00569A77 /* GroupFilterMenu.swift */; };
+		F85D99BB2968C55000DE37E0 /* RFCProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D99BA2968C55000DE37E0 /* RFCProvider.swift */; };
+		F85D99BD2968C9C500DE37E0 /* IETFNextError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D99BC2968C9C500DE37E0 /* IETFNextError.swift */; };
+		F85D99C02968CBDC00DE37E0 /* RFC+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D99BE2968CBDC00DE37E0 /* RFC+CoreDataClass.swift */; };
+		F85D99C12968CBDC00DE37E0 /* RFC+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D99BF2968CBDC00DE37E0 /* RFC+CoreDataProperties.swift */; };
+		F85D99C32968CC9E00DE37E0 /* RFC+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D99C22968CC9E00DE37E0 /* RFC+Extension.swift */; };
 		F865B9F2295930AB00C3DB13 /* LocationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F865B9F1295930AB00C3DB13 /* LocationDetailView.swift */; };
 		F87E0F42294FD45800E1E1A8 /* MarkdownKit in Frameworks */ = {isa = PBXBuildFile; productRef = F87E0F41294FD45800E1E1A8 /* MarkdownKit */; };
 		F88B7E5C2960931B00F770C9 /* LocationPhotoMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88B7E5B2960931B00F770C9 /* LocationPhotoMenuView.swift */; };
@@ -85,6 +90,11 @@
 		F85D55C5295F7A7500569A77 /* SessionListTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListTitleView.swift; sourceTree = "<group>"; };
 		F85D55C7295F85B200569A77 /* GroupListTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListTitleView.swift; sourceTree = "<group>"; };
 		F85D55C9295F86DC00569A77 /* GroupFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupFilterMenu.swift; sourceTree = "<group>"; };
+		F85D99BA2968C55000DE37E0 /* RFCProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCProvider.swift; sourceTree = "<group>"; };
+		F85D99BC2968C9C500DE37E0 /* IETFNextError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextError.swift; sourceTree = "<group>"; };
+		F85D99BE2968CBDC00DE37E0 /* RFC+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RFC+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		F85D99BF2968CBDC00DE37E0 /* RFC+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RFC+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		F85D99C22968CC9E00DE37E0 /* RFC+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RFC+Extension.swift"; sourceTree = "<group>"; };
 		F865B9F1295930AB00C3DB13 /* LocationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailView.swift; sourceTree = "<group>"; };
 		F88B7E5B2960931B00F770C9 /* LocationPhotoMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPhotoMenuView.swift; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
@@ -182,6 +192,7 @@
 				F85D55C7295F85B200569A77 /* GroupListTitleView.swift */,
 				F80CA268294778FA002AD2C6 /* GroupListRowView.swift */,
 				F80CA274294ABA24002AD2C6 /* HTML.swift */,
+				F85D99BC2968C9C500DE37E0 /* IETFNextError.swift */,
 				F8E9B9CC2934295E00CA6F09 /* Load.swift */,
 				F8E9BA102935624100CA6F09 /* LocationListView.swift */,
 				F865B9F1295930AB00C3DB13 /* LocationDetailView.swift */,
@@ -189,8 +200,12 @@
 				F85D55C1295E72B100569A77 /* MacOSCompat.swift */,
 				F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */,
 				F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */,
+				F85D99BE2968CBDC00DE37E0 /* RFC+CoreDataClass.swift */,
+				F85D99BF2968CBDC00DE37E0 /* RFC+CoreDataProperties.swift */,
+				F85D99C22968CC9E00DE37E0 /* RFC+Extension.swift */,
 				F82FFEAE2965D897007AA54A /* RFCListView.swift */,
 				F82FFEAB2964C8FE007AA54A /* RFCParser.swift */,
+				F85D99BA2968C55000DE37E0 /* RFCProvider.swift */,
 				F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */,
 				F8E9BA162937EB2C00CA6F09 /* SessionListRowView.swift */,
 				F80CA26C2947BC73002AD2C6 /* SessionListLocationView.swift */,
@@ -407,16 +422,21 @@
 				F8E9B99D2934101200CA6F09 /* IETFNextApp.swift in Sources */,
 				F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */,
 				F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */,
+				F85D99BB2968C55000DE37E0 /* RFCProvider.swift in Sources */,
 				F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */,
+				F85D99C02968CBDC00DE37E0 /* RFC+CoreDataClass.swift in Sources */,
 				F8E127C92943F13B004A35E8 /* Revision.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
 				F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */,
 				F85D55C0295E05F900569A77 /* DetailViewUnwrapped.swift in Sources */,
 				F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */,
+				F85D99BD2968C9C500DE37E0 /* IETFNextError.swift in Sources */,
+				F85D99C32968CC9E00DE37E0 /* RFC+Extension.swift in Sources */,
 				F85D55C8295F85B200569A77 /* GroupListTitleView.swift in Sources */,
 				F85D55CA295F86DC00569A77 /* GroupFilterMenu.swift in Sources */,
 				F8E9BA172937EB2C00CA6F09 /* SessionListRowView.swift in Sources */,
 				F80CA26729469B60002AD2C6 /* DownloadListView.swift in Sources */,
+				F85D99C12968CBDC00DE37E0 /* RFC+CoreDataProperties.swift in Sources */,
 				F88B7E5C2960931B00F770C9 /* LocationPhotoMenuView.swift in Sources */,
 				F8E9B99F2934101200CA6F09 /* Persistence.swift in Sources */,
 				F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */,

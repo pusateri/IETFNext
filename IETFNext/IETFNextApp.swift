@@ -19,12 +19,12 @@ public enum SidebarOption: String {
 struct IETFNextApp: App {
     @State private var showingMeetings = false
     @State var menuSidebarOption: SidebarOption? = nil
-    let persistenceController = PersistenceController.shared
+    //let persistenceController = PersistenceController.shared
 
     var body: some Scene {
         WindowGroup {
             ContentView(showingMeetings: $showingMeetings, menuSidebarOption: $menuSidebarOption)
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environment(\.managedObjectContext, RFCProvider.shared.container.viewContext)
         }
 #if os(macOS)
         .windowToolbarStyle(UnifiedCompactWindowToolbarStyle(showsTitle: false))

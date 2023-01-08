@@ -39,137 +39,6 @@ struct RFCListView: View {
     private var rfcs: FetchedResults<RFC>
 
 
-    private func loadDownloadFile(from:Download) {
-        if let mimeType = from.mimeType {
-            if mimeType == "application/pdf" {
-                if let filename = from.filename {
-                    do {
-                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
-                                                                       in: .userDomainMask,
-                                                                       appropriateFor: nil,
-                                                                       create: false)
-                        html = ""
-                        localFileURL = documentsURL.appendingPathComponent(filename)
-                    } catch {
-                        html = "Error reading pdf file: \(from.filename!)"
-                    }
-                }
-            } else {
-                if let contents = contents2Html(from:from) {
-                    html = contents
-                } else {
-                    html = "Error reading \(from.filename!) error: \(String(describing: model.error))"
-                }
-            }
-        }
-    }
-
-    private func makeSpace(rfc: String?) -> String {
-        if let rfc = rfc {
-            return rfc.enumerated().compactMap({ ($0  == 3) ? " \($1)" : "\($1)" }).joined()
-        } else {
-            return ""
-        }
-    }
-
-    public func fetchDownload(kind:DownloadKind, url:URL) -> Download? {
-        var download: Download?
-
-        viewContext.performAndWait {
-            let fetch: NSFetchRequest<Download> = Download.fetchRequest()
-            fetch.predicate = NSPredicate(format: "basename = %@", url.lastPathComponent)
-
-            let results = try? viewContext.fetch(fetch)
-
-            if results?.count == 0 {
-                download = nil
-            } else {
-                // here you are updating
-                download = results?.first
-            }
-        }
-        return download
-    }
-
-    func loadRFC(doc: RFC) {
-        let urlString = "https://www.rfc-editor.org/rfc/\(doc.name!.lowercased()).html"
-        if let url = URL(string: urlString) {
-            let download = fetchDownload(kind:.rfc, url:url)
-            if let download = download {
-                selectedDownload = download
-                loadDownloadFile(from: download)
-            } else {
-                Task {
-                    await model.downloadToFile(context:viewContext, url:url, group: nil, kind:.rfc, title: doc.title!)
-                }
-            }
-        }
-    }
-
-    private func colorForStatus(status: String?) -> Color {
-        if let status = status {
-            switch(status) {
-            case "BEST CURRENT PRACTICE":
-                return Color(hex: 0x795548) // brown
-            case "DRAFT STANDARD":
-                return Color(hex: 0xf44336) // red
-            case "EXPERIMENTAL":
-                return Color(hex: 0x9c27b0) // magenta
-            case "HISTORIC":
-                return Color(hex: 0x607d8b) // blue gray
-            case "INFORMATIONAL":
-                return Color(hex: 0x009688) // green
-            case "INTERNET STANDARD":
-                return Color(hex: 0x673ab7) // purple
-            case "PROPOSED STANDARD":
-                return Color(hex: 0x3f51b5) // dark blue
-            default:
-                return Color.secondary
-            }
-        }
-        return Color.secondary
-    }
-
-    private func shortenStatus(status: String?) -> String {
-        if let status = status {
-            switch(status) {
-            case "BEST CURRENT PRACTICE":
-                return "BCP"
-            case "DRAFT STANDARD":
-                return "DS"
-            case "EXPERIMENTAL":
-                return "EXP"
-            case "HISTORIC":
-                return "HIST"
-            case "INFORMATIONAL":
-                return "INFO"
-            case "INTERNET STANDARD":
-                return "IS"
-            case "PROPOSED STANDARD":
-                return "PS"
-            default:
-                return "UNKN"
-            }
-        }
-        return "UNKN"
-    }
-
-    private func shortenStream(stream: String?) -> String {
-        if let stream = stream {
-            switch(stream) {
-            case "IAB", "IETF", "IRTF":
-                return stream
-            case "INDEPENDENT":
-                return "INDP"
-            case "Legacy":
-                return "LEGC"
-            default:
-                return stream
-            }
-        }
-        return ""
-    }
-
     private func updatePredicate() {
         if searchText.isEmpty {
             rfcs.nsPredicate = NSPredicate(value: true)
@@ -184,15 +53,15 @@ struct RFCListView: View {
             List(rfcs, id: \.self, selection: $selectedRFC) { rfc in
                 HStack {
                     Rectangle()
-                        .fill(colorForStatus(status: rfc.currentStatus))
+                        .fill(rfc.color)
                         .frame(width: 8, height: 42)
                     VStack(alignment: .leading) {
                         HStack {
-                            Text("\(makeSpace(rfc: rfc.name))")
+                            Text("\(rfc.name2)")
                                 .font(.title3.bold())
                                 .foregroundColor(.primary)
                             Spacer()
-                            Text("\(shortenStatus(status: rfc.currentStatus)) \(shortenStream(stream: rfc.stream))")
+                            Text("\(rfc.shortStatus) \(rfc.shortStream)")
                                 .font(.body)
                                 .foregroundColor(.secondary)
                         }
@@ -207,7 +76,7 @@ struct RFCListView: View {
                                     .foregroundColor(.secondary)
                                     //.padding(.bottom)
                                 //Image(systemName: "arrow.triangle.pull")
-                                    //.foregroundColor(colorForStatus(status: rfc.currentStatus))
+                                    //.foregroundColor(rfc.color)
                             }
                         }
                     }
@@ -251,6 +120,67 @@ struct RFCListView: View {
                 }
                 if columnVisibility == .all {
                     columnVisibility = .doubleColumn
+                }
+            }
+        }
+    }
+}
+
+extension RFCListView {
+    private func loadDownloadFile(from:Download) {
+        if let mimeType = from.mimeType {
+            if mimeType == "application/pdf" {
+                if let filename = from.filename {
+                    do {
+                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
+                                                                       in: .userDomainMask,
+                                                                       appropriateFor: nil,
+                                                                       create: false)
+                        html = ""
+                        localFileURL = documentsURL.appendingPathComponent(filename)
+                    } catch {
+                        html = "Error reading pdf file: \(from.filename!)"
+                    }
+                }
+            } else {
+                if let contents = contents2Html(from:from) {
+                    html = contents
+                } else {
+                    html = "Error reading \(from.filename!) error: \(String(describing: model.error))"
+                }
+            }
+        }
+    }
+
+    private func fetchDownload(kind:DownloadKind, url:URL) -> Download? {
+        var download: Download?
+
+        viewContext.performAndWait {
+            let fetch: NSFetchRequest<Download> = Download.fetchRequest()
+            fetch.predicate = NSPredicate(format: "basename = %@", url.lastPathComponent)
+
+            let results = try? viewContext.fetch(fetch)
+
+            if results?.count == 0 {
+                download = nil
+            } else {
+                // here you are updating
+                download = results?.first
+            }
+        }
+        return download
+    }
+
+    private func loadRFC(doc: RFC) {
+        let urlString = "https://www.rfc-editor.org/rfc/\(doc.name!.lowercased()).html"
+        if let url = URL(string: urlString) {
+            let download = fetchDownload(kind:.rfc, url:url)
+            if let download = download {
+                selectedDownload = download
+                loadDownloadFile(from: download)
+            } else {
+                Task {
+                    await model.downloadToFile(context:viewContext, url:url, group: nil, kind:.rfc, title: doc.title!)
                 }
             }
         }

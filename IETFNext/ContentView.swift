@@ -206,6 +206,8 @@ struct ContentView: View {
     @State var listSelection: SidebarOption? = nil
     @SceneStorage("top.detailSelection") var detailSelection: SidebarOption?
 
+    var rfcProvider: RFCProvider = .shared
+
     @ViewBuilder
     var first_header: some View {
         if let m = selectedMeeting {
@@ -375,10 +377,8 @@ struct ContentView: View {
                 columnVisibility = .all
             }
         }
-
         .task {
-            await loadRFCindex(context: viewContext)
+            try? await rfcProvider.fetchRFCs()
         }
-
     }
 }
