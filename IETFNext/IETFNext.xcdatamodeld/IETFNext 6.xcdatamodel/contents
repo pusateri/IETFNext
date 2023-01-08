@@ -123,7 +123,7 @@
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="session" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Session" inverseName="presentations" inverseEntity="Session"/>
     </entity>
-    <entity name="RFC" representedClassName="RFC" syncable="YES">
+    <entity name="RFC" representedClassName="RFC" syncable="YES" codeGenerationType="class">
         <attribute name="abstract" optional="YES" attributeType="String"/>
         <attribute name="acronym" optional="YES" attributeType="String"/>
         <attribute name="area" optional="YES" attributeType="String"/>

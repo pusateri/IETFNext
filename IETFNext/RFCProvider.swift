@@ -17,28 +17,8 @@ class RFCProvider {
 
     let logger = Logger(subsystem: "com.bangj.IETFNext", category: "persistence")
 
-    // MARK: Core Data
-
     /// A shared RFC provider for use within the main app bundle.
     static let shared = RFCProvider()
-
-    private var notificationToken: NSObjectProtocol?
-
-    private init() {
-        // Observe Core Data remote change notifications on the queue where the changes were made.
-        notificationToken = NotificationCenter.default.addObserver(forName: .NSPersistentStoreRemoteChange, object: nil, queue: nil) { note in
-            self.logger.debug("Received a persistent store remote change notification.")
-            Task {
-                await self.fetchPersistentHistory()
-            }
-        }
-    }
-
-    deinit {
-        if let observer = notificationToken {
-            NotificationCenter.default.removeObserver(observer)
-        }
-    }
 
     /// A peristent history token used for fetching transactions from the store.
     private var lastToken: NSPersistentHistoryToken?
@@ -52,25 +32,13 @@ class RFCProvider {
             fatalError("Failed to retrieve a persistent store description.")
         }
 
-        // Enable persistent store remote change notifications
-        /// - Tag: persistentStoreRemoteChange
-        description.setOption(true as NSNumber,
-                              forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
-
-        // Enable persistent history tracking
-        /// - Tag: persistentHistoryTracking
-        description.setOption(true as NSNumber,
-                              forKey: NSPersistentHistoryTrackingKey)
-
         container.loadPersistentStores { storeDescription, error in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         }
 
-        // refresh UI by consuming store changes via persistent history tracking.
-        /// - Tag: viewContextMergeParentChanges
-        container.viewContext.automaticallyMergesChangesFromParent = false
+        container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.name = "viewContext"
         /// - Tag: viewContextMergePolicy
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
@@ -150,89 +118,6 @@ class RFCProvider {
         }
 
         logger.debug("Successfully inserted data.")
-    }
-
-    /// Synchronously deletes given records in the Core Data store with the specified object IDs.
-    func deleteRFCs(identifiedBy objectIDs: [NSManagedObjectID]) {
-        let viewContext = container.viewContext
-        logger.debug("Start deleting data from the store...")
-
-        viewContext.perform {
-            objectIDs.forEach { objectID in
-                let rfc = viewContext.object(with: objectID)
-                viewContext.delete(rfc)
-            }
-        }
-
-        logger.debug("Successfully deleted data.")
-    }
-
-    /// Asynchronously deletes records in the Core Data store with the specified `RFC` managed objects.
-    func deleteRFCs(_ rfcs: [RFC]) async throws {
-        let objectIDs = rfcs.map { $0.objectID }
-        let taskContext = newTaskContext()
-        // Add name and author to identify source of persistent history changes.
-        taskContext.name = "deleteContext"
-        taskContext.transactionAuthor = "deleteRFCs"
-        logger.debug("Start deleting data from the store...")
-
-        try await taskContext.perform {
-            // Execute the batch delete.
-            let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: objectIDs)
-            guard let fetchResult = try? taskContext.execute(batchDeleteRequest),
-                  let batchDeleteResult = fetchResult as? NSBatchDeleteResult,
-                  let success = batchDeleteResult.result as? Bool, success
-            else {
-                self.logger.debug("Failed to execute batch delete request.")
-                throw IETFNextError.batchDeleteError
-            }
-        }
-
-        logger.debug("Successfully deleted data.")
-    }
-
-    func fetchPersistentHistory() async {
-        do {
-            try await fetchPersistentHistoryTransactionsAndChanges()
-        } catch {
-            logger.debug("\(error.localizedDescription)")
-        }
-    }
-
-    private func fetchPersistentHistoryTransactionsAndChanges() async throws {
-        let taskContext = newTaskContext()
-        taskContext.name = "persistentHistoryContext"
-        logger.debug("Start fetching persistent history changes from the store...")
-
-        try await taskContext.perform {
-            // Execute the persistent history change since the last transaction.
-            /// - Tag: fetchHistory
-            let changeRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: self.lastToken)
-            let historyResult = try taskContext.execute(changeRequest) as? NSPersistentHistoryResult
-            if let history = historyResult?.result as? [NSPersistentHistoryTransaction],
-               !history.isEmpty {
-                self.mergePersistentHistoryChanges(from: history)
-                return
-            }
-
-            self.logger.debug("No persistent history transactions found.")
-            throw IETFNextError.persistentHistoryChangeError
-        }
-
-        logger.debug("Finished merging history changes.")
-    }
-
-    private func mergePersistentHistoryChanges(from history: [NSPersistentHistoryTransaction]) {
-        self.logger.debug("Received \(history.count) persistent history transactions.")
-        // Update view context with objectIDs from history change request.
-        /// - Tag: mergeChanges
-        let viewContext = container.viewContext
-        viewContext.perform {
-            for transaction in history {
-                viewContext.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
-                self.lastToken = transaction.token
-            }
-        }
     }
 }
 
