@@ -142,6 +142,10 @@
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="rfcs" inverseEntity="Author"/>
         <relationship name="formats" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DocFormat" inverseName="rfcs" inverseEntity="DocFormat"/>
         <relationship name="keywords" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Keyword" inverseName="rfcs" inverseEntity="Keyword"/>
+        <relationship name="obsoletedBy" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="obsoletes" inverseEntity="RFC"/>
+        <relationship name="obsoletes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="obsoletedBy" inverseEntity="RFC"/>
+        <relationship name="updatedBy" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="updates" inverseEntity="RFC"/>
+        <relationship name="updates" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="updatedBy" inverseEntity="RFC"/>
     </entity>
     <entity name="Session" representedClassName="Session" syncable="YES" codeGenerationType="class">
         <attribute name="agenda" optional="YES" attributeType="URI"/>

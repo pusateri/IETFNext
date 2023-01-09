@@ -727,7 +727,7 @@ private func updateLocation(context: NSManagedObjectContext, meeting:Meeting, lo
         // here you are inserting
         loc = Location(context: context)
         loc.id = location.id
-        loc.meeting = context.object(with: meeting.objectID) as? Meeting
+        loc.meeting = meeting
         save = true
     } else {
         // here you are updating

@@ -111,12 +111,39 @@ class RFCProvider {
         taskContext.name = "importContext"
         taskContext.transactionAuthor = "importRFCs"
 
+        var updates: [String: [String]] = [:]
+        var obsoletes: [String: [String]] = [:]
         await taskContext.perform {
             for rfc in from["rfc-entry"] {
-                updateRFC(context: taskContext, xml: rfc)
+                updateRFC(context: taskContext, xml: rfc, obsoletes: &obsoletes, updates: &updates)
+            }
+            for update in updates {
+                if let rfc = findRFC(context: taskContext, name: update.key) {
+                    for item in update.value {
+                        if let updated = findRFC(context: taskContext, name: item) {
+                            //print("\(rfc.name!) updates \(updated.name!)")
+                            rfc.addToUpdates(updated)
+                        }
+                    }
+                }
+            }
+            for obsolete in obsoletes {
+                if let rfc = findRFC(context: taskContext, name: obsolete.key) {
+                    for item in obsolete.value {
+                        if let obsoleted = findRFC(context: taskContext, name: item) {
+                            //print("\(rfc.name!) obsoletes \(obsoleted.name!)")
+                            rfc.addToObsoletes(obsoleted)
+                        }
+                    }
+                }
+            }
+            do {
+                try taskContext.save()
+            }
+            catch {
+                self.logger.debug("Unable to save after adding updates/obsoletes")
             }
         }
-
         logger.debug("Successfully inserted data.")
     }
 }

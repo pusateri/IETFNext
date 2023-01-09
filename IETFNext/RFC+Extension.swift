@@ -63,7 +63,7 @@ extension RFC {
         case "EXPERIMENTAL":
             return Color(hex: 0x9c27b0) // magenta
         case "HISTORIC":
-            return Color(hex: 0x607d8b) // blue gray
+            return Color.gray //Color(hex: 0x607d8b) // blue gray
         case "INFORMATIONAL":
             return Color(hex: 0x009688) // green
         case "INTERNET STANDARD":
@@ -73,5 +73,12 @@ extension RFC {
         default:
             return Color.secondary
         }
+    }
+
+    var branch: Bool {
+        return updates?.count ?? 0 > 0 ||
+            updatedBy?.count ?? 0 > 0 ||
+            obsoletes?.count ?? 0 > 0 ||
+            obsoletedBy?.count ?? 0 > 0
     }
 }

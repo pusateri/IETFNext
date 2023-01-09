@@ -117,31 +117,34 @@ private func updateKeyword(context: NSManagedObjectContext, key: String?) -> Key
     }
     return nil
 }
-func updateRFC(context: NSManagedObjectContext, xml: XML.Accessor) {
+
+func findRFC(context: NSManagedObjectContext, name: String) -> RFC? {
     let fetchRFC: NSFetchRequest<RFC> = RFC.fetchRequest()
-    fetchRFC.predicate = NSPredicate(format: "name = %@", xml["doc-id"].text!)
 
-    var rfc: RFC!
-    var save = false
+    fetchRFC.predicate = NSPredicate(format: "name = %@", name)
+
     let results = try? context.fetch(fetchRFC)
+    return results?.first
+ }
 
-    if results?.count == 0 {
-        // here you are inserting
-        rfc = RFC(context: context)
-        rfc.name = xml["doc-id"].text!
-        save = true
-    } else {
+func updateRFC(context: NSManagedObjectContext, xml: XML.Accessor, obsoletes: inout [String: [String]], updates: inout [String: [String]]) {
+    var up = [String]()
+    var ob = [String]()
+    guard let name = xml["doc-id"].text else {
+        return
+    }
+    if let _ = findRFC(context: context, name: name) {
         // Since older entries don't change, we just return if we have a match
-        // rfc = results?.first
         return
     }
 
-    // TODO: need to add obsoletes, updates, obsoleted-by, updated-by, see-also
+    let rfc = RFC(context: context)
+    rfc.name = name
+
     for author in xml["author"] {
         if let author_obj = updateAuthor(context: context, name:author["name"].text) {
             if rfc.authors?.contains(author_obj) != nil {
                 rfc.addToAuthors(author_obj)
-                save = true
             }
         }
     }
@@ -149,7 +152,6 @@ func updateRFC(context: NSManagedObjectContext, xml: XML.Accessor) {
         if let format_obj = updateFormat(context: context, format: format.text) {
             if rfc.formats?.contains(format_obj) != nil {
                 rfc.addToFormats(format_obj)
-                save = true
             }
         }
     }
@@ -157,30 +159,38 @@ func updateRFC(context: NSManagedObjectContext, xml: XML.Accessor) {
         if let kw_obj = updateKeyword(context: context, key: keyword.text) {
             if rfc.keywords?.contains(kw_obj) != nil {
                 rfc.addToKeywords(kw_obj)
-                save = true
             }
         }
+    }
+    // TODO: need to add obsoletes, updates, obsoleted-by, updated-by, see-also
+    for docid in xml["obsoletes"]["doc-id"] {
+        if let name = docid.text {
+            ob.append(name)
+        }
+    }
+    if ob.count > 0 {
+        obsoletes[name] = ob
+    }
+
+    for docid in xml["updates"]["doc-id"] {
+        if let name = docid.text {
+            up.append(name)
+        }
+    }
+    if up.count > 0 {
+        updates[name] = up
     }
     // create a date object from month and year
     // and also keep them separate as int objects for section sorting
     if let month = xml["date"]["month"].text {
         if let year = xml["date"]["year"].text {
             if let pubDate = DateFormatter.monthYearFormatter.date(from: month + " " + year) {
-                if rfc.published != pubDate {
-                    rfc.published = pubDate
-                    save = true
-                }
+                rfc.published = pubDate
                 let number = DateFormatter.monthFormatter.string(from: pubDate)
                 if let number = Int16(number) {
-                    if rfc.month != number {
-                        rfc.month = number
-                        save = true
-                    }
+                    rfc.month = number
                 }
-                if rfc.year != year {
-                    rfc.year = year
-                    save = true
-                }
+                rfc.year = year
             }
         }
     }
@@ -190,81 +200,46 @@ func updateRFC(context: NSManagedObjectContext, xml: XML.Accessor) {
     }
 
     if let abstract = xml.abstract.text {
-        if rfc.abstract != abstract {
-            rfc.abstract = abstract
-            save = true
-        }
+        rfc.abstract = abstract
     }
     if let area = xml.area.text {
-        if rfc.area != area {
-            rfc.area = area
-            save = true
-        }
+        rfc.area = area
     }
     if let status = xml["current-status"].text {
-        if rfc.currentStatus != status {
-            rfc.currentStatus = status
-            save = true
-        }
+        rfc.currentStatus = status
     }
     if let doi = xml.doi.text {
-        if rfc.doi != doi {
-            rfc.doi = doi
-            save = true
-        }
+        rfc.doi = doi
     }
     if let draft = xml.draft.text {
-        if rfc.draft != draft {
-            rfc.draft = draft
-            save = true
-        }
+        rfc.draft = draft
     }
     if let errata = xml["errata-url"].text {
         if let url = URL(string: errata) {
-            if rfc.errata != url {
-                rfc.errata = url
-                save = true
-            }
+            rfc.errata = url
         }
     }
     if let pages = xml["page-count"].int {
-        if rfc.pageCount != pages {
-            rfc.pageCount = Int32(pages)
-            save = true
-        }
+        rfc.pageCount = Int32(pages)
     }
     if let status = xml["publication-status"].text {
-        if rfc.publicationStatus != status {
-            rfc.publicationStatus = status
-            save = true
-        }
+        rfc.publicationStatus = status
     }
     if let stream = xml.stream.text {
-        if rfc.stream != stream {
-            rfc.stream = stream
-            save = true
-        }
+        rfc.stream = stream
     }
     if let title = xml.title.text {
-        if rfc.title != title {
-            rfc.title = title
-            save = true
-        }
+        rfc.title = title
     }
     if let wg = xml.wg_acronym.text {
-        if rfc.acronym != wg {
-            rfc.acronym = wg
-            save = true
-        }
+        rfc.acronym = wg
     }
-    if save {
-        do {
-            try context.save()
-        }
-        catch {
-            print("Unable to save RFC \(xml["doc-id"].text!)")
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
+    do {
+        try context.save()
+    }
+    catch {
+        print("Unable to save RFC \(xml["doc-id"].text!)")
+        let nsError = error as NSError
+        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
     }
 }

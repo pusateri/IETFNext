@@ -74,9 +74,18 @@ struct RFCListView: View {
                                 Text("\(DateFormatter.simpleFormatter.string(from: rfc.published!))")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
-                                    //.padding(.bottom)
-                                //Image(systemName: "arrow.triangle.pull")
-                                    //.foregroundColor(rfc.color)
+                                if rfc.branch {
+                                    Button(action: {
+                                        print(rfc.name!)
+                                    }) {
+                                        Image(systemName: "arrow.triangle.pull")
+                                            .font(Font.system(size: 24, weight: .bold))
+                                            .foregroundColor(Color(hex: 0xf6c844))
+
+                                    }
+                                    .buttonStyle(BorderlessButtonStyle())
+                                    .padding(.top, 2)
+                                }
                             }
                         }
                     }
