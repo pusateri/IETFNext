@@ -1,6 +1,24 @@
 {
   "pins" : [
     {
+      "identity" : "graphviz",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pusateri/GraphViz.git",
+      "state" : {
+        "revision" : "a4310b14e9ba8512f4793b5281ed95e45cb76987",
+        "version" : "0.5.0"
+      }
+    },
+    {
+      "identity" : "graphvizframeworkpkg",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pusateri/GraphvizFrameworkPkg",
+      "state" : {
+        "revision" : "14cc26c9d44427e8b7878d30fbdc6ffb8e923d3a",
+        "version" : "0.2.0"
+      }
+    },
+    {
       "identity" : "swift-markdownkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/objecthub/swift-markdownkit.git",

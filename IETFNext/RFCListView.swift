@@ -7,6 +7,14 @@
 
 import SwiftUI
 import CoreData
+import GraphViz
+
+enum RFCGraphMode: String {
+    case updates
+    case updatedBy
+    case obsoletes
+    case obsoletedBy
+}
 
 private extension DateFormatter {
     static let simpleFormatter: DateFormatter = {
@@ -38,7 +46,6 @@ struct RFCListView: View {
         animation: .default)
     private var rfcs: FetchedResults<RFC>
 
-
     private func updatePredicate() {
         if searchText.isEmpty {
             rfcs.nsPredicate = NSPredicate(value: true)
@@ -46,6 +53,41 @@ struct RFCListView: View {
             rfcs.nsPredicate = NSPredicate(
                 format: "(name contains[cd] %@) OR (title contains[cd] %@)", searchText, searchText)
         }
+    }
+
+    private func makeNode(rfc: RFC, mode: RFCGraphMode) -> Node {
+        let node = Node(rfc.name2)
+        return node
+    }
+
+    private func makeEdge(from: Node, to: Node, mode: RFCGraphMode) -> GraphViz.Edge {
+        let edge = Edge(from: from, to: to)
+        return edge
+    }
+
+    private func buildGraph(start: RFC) -> Graph {
+        var seen = Set<RFC>()
+        var graph = Graph(directed: true)
+        seen.insert(start)
+
+        var current = start
+        var current_node = makeNode(rfc: current, mode: .updates)
+        if var updates: Set<RFC> = current.updates as? Set<RFC> {
+            updates.subtract(seen)
+            var list: [RFC] = Array(updates)
+            while !list.isEmpty {
+                if let next = list.popLast() {
+                    if seen.contains(next) {
+                        continue
+                    }
+                    seen.insert(next)
+                    let node = makeNode(rfc: next, mode: .updates)
+                    let edge = makeEdge(from: current_node, to: node, mode: .updates)
+                    graph.append(edge)
+                }
+            }
+        }
+        return graph
     }
 
     var body: some View {
