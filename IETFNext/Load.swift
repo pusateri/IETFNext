@@ -241,7 +241,6 @@ public func loadData(context: NSManagedObjectContext, meeting: Meeting?) async {
                 print("Http Result \(httpResponse.statusCode): \(url.absoluteString)")
                 return
             }
-            print(httpResponse.statusCode)
             if let etag = httpResponse.value(forHTTPHeaderField: "ETag") {
                 meeting.etag = etag
             }

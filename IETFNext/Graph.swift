@@ -5,7 +5,7 @@
 //  Created by Tom Pusateri on 1/16/23.
 //
 
-import Foundation
+import SwiftUI
 import GraphViz
 
 
@@ -17,29 +17,29 @@ enum RFCGraphMode: String {
     case obsoletedBy
 }
 
-private func makeNode(rfc: RFC, nodes: inout [String:Node], mode: RFCGraphMode) -> Node {
-    if let node = nodes[rfc.name!] {
+private func makeNode(rfc: RFC, nodes: inout [String:Node], mode: RFCGraphMode, colorScheme: ColorScheme) -> Node {
+    if let node = nodes[rfc.name2] {
         return node
     }
 
-    var node = Node(rfc.name!)
-    nodes[rfc.name!] = node
+    var node = Node(rfc.name2)
+    nodes[rfc.name2] = node
 
-    /*
-    node.fontName = "Monospace"
-    node.strokeWidth = 2.0
-    node.strokeColor = .rgb(red: 55, green: 44, blue: 33)
-    if mode == .obsoletes {
-        node.style = .dashed
-    } else if mode == .start {
+    if mode == .start {
         node.shape = .doublecircle
     }
-     */
+    if let obsBy: Set<RFC> = rfc.obsoletedBy as? Set<RFC>, obsBy.count > 0 {
+        node.style = .dashed
+    }
+    if colorScheme == .dark {
+        node.strokeColor = .named(.white)
+    }
+    node.textColor = .rgb(red:0x3A, green:0x82, blue: 0xF6)
     node.href = "https://www.rfc-editor.org/rfc/\(rfc.name!.lowercased()).html"
     return node
 }
 
-private func makeEdge(from: Node, to: Node, mode: RFCGraphMode) -> GraphViz.Edge {
+private func makeEdge(from: Node, to: Node, mode: RFCGraphMode, colorScheme: ColorScheme) -> GraphViz.Edge {
     var edge: GraphViz.Edge
     switch(mode) {
     case .updates, .obsoletes, .start:
@@ -54,21 +54,31 @@ private func makeEdge(from: Node, to: Node, mode: RFCGraphMode) -> GraphViz.Edge
         edge.exteriorLabel = "Updates"
     }
     edge.fontSize = 10.0
+    if colorScheme == .dark {
+        edge.textColor = .named(.white)
+        edge.strokeColor = .named(.white)
+    }
     return edge
 }
 
-func buildGraph(start: RFC) -> Graph {
+func buildGraph(start: RFC, colorScheme: ColorScheme) -> Graph {
     var seen = Set<RFC>()
     var todo = Set<RFC>()
     var nodes: [String:Node] = [:]
     var graph = Graph(directed: true)
-    graph.center = true
+    graph.fontNamingConvention = Graph.FontNamingConvention.svg
+    graph.fontName = "Monospace"
+    if colorScheme == .dark {
+        graph.backgroundColor = .named(.black)
+        graph.textColor = .named(.white)
+    }
     todo.insert(start)
     seen.insert(start)
 
     while !todo.isEmpty {
         let current = todo.removeFirst()
-        let current_node = makeNode(rfc: current, nodes: &nodes, mode: .start)
+        let current_node = makeNode(rfc: current, nodes: &nodes, mode: .start, colorScheme: colorScheme)
+        graph.append(current_node)
 
         if var upBy: Set<RFC> = current.updatedBy as? Set<RFC> {
             upBy.subtract(seen)
@@ -78,8 +88,9 @@ func buildGraph(start: RFC) -> Graph {
                 while !list.isEmpty {
                     if let next = list.popLast() {
                         seen.insert(next)
-                        let node = makeNode(rfc: next, nodes: &nodes, mode: .updatedBy)
-                        let edge = makeEdge(from: current_node, to: node, mode: .updatedBy)
+                        let node = makeNode(rfc: next, nodes: &nodes, mode: .updatedBy, colorScheme: colorScheme)
+                        graph.append(node)
+                        let edge = makeEdge(from: current_node, to: node, mode: .updatedBy, colorScheme: colorScheme)
                         graph.append(edge)
                     }
                 }
@@ -93,8 +104,9 @@ func buildGraph(start: RFC) -> Graph {
                 while !list.isEmpty {
                     if let next = list.popLast() {
                         seen.insert(next)
-                        let node = makeNode(rfc: next, nodes: &nodes, mode: .updates)
-                        let edge = makeEdge(from: current_node, to: node, mode: .updates)
+                        let node = makeNode(rfc: next, nodes: &nodes, mode: .updates, colorScheme: colorScheme)
+                        graph.append(node)
+                        let edge = makeEdge(from: current_node, to: node, mode: .updates, colorScheme: colorScheme)
                         graph.append(edge)
                     }
                 }
@@ -108,8 +120,9 @@ func buildGraph(start: RFC) -> Graph {
                 while !list.isEmpty {
                     if let next = list.popLast() {
                         seen.insert(next)
-                        let node = makeNode(rfc: next, nodes: &nodes, mode: .obsoletes)
-                        let edge = makeEdge(from: current_node, to: node, mode: .obsoletes)
+                        let node = makeNode(rfc: next, nodes: &nodes, mode: .obsoletes, colorScheme: colorScheme)
+                        graph.append(node)
+                        let edge = makeEdge(from: current_node, to: node, mode: .obsoletes, colorScheme: colorScheme)
                         graph.append(edge)
                     }
                 }
@@ -123,8 +136,9 @@ func buildGraph(start: RFC) -> Graph {
                 while !list.isEmpty {
                     if let next = list.popLast() {
                         seen.insert(next)
-                        let node = makeNode(rfc: next, nodes: &nodes, mode: .obsoletedBy)
-                        let edge = makeEdge(from: current_node, to: node, mode: .obsoletedBy)
+                        let node = makeNode(rfc: next, nodes: &nodes, mode: .obsoletedBy, colorScheme: colorScheme)
+                        graph.append(node)
+                        let edge = makeEdge(from: current_node, to: node, mode: .obsoletedBy, colorScheme: colorScheme)
                         graph.append(edge)
                     }
                 }

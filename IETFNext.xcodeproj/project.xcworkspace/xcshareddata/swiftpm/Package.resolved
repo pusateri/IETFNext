@@ -3,7 +3,7 @@
     {
       "identity" : "graphviz",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pusateri/GraphViz",
+      "location" : "https://github.com/pusateri/GraphViz.git",
       "state" : {
         "revision" : "a4310b14e9ba8512f4793b5281ed95e45cb76987",
         "version" : "0.5.0"
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pusateri/GraphvizFrameworkPkg",
       "state" : {
-        "revision" : "14cc26c9d44427e8b7878d30fbdc6ffb8e923d3a",
-        "version" : "0.2.0"
+        "revision" : "4a6121afdaabf8b5748b653225fa567f9a22969e",
+        "version" : "0.2.1"
       }
     },
     {

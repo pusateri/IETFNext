@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import GraphViz
 
 private extension DateFormatter {
     static let simpleFormatter: DateFormatter = {
@@ -20,8 +21,11 @@ private extension DateFormatter {
 
 
 struct RFCListRowView: View {
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     @ObservedObject var rfc: RFC
     @Binding var html: String
+
+    @State var oldColorScheme: ColorScheme? = nil
 
     var body: some View {
         HStack {
@@ -49,13 +53,7 @@ struct RFCListRowView: View {
                             .foregroundColor(.secondary)
                         if rfc.branch {
                             Button(action: {
-                                let graph = buildGraph(start: rfc)
-                                graph.render(using: .dot, to: .svg) { result in
-                                    guard case .success(let data) = result else { return }
-                                    if let str = String(data: data, encoding: .utf8) {
-                                        html = str
-                                    }
-                                }
+                                showGraph(rfc: rfc, colorScheme: colorScheme)
                             }) {
                                 Image(systemName: "arrow.triangle.pull")
                                     .font(Font.system(size: 24, weight: .bold))
@@ -67,6 +65,20 @@ struct RFCListRowView: View {
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+extension RFCListRowView {
+    func showGraph(rfc: RFC, colorScheme: ColorScheme) {
+        let graph = buildGraph(start: rfc, colorScheme: colorScheme)
+        let lines = GraphViz.DOTEncoder.encode(graph)
+        print(lines)
+        graph.render(using: .dot, to: .svg) { result in
+            guard case .success(let data) = result else { return }
+            if let str = String(data: data, encoding: .utf8) {
+                html = SVG_PRE + str + SVG_POST
             }
         }
     }
