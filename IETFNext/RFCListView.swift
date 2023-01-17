@@ -47,7 +47,7 @@ struct RFCListView: View {
             .listStyle(.inset)
 #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
+            .searchable(text: $searchText, placement: .automatic, prompt: "Number or Title string")
             .keyboardType(.alphabet)
             .disableAutocorrection(true)
 #endif
