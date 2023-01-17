@@ -27,9 +27,9 @@
 		F85D99C32968CC9E00DE37E0 /* RFC+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D99C22968CC9E00DE37E0 /* RFC+Extension.swift */; };
 		F865B9F2295930AB00C3DB13 /* LocationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F865B9F1295930AB00C3DB13 /* LocationDetailView.swift */; };
 		F87E0F42294FD45800E1E1A8 /* MarkdownKit in Frameworks */ = {isa = PBXBuildFile; productRef = F87E0F41294FD45800E1E1A8 /* MarkdownKit */; };
+		F884CA292974CF45004B45C7 /* graphvizFramework in Frameworks */ = {isa = PBXBuildFile; productRef = F884CA282974CF45004B45C7 /* graphvizFramework */; };
+		F884CA2C2974CF5F004B45C7 /* GraphViz in Frameworks */ = {isa = PBXBuildFile; productRef = F884CA2B2974CF5F004B45C7 /* GraphViz */; };
 		F88B7E5C2960931B00F770C9 /* LocationPhotoMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88B7E5B2960931B00F770C9 /* LocationPhotoMenuView.swift */; };
-		F895D6332973ACB900BD5FEE /* GraphViz in Frameworks */ = {isa = PBXBuildFile; productRef = F895D6322973ACB900BD5FEE /* GraphViz */; };
-		F895D6362973AD8200BD5FEE /* graphvizFramework in Frameworks */ = {isa = PBXBuildFile; productRef = F895D6352973AD8200BD5FEE /* graphvizFramework */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListView.swift */; };
@@ -126,10 +126,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F895D6332973ACB900BD5FEE /* GraphViz in Frameworks */,
 				F87E0F42294FD45800E1E1A8 /* MarkdownKit in Frameworks */,
-				F895D6362973AD8200BD5FEE /* graphvizFramework in Frameworks */,
+				F884CA292974CF45004B45C7 /* graphvizFramework in Frameworks */,
 				F82FFEAA2964C73C007AA54A /* SwiftyXMLParser in Frameworks */,
+				F884CA2C2974CF5F004B45C7 /* GraphViz in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,8 +260,8 @@
 			packageProductDependencies = (
 				F87E0F41294FD45800E1E1A8 /* MarkdownKit */,
 				F82FFEA92964C73C007AA54A /* SwiftyXMLParser */,
-				F895D6322973ACB900BD5FEE /* GraphViz */,
-				F895D6352973AD8200BD5FEE /* graphvizFramework */,
+				F884CA282974CF45004B45C7 /* graphvizFramework */,
+				F884CA2B2974CF5F004B45C7 /* GraphViz */,
 			);
 			productName = IETFNext;
 			productReference = F8E9B9992934101200CA6F09 /* IETFNext.app */;
@@ -338,8 +338,8 @@
 			packageReferences = (
 				F87E0F40294FD45800E1E1A8 /* XCRemoteSwiftPackageReference "swift-markdownkit" */,
 				F82FFEA82964C73C007AA54A /* XCRemoteSwiftPackageReference "SwiftyXMLParser" */,
-				F895D6312973ACB900BD5FEE /* XCRemoteSwiftPackageReference "GraphViz" */,
-				F895D6342973AD8200BD5FEE /* XCRemoteSwiftPackageReference "GraphvizFrameworkPkg" */,
+				F884CA272974CF45004B45C7 /* XCRemoteSwiftPackageReference "GraphvizFrameworkPkg" */,
+				F884CA2A2974CF5F004B45C7 /* XCRemoteSwiftPackageReference "GraphViz" */,
 			);
 			productRefGroup = F8E9B99A2934101200CA6F09 /* Products */;
 			projectDirPath = "";
@@ -832,20 +832,20 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		F895D6312973ACB900BD5FEE /* XCRemoteSwiftPackageReference "GraphViz" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pusateri/GraphViz.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.0;
-			};
-		};
-		F895D6342973AD8200BD5FEE /* XCRemoteSwiftPackageReference "GraphvizFrameworkPkg" */ = {
+		F884CA272974CF45004B45C7 /* XCRemoteSwiftPackageReference "GraphvizFrameworkPkg" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pusateri/GraphvizFrameworkPkg";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.2.0;
+			};
+		};
+		F884CA2A2974CF5F004B45C7 /* XCRemoteSwiftPackageReference "GraphViz" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pusateri/GraphViz.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -861,15 +861,15 @@
 			package = F87E0F40294FD45800E1E1A8 /* XCRemoteSwiftPackageReference "swift-markdownkit" */;
 			productName = MarkdownKit;
 		};
-		F895D6322973ACB900BD5FEE /* GraphViz */ = {
+		F884CA282974CF45004B45C7 /* graphvizFramework */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F895D6312973ACB900BD5FEE /* XCRemoteSwiftPackageReference "GraphViz" */;
-			productName = GraphViz;
-		};
-		F895D6352973AD8200BD5FEE /* graphvizFramework */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F895D6342973AD8200BD5FEE /* XCRemoteSwiftPackageReference "GraphvizFrameworkPkg" */;
+			package = F884CA272974CF45004B45C7 /* XCRemoteSwiftPackageReference "GraphvizFrameworkPkg" */;
 			productName = graphvizFramework;
+		};
+		F884CA2B2974CF5F004B45C7 /* GraphViz */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F884CA2A2974CF5F004B45C7 /* XCRemoteSwiftPackageReference "GraphViz" */;
+			productName = GraphViz;
 		};
 /* End XCSwiftPackageProductDependency section */
 
