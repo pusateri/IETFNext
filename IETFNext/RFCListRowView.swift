@@ -73,8 +73,6 @@ struct RFCListRowView: View {
 extension RFCListRowView {
     func showGraph(rfc: RFC, colorScheme: ColorScheme) {
         let graph = buildGraph(start: rfc, colorScheme: colorScheme)
-        let lines = GraphViz.DOTEncoder.encode(graph)
-        print(lines)
         graph.render(using: .dot, to: .svg) { result in
             guard case .success(let data) = result else { return }
             if let str = String(data: data, encoding: .utf8) {

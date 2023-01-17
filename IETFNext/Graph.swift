@@ -34,6 +34,7 @@ private func makeNode(rfc: RFC, nodes: inout [String:Node], mode: RFCGraphMode, 
     if colorScheme == .dark {
         node.strokeColor = .named(.white)
     }
+    node.fontName = "Arial"
     node.textColor = .rgb(red:0x3A, green:0x82, blue: 0xF6)
     node.href = "https://www.rfc-editor.org/rfc/\(rfc.name!.lowercased()).html"
     return node
@@ -49,11 +50,11 @@ private func makeEdge(from: Node, to: Node, mode: RFCGraphMode, colorScheme: Col
     }
     if mode == .obsoletes || mode == .obsoletedBy {
         edge.exteriorLabel = "Obsoletes"
-        //edge.fontName = "Monospace"
     } else {
         edge.exteriorLabel = "Updates"
     }
     edge.fontSize = 10.0
+    edge.fontName = "Arial"
     if colorScheme == .dark {
         edge.textColor = .named(.white)
         edge.strokeColor = .named(.white)
@@ -67,7 +68,7 @@ func buildGraph(start: RFC, colorScheme: ColorScheme) -> Graph {
     var nodes: [String:Node] = [:]
     var graph = Graph(directed: true)
     graph.fontNamingConvention = Graph.FontNamingConvention.svg
-    graph.fontName = "Monospace"
+    graph.fontName = "Arial"
     if colorScheme == .dark {
         graph.backgroundColor = .named(.black)
         graph.textColor = .named(.white)
