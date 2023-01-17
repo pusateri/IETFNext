@@ -170,6 +170,7 @@ extension Choice {
         SectionChoice(
             id: "Standards",
             choices: [
+                Choice(id: .bcp, text: "BCPs", imageName: "doc.plaintext", key: "b"),
                 Choice(id: .rfc, text: "RFCs", imageName: "doc.plaintext", key: "r")
                 ]
             ),
@@ -198,6 +199,7 @@ struct ContentView: View {
     @State var selectedLocation: Location?
     @State var selectedDownload: Download?
     @State var selectedRFC: RFC? = nil
+    @State var selectedBCP: RFC? = nil
     @State var html: String = ""
     @State var localFileURL: URL? = nil
     @State var sessionFilterMode: SessionFilterMode = .none
@@ -308,6 +310,10 @@ struct ContentView: View {
                     LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, columnVisibility: $columnVisibility)
                         .keyboardShortcut("l")
                     .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
+                case .bcp:
+                    RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
+                        .keyboardShortcut("b")
+                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 case .rfc:
                     RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
                         .keyboardShortcut("r")
@@ -325,7 +331,7 @@ struct ContentView: View {
                 switch(ds) {
                 case .locations:
                     LocationDetailView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)
-                case .download, .rfc:
+                case .download, .rfc, .bcp:
                     DownloadDetailView(selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
                 default:
                     DetailView(

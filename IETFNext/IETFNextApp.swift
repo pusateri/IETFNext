@@ -12,6 +12,7 @@ public enum SidebarOption: String {
     case groups
     case locations
     case rfc
+    case bcp
     case schedule
 }
 
@@ -86,6 +87,13 @@ struct IETFNextApp: App {
                     Text("Venue & Room Locations")
                 }
                 .keyboardShortcut("l")
+                Button(action: {
+                    menuSidebarOption = .bcp
+                }) {
+                    Image(systemName: "doc.plaintext")
+                    Text("BCPs")
+                }
+                .keyboardShortcut("b")
                 Button(action: {
                     menuSidebarOption = .rfc
                 }) {
