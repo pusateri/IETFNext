@@ -14,20 +14,43 @@ struct RFCListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Binding var selectedRFC: RFC?
     @Binding var selectedDownload: Download?
+    @Binding var rfcFilterMode: RFCFilterMode
     @Binding var html: String
     @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
-    
+    @FetchRequest<RFC> var rfcs: FetchedResults<RFC>
     @State private var searchText = ""
     @ObservedObject var model: DownloadViewModel = DownloadViewModel.shared
 
-    @FetchRequest<RFC>(
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \RFC.name, ascending: false),
-        ],
-        animation: .default)
-    private var rfcs: FetchedResults<RFC>
+    init(selectedRFC: Binding<RFC?>, selectedDownload: Binding<Download?>, rfcFilterMode: Binding<RFCFilterMode>, html: Binding<String>, localFileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+        var predicate: NSPredicate?
+
+        switch(rfcFilterMode.wrappedValue) {
+        case .bcp:
+            predicate = nil
+        case .fyi:
+            predicate = nil
+        case .std:
+            predicate = nil
+        case .none:
+            predicate = nil
+        }
+
+        _rfcs = FetchRequest<RFC>(
+            sortDescriptors: [
+                NSSortDescriptor(keyPath: \RFC.name, ascending: false),
+            ],
+            predicate: predicate,
+            animation: .default
+        )
+        self._selectedRFC = selectedRFC
+        self._selectedDownload = selectedDownload
+        self._rfcFilterMode = rfcFilterMode
+        self._html = html
+        self._localFileURL = localFileURL
+        self._columnVisibility = columnVisibility
+    }
 
     private func updatePredicate() {
         if searchText.isEmpty {
@@ -51,6 +74,23 @@ struct RFCListView: View {
             .keyboardType(.alphabet)
             .disableAutocorrection(true)
 #endif
+            .toolbar {
+#if os(macOS)
+                ToolbarItem(placement: .navigation) {
+                    RFCListTitleView(rfcFilterMode: $rfcFilterMode)
+                }
+                ToolbarItem(placement: .navigation) {
+                    RFCFilterMenu(rfcFilterMode: $rfcFilterMode)
+                }
+#else
+                ToolbarItem(placement: .principal) {
+                    RFCListTitleView(rfcFilterMode: $rfcFilterMode)
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    RFCFilterMenu(rfcFilterMode: $rfcFilterMode)
+                }
+#endif
+            }
             .onChange(of: selectedRFC) { newValue in
                 if let doc = newValue {
                     loadRFC(doc: doc)

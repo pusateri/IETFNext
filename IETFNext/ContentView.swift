@@ -28,6 +28,44 @@ enum GroupFilterMode: String {
     case none
 }
 
+enum RFCFilterMode: String, CompoundEnum {
+    case bcp
+    case fyi
+    case std
+    case none
+
+    var image: String {
+        switch(self) {
+        case .bcp, .std, .fyi, .none:
+            return "doc.plaintext"
+        }
+    }
+    var label: String {
+        switch(self) {
+        case .bcp:
+            return "Show BCPs"
+        case .fyi:
+            return "Show FYIs"
+        case .std:
+            return "Show STDs"
+        case .none:
+            return "No Filter (All RFCs)"
+        }
+    }
+    var short: String {
+        switch(self) {
+        case .bcp:
+            return "BCP"
+        case .fyi:
+            return "FYI"
+        case .std:
+            return "STD"
+        case .none:
+            return "All"
+        }
+    }
+}
+
 enum SessionFilterMode: String, CompoundEnum {
     case bofs
     case favorites
@@ -204,6 +242,7 @@ struct ContentView: View {
     @State var localFileURL: URL? = nil
     @State var sessionFilterMode: SessionFilterMode = .none
     @State var groupFilterMode: GroupFilterMode = .none
+    @State var rfcFilterMode: RFCFilterMode = .none
 
     @State var listSelection: SidebarOption? = nil
     @SceneStorage("top.detailSelection") var detailSelection: SidebarOption?
@@ -311,11 +350,11 @@ struct ContentView: View {
                         .keyboardShortcut("l")
                     .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 case .bcp:
-                    RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
+                    RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
                         .keyboardShortcut("b")
                         .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 case .rfc:
-                    RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
+                    RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
                         .keyboardShortcut("r")
                         .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
                 case .download:

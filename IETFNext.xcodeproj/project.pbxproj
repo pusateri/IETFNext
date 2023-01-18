@@ -53,6 +53,8 @@
 		F8E9BA1329366A4000CA6F09 /* MeetingListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */; };
 		F8E9BA152936B5FA00CA6F09 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9BA142936B5FA00CA6F09 /* WebView.swift */; };
 		F8E9BA172937EB2C00CA6F09 /* SessionListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9BA162937EB2C00CA6F09 /* SessionListRowView.swift */; };
+		F8F129C3297752A90096B3D4 /* RFCListTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F129C2297752A90096B3D4 /* RFCListTitleView.swift */; };
+		F8F129C529776E970096B3D4 /* RFCFilterMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F129C429776E970096B3D4 /* RFCFilterMenu.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -125,6 +127,8 @@
 		F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingListRowView.swift; sourceTree = "<group>"; };
 		F8E9BA142936B5FA00CA6F09 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		F8E9BA162937EB2C00CA6F09 /* SessionListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListRowView.swift; sourceTree = "<group>"; };
+		F8F129C2297752A90096B3D4 /* RFCListTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCListTitleView.swift; sourceTree = "<group>"; };
+		F8F129C429776E970096B3D4 /* RFCFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCFilterMenu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,7 +211,9 @@
 				F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */,
 				F85D99C22968CC9E00DE37E0 /* RFC+Extension.swift */,
 				F884CA2F29762AF7004B45C7 /* RFCListRowView.swift */,
+				F8F129C429776E970096B3D4 /* RFCFilterMenu.swift */,
 				F82FFEAE2965D897007AA54A /* RFCListView.swift */,
+				F8F129C2297752A90096B3D4 /* RFCListTitleView.swift */,
 				F82FFEAB2964C8FE007AA54A /* RFCParser.swift */,
 				F85D99BA2968C55000DE37E0 /* RFCProvider.swift */,
 				F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */,
@@ -419,6 +425,7 @@
 				F85D55C6295F7A7500569A77 /* SessionListTitleView.swift in Sources */,
 				F8E9BA112935624100CA6F09 /* LocationListView.swift in Sources */,
 				F82FFEA529624ED1007AA54A /* DownloadDetailView.swift in Sources */,
+				F8F129C3297752A90096B3D4 /* RFCListTitleView.swift in Sources */,
 				F865B9F2295930AB00C3DB13 /* LocationDetailView.swift in Sources */,
 				F8E9BA1329366A4000CA6F09 /* MeetingListRowView.swift in Sources */,
 				F85D55C2295E72B100569A77 /* MacOSCompat.swift in Sources */,
@@ -436,6 +443,7 @@
 				F8E127C92943F13B004A35E8 /* Revision.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
 				F884CA3029762AF7004B45C7 /* RFCListRowView.swift in Sources */,
+				F8F129C529776E970096B3D4 /* RFCFilterMenu.swift in Sources */,
 				F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */,
 				F85D55C0295E05F900569A77 /* DetailViewUnwrapped.swift in Sources */,
 				F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */,
