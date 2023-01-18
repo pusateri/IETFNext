@@ -54,6 +54,30 @@ extension RFC {
         }
     }
 
+    // insert space between BCP and 0001
+    var presentBCP: String {
+        if let name = bcp {
+            return name.enumerated().compactMap({ ($0  == 3) ? " \($1)" : "\($1)" }).joined()
+        }
+        return ""
+    }
+
+    // insert space between FYI and 0001
+    var presentFYI: String {
+        if let name = fyi {
+            return name.enumerated().compactMap({ ($0  == 3) ? " \($1)" : "\($1)" }).joined()
+        }
+        return ""
+    }
+
+    // insert space between STD and 0001
+    var presentSTD: String {
+        if let name = std {
+            return name.enumerated().compactMap({ ($0  == 3) ? " \($1)" : "\($1)" }).joined()
+        }
+        return ""
+    }
+
     var color: Color {
         switch(currentStatus) {
         case "BEST CURRENT PRACTICE":

@@ -208,8 +208,10 @@ extension Choice {
         SectionChoice(
             id: "Standards",
             choices: [
+                Choice(id: .rfc, text: "RFCs", imageName: "doc.plaintext", key: "r"),
                 Choice(id: .bcp, text: "BCPs", imageName: "doc.plaintext", key: "b"),
-                Choice(id: .rfc, text: "RFCs", imageName: "doc.plaintext", key: "r")
+                Choice(id: .fyi, text: "FYIs", imageName: "doc.plaintext", key: ""),
+                Choice(id: .std, text: "STDs", imageName: "doc.plaintext", key: ""),
                 ]
             ),
         SectionChoice(
@@ -246,6 +248,7 @@ struct ContentView: View {
 
     @State var listSelection: SidebarOption? = nil
     @SceneStorage("top.detailSelection") var detailSelection: SidebarOption?
+
 
     var rfcProvider: RFCProvider = .shared
 
@@ -309,7 +312,6 @@ struct ContentView: View {
                                     Image(systemName: choice.imageName)
                                 }
                             }
-                            //.keyboardShortcut(choice.key)
                         }
                     }
                 }
@@ -335,33 +337,21 @@ struct ContentView: View {
             }
 #endif
         } content: {
-            if let ds = detailSelection {
-                switch(ds) {
-                case .schedule:
-                    SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, sessionFilterMode: $sessionFilterMode, html:$html, columnVisibility:$columnVisibility)
-                        .keyboardShortcut("s")
-                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
-                case .groups:
-                    GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, groupFilterMode: $groupFilterMode, html:$html, columnVisibility:$columnVisibility)
-                        .keyboardShortcut("g")
-                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
-                case .locations:
-                    LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, columnVisibility: $columnVisibility)
-                        .keyboardShortcut("l")
-                    .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
-                case .bcp:
-                    RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
-                        .keyboardShortcut("b")
-                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
-                case .rfc:
-                    RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
-                        .keyboardShortcut("r")
-                        .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
-                case .download:
-                    DownloadListView(selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
-                        .keyboardShortcut("d")
-                    .navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 370)
-                }
+            if let listMode = detailSelection {
+                SplitViewContent(
+                    selectedMeeting: $selectedMeeting,
+                    selectedGroup: $selectedGroup,
+                    selectedLocation: $selectedLocation,
+                    selectedDownload: $selectedDownload,
+                    selectedRFC: $selectedRFC,
+                    sessionFilterMode: $sessionFilterMode,
+                    groupFilterMode: $groupFilterMode,
+                    rfcFilterMode: $rfcFilterMode,
+                    listMode: listMode,
+                    html: $html,
+                    localFileURL: $localFileURL,
+                    columnVisibility: $columnVisibility
+                )
             } else {
                 Text("Select View in Sidebar")
             }

@@ -15,6 +15,7 @@ struct RFCListView: View {
     @Binding var selectedRFC: RFC?
     @Binding var selectedDownload: Download?
     @Binding var rfcFilterMode: RFCFilterMode
+    var listMode: SidebarOption
     @Binding var html: String
     @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
@@ -23,30 +24,45 @@ struct RFCListView: View {
     @State private var searchText = ""
     @ObservedObject var model: DownloadViewModel = DownloadViewModel.shared
 
-    init(selectedRFC: Binding<RFC?>, selectedDownload: Binding<Download?>, rfcFilterMode: Binding<RFCFilterMode>, html: Binding<String>, localFileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+    init(selectedRFC: Binding<RFC?>, selectedDownload: Binding<Download?>, rfcFilterMode: Binding<RFCFilterMode>, listMode: SidebarOption, html: Binding<String>, localFileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
         var predicate: NSPredicate?
+        var sortDescriptors: [NSSortDescriptor]
 
         switch(rfcFilterMode.wrappedValue) {
-        case .bcp:
-            predicate = NSPredicate(format: "bcp != nil")
-        case .fyi:
-            predicate = NSPredicate(format: "fyi != nil")
-        case .std:
-            predicate = NSPredicate(format: "std != nil")
-        case .none:
-            predicate = nil
+            case .bcp:
+                predicate = NSPredicate(format: "bcp != nil")
+                sortDescriptors = [NSSortDescriptor(keyPath: \RFC.bcp, ascending: false)]
+            case .fyi:
+                predicate = NSPredicate(format: "fyi != nil")
+                sortDescriptors = [NSSortDescriptor(keyPath: \RFC.fyi, ascending: false)]
+            case .std:
+                predicate = NSPredicate(format: "std != nil")
+                sortDescriptors = [NSSortDescriptor(keyPath: \RFC.std, ascending: false)]
+            case .none:
+                if listMode == .bcp {
+                    predicate = NSPredicate(format: "bcp != nil")
+                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.bcp, ascending: true)]
+                } else if listMode == .fyi {
+                    predicate = NSPredicate(format: "fyi != nil")
+                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.fyi, ascending: true)]
+                } else if listMode == .std {
+                    predicate = NSPredicate(format: "std != nil")
+                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.std, ascending: true)]
+                } else {
+                    predicate = nil
+                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.name, ascending: false)]
+                }
         }
 
         _rfcs = FetchRequest<RFC>(
-            sortDescriptors: [
-                NSSortDescriptor(keyPath: \RFC.name, ascending: false),
-            ],
+            sortDescriptors: sortDescriptors,
             predicate: predicate,
             animation: .default
         )
         self._selectedRFC = selectedRFC
         self._selectedDownload = selectedDownload
         self._rfcFilterMode = rfcFilterMode
+        self.listMode = listMode
         self._html = html
         self._localFileURL = localFileURL
         self._columnVisibility = columnVisibility
@@ -64,7 +80,7 @@ struct RFCListView: View {
     var body: some View {
         ScrollViewReader { scrollViewReader in
             List(rfcs, id: \.self, selection: $selectedRFC) { rfc in
-                RFCListRowView(rfc: rfc, rfcFilterMode: $rfcFilterMode, html: $html)
+                RFCListRowView(rfc: rfc, rfcFilterMode: $rfcFilterMode, listMode: listMode, html: $html)
                 .listRowSeparator(.visible)
             }
             .listStyle(.inset)
@@ -75,21 +91,23 @@ struct RFCListView: View {
             .disableAutocorrection(true)
 #endif
             .toolbar {
+                if listMode == .rfc {
 #if os(macOS)
-                ToolbarItem(placement: .navigation) {
-                    RFCListTitleView(rfcFilterMode: $rfcFilterMode)
-                }
-                ToolbarItem(placement: .navigation) {
-                    RFCFilterMenu(rfcFilterMode: $rfcFilterMode)
-                }
+                    ToolbarItem(placement: .navigation) {
+                        RFCListTitleView(rfcFilterMode: $rfcFilterMode)
+                    }
+                    ToolbarItem(placement: .navigation) {
+                        RFCFilterMenu(rfcFilterMode: $rfcFilterMode)
+                    }
 #else
-                ToolbarItem(placement: .principal) {
-                    RFCListTitleView(rfcFilterMode: $rfcFilterMode)
-                }
-                ToolbarItem(placement: .primaryAction) {
-                    RFCFilterMenu(rfcFilterMode: $rfcFilterMode)
-                }
+                    ToolbarItem(placement: .principal) {
+                        RFCListTitleView(rfcFilterMode: $rfcFilterMode)
+                    }
+                    ToolbarItem(placement: .primaryAction) {
+                        RFCFilterMenu(rfcFilterMode: $rfcFilterMode)
+                    }
 #endif
+                }
             }
             .onChange(of: selectedRFC) { newValue in
                 if let doc = newValue {

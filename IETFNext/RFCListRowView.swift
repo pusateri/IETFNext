@@ -24,6 +24,7 @@ struct RFCListRowView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @ObservedObject var rfc: RFC
     @Binding var rfcFilterMode: RFCFilterMode
+    var listMode: SidebarOption
     @Binding var html: String
 
     @State var oldColorScheme: ColorScheme? = nil
@@ -35,27 +36,54 @@ struct RFCListRowView: View {
                 .frame(width: 8, height: 42)
             VStack(alignment: .leading) {
                 HStack {
-                    Text("\(rfc.name2)")
-                        .font(.title3.bold())
-                        .foregroundColor(.primary)
-                    Spacer()
-                    switch(rfcFilterMode) {
+                    switch(listMode) {
                         case .bcp:
-                            Text("\(rfc.bcp ?? "")")
+                            Text("\(rfc.presentBCP)")
+                                .font(.title3.bold())
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Text("\(rfc.name2)")
                                 .font(.body)
                                 .foregroundColor(.secondary)
                         case .fyi:
-                            Text("\(rfc.fyi ?? "")")
+                            Text("\(rfc.presentFYI)")
+                                .font(.title3.bold())
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Text("\(rfc.name2)")
                                 .font(.body)
                                 .foregroundColor(.secondary)
                         case .std:
-                            Text("\(rfc.std ?? "")")
+                            Text("\(rfc.presentSTD)")
+                                .font(.title3.bold())
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Text("\(rfc.name2)")
                                 .font(.body)
                                 .foregroundColor(.secondary)
-                        case .none:
-                        Text("\(rfc.shortStatus) \(rfc.shortStream)")
-                            .font(.body)
-                            .foregroundColor(.secondary)
+                        default:
+                            Text("\(rfc.name2)")
+                                .font(.title3.bold())
+                                .foregroundColor(.primary)
+                            Spacer()
+                            switch(rfcFilterMode) {
+                                case .bcp:
+                                    Text("\(rfc.presentBCP)")
+                                        .font(.body)
+                                        .foregroundColor(.secondary)
+                                case .fyi:
+                                    Text("\(rfc.presentFYI)")
+                                        .font(.body)
+                                        .foregroundColor(.secondary)
+                                case .std:
+                                    Text("\(rfc.presentSTD)")
+                                        .font(.body)
+                                        .foregroundColor(.secondary)
+                                case .none:
+                                    Text("\(rfc.shortStatus) \(rfc.shortStream)")
+                                        .font(.body)
+                                        .foregroundColor(.secondary)
+                            }
                     }
                 }
                 HStack {

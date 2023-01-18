@@ -8,12 +8,14 @@
 import SwiftUI
 
 public enum SidebarOption: String {
+    case bcp
     case download
+    case fyi
     case groups
     case locations
     case rfc
-    case bcp
     case schedule
+    case std
 }
 
 @main
@@ -88,6 +90,13 @@ struct IETFNextApp: App {
                 }
                 .keyboardShortcut("l")
                 Button(action: {
+                    menuSidebarOption = .rfc
+                }) {
+                    Image(systemName: "doc.plaintext")
+                    Text("RFCs")
+                }
+                .keyboardShortcut("r")
+                Button(action: {
                     menuSidebarOption = .bcp
                 }) {
                     Image(systemName: "doc.plaintext")
@@ -95,12 +104,17 @@ struct IETFNextApp: App {
                 }
                 .keyboardShortcut("b")
                 Button(action: {
-                    menuSidebarOption = .rfc
+                    menuSidebarOption = .fyi
                 }) {
                     Image(systemName: "doc.plaintext")
-                    Text("RFCs")
+                    Text("FYIs")
                 }
-                .keyboardShortcut("r")
+                Button(action: {
+                    menuSidebarOption = .std
+                }) {
+                    Image(systemName: "doc.plaintext")
+                    Text("STDs")
+                }
                 Button(action: {
                     menuSidebarOption = .download
                 }) {

@@ -53,3 +53,5 @@ extension Sequence where Iterator.Element: Hashable {
         return filter { seen.insert($0).inserted }
     }
 }
+
+BCP 0009 specifically RFC 2026 obsoletes 1871 which updates 1603 which is obsoleted by 2418 which shows on graph but no arrow is attached.
