@@ -162,7 +162,7 @@ func updateRFC(context: NSManagedObjectContext, xml: XML.Accessor, obsoletes: in
             }
         }
     }
-    // TODO: need to add obsoletes, updates, obsoleted-by, updated-by, see-also
+    // TODO: need to add see-also?
     for docid in xml["obsoletes"]["doc-id"] {
         if let name = docid.text {
             ob.append(name)
@@ -233,6 +233,17 @@ func updateRFC(context: NSManagedObjectContext, xml: XML.Accessor, obsoletes: in
     }
     if let wg = xml.wg_acronym.text {
         rfc.acronym = wg
+    }
+    for docid in xml["is-also"]["doc-id"] {
+        if let name = docid.text {
+            if name.starts(with: "BCP") {
+                rfc.bcp = name
+            } else if name.starts(with: "FYI") {
+                rfc.fyi = name
+            } else if name.starts(with: "STD") {
+                rfc.std = name
+            }
+        }
     }
     do {
         try context.save()

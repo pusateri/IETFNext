@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G320" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Area" representedClassName="Area" syncable="YES" codeGenerationType="class">
+        <attribute name="desc" attributeType="String"/>
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="modified" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Group" inverseName="area" inverseEntity="Group"/>
+    </entity>
+    <entity name="Author" representedClassName="Author" syncable="YES" codeGenerationType="class">
+        <attribute name="firstInitial" optional="YES" attributeType="String"/>
+        <attribute name="given" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="sortName" optional="YES" attributeType="String"/>
+        <attribute name="surname" optional="YES" attributeType="String"/>
+        <relationship name="rfcs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="authors" inverseEntity="RFC"/>
+    </entity>
+    <entity name="DocFormat" representedClassName="DocFormat" syncable="YES" codeGenerationType="class">
+        <attribute name="format" optional="YES" attributeType="String"/>
+        <relationship name="rfcs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="formats" inverseEntity="RFC"/>
+    </entity>
+    <entity name="Document" representedClassName="Document" syncable="YES" codeGenerationType="class">
+        <attribute name="abstract" optional="YES" attributeType="String"/>
+        <attribute name="ad" optional="YES" attributeType="String"/>
+        <attribute name="expires" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="external_url" optional="YES" attributeType="URI"/>
+        <attribute name="group_uri" optional="YES" attributeType="String"/>
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="intended_std_level" optional="YES" attributeType="String"/>
+        <attribute name="internal_comments" optional="YES" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <attribute name="notify" optional="YES" attributeType="String"/>
+        <attribute name="order" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pages" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="resource_uri" optional="YES" attributeType="String"/>
+        <attribute name="rev" optional="YES" attributeType="String"/>
+        <attribute name="rfc" optional="YES" attributeType="String"/>
+        <attribute name="shepherd" optional="YES" attributeType="String"/>
+        <attribute name="std_level" optional="YES" attributeType="String"/>
+        <attribute name="stream" optional="YES" attributeType="String"/>
+        <attribute name="time" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" attributeType="String"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <attribute name="uploaded_filename" optional="YES" attributeType="String"/>
+        <attribute name="words" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="documents" inverseEntity="Group"/>
+        <relationship name="relatedGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="relatedDocs" inverseEntity="Group"/>
+        <relationship name="rfcGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="rfcs" inverseEntity="Group"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="Download" representedClassName="Download" syncable="YES" codeGenerationType="class">
+        <attribute name="basename" optional="YES" attributeType="String"/>
+        <attribute name="encoding" optional="YES" attributeType="String"/>
+        <attribute name="etag" optional="YES" attributeType="String"/>
+        <attribute name="ext" attributeType="String"/>
+        <attribute name="filename" optional="YES" attributeType="String"/>
+        <attribute name="filesize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="kind" attributeType="String"/>
+        <attribute name="mimeType" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="downloads" inverseEntity="Group"/>
+    </entity>
+    <entity name="Group" representedClassName="Group" syncable="YES" codeGenerationType="class">
+        <attribute name="acronym" attributeType="String"/>
+        <attribute name="areaKey" attributeType="String"/>
+        <attribute name="favorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="state" attributeType="String"/>
+        <attribute name="type" attributeType="String"/>
+        <relationship name="area" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Area" inverseName="groups" inverseEntity="Area"/>
+        <relationship name="documents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Document" inverseName="group" inverseEntity="Document"/>
+        <relationship name="downloads" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Download" inverseName="group" inverseEntity="Download"/>
+        <relationship name="relatedDocs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Document" inverseName="relatedGroup" inverseEntity="Document"/>
+        <relationship name="rfcs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Document" inverseName="rfcGroup" inverseEntity="Document"/>
+        <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Session" inverseName="group" inverseEntity="Session"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="acronym"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="Keyword" representedClassName="Keyword" syncable="YES" codeGenerationType="class">
+        <attribute name="key" optional="YES" attributeType="String"/>
+        <relationship name="rfcs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="keywords" inverseEntity="RFC"/>
+    </entity>
+    <entity name="Location" representedClassName="Location" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="level_name" optional="YES" attributeType="String"/>
+        <attribute name="level_sort" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="map" optional="YES" attributeType="URI"/>
+        <attribute name="modified" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="x" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="y" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="meeting" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Meeting" inverseName="locations" inverseEntity="Meeting"/>
+        <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Session" inverseName="location" inverseEntity="Session"/>
+    </entity>
+    <entity name="Meeting" representedClassName="Meeting" syncable="YES" codeGenerationType="class">
+        <attribute name="acknowledgements" optional="YES" attributeType="String"/>
+        <attribute name="city" optional="YES" attributeType="String"/>
+        <attribute name="country" optional="YES" attributeType="String"/>
+        <attribute name="date" optional="YES" attributeType="String"/>
+        <attribute name="etag" optional="YES" attributeType="String"/>
+        <attribute name="lastModified" optional="YES" attributeType="String"/>
+        <attribute name="number" attributeType="String"/>
+        <attribute name="time_zone" optional="YES" attributeType="String"/>
+        <attribute name="updated_at" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="venue_addr" optional="YES" attributeType="String"/>
+        <attribute name="venue_name" optional="YES" attributeType="String"/>
+        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="meeting" inverseEntity="Location"/>
+        <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Session" inverseName="meeting" inverseEntity="Session"/>
+    </entity>
+    <entity name="Presentation" representedClassName="Presentation" syncable="YES" codeGenerationType="class">
+        <attribute name="name" attributeType="String"/>
+        <attribute name="order" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="resource_uri" attributeType="String"/>
+        <attribute name="rev" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="session" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Session" inverseName="presentations" inverseEntity="Session"/>
+    </entity>
+    <entity name="RFC" representedClassName="RFC" syncable="YES" codeGenerationType="class">
+        <attribute name="abstract" optional="YES" attributeType="String"/>
+        <attribute name="acronym" optional="YES" attributeType="String"/>
+        <attribute name="area" optional="YES" attributeType="String"/>
+        <attribute name="bcp" optional="YES" attributeType="String"/>
+        <attribute name="currentStatus" optional="YES" attributeType="String"/>
+        <attribute name="doi" optional="YES" attributeType="String"/>
+        <attribute name="draft" optional="YES" attributeType="String"/>
+        <attribute name="errata" optional="YES" attributeType="URI"/>
+        <attribute name="fyi" optional="YES" attributeType="String"/>
+        <attribute name="month" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="pageCount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="publicationStatus" optional="YES" attributeType="String"/>
+        <attribute name="published" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="std" optional="YES" attributeType="String"/>
+        <attribute name="stream" optional="YES" attributeType="String"/>
+        <attribute name="title" attributeType="String"/>
+        <attribute name="year" optional="YES" attributeType="String"/>
+        <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="rfcs" inverseEntity="Author"/>
+        <relationship name="formats" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DocFormat" inverseName="rfcs" inverseEntity="DocFormat"/>
+        <relationship name="keywords" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Keyword" inverseName="rfcs" inverseEntity="Keyword"/>
+        <relationship name="obsoletedBy" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="obsoletes" inverseEntity="RFC"/>
+        <relationship name="obsoletes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="obsoletedBy" inverseEntity="RFC"/>
+        <relationship name="updatedBy" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="updates" inverseEntity="RFC"/>
+        <relationship name="updates" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="updatedBy" inverseEntity="RFC"/>
+    </entity>
+    <entity name="Session" representedClassName="Session" syncable="YES" codeGenerationType="class">
+        <attribute name="agenda" optional="YES" attributeType="URI"/>
+        <attribute name="day" attributeType="String"/>
+        <attribute name="end" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="favorite" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="is_bof" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="minutes" optional="YES" attributeType="URI"/>
+        <attribute name="modified" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="recording" optional="YES" attributeType="URI"/>
+        <attribute name="session_id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="session_res_uri" attributeType="URI"/>
+        <attribute name="start" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="status" attributeType="String"/>
+        <attribute name="timerange" attributeType="String"/>
+        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="sessions" inverseEntity="Group"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="sessions" inverseEntity="Location"/>
+        <relationship name="meeting" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Meeting" inverseName="sessions" inverseEntity="Meeting"/>
+        <relationship name="presentations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Presentation" inverseName="session" inverseEntity="Presentation"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="session_id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+</model>

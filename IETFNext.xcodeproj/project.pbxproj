@@ -88,6 +88,7 @@
 		F82FFEAB2964C8FE007AA54A /* RFCParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RFCParser.swift; sourceTree = "<group>"; };
 		F82FFEAD2964D0DA007AA54A /* IETFNext 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 6.xcdatamodel"; sourceTree = "<group>"; };
 		F82FFEAE2965D897007AA54A /* RFCListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCListView.swift; sourceTree = "<group>"; };
+		F837505F2978527000EBABB4 /* IETFNext 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 7.xcdatamodel"; sourceTree = "<group>"; };
 		F85D55BF295E05F900569A77 /* DetailViewUnwrapped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewUnwrapped.swift; sourceTree = "<group>"; };
 		F85D55C1295E72B100569A77 /* MacOSCompat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacOSCompat.swift; sourceTree = "<group>"; };
 		F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFilterMenu.swift; sourceTree = "<group>"; };
@@ -897,6 +898,7 @@
 		F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F837505F2978527000EBABB4 /* IETFNext 7.xcdatamodel */,
 				F82FFEAD2964D0DA007AA54A /* IETFNext 6.xcdatamodel */,
 				F82FFEA329621B0B007AA54A /* IETFNext 5.xcdatamodel */,
 				F80633BF29523631006D69AD /* IETFNext 4.xcdatamodel */,
@@ -904,7 +906,7 @@
 				F80CA26329469780002AD2C6 /* IETFNext 2.xcdatamodel */,
 				F8E9B9A12934101200CA6F09 /* IETFNext.xcdatamodel */,
 			);
-			currentVersion = F82FFEAD2964D0DA007AA54A /* IETFNext 6.xcdatamodel */;
+			currentVersion = F837505F2978527000EBABB4 /* IETFNext 7.xcdatamodel */;
 			path = IETFNext.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

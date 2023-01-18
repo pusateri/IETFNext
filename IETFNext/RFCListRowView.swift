@@ -23,6 +23,7 @@ private extension DateFormatter {
 struct RFCListRowView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @ObservedObject var rfc: RFC
+    @Binding var rfcFilterMode: RFCFilterMode
     @Binding var html: String
 
     @State var oldColorScheme: ColorScheme? = nil
@@ -38,9 +39,24 @@ struct RFCListRowView: View {
                         .font(.title3.bold())
                         .foregroundColor(.primary)
                     Spacer()
-                    Text("\(rfc.shortStatus) \(rfc.shortStream)")
-                        .font(.body)
-                        .foregroundColor(.secondary)
+                    switch(rfcFilterMode) {
+                        case .bcp:
+                            Text("\(rfc.bcp ?? "")")
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                        case .fyi:
+                            Text("\(rfc.fyi ?? "")")
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                        case .std:
+                            Text("\(rfc.std ?? "")")
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                        case .none:
+                        Text("\(rfc.shortStatus) \(rfc.shortStream)")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                    }
                 }
                 HStack {
                     Text("\(rfc.title!)")

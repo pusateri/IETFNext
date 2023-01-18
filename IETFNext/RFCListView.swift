@@ -28,11 +28,11 @@ struct RFCListView: View {
 
         switch(rfcFilterMode.wrappedValue) {
         case .bcp:
-            predicate = nil
+            predicate = NSPredicate(format: "bcp != nil")
         case .fyi:
-            predicate = nil
+            predicate = NSPredicate(format: "fyi != nil")
         case .std:
-            predicate = nil
+            predicate = NSPredicate(format: "std != nil")
         case .none:
             predicate = nil
         }
@@ -64,7 +64,7 @@ struct RFCListView: View {
     var body: some View {
         ScrollViewReader { scrollViewReader in
             List(rfcs, id: \.self, selection: $selectedRFC) { rfc in
-                RFCListRowView(rfc: rfc, html: $html)
+                RFCListRowView(rfc: rfc, rfcFilterMode: $rfcFilterMode, html: $html)
                 .listRowSeparator(.visible)
             }
             .listStyle(.inset)
