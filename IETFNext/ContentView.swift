@@ -304,6 +304,15 @@ struct ContentView: View {
                                         case .rfc:
                                             Text("\(rfcs.count)")
                                                 .foregroundColor(.secondary)
+                                        case .bcp:
+                                            Text("\(rfcs.compactMap { $0.bcp }.count)")
+                                                .foregroundColor(.secondary)
+                                        case .fyi:
+                                            Text("\(rfcs.compactMap { $0.fyi }.count)")
+                                                .foregroundColor(.secondary)
+                                        case .std:
+                                            Text("\(rfcs.compactMap { $0.std }.count)")
+                                                .foregroundColor(.secondary)
                                         default:
                                             Text("")
                                         }
@@ -360,7 +369,7 @@ struct ContentView: View {
                 switch(ds) {
                 case .locations:
                     LocationDetailView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)
-                case .download, .rfc, .bcp:
+                case .download, .rfc, .bcp, .fyi, .std:
                     DownloadDetailView(selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
                 default:
                     DetailView(
