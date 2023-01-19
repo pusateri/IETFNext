@@ -158,7 +158,12 @@ let SVG_PRE = """
       a:visited {
           color: purple;
       }
-      body { background-color: black; }
+      @media (prefers-color-scheme: light) {
+        body { background-color: white; }
+      }
+      @media (prefers-color-scheme: dark) {
+        body { background-color: black; }
+      }
       svg { margin-left:auto; margin-right:auto; display:block; }
     </style>
   </head>
