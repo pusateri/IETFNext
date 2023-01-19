@@ -9,6 +9,67 @@ import SwiftUI
 import CoreData
 import GraphViz
 
+extension DynamicFetchRequestView where T : RFC {
+
+    init(withMode listMode: SidebarOption, searchText: String, filterMode: Binding<RFCFilterMode>, @ViewBuilder content: @escaping (FetchedResults<T>) -> Content) {
+
+        var sortDescriptors: [NSSortDescriptor]
+        var search_criteria = searchText.isEmpty ? "" : "(name contains[cd] %@) OR (title contains[cd] %@)"
+        let args = searchText.isEmpty ? [] : [searchText, searchText]
+
+        switch(filterMode.wrappedValue) {
+            case .bcp:
+                if !search_criteria.isEmpty {
+                    search_criteria += " AND "
+                }
+                search_criteria += "bcp != nil"
+                sortDescriptors = [NSSortDescriptor(keyPath: \RFC.bcp, ascending: false)]
+            case .fyi:
+                if !search_criteria.isEmpty {
+                    search_criteria += " AND "
+                }
+                search_criteria += "fyi != nil"
+                sortDescriptors = [NSSortDescriptor(keyPath: \RFC.fyi, ascending: false)]
+            case .std:
+                if !search_criteria.isEmpty {
+                    search_criteria += " AND "
+                }
+                search_criteria += "std != nil"
+                sortDescriptors = [NSSortDescriptor(keyPath: \RFC.std, ascending: false)]
+            case .none:
+                if listMode == .bcp {
+                    if !search_criteria.isEmpty {
+                        search_criteria += " AND "
+                    }
+                    search_criteria += "bcp != nil"
+                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.bcp, ascending: true)]
+                } else if listMode == .fyi {
+                    if !search_criteria.isEmpty {
+                        search_criteria += " AND "
+                    }
+                    search_criteria += "fyi != nil"
+                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.fyi, ascending: true)]
+                } else if listMode == .std {
+                    if !search_criteria.isEmpty {
+                        search_criteria += " AND "
+                    }
+                    search_criteria += "std != nil"
+                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.std, ascending: true)]
+                } else {
+                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.name, ascending: false)]
+                }
+        }
+
+        if !search_criteria.isEmpty {
+            let predicate = NSPredicate(format: search_criteria, argumentArray: args)
+            self.init( withPredicate: predicate, andSortDescriptor: sortDescriptors, content: content)
+        } else {
+            let predicate = NSPredicate(value: true)
+            self.init( withPredicate: predicate, andSortDescriptor: sortDescriptors, content: content)
+        }
+    }
+}
+
 
 struct RFCListView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -20,76 +81,24 @@ struct RFCListView: View {
     @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
-    @FetchRequest<RFC> var rfcs: FetchedResults<RFC>
     @State private var searchText = ""
     @ObservedObject var model: DownloadViewModel = DownloadViewModel.shared
 
-    init(selectedRFC: Binding<RFC?>, selectedDownload: Binding<Download?>, rfcFilterMode: Binding<RFCFilterMode>, listMode: SidebarOption, html: Binding<String>, localFileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
-        var predicate: NSPredicate?
-        var sortDescriptors: [NSSortDescriptor]
-
-        switch(rfcFilterMode.wrappedValue) {
-            case .bcp:
-                predicate = NSPredicate(format: "bcp != nil")
-                sortDescriptors = [NSSortDescriptor(keyPath: \RFC.bcp, ascending: false)]
-            case .fyi:
-                predicate = NSPredicate(format: "fyi != nil")
-                sortDescriptors = [NSSortDescriptor(keyPath: \RFC.fyi, ascending: false)]
-            case .std:
-                predicate = NSPredicate(format: "std != nil")
-                sortDescriptors = [NSSortDescriptor(keyPath: \RFC.std, ascending: false)]
-            case .none:
-                if listMode == .bcp {
-                    predicate = NSPredicate(format: "bcp != nil")
-                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.bcp, ascending: true)]
-                } else if listMode == .fyi {
-                    predicate = NSPredicate(format: "fyi != nil")
-                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.fyi, ascending: true)]
-                } else if listMode == .std {
-                    predicate = NSPredicate(format: "std != nil")
-                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.std, ascending: true)]
-                } else {
-                    predicate = nil
-                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.name, ascending: false)]
-                }
-        }
-
-        _rfcs = FetchRequest<RFC>(
-            sortDescriptors: sortDescriptors,
-            predicate: predicate,
-            animation: .default
-        )
-        self._selectedRFC = selectedRFC
-        self._selectedDownload = selectedDownload
-        self._rfcFilterMode = rfcFilterMode
-        self.listMode = listMode
-        self._html = html
-        self._localFileURL = localFileURL
-        self._columnVisibility = columnVisibility
-    }
-
-    private func updatePredicate() {
-        if searchText.isEmpty {
-            rfcs.nsPredicate = nil
-        } else {
-            rfcs.nsPredicate = NSPredicate(
-                format: "(name contains[cd] %@) OR (title contains[cd] %@)", searchText, searchText)
-        }
-    }
-
     var body: some View {
         ScrollViewReader { scrollViewReader in
-            List(rfcs, id: \.self, selection: $selectedRFC) { rfc in
-                RFCListRowView(rfc: rfc, rfcFilterMode: $rfcFilterMode, listMode: listMode, html: $html)
-                .listRowSeparator(.visible)
-            }
-            .listStyle(.inset)
+            DynamicFetchRequestView(withMode: listMode, searchText: searchText, filterMode: $rfcFilterMode) { rfcs in
+                List(rfcs, id: \.self, selection: $selectedRFC) { rfc in
+                    RFCListRowView(rfc: rfc, rfcFilterMode: $rfcFilterMode, listMode: listMode, html: $html)
+                        .listRowSeparator(.visible)
+                }
+                .listStyle(.inset)
+                .searchable(text: $searchText, placement: .automatic, prompt: "Number or Title string")
+                .disableAutocorrection(true)
 #if !os(macOS)
-            .navigationBarTitleDisplayMode(.inline)
-            .searchable(text: $searchText, placement: .automatic, prompt: "Number or Title string")
-            .keyboardType(.alphabet)
-            .disableAutocorrection(true)
+                .keyboardType(.alphabet)
+                .navigationBarTitleDisplayMode(.inline)
 #endif
+            }
             .toolbar {
                 if listMode == .rfc {
 #if os(macOS)
@@ -124,9 +133,6 @@ struct RFCListView: View {
                 if let err = newValue {
                     html = PLAIN_PRE + err + PLAIN_POST
                 }
-            }
-            .onChange(of: searchText) { newValue in
-                updatePredicate()
             }
             .onAppear {
                 if let doc = selectedRFC {

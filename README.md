@@ -1,16 +1,15 @@
 *** TODO ***
 
-1. Add RFCs: "https://datatracker.ietf.org/api/v1/doc/docalias/?name__startswith=rfc&document__name__contains=%@&document__type=draft", wg_abbr
-2. print pdf version of drafts
-3. add local time
-4. detail view moving from open slides to try and open drafts gives error
-5. pdf thumbnails
-6. Add draft / presentation / charter / agenda date to download list
-7. Only gets the first 20 drafts right now
-8. Jump between session and location and back
-9. Load basename document to support useractivity
-10. set title for branch svg files
-
+1. print pdf version of drafts
+2. add local time
+3. detail view moving from open slides to try and open drafts gives error
+4. pdf thumbnails
+5. Add draft / presentation / charter / agenda date to download list
+6. Only gets the first 20 drafts right now
+7. Jump between session and location and back
+8. Load basename document to support useractivity
+9. set title for branch svg files
+10. on macOS, size of draft list and meeting list is very narrow
 
 *** Maybe ***
 

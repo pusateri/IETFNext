@@ -9,9 +9,9 @@ import SwiftUI
 import CoreData
 
 
-extension DynamicFetchRequestView where T : Group {
+extension DynamicSectionedFetchRequestView where T : Group {
 
-    init(withMeeting meeting: Binding<Meeting?>, searchText: String, filterMode: Binding<GroupFilterMode>, @ViewBuilder content: @escaping (FetchedResults<T>) -> Content) {
+    init(withMeeting meeting: Binding<Meeting?>, searchText: String, filterMode: Binding<GroupFilterMode>, @ViewBuilder content: @escaping (SectionedFetchResults<String, T>) -> Content) {
 
         var search_criteria = searchText.isEmpty ? "" : "((name contains[cd] %@) OR (acronym contains[cd] %@) OR (state = [c] %@)) AND "
         var args = searchText.isEmpty ? [] : [searchText, searchText, searchText]
@@ -28,13 +28,13 @@ extension DynamicFetchRequestView where T : Group {
             NSSortDescriptor(keyPath: \Group.areaKey, ascending: true),
             NSSortDescriptor(keyPath: \Group.acronym, ascending: true),
         ]
-        self.init( withPredicate: predicate, andSortDescriptor: sortDescriptors, content: content)
+        self.init( withPredicate: predicate, andSectionIdentifier: \.areaKey!, andSortDescriptor: sortDescriptors, content: content)
     }
 }
 
 struct GroupListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    //@SectionedFetchRequest<String, Group> var fetchRequest: SectionedFetchResults<String, Group>
+
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
     @Binding var groupFilterMode: GroupFilterMode
@@ -55,28 +55,21 @@ struct GroupListFilteredView: View {
 
     var body: some View {
         ScrollViewReader { scrollViewReader in
-            DynamicFetchRequestView(withMeeting: $selectedMeeting, searchText: searchText, filterMode: $groupFilterMode) { results in
-                List(results, id: \.self, selection: $selectedGroup) { group in
-                    GroupListRowView(group:group)
+            DynamicSectionedFetchRequestView(withMeeting: $selectedMeeting, searchText: searchText, filterMode: $groupFilterMode) { results in
+                List(results, selection: $selectedGroup) { section in
+                    Section(header: Text(section.id).textCase(.uppercase).foregroundColor(.accentColor)) {
+                        ForEach(section, id: \.self) { group in
+                            GroupListRowView(group:group)
+                                .listRowSeparator(.visible)
+                        }
+                    }
+                    .headerProminence(.increased)
                 }
-                /*
-                 List(fetchRequest, selection: $selectedGroup) { section in
-                 Section(header: Text(section.id).textCase(.uppercase).foregroundColor(.accentColor)) {
-                 ForEach(section, id: \.self) { group in
-                 GroupListRowView(group:group)
-                 .listRowSeparator(.visible)
-                 //.listRowBackground(group.state == "bof" ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
-                 }
-                 }
-                 .headerProminence(.increased)
-                 }
-                 */
                 .listStyle(.inset)
-                .searchable(text: $searchText, placement: .automatic)
-                .keyboardType(.alphabet)
+                .searchable(text: $searchText, placement: .automatic, prompt: "Group acronym, name, or BOF")
                 .disableAutocorrection(true)
 #if !os(macOS)
-                //.searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
+                .keyboardType(.alphabet)
                 .navigationBarTitleDisplayMode(.inline)
 #endif
 
