@@ -9,44 +9,40 @@ import SwiftUI
 import CoreData
 
 
+extension DynamicFetchRequestView where T : Group {
+
+    init(withMeeting meeting: Binding<Meeting?>, searchText: String, filterMode: Binding<GroupFilterMode>, @ViewBuilder content: @escaping (FetchedResults<T>) -> Content) {
+
+        var search_criteria = searchText.isEmpty ? "" : "((name contains[cd] %@) OR (acronym contains[cd] %@) OR (state = [c] %@)) AND "
+        var args = searchText.isEmpty ? [] : [searchText, searchText, searchText]
+
+        search_criteria += "(ANY sessions.meeting.number = %@)"
+        args.append(meeting.wrappedValue?.number ?? "0")
+
+        if filterMode.wrappedValue == .favorites {
+            search_criteria += " AND (favorite = true)"
+        }
+        let predicate = NSPredicate(format: search_criteria, argumentArray: args)
+
+        let sortDescriptors = [
+            NSSortDescriptor(keyPath: \Group.areaKey, ascending: true),
+            NSSortDescriptor(keyPath: \Group.acronym, ascending: true),
+        ]
+        self.init( withPredicate: predicate, andSortDescriptor: sortDescriptors, content: content)
+    }
+}
+
 struct GroupListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @SectionedFetchRequest<String, Group> var fetchRequest: SectionedFetchResults<String, Group>
+    //@SectionedFetchRequest<String, Group> var fetchRequest: SectionedFetchResults<String, Group>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
     @Binding var groupFilterMode: GroupFilterMode
-    @Binding var columnVisibility: NavigationSplitViewVisibility
     @Binding var html: String
+    @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @State private var searchText = ""
-
     @SceneStorage("group.selection") var groupShort: String?
-
-    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, groupFilterMode: Binding<GroupFilterMode>, html: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
-        var predicate: NSPredicate
-
-        switch(groupFilterMode.wrappedValue) {
-        case .favorites:
-            predicate = NSPredicate(format: "(ANY sessions.meeting.number = %@) AND (favorite = %d)", selectedMeeting.wrappedValue?.number ?? "0", true)
-        case .none:
-            predicate = NSPredicate(format: "ANY sessions.meeting.number = %@", selectedMeeting.wrappedValue?.number ?? "0")
-        }
-
-        _fetchRequest = SectionedFetchRequest<String, Group>(
-            sectionIdentifier: \.areaKey!,
-            sortDescriptors: [
-                NSSortDescriptor(keyPath: \Group.areaKey, ascending: true),
-                NSSortDescriptor(keyPath: \Group.acronym, ascending: true),
-            ],
-            predicate: predicate,
-            animation: .default
-        )
-        self._selectedMeeting = selectedMeeting
-        self._selectedGroup = selectedGroup
-        self._groupFilterMode = groupFilterMode
-        self._html = html
-        self._columnVisibility = columnVisibility
-    }
 
     private func fetchGroup(short: String) -> Group? {
         let fetchGroup: NSFetchRequest<Group> = Group.fetchRequest()
@@ -57,46 +53,34 @@ struct GroupListFilteredView: View {
         return results?.first
     }
 
-    private func updateGroupPredicate() {
-        if let meeting = selectedMeeting {
-            switch(groupFilterMode) {
-            case .none:
-                if searchText.isEmpty {
-                    fetchRequest.nsPredicate = NSPredicate(format: "ANY sessions.meeting.number = %@", meeting.number!)
-                } else {
-                    fetchRequest.nsPredicate = NSPredicate(
-                        format: "(ANY sessions.meeting.number = %@) AND ((name contains[cd] %@) OR (acronym contains[cd] %@) OR (state = [c] %@))", meeting.number!, searchText, searchText, searchText)
-                }
-            case .favorites:
-                if searchText.isEmpty {
-                    fetchRequest.nsPredicate = NSPredicate(format: "(ANY sessions.meeting.number = %@) AND (favorite = %d)", meeting.number!, true)
-                } else {
-                    fetchRequest.nsPredicate = NSPredicate(
-                        format: "(ANY sessions.meeting.number = %@) AND (favorite = %d) AND ((name contains[cd] %@) OR (acronym contains[cd] %@) OR (state = [c] %@))", meeting.number!, true, searchText, searchText, searchText)
-                }
-            }
-        }
-    }
-
     var body: some View {
         ScrollViewReader { scrollViewReader in
-            List(fetchRequest, selection: $selectedGroup) { section in
-                Section(header: Text(section.id).textCase(.uppercase).foregroundColor(.accentColor)) {
-                    ForEach(section, id: \.self) { group in
-                        GroupListRowView(group:group)
-                            .listRowSeparator(.visible)
-                            //.listRowBackground(group.state == "bof" ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
-                    }
+            DynamicFetchRequestView(withMeeting: $selectedMeeting, searchText: searchText, filterMode: $groupFilterMode) { results in
+                List(results, id: \.self, selection: $selectedGroup) { group in
+                    GroupListRowView(group:group)
                 }
-                .headerProminence(.increased)
-            }
-            .listStyle(.inset)
+                /*
+                 List(fetchRequest, selection: $selectedGroup) { section in
+                 Section(header: Text(section.id).textCase(.uppercase).foregroundColor(.accentColor)) {
+                 ForEach(section, id: \.self) { group in
+                 GroupListRowView(group:group)
+                 .listRowSeparator(.visible)
+                 //.listRowBackground(group.state == "bof" ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
+                 }
+                 }
+                 .headerProminence(.increased)
+                 }
+                 */
+                .listStyle(.inset)
+                .searchable(text: $searchText, placement: .automatic)
+                .keyboardType(.alphabet)
+                .disableAutocorrection(true)
 #if !os(macOS)
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
-            .keyboardType(.alphabet)
-            .navigationBarTitleDisplayMode(.inline)
+                //.searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
+                .navigationBarTitleDisplayMode(.inline)
 #endif
-            .disableAutocorrection(true)
+
+            }
             .toolbar {
 #if os(macOS)
                 ToolbarItem(placement: .navigation) {
@@ -125,16 +109,7 @@ struct GroupListFilteredView: View {
                 }
 #endif
             }
-            .onChange(of: groupFilterMode) { newValue in
-                updateGroupPredicate()
-            }
-            .onChange(of: selectedMeeting) { newValue in
-                if let meeting = newValue {
-                    fetchRequest.nsPredicate = NSPredicate(format: "ANY sessions.meeting.number = %@", meeting.number!)
-                }
-            }
             .onChange(of: selectedGroup) { newValue in
-                searchText = ""
                 if let group = newValue {
                     groupShort = group.acronym!
                 } else {
@@ -144,9 +119,6 @@ struct GroupListFilteredView: View {
                     }
 #endif
                 }
-            }
-            .onChange(of: searchText) { newValue in
-                updateGroupPredicate()
             }
             .onAppear() {
                 if columnVisibility == .all {

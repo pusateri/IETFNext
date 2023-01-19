@@ -22,7 +22,6 @@ public enum SidebarOption: String {
 struct IETFNextApp: App {
     @State private var showingMeetings = false
     @State var menuSidebarOption: SidebarOption? = nil
-    //let persistenceController = PersistenceController.shared
 
     var body: some Scene {
         WindowGroup {
