@@ -9,9 +9,7 @@
 7. Only gets the first 20 drafts right now
 8. Jump between session and location and back
 9. Load basename document to support useractivity
-10. add tooltip to node
-11. add label to edge
-12. set title for branch svg files
+10. set title for branch svg files
 
 
 *** Maybe ***
@@ -58,3 +56,12 @@ extension Sequence where Iterator.Element: Hashable {
 }
 
 BCP 0009 specifically RFC 2026 obsoletes 1871 which updates 1603 which is obsoleted by 2418 which shows on graph but no arrow is attached.
+
+Core Data store: 
+
+# cd ~/Library/Containers/com.bangj.IETFNext/Data/Library/
+# rm Application\ Support/IETFNext/IETFNext.sqlite*
+# rm -rf Application\ Scripts/com.bangj.IETFNext
+# rm -rf HTTPStorages/com.bangj.IETFNext
+# rm -rf Caches/com.bangj.IETFNext
+# rm Preferences/com.bangj.IETFNext.plist

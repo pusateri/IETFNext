@@ -19,24 +19,28 @@ struct RFCFilterMenu: View {
                     Text(RFCFilterMode.bcp.label)
                     Image(systemName: RFCFilterMode.bcp.image)
                 }
+                .keyboardShortcut(nil)
                 Button(action: {
                     rfcFilterMode = .fyi
                 }) {
                     Text(RFCFilterMode.fyi.label)
                     Image(systemName: RFCFilterMode.fyi.image)
                 }
+                .keyboardShortcut(nil)
                 Button(action: {
                     rfcFilterMode = .std
                 }) {
                     Text(RFCFilterMode.std.label)
                     Image(systemName: RFCFilterMode.std.image)
                 }
+                .keyboardShortcut(nil)
                 Button(action: {
                     rfcFilterMode = .none
                 }) {
                     Text(RFCFilterMode.none.label)
                     Image(systemName: RFCFilterMode.none.image)
                 }
+                .keyboardShortcut(nil)
             }
         }
         label: {

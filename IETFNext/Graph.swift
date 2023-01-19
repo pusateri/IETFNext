@@ -37,6 +37,7 @@ private func makeNode(rfc: RFC, nodes: inout [String:Node], mode: RFCGraphMode, 
     node.fontName = "Arial"
     node.textColor = .rgb(red:0x3A, green:0x82, blue: 0xF6)
     node.href = "https://www.rfc-editor.org/rfc/\(rfc.name!.lowercased()).html"
+    node.tooltip = rfc.title!
     return node
 }
 
@@ -49,9 +50,9 @@ private func makeEdge(from: Node, to: Node, mode: RFCGraphMode, colorScheme: Col
         edge = Edge(from: to, to: from)
     }
     if mode == .obsoletes || mode == .obsoletedBy {
-        edge.exteriorLabel = "Obsoletes"
+        edge.label = "Obsoletes"
     } else {
-        edge.exteriorLabel = "Updates"
+        edge.label = "Updates"
     }
     edge.fontSize = 10.0
     edge.fontName = "Arial"

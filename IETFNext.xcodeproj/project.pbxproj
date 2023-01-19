@@ -862,7 +862,7 @@
 			repositoryURL = "https://github.com/pusateri/GraphvizFrameworkPkg";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.2.0;
+				minimumVersion = 0.2.1;
 			};
 		};
 		F884CA2A2974CF5F004B45C7 /* XCRemoteSwiftPackageReference "GraphViz" */ = {
@@ -870,7 +870,7 @@
 			repositoryURL = "https://github.com/pusateri/GraphViz.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.0;
+				minimumVersion = 0.5.4;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

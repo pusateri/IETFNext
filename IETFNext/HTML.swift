@@ -148,12 +148,18 @@ let SVG_PRE = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Blank</title>
     <style type="text/css" media="screen">
       :root {
           color-scheme: light dark;
       }
-      svg {margin-left:auto; margin-right:auto; display:block;}
+      a:link {
+          color: #3A82F6;
+      }
+      a:visited {
+          color: purple;
+      }
+      body { background-color: black; }
+      svg { margin-left:auto; margin-right:auto; display:block; }
     </style>
   </head>
   <body>
