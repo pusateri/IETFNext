@@ -9,7 +9,7 @@
 7. Jump between session and location and back
 8. Load basename document to support useractivity
 9. set title for branch svg files
-10. on macOS, size of draft list and meeting list is very narrow
+10. fix macOS app icon
 
 *** Maybe ***
 

@@ -89,10 +89,10 @@ struct DocumentListView: View {
                     }
                 }
             }
-        }
 #if os(macOS)
-        .frame(width: 600, height: 740)
+            .frame(width: 600, height: 740)
 #endif
+        }
         .onChange(of: selectedDocument) { newValue in
             if let d = newValue {
                 dismiss()
@@ -105,7 +105,6 @@ struct DocumentListView: View {
                 titleString = d.title
                 // native html
                 urlString = "https://www.ietf.org/archive/id/\(d.name!)-\(d.rev!).html"
-
             }
         }
         .onAppear {

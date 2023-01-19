@@ -382,6 +382,9 @@ struct DetailViewUnwrapped: View {
         }
         .sheet(isPresented: $showingDocuments) {
             DocumentListView(wg:group.acronym!, urlString:$draftURL, titleString:$draftTitle, kind:$kind)
+#if os(macOS)
+            .frame(width: 600, height: 740)
+#endif
         }
         .onChange(of: meeting) { newValue in
             html = BLANK

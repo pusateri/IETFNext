@@ -393,6 +393,9 @@ struct ContentView: View {
 #endif
         .sheet(isPresented: $showingMeetings) {
             MeetingListView(selectedMeeting: $selectedMeeting)
+#if os(macOS)
+            .frame(width: 600, height: 740)
+#endif
         }
         .onChange(of: listSelection) { newValue in
             if let ls = newValue {
