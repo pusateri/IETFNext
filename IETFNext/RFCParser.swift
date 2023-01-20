@@ -95,18 +95,18 @@ private func updateFormat(context: NSManagedObjectContext, format: String?) -> D
     return nil
 }
 
-private func updateKeyword(context: NSManagedObjectContext, key: String?) -> Keyword? {
+private func updateKeyword(context: NSManagedObjectContext, key: String?) -> Keykeyword? {
     if let key = key {
-        let k: Keyword!
+        let k: Keykeyword!
 
-        let fetchKeyword: NSFetchRequest<Keyword> = Keyword.fetchRequest()
+        let fetchKeyword: NSFetchRequest<Keykeyword> = Keykeyword.fetchRequest()
         fetchKeyword.predicate = NSPredicate(format: "key = %@", key)
 
         let results = try? context.fetch(fetchKeyword)
 
         if results?.count == 0 {
             // here you are inserting
-            k = Keyword(context: context)
+            k = Keykeyword(context: context)
             k.key = key
         } else {
             // here you are updating
@@ -157,8 +157,8 @@ func updateRFC(context: NSManagedObjectContext, xml: XML.Accessor, obsoletes: in
     }
     for keyword in xml["keywords"]["kw"] {
         if let kw_obj = updateKeyword(context: context, key: keyword.text) {
-            if rfc.keywords?.contains(kw_obj) != nil {
-                rfc.addToKeywords(kw_obj)
+            if rfc.keykeywords?.contains(kw_obj) != nil {
+                rfc.addToKeykeywords(kw_obj)
             }
         }
     }

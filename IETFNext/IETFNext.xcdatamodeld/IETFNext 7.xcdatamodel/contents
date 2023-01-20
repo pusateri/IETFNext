@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G320" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22C65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Area" representedClassName="Area" syncable="YES" codeGenerationType="class">
         <attribute name="desc" attributeType="String"/>
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
@@ -84,9 +84,9 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
-    <entity name="Keyword" representedClassName="Keyword" syncable="YES" codeGenerationType="class">
+    <entity name="Keykeyword" representedClassName="Keykeyword" syncable="YES" codeGenerationType="class">
         <attribute name="key" optional="YES" attributeType="String"/>
-        <relationship name="rfcs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="keywords" inverseEntity="RFC"/>
+        <relationship name="rfcs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="keykeywords" inverseEntity="RFC"/>
     </entity>
     <entity name="Location" representedClassName="Location" syncable="YES" codeGenerationType="class">
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
@@ -144,7 +144,7 @@
         <attribute name="year" optional="YES" attributeType="String"/>
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Author" inverseName="rfcs" inverseEntity="Author"/>
         <relationship name="formats" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DocFormat" inverseName="rfcs" inverseEntity="DocFormat"/>
-        <relationship name="keywords" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Keyword" inverseName="rfcs" inverseEntity="Keyword"/>
+        <relationship name="keykeywords" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Keykeyword" inverseName="rfcs" inverseEntity="Keykeyword"/>
         <relationship name="obsoletedBy" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="obsoletes" inverseEntity="RFC"/>
         <relationship name="obsoletes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="obsoletedBy" inverseEntity="RFC"/>
         <relationship name="updatedBy" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RFC" inverseName="updates" inverseEntity="RFC"/>
