@@ -8,7 +8,7 @@
 6. Only gets the first 20 drafts right now
 7. Jump between session and location and back
 8. Load basename document to support useractivity
-9. fix macOS app icon
+9. macOS: app icon
 
 *** Maybe ***
 

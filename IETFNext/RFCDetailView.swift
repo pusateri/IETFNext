@@ -20,22 +20,24 @@ struct RFCDetailView: View {
     var body: some View {
         WebView(html:$html, localFileURL:$localFileURL)
         .toolbar {
-            ToolbarItem(placement: .principal) {
-                if hSizeClass == .compact {
-                    Text(shortTitle ?? "")
-                } else {
-                    Text(longTitle ?? "")
-                }
-            }
-            if let rfc = selectedRFC, rfc.branch == true {
-                ToolbarItemGroup {
+            ToolbarItemGroup {
+                HStack {
                     Spacer()
-                    Button(action: {
-                        showGraph(rfc: rfc, colorScheme: colorScheme)
-                    }) {
-                        Image(systemName: "arrow.triangle.pull")
-                            .bold()
-                            .foregroundColor(Color(hex: 0xf6c844))
+                    if hSizeClass == .compact {
+                        Text(shortTitle ?? "")
+                    } else {
+                        Text(longTitle ?? "")
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Spacer()
+                    if let rfc = selectedRFC, rfc.branch == true {
+                        Button(action: {
+                            showGraph(rfc: rfc, colorScheme: colorScheme)
+                        }) {
+                            Image(systemName: "arrow.triangle.pull")
+                                .bold()
+                                .foregroundColor(Color(hex: 0xf6c844))
+                        }
                     }
                 }
             }

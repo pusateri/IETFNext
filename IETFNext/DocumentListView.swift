@@ -78,7 +78,6 @@ struct DocumentListView: View {
                 }
                 .listStyle(.inset)
             }
-            .navigationTitle("\(wg)")
 #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
 #endif
@@ -88,9 +87,14 @@ struct DocumentListView: View {
                         dismiss()
                     }
                 }
+                ToolbarItem(placement: .principal) {
+                    Text(wg)
+                        .foregroundColor(.primary)
+                        .font(.headline)
+                }
             }
 #if os(macOS)
-            .frame(width: 600, height: 740)
+            .frame(width: 600, height: 620)
 #endif
         }
         .onChange(of: selectedDocument) { newValue in
