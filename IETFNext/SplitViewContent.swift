@@ -19,6 +19,7 @@ struct SplitViewContent: View {
     var listMode: SidebarOption
     @Binding var html: String
     @Binding var localFileURL: URL?
+    @Binding var title: String?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     let SB_MIN = 270.0         // sidebar minimum size
@@ -40,18 +41,18 @@ struct SplitViewContent: View {
                     .keyboardShortcut("l")
                     .navigationSplitViewColumnWidth(min: SB_MIN, ideal: SB_IDEAL, max: SB_MAX)
             case .rfc:
-                RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, listMode: listMode, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
+                RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, listMode: listMode, html:$html, localFileURL:$localFileURL, title: $title, columnVisibility: $columnVisibility)
                     .keyboardShortcut("r")
                     .navigationSplitViewColumnWidth(min: SB_MIN, ideal: SB_IDEAL, max: SB_MAX)
             case .bcp:
-                RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, listMode: listMode, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
+                RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, listMode: listMode, html:$html, localFileURL:$localFileURL, title: $title, columnVisibility: $columnVisibility)
                     .keyboardShortcut("b")
                     .navigationSplitViewColumnWidth(min: SB_MIN, ideal: SB_IDEAL, max: SB_MAX)
             case .fyi, .std:
-                RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, listMode: listMode, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
+                RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, listMode: listMode, html:$html, localFileURL:$localFileURL, title: $title, columnVisibility: $columnVisibility)
                     .navigationSplitViewColumnWidth(min: SB_MIN, ideal: SB_IDEAL, max: SB_MAX)
             case .download:
-                DownloadListView(selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
+                DownloadListView(selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, title: $title, columnVisibility:$columnVisibility)
                     .keyboardShortcut("d")
                     .navigationSplitViewColumnWidth(min: SB_MIN, ideal: SB_IDEAL, max: SB_MAX)
         }

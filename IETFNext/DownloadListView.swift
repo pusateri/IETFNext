@@ -92,6 +92,7 @@ struct DownloadListView: View {
     @Binding var selectedDownload: Download?
     @Binding var html: String
     @Binding var localFileURL: URL?
+    @Binding var title: String?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @SectionedFetchRequest<String, Download>(
@@ -103,7 +104,8 @@ struct DownloadListView: View {
         animation: .default)
     private var downloads: SectionedFetchResults<String, Download>
 
-    func loadDownloadFile(from:Download) {
+    private func loadDownloadFile(from:Download) {
+        title = selectedDownload?.title ?? ""
         if let mimeType = from.mimeType {
             if mimeType == "application/pdf" {
                 if let filename = from.filename {

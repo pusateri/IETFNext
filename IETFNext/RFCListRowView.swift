@@ -26,6 +26,7 @@ struct RFCListRowView: View {
     @Binding var rfcFilterMode: RFCFilterMode
     var listMode: SidebarOption
     @Binding var html: String
+    @Binding var title: String?
 
     @State var oldColorScheme: ColorScheme? = nil
 
@@ -97,6 +98,7 @@ struct RFCListRowView: View {
                             .foregroundColor(.secondary)
                         if rfc.branch {
                             Button(action: {
+                                title = rfc.title
                                 showGraph(rfc: rfc, colorScheme: colorScheme)
                             }) {
                                 Image(systemName: "arrow.triangle.pull")

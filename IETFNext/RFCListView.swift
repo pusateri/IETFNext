@@ -79,6 +79,7 @@ struct RFCListView: View {
     var listMode: SidebarOption
     @Binding var html: String
     @Binding var localFileURL: URL?
+    @Binding var title: String?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @State private var searchText = ""
@@ -88,7 +89,7 @@ struct RFCListView: View {
         ScrollViewReader { scrollViewReader in
             DynamicFetchRequestView(withMode: listMode, searchText: searchText, filterMode: $rfcFilterMode) { rfcs in
                 List(rfcs, id: \.self, selection: $selectedRFC) { rfc in
-                    RFCListRowView(rfc: rfc, rfcFilterMode: $rfcFilterMode, listMode: listMode, html: $html)
+                    RFCListRowView(rfc: rfc, rfcFilterMode: $rfcFilterMode, listMode: listMode, html: $html, title: $title)
                         .listRowSeparator(.visible)
                 }
                 .listStyle(.inset)
@@ -153,6 +154,7 @@ struct RFCListView: View {
 
 extension RFCListView {
     private func loadDownloadFile(from:Download) {
+        title = selectedDownload?.title ?? ""
         if let mimeType = from.mimeType {
             if mimeType == "application/pdf" {
                 if let filename = from.filename {
