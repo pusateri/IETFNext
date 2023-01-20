@@ -21,7 +21,6 @@ private extension DateFormatter {
 
 
 struct RFCListRowView: View {
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
     @ObservedObject var rfc: RFC
     @Binding var rfcFilterMode: RFCFilterMode
     var listMode: SidebarOption
@@ -96,18 +95,18 @@ struct RFCListRowView: View {
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                         if rfc.branch {
-                            Button(action: {
-                                longTitle = rfc.title
-                                shortTitle = rfc.name2
-                                showGraph(rfc: rfc, colorScheme: colorScheme)
-                            }) {
+#if !os(macOS)
+                            if UIDevice.isIPhone {
                                 Image(systemName: "arrow.triangle.pull")
                                     .font(Font.system(size: 24, weight: .bold))
                                     .foregroundColor(Color(hex: 0xf6c844))
-
+                                    .padding(.top, 2)
+                            } else {
+                                BranchButtonView(rfc: rfc, shortTitle: $shortTitle, longTitle: $longTitle, html: $html)
                             }
-                            .buttonStyle(BorderlessButtonStyle())
-                            .padding(.top, 2)
+#else
+                            BranchButtonView(rfc: rfc, shortTitle: $shortTitle, longTitle: $longTitle, html: $html)
+#endif
                         }
                     }
                 }
@@ -116,7 +115,30 @@ struct RFCListRowView: View {
     }
 }
 
-extension RFCListRowView {
+struct BranchButtonView: View {
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @ObservedObject var rfc: RFC
+    @Binding var shortTitle: String?
+    @Binding var longTitle: String?
+    @Binding var html: String
+
+    var body: some View {
+        Button(action: {
+            longTitle = rfc.title
+            shortTitle = rfc.name2
+            showGraph(rfc: rfc, colorScheme: colorScheme)
+        }) {
+            Image(systemName: "arrow.triangle.pull")
+                .font(Font.system(size: 24, weight: .bold))
+                .foregroundColor(Color(hex: 0xf6c844))
+
+        }
+        .buttonStyle(BorderlessButtonStyle())
+        .padding(.top, 2)
+    }
+}
+
+extension BranchButtonView {
     func showGraph(rfc: RFC, colorScheme: ColorScheme) {
         let graph = buildGraph(start: rfc, colorScheme: colorScheme)
         graph.render(using: .dot, to: .svg) { result in
