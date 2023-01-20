@@ -250,6 +250,7 @@ struct ContentView: View {
 
     @State var listSelection: SidebarOption? = nil
     @SceneStorage("top.detailSelection") var detailSelection: SidebarOption?
+    @SceneStorage("top.rfcIndexLastTime") var rfcIndexLastTime: String?
 
 
     var rfcProvider: RFCProvider = .shared
@@ -431,7 +432,23 @@ struct ContentView: View {
             }
         }
         .task {
-            try? await rfcProvider.fetchRFCs()
+            // distant past
+            var last_check = 0.0
+            let check_interval = 2.0 * 24.0 * 3600.0     // 2 days in seconds
+
+            // only check for RFC index updates once every 48 hours
+            if let last = rfcIndexLastTime {
+                if let sec = TimeInterval(last) {
+                    last_check = sec
+                }
+            }
+            // if we haven't checked within the check interval, check now (still using our ETag)
+            // TODO: make RFC list refreshable
+            let now = Date().timeIntervalSince1970
+            if now - last_check > check_interval {
+                try? await rfcProvider.fetchRFCs()
+                rfcIndexLastTime = String(now)
+            }
         }
     }
 }

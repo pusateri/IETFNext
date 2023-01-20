@@ -20,7 +20,7 @@ extension RFC {
     // remove leading 0
     var shortLowerName: String {
         if let n = name {
-            return n.replacingOccurrences(of: "RFC0", with: "rfc")
+            return n.replacingOccurrences(of: "RFC0", with: "rfc").lowercased()
         }
         return "error"
     }
