@@ -245,7 +245,8 @@ struct ContentView: View {
     @State var sessionFilterMode: SessionFilterMode = .none
     @State var groupFilterMode: GroupFilterMode = .none
     @State var rfcFilterMode: RFCFilterMode = .none
-    @State var downloadDetailTitle: String? = nil
+    @State var rfcDetailShortTitle: String? = nil
+    @State var rfcDetailLongTitle: String? = nil
 
     @State var listSelection: SidebarOption? = nil
     @SceneStorage("top.detailSelection") var detailSelection: SidebarOption?
@@ -358,9 +359,10 @@ struct ContentView: View {
                     groupFilterMode: $groupFilterMode,
                     rfcFilterMode: $rfcFilterMode,
                     listMode: listMode,
+                    shortTitle: $rfcDetailShortTitle,
+                    longTitle: $rfcDetailLongTitle,
                     html: $html,
                     localFileURL: $localFileURL,
-                    title: $downloadDetailTitle,
                     columnVisibility: $columnVisibility
                 )
             } else {
@@ -371,8 +373,10 @@ struct ContentView: View {
                 switch(ds) {
                 case .locations:
                     LocationDetailView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)
-                case .download, .rfc, .bcp, .fyi, .std:
-                    DownloadDetailView(html:$html, localFileURL:$localFileURL, title: $downloadDetailTitle, columnVisibility:$columnVisibility)
+                case .download:
+                    DownloadDetailView(selectedDownload: $selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
+                case .rfc, .bcp, .fyi, .std:
+                    RFCDetailView(selectedRFC: $selectedRFC, shortTitle: $rfcDetailShortTitle, longTitle: $rfcDetailLongTitle, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
                 default:
                     DetailView(
                         selectedMeeting:$selectedMeeting,

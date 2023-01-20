@@ -77,9 +77,10 @@ struct RFCListView: View {
     @Binding var selectedDownload: Download?
     @Binding var rfcFilterMode: RFCFilterMode
     var listMode: SidebarOption
+    @Binding var shortTitle: String?
+    @Binding var longTitle: String?
     @Binding var html: String
     @Binding var localFileURL: URL?
-    @Binding var title: String?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @State private var searchText = ""
@@ -89,8 +90,15 @@ struct RFCListView: View {
         ScrollViewReader { scrollViewReader in
             DynamicFetchRequestView(withMode: listMode, searchText: searchText, filterMode: $rfcFilterMode) { rfcs in
                 List(rfcs, id: \.self, selection: $selectedRFC) { rfc in
-                    RFCListRowView(rfc: rfc, rfcFilterMode: $rfcFilterMode, listMode: listMode, html: $html, title: $title)
-                        .listRowSeparator(.visible)
+                    RFCListRowView(
+                        rfc: rfc,
+                        rfcFilterMode: $rfcFilterMode,
+                        listMode: listMode,
+                        shortTitle: $shortTitle,
+                        longTitle: $longTitle,
+                        html: $html
+                    )
+                    .listRowSeparator(.visible)
                 }
                 .listStyle(.inset)
                 .searchable(text: $searchText, placement: .automatic, prompt: "Number or Title string")
@@ -101,27 +109,31 @@ struct RFCListView: View {
 #endif
             }
             .toolbar {
-                if listMode == .rfc {
 #if os(macOS)
-                    ToolbarItem(placement: .navigation) {
-                        RFCListTitleView(rfcFilterMode: $rfcFilterMode)
-                    }
+                ToolbarItem(placement: .navigation) {
+                    RFCListTitleView(rfcFilterMode: $rfcFilterMode)
+                }
+                if listMode == .rfc {
                     ToolbarItem(placement: .navigation) {
                         RFCFilterMenu(rfcFilterMode: $rfcFilterMode)
                     }
+                }
 #else
-                    ToolbarItem(placement: .principal) {
-                        RFCListTitleView(rfcFilterMode: $rfcFilterMode)
-                    }
+                ToolbarItem(placement: .principal) {
+                    RFCListTitleView(rfcFilterMode: $rfcFilterMode)
+                }
+                if listMode == .rfc {
                     ToolbarItem(placement: .primaryAction) {
                         RFCFilterMenu(rfcFilterMode: $rfcFilterMode)
                     }
-#endif
                 }
+#endif
             }
             .onChange(of: selectedRFC) { newValue in
-                if let doc = newValue {
-                    loadRFC(doc: doc)
+                if let rfc = newValue {
+                    longTitle = rfc.title
+                    shortTitle = rfc.name2
+                    loadRFC(doc: rfc)
                 }
             }
             .onChange(of: model.download) { newValue in
@@ -141,8 +153,6 @@ struct RFCListView: View {
                     withAnimation {
                         scrollViewReader.scrollTo(doc, anchor: .center)
                     }
-                } else {
-                    html = BLANK
                 }
                 if columnVisibility == .all {
                     columnVisibility = .doubleColumn
@@ -154,7 +164,6 @@ struct RFCListView: View {
 
 extension RFCListView {
     private func loadDownloadFile(from:Download) {
-        title = selectedDownload?.title ?? ""
         if let mimeType = from.mimeType {
             if mimeType == "application/pdf" {
                 if let filename = from.filename {
@@ -199,7 +208,7 @@ extension RFCListView {
     }
 
     private func loadRFC(doc: RFC) {
-        let urlString = "https://www.rfc-editor.org/rfc/\(doc.name!.lowercased()).html"
+        let urlString = "https://www.rfc-editor.org/rfc/\(doc.shortLowerName).html"
         if let url = URL(string: urlString) {
             let download = fetchDownload(kind:.rfc, url:url)
             if let download = download {

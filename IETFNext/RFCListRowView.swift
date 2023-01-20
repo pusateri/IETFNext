@@ -25,10 +25,9 @@ struct RFCListRowView: View {
     @ObservedObject var rfc: RFC
     @Binding var rfcFilterMode: RFCFilterMode
     var listMode: SidebarOption
+    @Binding var shortTitle: String?
+    @Binding var longTitle: String?
     @Binding var html: String
-    @Binding var title: String?
-
-    @State var oldColorScheme: ColorScheme? = nil
 
     var body: some View {
         HStack {
@@ -98,7 +97,8 @@ struct RFCListRowView: View {
                             .foregroundColor(.secondary)
                         if rfc.branch {
                             Button(action: {
-                                title = rfc.title
+                                longTitle = rfc.title
+                                shortTitle = rfc.name2
                                 showGraph(rfc: rfc, colorScheme: colorScheme)
                             }) {
                                 Image(systemName: "arrow.triangle.pull")

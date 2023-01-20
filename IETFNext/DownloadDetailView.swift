@@ -9,10 +9,9 @@ import SwiftUI
 
 struct DownloadDetailView: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
-    //@Binding var selectedDownload: Download?
+    @Binding var selectedDownload: Download?
     @Binding var html: String
     @Binding var localFileURL: URL?
-    @Binding var title: String?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     var body: some View {
@@ -20,7 +19,7 @@ struct DownloadDetailView: View {
         .toolbar {
             if hSizeClass == .regular {
                 ToolbarItem(placement: .principal) {
-                    Text(title ?? "")
+                    Text(selectedDownload?.title ?? "")
                 }
             }
 #if !os(macOS)

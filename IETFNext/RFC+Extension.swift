@@ -17,6 +17,14 @@ extension RFC {
         return "Unnamed"
     }
 
+    // remove leading 0
+    var shortLowerName: String {
+        if let n = name {
+            return n.replacingOccurrences(of: "RFC0", with: "rfc")
+        }
+        return "error"
+    }
+
     var shortStream: String {
         if let orig = stream {
             switch(orig) {

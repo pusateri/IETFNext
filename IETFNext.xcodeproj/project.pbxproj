@@ -13,6 +13,7 @@
 		F80CA271294920D9002AD2C6 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA270294920D9002AD2C6 /* DownloadViewModel.swift */; };
 		F80CA275294ABA24002AD2C6 /* HTML.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA274294ABA24002AD2C6 /* HTML.swift */; };
 		F8249B2E2979DC83004B66DF /* DynamicFetchRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8249B2D2979DC83004B66DF /* DynamicFetchRequestView.swift */; };
+		F8249B30297ABB1F004B66DF /* RFCDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8249B2F297ABB1F004B66DF /* RFCDetailView.swift */; };
 		F82FFEA529624ED1007AA54A /* DownloadDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FFEA429624ED1007AA54A /* DownloadDetailView.swift */; };
 		F82FFEAA2964C73C007AA54A /* SwiftyXMLParser in Frameworks */ = {isa = PBXBuildFile; productRef = F82FFEA92964C73C007AA54A /* SwiftyXMLParser */; };
 		F82FFEAC2964C8FF007AA54A /* RFCParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FFEAB2964C8FE007AA54A /* RFCParser.swift */; };
@@ -86,6 +87,7 @@
 		F80CA274294ABA24002AD2C6 /* HTML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTML.swift; sourceTree = "<group>"; };
 		F80CA276294B937B002AD2C6 /* IETFNext 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 3.xcdatamodel"; sourceTree = "<group>"; };
 		F8249B2D2979DC83004B66DF /* DynamicFetchRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicFetchRequestView.swift; sourceTree = "<group>"; };
+		F8249B2F297ABB1F004B66DF /* RFCDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCDetailView.swift; sourceTree = "<group>"; };
 		F82FFEA329621B0B007AA54A /* IETFNext 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 5.xcdatamodel"; sourceTree = "<group>"; };
 		F82FFEA429624ED1007AA54A /* DownloadDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadDetailView.swift; sourceTree = "<group>"; };
 		F82FFEAB2964C8FE007AA54A /* RFCParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RFCParser.swift; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 				F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */,
 				F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */,
 				F85D99C22968CC9E00DE37E0 /* RFC+Extension.swift */,
+				F8249B2F297ABB1F004B66DF /* RFCDetailView.swift */,
 				F884CA2F29762AF7004B45C7 /* RFCListRowView.swift */,
 				F8F129C429776E970096B3D4 /* RFCFilterMenu.swift */,
 				F82FFEAE2965D897007AA54A /* RFCListView.swift */,
@@ -438,6 +441,7 @@
 				F85D55C2295E72B100569A77 /* MacOSCompat.swift in Sources */,
 				F85D55C4295F71DB00569A77 /* SessionFilterMenu.swift in Sources */,
 				F8E9B9D32935070D00CA6F09 /* MeetingListView.swift in Sources */,
+				F8249B30297ABB1F004B66DF /* RFCDetailView.swift in Sources */,
 				F80CA269294778FA002AD2C6 /* GroupListRowView.swift in Sources */,
 				F80CA26D2947BC73002AD2C6 /* SessionListLocationView.swift in Sources */,
 				F8E127C22940E254004A35E8 /* DetailView.swift in Sources */,
