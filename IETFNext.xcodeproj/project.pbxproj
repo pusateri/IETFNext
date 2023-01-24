@@ -19,6 +19,7 @@
 		F82FFEAC2964C8FF007AA54A /* RFCParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FFEAB2964C8FE007AA54A /* RFCParser.swift */; };
 		F82FFEAF2965D897007AA54A /* RFCListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FFEAE2965D897007AA54A /* RFCListView.swift */; };
 		F83750612978741400EBABB4 /* SplitViewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83750602978741400EBABB4 /* SplitViewContent.swift */; };
+		F855A19929803C1F00CDE2C9 /* UIDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F855A19829803C1F00CDE2C9 /* UIDevice+Extension.swift */; };
 		F85D55C0295E05F900569A77 /* DetailViewUnwrapped.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55BF295E05F900569A77 /* DetailViewUnwrapped.swift */; };
 		F85D55C2295E72B100569A77 /* MacOSCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C1295E72B100569A77 /* MacOSCompat.swift */; };
 		F85D55C4295F71DB00569A77 /* SessionFilterMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */; };
@@ -96,6 +97,7 @@
 		F82FFEAE2965D897007AA54A /* RFCListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCListView.swift; sourceTree = "<group>"; };
 		F837505F2978527000EBABB4 /* IETFNext 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 7.xcdatamodel"; sourceTree = "<group>"; };
 		F83750602978741400EBABB4 /* SplitViewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewContent.swift; sourceTree = "<group>"; };
+		F855A19829803C1F00CDE2C9 /* UIDevice+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Extension.swift"; sourceTree = "<group>"; };
 		F85D55BF295E05F900569A77 /* DetailViewUnwrapped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewUnwrapped.swift; sourceTree = "<group>"; };
 		F85D55C1295E72B100569A77 /* MacOSCompat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacOSCompat.swift; sourceTree = "<group>"; };
 		F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFilterMenu.swift; sourceTree = "<group>"; };
@@ -234,6 +236,7 @@
 				F8E127BF293EA7A4004A35E8 /* SessionListView.swift */,
 				F85D55C5295F7A7500569A77 /* SessionListTitleView.swift */,
 				F83750602978741400EBABB4 /* SplitViewContent.swift */,
+				F855A19829803C1F00CDE2C9 /* UIDevice+Extension.swift */,
 				F8E9BA142936B5FA00CA6F09 /* WebView.swift */,
 				F8E9B9A52934101300CA6F09 /* Assets.xcassets */,
 				F8E9B9A72934101300CA6F09 /* IETFNext.entitlements */,
@@ -459,6 +462,7 @@
 				F8E127C92943F13B004A35E8 /* Revision.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
 				F884CA3029762AF7004B45C7 /* RFCListRowView.swift in Sources */,
+				F855A19929803C1F00CDE2C9 /* UIDevice+Extension.swift in Sources */,
 				F8249B2E2979DC83004B66DF /* DynamicFetchRequestView.swift in Sources */,
 				F8F129C529776E970096B3D4 /* RFCFilterMenu.swift in Sources */,
 				F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */,

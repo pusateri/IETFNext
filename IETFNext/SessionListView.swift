@@ -9,21 +9,77 @@ import SwiftUI
 import CoreData
 
 
-#if !os(macOS)
-extension UIDevice {
-    static var isIPad: Bool {
-        UIDevice.current.userInterfaceIdiom == .pad
-    }
+extension DynamicSectionedFetchRequestView where T : Session {
 
-    static var isIPhone: Bool {
-        UIDevice.current.userInterfaceIdiom == .phone
+    init(withMeeting meeting: Binding<Meeting?>, searchText: String, filterMode: Binding<SessionFilterMode>, @ViewBuilder content: @escaping (SectionedFetchResults<String, T>) -> Content) {
+
+        var now: Date
+        var search_criteria = searchText.isEmpty ? "" : "((name contains[cd] %@) OR (group.acronym contains[cd] %@)) AND "
+        var args: [CVarArg] = searchText.isEmpty ? [] : [searchText, searchText]
+
+        search_criteria += "(meeting.number = %@) AND (status != \"canceled\")"
+        args.append(meeting.wrappedValue?.number ?? "0")
+
+        switch(filterMode.wrappedValue) {
+            case .favorites:
+                search_criteria += " AND (group.favorite = true)"
+            case .bofs:
+                search_criteria += " AND (is_bof = true)"
+            case .now:
+                now = Date()
+                search_criteria += " AND (start > %@) AND (end < %@)"
+                args.append(now as CVarArg)
+                args.append(now as CVarArg)
+            case .today:
+                now = Date()
+                let calendar = Calendar.current
+                let begin = calendar.startOfDay(for: now)
+                let end = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: now)
+                if let end = end {
+                    search_criteria += " AND (start > %@) AND (end < %@)"
+                    args.append(begin as CVarArg)
+                    args.append(end as CVarArg)
+                } else {
+                        // we should NEVER hit this case but we don't want it to crash unexpectedly
+                    search_criteria += " AND (start > %@)"
+                    args.append(begin as CVarArg)
+                }
+            case .none:
+                break
+            case .area_art:
+                search_criteria += " AND (group.area.name = \"art\")"
+            case .area_gen:
+                search_criteria += " AND (group.area.name = \"gen\")"
+            case .area_iab:
+                search_criteria += " AND (group.area.name = \"iab\")"
+            case .area_ietf:
+                search_criteria += " AND (group.area.name = \"ietf\")"
+            case .area_int:
+                search_criteria += " AND (group.area.name = \"int\")"
+            case .area_irtf:
+                search_criteria += " AND (group.area.name = \"irtf\")"
+            case .area_ops:
+                search_criteria += " AND (group.area.name = \"ops\")"
+            case .area_rtg:
+                search_criteria += " AND (group.area.name = \"rtg\")"
+            case .area_sec:
+                search_criteria += " AND (group.area.name = \"sec\")"
+            case .area_tsv:
+                search_criteria += " AND (group.area.name = \"tsv\")"
+        }
+
+        let predicate = NSPredicate(format: search_criteria, argumentArray: args)
+
+        let sortDescriptors = [
+            NSSortDescriptor(keyPath: \Session.start, ascending: true),
+            NSSortDescriptor(keyPath: \Session.end, ascending: false),
+            NSSortDescriptor(keyPath: \Session.name, ascending: true),
+        ]
+        self.init( withPredicate: predicate, andSectionIdentifier: \.day!, andSortDescriptor: sortDescriptors, content: content)
     }
 }
-#endif
-
 struct SessionListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
     @Binding var sessionFilterMode: SessionFilterMode
@@ -31,6 +87,7 @@ struct SessionListFilteredView: View {
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @State var selected: Session? = nil
+    @State private var searchText = ""
     @SceneStorage("schedule.selection") var sessionID: Int?
 
     private func fetchSession(session_id: Int32) -> Session? {
@@ -42,89 +99,27 @@ struct SessionListFilteredView: View {
         return results?.first
     }
 
-    init(selectedMeeting: Binding<Meeting?>, selectedGroup: Binding<Group?>, sessionFilterMode: Binding<SessionFilterMode>, html: Binding<String>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
-        var predicate: NSPredicate
-        var now: Date
-        let number = selectedMeeting.wrappedValue?.number ?? "0"
-
-        switch(sessionFilterMode.wrappedValue) {
-        case .favorites:
-            predicate = NSPredicate(format: "meeting.number = %@ AND group.favorite = %d AND (status != \"canceled\")", number, true)
-        case .bofs:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (is_bof = %d) AND (status != \"canceled\")", number, true)
-        case .now:
-            now = Date()
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (start > %@) AND (end < %@) AND (status != \"canceled\")", number, now as CVarArg, now as CVarArg)
-        case .today:
-            now = Date()
-            let calendar = Calendar.current
-            let begin = calendar.startOfDay(for: now)
-            let end = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: now)
-            if let end = end {
-                predicate = NSPredicate(format: "(meeting.number = %@) AND (start > %@) AND (end < %@) AND (status != \"canceled\")", number, begin as CVarArg, end as CVarArg)
-            } else {
-                // we should NEVER hit this case but we don't want it to crash unexpectedly
-                predicate = NSPredicate(format: "(meeting.number = %@) AND (start > %@)", number, begin as CVarArg)
-            }
-        case .none:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (status != \"canceled\")", number)
-        case .area_art:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "art")
-        case .area_gen:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "gen")
-        case .area_iab:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "iab")
-        case .area_ietf:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "ietf")
-        case .area_int:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "int")
-        case .area_irtf:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "irtf")
-        case .area_ops:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "ops")
-        case .area_rtg:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "rtg")
-        case .area_sec:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "sec")
-        case .area_tsv:
-            predicate = NSPredicate(format: "(meeting.number = %@) AND (group.area.name = %@) AND (status != \"canceled\")", number, "tsv")
-        }
-
-        _fetchRequest = SectionedFetchRequest<String, Session> (
-            sectionIdentifier: \.day!,
-            sortDescriptors: [
-                NSSortDescriptor(keyPath: \Session.start, ascending: true),
-                NSSortDescriptor(keyPath: \Session.end, ascending: false),
-                NSSortDescriptor(keyPath: \Session.name, ascending: true),
-            ],
-            predicate: predicate,
-            animation: .default
-        )
-
-        self._selectedMeeting = selectedMeeting
-        self._selectedGroup = selectedGroup
-        self._sessionFilterMode = sessionFilterMode
-        self._html = html
-        self._columnVisibility = columnVisibility
-    }
-
     var body: some View {
         ScrollViewReader { scrollViewReader in
-            List(fetchRequest, selection: $selected) { section in
-                Section(header: Text(section.id).foregroundColor(.primary)) {
-                    ForEach(section, id: \.self) { session in
-                        if let session_group = session.group {
-                            SessionListRowView(session: session, group: session_group)
-                                .listRowSeparator(.visible)
-                            //.listRowBackground(session.is_bof ? Color(hex: 0xbaffff, alpha: 0.2) : Color(.clear))
+            DynamicSectionedFetchRequestView(withMeeting: $selectedMeeting, searchText: searchText, filterMode: $sessionFilterMode) { results in
+                List(results, selection: $selected) { section in
+                    Section(header: Text(section.id).foregroundColor(.primary)) {
+                        ForEach(section, id: \.self) { session in
+                            if let session_group = session.group {
+                                SessionListRowView(session: session, group: session_group)
+                                    .listRowSeparator(.visible)
+                            }
                         }
                     }
                 }
-            }
-            .listStyle(.inset)
+                .listStyle(.inset)
+                .searchable(text: $searchText, placement: .automatic, prompt: "Session name or Group acronym")
+                .disableAutocorrection(true)
 #if !os(macOS)
-            .navigationBarTitleDisplayMode(.inline)
+                .keyboardType(.alphabet)
+                .navigationBarTitleDisplayMode(.inline)
 #endif
+            }
             .toolbar {
 #if os(macOS)
                 ToolbarItem(placement: .navigation) {
@@ -152,11 +147,6 @@ struct SessionListFilteredView: View {
                     }
                 }
 #endif
-            }
-            .onChange(of: selectedMeeting) { newValue in
-                if let meeting = newValue {
-                    fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
-                }
             }
             .onChange(of: selected) { newValue in
                 if let session = newValue {
