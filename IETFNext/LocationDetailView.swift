@@ -34,6 +34,7 @@ struct LocationDetailView: View {
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedLocation: Location?
     @Binding var sessionFormatter: DateFormatter?
+    @Binding var timerangeFormatter: DateFormatter?
 
     var body: some View {
         VStack() {
@@ -82,9 +83,11 @@ struct LocationDetailView: View {
                                         ForEach(groupByDate[section]!, id: \.self) { session in
                                             VStack(alignment: .leading) {
                                                 HStack {
-                                                    Text("\(session.timerange!)")
-                                                        .font(.title3)
-                                                        .foregroundColor(.primary)
+                                                    if let formatter = timerangeFormatter {
+                                                        Text("\(formatter.string(from: session.start!))-\(formatter.string(from: session.end!))")
+                                                            .font(.title3)
+                                                            .foregroundColor(.primary)
+                                                    }
                                                     Spacer()
                                                     Text("\(session.group?.acronym ?? "")")
                                                         .foregroundColor(.primary)

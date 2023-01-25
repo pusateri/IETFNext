@@ -239,6 +239,7 @@ struct ContentView: View {
     @State var selectedLocation: Location?
     @State var selectedDownload: Download?
     @State var sessionFormatter: DateFormatter? = nil
+    @State var timerangeFormatter: DateFormatter? = nil
     @State var selectedRFC: RFC? = nil
     @State var selectedBCP: RFC? = nil
     @State var html: String = ""
@@ -358,6 +359,7 @@ struct ContentView: View {
                     selectedDownload: $selectedDownload,
                     selectedRFC: $selectedRFC,
                     sessionFormatter: $sessionFormatter,
+                    timerangeFormatter: $timerangeFormatter,
                     sessionFilterMode: $sessionFilterMode,
                     groupFilterMode: $groupFilterMode,
                     rfcFilterMode: $rfcFilterMode,
@@ -375,7 +377,12 @@ struct ContentView: View {
             if let ds = detailSelection {
                 switch(ds) {
                 case .locations:
-                    LocationDetailView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, sessionFormatter: $sessionFormatter)
+                    LocationDetailView(
+                        selectedMeeting: $selectedMeeting,
+                        selectedLocation: $selectedLocation,
+                        sessionFormatter: $sessionFormatter,
+                        timerangeFormatter: $timerangeFormatter
+                    )
                 case .download:
                     DownloadDetailView(selectedDownload: $selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
                 case .rfc, .bcp, .fyi, .std:
@@ -407,16 +414,25 @@ struct ContentView: View {
 #endif
         }
         .onChange(of: selectedMeeting) { newValue in
+            let rangeFormatter = DateFormatter()
+            rangeFormatter.locale = Locale(identifier: Locale.current.identifier)
+            rangeFormatter.dateFormat = "HHmm"
+            rangeFormatter.calendar = Calendar(identifier: .iso8601)
+
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: Locale.current.identifier)
             formatter.dateFormat = "yyyy-MM-dd EEEE"
             formatter.calendar = Calendar(identifier: .iso8601)
             if let meeting = newValue {
                 formatter.timeZone = TimeZone(identifier: meeting.time_zone!)
+                rangeFormatter.timeZone = TimeZone(identifier: meeting.time_zone!)
             } else {
                 formatter.timeZone = TimeZone(secondsFromGMT: 0)
+                rangeFormatter.timeZone = TimeZone(secondsFromGMT: 0)
             }
             sessionFormatter = formatter
+            timerangeFormatter = rangeFormatter
+
         }
         .onChange(of: listSelection) { newValue in
             if let ls = newValue {

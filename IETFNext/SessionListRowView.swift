@@ -7,10 +7,13 @@
 
 import SwiftUI
 
+
 struct SessionListRowView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @ObservedObject var session: Session
     @ObservedObject var group: Group
+    @Binding var timerangeFormatter: DateFormatter?
+
     var body: some View {
 
         HStack {
@@ -29,8 +32,10 @@ struct SessionListRowView: View {
                     .bold()
                     .foregroundColor(.primary)
                 HStack {
-                    Text("\(session.timerange!)")
-                        .foregroundColor(.primary)
+                    if let formatter = timerangeFormatter {
+                        Text("\(formatter.string(from: session.start!))-\(formatter.string(from: session.end!))")
+                            .foregroundColor(.primary)
+                    }
                     Spacer()
                     if let loc = session.location {
                         Text("\(loc.name!)")

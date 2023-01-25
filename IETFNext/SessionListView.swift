@@ -85,6 +85,7 @@ struct SessionListFilteredView: View {
     @Binding var selectedGroup: Group?
     @Binding var sessionFilterMode: SessionFilterMode
     @Binding var sessionFormatter: DateFormatter?
+    @Binding var timerangeFormatter: DateFormatter?
     @Binding var html: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
@@ -114,7 +115,7 @@ struct SessionListFilteredView: View {
                             Section(header: Text(section).foregroundColor(.primary)) {
                                 ForEach(groupByDate[section]!, id: \.self) { session in
                                     if let session_group = session.group {
-                                        SessionListRowView(session: session, group: session_group)
+                                        SessionListRowView(session: session, group: session_group, timerangeFormatter: $timerangeFormatter)
                                             .listRowSeparator(.visible)
                                     }
                                 }

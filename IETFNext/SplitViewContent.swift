@@ -14,6 +14,7 @@ struct SplitViewContent: View {
     @Binding var selectedDownload: Download?
     @Binding var selectedRFC: RFC?
     @Binding var sessionFormatter: DateFormatter?
+    @Binding var timerangeFormatter: DateFormatter?
     @Binding var sessionFilterMode: SessionFilterMode
     @Binding var groupFilterMode: GroupFilterMode
     @Binding var rfcFilterMode: RFCFilterMode
@@ -32,7 +33,15 @@ struct SplitViewContent: View {
         VStack {
             switch(listMode) {
             case .schedule:
-                SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, sessionFilterMode: $sessionFilterMode, sessionFormatter: $sessionFormatter, html:$html, columnVisibility:$columnVisibility)
+                SessionListFilteredView(
+                    selectedMeeting: $selectedMeeting,
+                    selectedGroup: $selectedGroup,
+                    sessionFilterMode: $sessionFilterMode,
+                    sessionFormatter: $sessionFormatter,
+                    timerangeFormatter: $timerangeFormatter,
+                    html:$html,
+                    columnVisibility:$columnVisibility
+                )
                     .keyboardShortcut("s")
                     .navigationSplitViewColumnWidth(min: SB_MIN, ideal: SB_IDEAL, max: SB_MAX)
             case .groups:

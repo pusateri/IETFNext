@@ -220,18 +220,6 @@ public func loadData(context: NSManagedObjectContext, meeting: Meeting?) async {
             urlrequest.cachePolicy = .reloadIgnoringLocalCacheData
         }
         do {
-            let dayFormatter = DateFormatter()
-            dayFormatter.locale = Locale(identifier: Locale.current.identifier)
-            dayFormatter.dateFormat = "yyyy-MM-dd EEEE"
-            dayFormatter.calendar = Calendar(identifier: .iso8601)
-            dayFormatter.timeZone = TimeZone(identifier: meeting.time_zone!)
-
-            let rangeFormatter = DateFormatter()
-            rangeFormatter.locale = Locale(identifier: Locale.current.identifier)
-            rangeFormatter.dateFormat = "HHmm"
-            rangeFormatter.calendar = Calendar(identifier: .iso8601)
-            rangeFormatter.timeZone = TimeZone(identifier: meeting.time_zone!)
-
             let (data, response) = try await URLSession.shared.data(for: urlrequest)
             guard let httpResponse = response as? HTTPURLResponse else {
                 print("No HTTP Result")
@@ -274,7 +262,7 @@ public func loadData(context: NSManagedObjectContext, meeting: Meeting?) async {
                             continue
                         case .session(let JSONsession):
                             if let baseURL = baseURL {
-                                updateSession(context: context, baseURL: baseURL, dayFormatter:dayFormatter, rangeFormatter:rangeFormatter, meeting:meeting, session:JSONsession)
+                                updateSession(context: context, baseURL: baseURL, meeting:meeting, session:JSONsession)
                             }
                         }
                     }
@@ -942,7 +930,7 @@ private func updatePresentation(context: NSManagedObjectContext, presentation: J
     return p
 }
 
-private func updateSession(context: NSManagedObjectContext, baseURL: URL, dayFormatter: DateFormatter, rangeFormatter: DateFormatter, meeting: Meeting, session: JSONSession) {
+private func updateSession(context: NSManagedObjectContext, baseURL: URL, meeting: Meeting, session: JSONSession) {
 
     let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
     fetchSession.predicate = NSPredicate(format: "id = %d", session.id)
@@ -950,8 +938,6 @@ private func updateSession(context: NSManagedObjectContext, baseURL: URL, dayFor
     var s: Session!
     var save = false
     let end = session.start.addingTimeInterval(session.duration.value)
-    let start_time = rangeFormatter.string(from: session.start)
-    let end_time = rangeFormatter.string(from: end)
     let results = try? context.fetch(fetchSession)
 
     if results?.count == 0 {
@@ -1016,11 +1002,6 @@ private func updateSession(context: NSManagedObjectContext, baseURL: URL, dayFor
     }
     if s.end != end {
         s.end = end
-        save = true
-    }
-    let timerange = "\(start_time)-\(end_time)"
-    if s.timerange != timerange {
-        s.timerange = timerange
         save = true
     }
     if s.status != session.status {
