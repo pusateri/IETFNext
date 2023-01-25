@@ -22,10 +22,11 @@ public enum SidebarOption: String {
 struct IETFNextApp: App {
     @State private var showingMeetings = false
     @State var menuSidebarOption: SidebarOption? = nil
+    @State var useLocalTime: Bool = false
 
     var body: some Scene {
         WindowGroup {
-            ContentView(showingMeetings: $showingMeetings, menuSidebarOption: $menuSidebarOption)
+            ContentView(showingMeetings: $showingMeetings, menuSidebarOption: $menuSidebarOption, useLocalTime: $useLocalTime)
                 .environment(\.managedObjectContext, RFCProvider.shared.container.viewContext)
         }
 #if os(macOS)
@@ -65,6 +66,7 @@ struct IETFNextApp: App {
                     Text("Change Meeting")
                 }
                 .keyboardShortcut("a")
+                Toggle("Use Local Time", isOn: $useLocalTime)
             }
             CommandMenu("Go") {
                 Button(action: {

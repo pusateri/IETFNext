@@ -232,6 +232,7 @@ struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     @Binding var showingMeetings: Bool
     @Binding var menuSidebarOption: SidebarOption?
+    @Binding var useLocalTime: Bool
 
     @State var columnVisibility: NavigationSplitViewVisibility = .doubleColumn
     @State var selectedMeeting: Meeting?
@@ -342,6 +343,7 @@ struct ContentView: View {
                             Label("Change Meeting", systemImage: "airplane.departure")
                         }
                         .keyboardShortcut("a")
+                        Toggle("Use Local Time", isOn: $useLocalTime)
                         Label("Version \(Bundle.main.releaseVersionNumber).\(Bundle.main.buildVersionNumber) (\(Git.kRevisionNumber))", systemImage: "v.circle")
                     }
                     label: {
@@ -413,26 +415,14 @@ struct ContentView: View {
             .frame(width: 600, height: 740)
 #endif
         }
+        .onChange(of: useLocalTime) { _ in
+            sessionFormatter = buildSessionFormatter(meeting: selectedMeeting, useLocalTime: useLocalTime)
+            timerangeFormatter = buildRangeFormatter(meeting: selectedMeeting, useLocalTime: useLocalTime)
+            UserDefaults.standard.set(useLocalTime, forKey:"UseLocalTime")
+        }
         .onChange(of: selectedMeeting) { newValue in
-            let rangeFormatter = DateFormatter()
-            rangeFormatter.locale = Locale(identifier: Locale.current.identifier)
-            rangeFormatter.dateFormat = "HHmm"
-            rangeFormatter.calendar = Calendar(identifier: .iso8601)
-
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: Locale.current.identifier)
-            formatter.dateFormat = "yyyy-MM-dd EEEE"
-            formatter.calendar = Calendar(identifier: .iso8601)
-            if let meeting = newValue {
-                formatter.timeZone = TimeZone(identifier: meeting.time_zone!)
-                rangeFormatter.timeZone = TimeZone(identifier: meeting.time_zone!)
-            } else {
-                formatter.timeZone = TimeZone(secondsFromGMT: 0)
-                rangeFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-            }
-            sessionFormatter = formatter
-            timerangeFormatter = rangeFormatter
-
+            sessionFormatter = buildSessionFormatter(meeting: newValue, useLocalTime: useLocalTime)
+            timerangeFormatter = buildRangeFormatter(meeting: newValue, useLocalTime: useLocalTime)
         }
         .onChange(of: listSelection) { newValue in
             if let ls = newValue {
@@ -443,6 +433,8 @@ struct ContentView: View {
             detailSelection = newValue
         }
         .onAppear {
+            useLocalTime = UserDefaults.standard.bool(forKey:"UseLocalTime")
+
             if let number = UserDefaults.standard.string(forKey:"MeetingNumber") {
                 viewContext.performAndWait {
                     selectedMeeting = selectMeeting(context: viewContext, number: number)
@@ -480,5 +472,42 @@ struct ContentView: View {
                 rfcIndexLastTime = String(now)
             }
         }
+    }
+}
+
+extension ContentView {
+    private func buildSessionFormatter(meeting: Meeting?, useLocalTime: Bool) -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: Locale.current.identifier)
+        formatter.dateFormat = "yyyy-MM-dd EEEE"
+        formatter.calendar = Calendar(identifier: .iso8601)
+        if useLocalTime {
+            formatter.timeZone = TimeZone.current
+        } else {
+            if let meeting = meeting {
+                formatter.timeZone = TimeZone(identifier: meeting.time_zone!)
+            } else {
+                formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            }
+        }
+        return formatter
+    }
+
+    private func buildRangeFormatter(meeting: Meeting?, useLocalTime: Bool) -> DateFormatter {
+        let rangeFormatter = DateFormatter()
+        rangeFormatter.locale = Locale(identifier: Locale.current.identifier)
+        rangeFormatter.dateFormat = "HHmm"
+        rangeFormatter.calendar = Calendar(identifier: .iso8601)
+
+        if useLocalTime {
+            rangeFormatter.timeZone = TimeZone.current
+        } else {
+            if let meeting = meeting {
+                rangeFormatter.timeZone = TimeZone(identifier: meeting.time_zone!)
+            } else {
+                rangeFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+            }
+        }
+        return rangeFormatter
     }
 }
