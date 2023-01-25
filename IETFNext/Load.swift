@@ -1018,11 +1018,6 @@ private func updateSession(context: NSManagedObjectContext, baseURL: URL, dayFor
         s.end = end
         save = true
     }
-    let day = dayFormatter.string(from: session.start)
-    if s.day != day {
-        s.day = day
-        save = true
-    }
     let timerange = "\(start_time)-\(end_time)"
     if s.timerange != timerange {
         s.timerange = timerange

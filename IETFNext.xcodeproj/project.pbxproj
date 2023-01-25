@@ -112,6 +112,7 @@
 		F884CA2F29762AF7004B45C7 /* RFCListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCListRowView.swift; sourceTree = "<group>"; };
 		F884CA3129762C99004B45C7 /* Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
 		F88B7E5B2960931B00F770C9 /* LocationPhotoMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPhotoMenuView.swift; sourceTree = "<group>"; };
+		F8C913352980B2580004D458 /* IETFNext 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 8.xcdatamodel"; sourceTree = "<group>"; };
 		F8CC8222297B9AB300269286 /* weather */ = {isa = PBXFileReference; lastKnownFileType = folder; path = weather; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
@@ -918,6 +919,7 @@
 		F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F8C913352980B2580004D458 /* IETFNext 8.xcdatamodel */,
 				F837505F2978527000EBABB4 /* IETFNext 7.xcdatamodel */,
 				F82FFEAD2964D0DA007AA54A /* IETFNext 6.xcdatamodel */,
 				F82FFEA329621B0B007AA54A /* IETFNext 5.xcdatamodel */,
@@ -926,7 +928,7 @@
 				F80CA26329469780002AD2C6 /* IETFNext 2.xcdatamodel */,
 				F8E9B9A12934101200CA6F09 /* IETFNext.xcdatamodel */,
 			);
-			currentVersion = F837505F2978527000EBABB4 /* IETFNext 7.xcdatamodel */;
+			currentVersion = F8C913352980B2580004D458 /* IETFNext 8.xcdatamodel */;
 			path = IETFNext.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

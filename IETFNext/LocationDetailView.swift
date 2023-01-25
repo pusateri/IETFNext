@@ -29,7 +29,7 @@ struct LocationDetailView: View {
         }
 
         _fetchRequest = SectionedFetchRequest<String, Session> (
-            sectionIdentifier: \.day!,
+            sectionIdentifier: \.status!,
             sortDescriptors: [
                 NSSortDescriptor(keyPath: \Session.start, ascending: true),
                 NSSortDescriptor(keyPath: \Session.end, ascending: false),
