@@ -7,37 +7,33 @@
 
 import SwiftUI
 
-struct LocationDetailView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
-    @Environment(\.verticalSizeClass) var vSizeClass
+extension DynamicFetchRequestView where T : Session {
+    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>, @ViewBuilder content: @escaping (FetchedResults<T>) -> Content) {
 
-    @SectionedFetchRequest<String, Session> var fetchRequest: SectionedFetchResults<String, Session>
-    @Binding var selectedMeeting: Meeting?
-    @Binding var selectedLocation: Location?
-
-    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>) {
         var predicate = NSPredicate(value: false)
-
-        self._selectedMeeting = selectedMeeting
-        self._selectedLocation = selectedLocation
 
         if let loc = selectedLocation.wrappedValue {
             if let meeting = selectedMeeting.wrappedValue {
                 predicate = NSPredicate(format: "(meeting.number = %@) AND (location.name = %@) AND (status != \"canceled\")", meeting.number!, loc.name!)
             }
         }
-
-        _fetchRequest = SectionedFetchRequest<String, Session> (
-            sectionIdentifier: \.status!,
-            sortDescriptors: [
-                NSSortDescriptor(keyPath: \Session.start, ascending: true),
-                NSSortDescriptor(keyPath: \Session.end, ascending: false),
-            ],
-            predicate: predicate,
-            animation: .default
-        )
+        let sortDescriptors = [
+            NSSortDescriptor(keyPath: \Session.start, ascending: true),
+            NSSortDescriptor(keyPath: \Session.end, ascending: false),
+            NSSortDescriptor(keyPath: \Session.name, ascending: true),
+        ]
+        self.init( withPredicate: predicate, andSortDescriptor: sortDescriptors, content: content)
     }
+}
+
+struct LocationDetailView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @Environment(\.verticalSizeClass) var vSizeClass
+
+    @Binding var selectedMeeting: Meeting?
+    @Binding var selectedLocation: Location?
+    @Binding var sessionFormatter: DateFormatter?
 
     var body: some View {
         VStack() {
@@ -74,32 +70,42 @@ struct LocationDetailView: View {
                     }
                 }
                 if vSizeClass != .compact {
-                    List(fetchRequest) { section in
-                        Section(header: Text(section.id).foregroundColor(.accentColor)) {
-                            ForEach(section, id: \.self) { session in
-                                VStack(alignment: .leading) {
-                                    HStack {
-                                        Text("\(session.timerange!)")
-                                            .font(.title3)
-                                            .foregroundColor(.primary)
-                                        Spacer()
-                                        Text("\(session.group?.acronym ?? "")")
-                                            .foregroundColor(.primary)
-                                            .font(.subheadline)
-                                    }
-                                    .padding(.all, 2)
-                                    Text(session.name!)
-                                        .foregroundColor(.secondary)
-                                        .font(.subheadline)
+                    DynamicFetchRequestView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation) { results in
+
+                        if let formatter = sessionFormatter {
+                            let groupByDate = Dictionary(grouping: results, by: {
+                                formatter.string(from: $0.start!)
+                            })
+                            List {
+                                ForEach(groupByDate.keys.sorted(), id: \.self) { section in
+                                    Section(header: Text(section).foregroundColor(.accentColor)) {
+                                        ForEach(groupByDate[section]!, id: \.self) { session in
+                                            VStack(alignment: .leading) {
+                                                HStack {
+                                                    Text("\(session.timerange!)")
+                                                        .font(.title3)
+                                                        .foregroundColor(.primary)
+                                                    Spacer()
+                                                    Text("\(session.group?.acronym ?? "")")
+                                                        .foregroundColor(.primary)
+                                                        .font(.subheadline)
+                                                }
+                                                .padding(.all, 2)
+                                                Text(session.name!)
+                                                    .foregroundColor(.secondary)
+                                                    .font(.subheadline)
 #if os(macOS)
-                                        .padding(.bottom, 5)
+                                                    .padding(.bottom, 5)
 #endif
+                                            }
+                                            .listRowSeparator(.visible)
+                                        }
+                                    }
                                 }
-                                .listRowSeparator(.visible)
                             }
+                            .listStyle(.inset)
                         }
                     }
-                    .listStyle(.inset)
                 }
             } else {
                 if let meeting = selectedMeeting {

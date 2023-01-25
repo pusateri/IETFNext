@@ -78,6 +78,7 @@ extension DynamicFetchRequestView where T : Session {
         self.init( withPredicate: predicate, andSortDescriptor: sortDescriptors, content: content)
     }
 }
+
 struct SessionListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Binding var selectedMeeting: Meeting?
