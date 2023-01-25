@@ -183,7 +183,9 @@ struct LocationListView: View {
         }
         .onAppear {
             if columnVisibility == .all {
-                columnVisibility = .doubleColumn
+                withAnimation {
+                    columnVisibility = .doubleColumn
+                }
             }
         }
     }

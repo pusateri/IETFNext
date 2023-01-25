@@ -156,7 +156,9 @@ struct RFCListView: View {
                     }
                 }
                 if columnVisibility == .all {
-                    columnVisibility = .doubleColumn
+                    withAnimation {
+                        columnVisibility = .doubleColumn
+                    }
                 }
             }
         }

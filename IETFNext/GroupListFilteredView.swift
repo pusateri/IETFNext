@@ -116,7 +116,9 @@ struct GroupListFilteredView: View {
             }
             .onAppear() {
                 if columnVisibility == .all {
-                    columnVisibility = .doubleColumn
+                    withAnimation {
+                        columnVisibility = .doubleColumn
+                    }
                 }
                 if let short = groupShort {
                     selectedGroup = fetchGroup(short: short)

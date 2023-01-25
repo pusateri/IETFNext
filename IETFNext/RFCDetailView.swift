@@ -47,10 +47,13 @@ struct RFCDetailView: View {
                     Button(action: {
                         switch (columnVisibility) {
                             case .detailOnly:
-                                columnVisibility = .doubleColumn
-
+                                withAnimation {
+                                    columnVisibility = .doubleColumn
+                                }
                             default:
-                                columnVisibility = .detailOnly
+                                withAnimation {
+                                    columnVisibility = .detailOnly
+                                }
                         }
                     }) {
                         switch (columnVisibility) {

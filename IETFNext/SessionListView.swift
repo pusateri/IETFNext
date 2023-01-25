@@ -174,7 +174,9 @@ struct SessionListFilteredView: View {
             }
             .onAppear {
                 if columnVisibility == .all {
-                    columnVisibility = .doubleColumn
+                    withAnimation {
+                        columnVisibility = .doubleColumn
+                    }
                 }
                 if let session_id = sessionID {
                     selected = fetchSession(session_id: Int32(session_id))
