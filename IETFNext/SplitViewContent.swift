@@ -23,14 +23,16 @@ struct SplitViewContent: View {
     @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
+    @State var sessionFormatter: DateFormatter? = nil
     let SB_MIN = 270.0         // sidebar minimum size
     let SB_IDEAL = 320.0       // sidebar ideal size
     let SB_MAX = 370.0         // sidebar maximum size
 
     var body: some View {
-        switch(listMode) {
+        VStack {
+            switch(listMode) {
             case .schedule:
-                SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, sessionFilterMode: $sessionFilterMode, html:$html, columnVisibility:$columnVisibility)
+                SessionListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, sessionFilterMode: $sessionFilterMode, sessionFormatter: $sessionFormatter, html:$html, columnVisibility:$columnVisibility)
                     .keyboardShortcut("s")
                     .navigationSplitViewColumnWidth(min: SB_MIN, ideal: SB_IDEAL, max: SB_MAX)
             case .groups:
@@ -56,6 +58,19 @@ struct SplitViewContent: View {
                 DownloadListView(selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
                     .keyboardShortcut("d")
                     .navigationSplitViewColumnWidth(min: SB_MIN, ideal: SB_IDEAL, max: SB_MAX)
+            }
+        }
+        .onChange(of: selectedMeeting) { newValue in
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: Locale.current.identifier)
+            formatter.dateFormat = "yyyy-MM-dd EEEE"
+            formatter.calendar = Calendar(identifier: .iso8601)
+            if let meeting = newValue {
+                formatter.timeZone = TimeZone(identifier: meeting.time_zone!)
+            } else {
+                formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            }
+            sessionFormatter = formatter
         }
     }
 }

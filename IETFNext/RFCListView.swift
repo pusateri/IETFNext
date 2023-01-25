@@ -104,6 +104,7 @@ struct RFCListView: View {
                 .searchable(text: $searchText, placement: .automatic, prompt: "Number or Title string")
                 .disableAutocorrection(true)
 #if !os(macOS)
+                .autocapitalization(.none)
                 .keyboardType(.alphabet)
                 .navigationBarTitleDisplayMode(.inline)
 #endif

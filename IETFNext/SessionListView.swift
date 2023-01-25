@@ -9,9 +9,9 @@ import SwiftUI
 import CoreData
 
 
-extension DynamicSectionedFetchRequestView where T : Session {
+extension DynamicFetchRequestView where T : Session {
 
-    init(withMeeting meeting: Binding<Meeting?>, searchText: String, filterMode: Binding<SessionFilterMode>, @ViewBuilder content: @escaping (SectionedFetchResults<String, T>) -> Content) {
+    init(withMeeting meeting: Binding<Meeting?>, searchText: String, filterMode: Binding<SessionFilterMode>, @ViewBuilder content: @escaping (FetchedResults<T>) -> Content) {
 
         var now: Date
         var search_criteria = searchText.isEmpty ? "" : "((name contains[cd] %@) OR (group.acronym contains[cd] %@)) AND "
@@ -75,7 +75,7 @@ extension DynamicSectionedFetchRequestView where T : Session {
             NSSortDescriptor(keyPath: \Session.end, ascending: false),
             NSSortDescriptor(keyPath: \Session.name, ascending: true),
         ]
-        self.init( withPredicate: predicate, andSectionIdentifier: \.day!, andSortDescriptor: sortDescriptors, content: content)
+        self.init( withPredicate: predicate, andSortDescriptor: sortDescriptors, content: content)
     }
 }
 struct SessionListFilteredView: View {
@@ -83,6 +83,7 @@ struct SessionListFilteredView: View {
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
     @Binding var sessionFilterMode: SessionFilterMode
+    @Binding var sessionFormatter: DateFormatter?
     @Binding var html: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
@@ -101,24 +102,33 @@ struct SessionListFilteredView: View {
 
     var body: some View {
         ScrollViewReader { scrollViewReader in
-            DynamicSectionedFetchRequestView(withMeeting: $selectedMeeting, searchText: searchText, filterMode: $sessionFilterMode) { results in
-                List(results, selection: $selected) { section in
-                    Section(header: Text(section.id).foregroundColor(.primary)) {
-                        ForEach(section, id: \.self) { session in
-                            if let session_group = session.group {
-                                SessionListRowView(session: session, group: session_group)
-                                    .listRowSeparator(.visible)
+            DynamicFetchRequestView(withMeeting: $selectedMeeting, searchText: searchText, filterMode: $sessionFilterMode) { results in
+
+                if let formatter = sessionFormatter {
+                    let groupByDate = Dictionary(grouping: results, by: {
+                        formatter.string(from: $0.start!)
+                    })
+                    List(selection: $selected) {
+                        ForEach(groupByDate.keys.sorted(), id: \.self) { section in
+                            Section(header: Text(section).foregroundColor(.primary)) {
+                                ForEach(groupByDate[section]!, id: \.self) { session in
+                                    if let session_group = session.group {
+                                        SessionListRowView(session: session, group: session_group)
+                                            .listRowSeparator(.visible)
+                                    }
+                                }
                             }
                         }
                     }
-                }
-                .listStyle(.inset)
-                .searchable(text: $searchText, placement: .automatic, prompt: "Session name or Group acronym")
-                .disableAutocorrection(true)
+                    .listStyle(.inset)
+                    .searchable(text: $searchText, placement: .automatic, prompt: "Session name or Group acronym")
+                    .disableAutocorrection(true)
 #if !os(macOS)
-                .keyboardType(.alphabet)
-                .navigationBarTitleDisplayMode(.inline)
+                    .autocapitalization(.none)
+                    .keyboardType(.alphabet)
+                    .navigationBarTitleDisplayMode(.inline)
 #endif
+                }
             }
             .toolbar {
 #if os(macOS)

@@ -69,6 +69,7 @@ struct GroupListFilteredView: View {
                 .searchable(text: $searchText, placement: .automatic, prompt: "Group acronym, name, or BOF")
                 .disableAutocorrection(true)
 #if !os(macOS)
+                .autocapitalization(.none)
                 .keyboardType(.alphabet)
                 .navigationBarTitleDisplayMode(.inline)
 #endif
