@@ -227,6 +227,12 @@ private class ChoiceViewModel: ObservableObject {
     @Published var sections: [SectionChoice] = Choice.sectionChoices
 }
 
+enum LocationDetailMode: String {
+    case location
+    case none
+    case weather
+}
+
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.scenePhase) var scenePhase
@@ -250,6 +256,7 @@ struct ContentView: View {
     @State var rfcFilterMode: RFCFilterMode = .none
     @State var rfcDetailShortTitle: String? = nil
     @State var rfcDetailLongTitle: String? = nil
+    @State var locationDetailMode: LocationDetailMode = .none
 
     @State var listSelection: SidebarOption? = nil
     @SceneStorage("top.detailSelection") var detailSelection: SidebarOption?
@@ -366,6 +373,7 @@ struct ContentView: View {
                     groupFilterMode: $groupFilterMode,
                     rfcFilterMode: $rfcFilterMode,
                     listMode: listMode,
+                    locationDetailMode: $locationDetailMode,
                     shortTitle: $rfcDetailShortTitle,
                     longTitle: $rfcDetailLongTitle,
                     html: $html,
@@ -383,7 +391,8 @@ struct ContentView: View {
                         selectedMeeting: $selectedMeeting,
                         selectedLocation: $selectedLocation,
                         sessionFormatter: $sessionFormatter,
-                        timerangeFormatter: $timerangeFormatter
+                        timerangeFormatter: $timerangeFormatter,
+                        locationDetailMode: $locationDetailMode
                     )
                 case .download:
                     DownloadDetailView(selectedDownload: $selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)

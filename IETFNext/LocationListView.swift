@@ -23,10 +23,12 @@ struct LocationListView: View {
     @SectionedFetchRequest<String, Location> var fetchRequest: SectionedFetchResults<String, Location>
     @Binding var selectedLocation: Location?
     @Binding var selectedMeeting: Meeting?
+    @Binding var locationDetailMode: LocationDetailMode
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
+    @State private var showingWeather = false
 
-    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>, locationDetailMode: Binding<LocationDetailMode>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
         _fetchRequest = SectionedFetchRequest<String, Location>(
             sectionIdentifier: \.level_name!,
             sortDescriptors: [
@@ -38,6 +40,7 @@ struct LocationListView: View {
         )
         self._selectedMeeting = selectedMeeting
         self._selectedLocation = selectedLocation
+        self._locationDetailMode = locationDetailMode
         self._columnVisibility = columnVisibility
     }
 
@@ -111,10 +114,10 @@ struct LocationListView: View {
             ToolbarItem {
                 Menu {
 #if os(macOS)
-                    LocationPhotoMenuView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)
+                    LocationPhotoMenuView(selectedMeeting: $selectedMeeting, locationDetailMode: $locationDetailMode)
 #else
                     if !UIDevice.isIPhone {
-                        LocationPhotoMenuView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation)
+                        LocationPhotoMenuView(selectedMeeting: $selectedMeeting, locationDetailMode: $locationDetailMode)
                     }
 #endif
                     Button(action: {
@@ -157,6 +160,18 @@ struct LocationListView: View {
                         Image(systemName: "mappin.and.ellipse")
                     }
                     .disabled(selectedMeeting?.venue_addr?.isEmpty ?? true)
+                    Button(action: {
+                        locationDetailMode = .weather
+#if !os(macOS)
+                        if UIDevice.isIPhone {
+                            showingWeather.toggle()
+                        }
+#endif
+                    }) {
+                        Text("Historical Weather")
+                        Image(systemName: "cloud.sun.rain")
+                    }
+                    .disabled(selectedMeeting == nil)
                 }
                 label: {
                     Label("Map", systemImage: "map")
@@ -176,9 +191,17 @@ struct LocationListView: View {
             }
 #endif
         }
+        .sheet(isPresented: $showingWeather) {
+            WeatherView()
+        }
         .onChange(of: selectedMeeting) { newValue in
             if let meeting = newValue {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
+            }
+        }
+        .onChange(of: selectedLocation) { newValue in
+            if let _ = newValue {
+                locationDetailMode = .location
             }
         }
         .onAppear {

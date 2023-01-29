@@ -19,6 +19,7 @@ struct SplitViewContent: View {
     @Binding var groupFilterMode: GroupFilterMode
     @Binding var rfcFilterMode: RFCFilterMode
     var listMode: SidebarOption
+    @Binding var locationDetailMode: LocationDetailMode
     @Binding var shortTitle: String?
     @Binding var longTitle: String?
     @Binding var html: String
@@ -49,7 +50,7 @@ struct SplitViewContent: View {
                     .keyboardShortcut("g")
                     .navigationSplitViewColumnWidth(min: SB_MIN, ideal: SB_IDEAL, max: SB_MAX)
             case .locations:
-                LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, columnVisibility: $columnVisibility)
+                LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, locationDetailMode: $locationDetailMode, columnVisibility: $columnVisibility)
                     .keyboardShortcut("l")
                     .navigationSplitViewColumnWidth(min: SB_MIN, ideal: SB_IDEAL, max: SB_MAX)
             case .rfc:

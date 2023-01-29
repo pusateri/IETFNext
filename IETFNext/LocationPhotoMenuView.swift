@@ -9,13 +9,13 @@ import SwiftUI
 
 struct LocationPhotoMenuView: View {
     @Binding var selectedMeeting: Meeting?
-    @Binding var selectedLocation: Location?
+    @Binding var locationDetailMode: LocationDetailMode
 
     var body: some View {
         if let meeting = selectedMeeting {
             if let _ = venuePhotos[meeting.number!] {
                 Button(action: {
-                    selectedLocation = nil
+                    locationDetailMode = .none
                 }) {
                     Text("Show Venue Photo")
                     Image(systemName: "photo")
