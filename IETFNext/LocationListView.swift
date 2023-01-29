@@ -171,7 +171,8 @@ struct LocationListView: View {
                         Text("Historical Weather")
                         Image(systemName: "cloud.sun.rain")
                     }
-                    .disabled(selectedMeeting == nil)
+                    // TODO: make this list part of the weather data array
+                    .disabled(selectedMeeting == nil || ["114", "115", "116", "117"].contains(selectedMeeting?.number ) == false)
                 }
                 label: {
                     Label("Map", systemImage: "map")
@@ -192,7 +193,11 @@ struct LocationListView: View {
 #endif
         }
         .sheet(isPresented: $showingWeather) {
-            WeatherView()
+            if let meeting = selectedMeeting {
+                WeatherView(meeting: meeting)
+            } else {
+                Text("Please select Meeting in Sidebar")
+            }
         }
         .onChange(of: selectedMeeting) { newValue in
             if let meeting = newValue {

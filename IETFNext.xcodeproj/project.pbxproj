@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F807990D2985AC960014F210 /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F807990C2985AC960014F210 /* WeatherView.swift */; };
+		F807990F29870AF40014F210 /* Meeting+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F807990E29870AF40014F210 /* Meeting+Extension.swift */; };
 		F80CA26729469B60002AD2C6 /* DownloadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26629469B60002AD2C6 /* DownloadListView.swift */; };
 		F80CA269294778FA002AD2C6 /* GroupListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA268294778FA002AD2C6 /* GroupListRowView.swift */; };
 		F80CA26D2947BC73002AD2C6 /* SessionListLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80CA26C2947BC73002AD2C6 /* SessionListLocationView.swift */; };
@@ -82,6 +83,7 @@
 /* Begin PBXFileReference section */
 		F80633BF29523631006D69AD /* IETFNext 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 4.xcdatamodel"; sourceTree = "<group>"; };
 		F807990C2985AC960014F210 /* WeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
+		F807990E29870AF40014F210 /* Meeting+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Meeting+Extension.swift"; sourceTree = "<group>"; };
 		F80CA26329469780002AD2C6 /* IETFNext 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 2.xcdatamodel"; sourceTree = "<group>"; };
 		F80CA26629469B60002AD2C6 /* DownloadListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadListView.swift; sourceTree = "<group>"; };
 		F80CA268294778FA002AD2C6 /* GroupListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListRowView.swift; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 				F865B9F1295930AB00C3DB13 /* LocationDetailView.swift */,
 				F88B7E5B2960931B00F770C9 /* LocationPhotoMenuView.swift */,
 				F85D55C1295E72B100569A77 /* MacOSCompat.swift */,
+				F807990E29870AF40014F210 /* Meeting+Extension.swift */,
 				F8E9B9D22935070D00CA6F09 /* MeetingListView.swift */,
 				F8E9BA1229366A4000CA6F09 /* MeetingListRowView.swift */,
 				F85D99C22968CC9E00DE37E0 /* RFC+Extension.swift */,
@@ -437,6 +440,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F807990F29870AF40014F210 /* Meeting+Extension.swift in Sources */,
 				F82FFEAC2964C8FF007AA54A /* RFCParser.swift in Sources */,
 				F80CA271294920D9002AD2C6 /* DownloadViewModel.swift in Sources */,
 				F85D55C6295F7A7500569A77 /* SessionListTitleView.swift in Sources */,

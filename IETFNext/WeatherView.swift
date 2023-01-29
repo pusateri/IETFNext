@@ -1,14 +1,432 @@
 //
 //  WeatherView.swift
-//  IETFNext
+//  HistoricalWeather
 //
-//  Created by Tom Pusateri on 1/28/23.
+//  Created by Tom Pusateri on 1/21/23.
 //
 
 import SwiftUI
+import Charts
+
+
+struct PlainGroupBoxStyle: GroupBoxStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        VStack(alignment: .center) {
+            configuration.label
+            configuration.content
+        }
+    }
+}
+
+struct TempFrequency: Decodable {
+    let temp: Double
+    let count: Int
+
+    var adjustedTemp: Double {
+        let ms = Locale.current.measurementSystem
+        if ms == .us {
+            return temp
+        }
+        let temperature = Measurement<UnitTemperature>(value: temp, unit: .fahrenheit)
+        return temperature.converted(to: .celsius).value
+    }
+}
+
+struct PlotRange: Decodable {
+    let minXTemp: Int32
+    let maxXTemp: Int32
+    let maxYPercent: Int32
+}
+
+struct Reading: Decodable {
+    let tempLow: Int32
+    let tempHigh: Int32
+    let tempMean: Int32
+    let feelsLikeLow: Int32
+    let feelsLikeHigh: Int32
+    let feelsLikeMean: Int32
+    let windSpeedLow: Int32
+    let windSpeedHigh: Int32
+    let windSpeedMean: Int32
+    let humidityLow: Int32
+    let humidityHigh: Int32
+    let humidityMean: Int32
+}
+
+struct Historical: Decodable {
+    let range: PlotRange
+    let temps: [TempFrequency]
+    let reading: Reading
+}
 
 struct WeatherView: View {
+    @Environment(\.horizontalSizeClass) var hSizeClass
+    @ObservedObject var meeting: Meeting
+
+    @State var historical: Historical? = nil
+
+/*
+    var meetings: [Meeting] = [
+        .init(city: "Yokohama", country: "JP", start: "2023-03-25", days: 7, number: 116, time_zone: "Asia/Tokyo")
+    ]
+*/
+    var data: [String: Historical] = [
+        "114": Historical(
+            range: PlotRange(minXTemp: 65, maxXTemp: 95, maxYPercent: 10),
+            temps: [
+            .init(temp: 80, count: 4),
+            .init(temp: 79, count: 5),
+            .init(temp: 78, count: 5),
+            .init(temp: 77, count: 10),
+            .init(temp: 81, count: 3),
+            .init(temp: 82, count: 3),
+            .init(temp: 84, count: 3),
+            .init(temp: 86, count: 2),
+            .init(temp: 87, count: 2),
+            .init(temp: 89, count: 1),
+            .init(temp: 85, count: 3),
+            .init(temp: 83, count: 3),
+            .init(temp: 75, count: 7),
+            .init(temp: 74, count: 6),
+            .init(temp: 73, count: 8),
+            .init(temp: 72, count: 6),
+            .init(temp: 71, count: 4),
+            .init(temp: 76, count: 5),
+            .init(temp: 88, count: 2),
+            .init(temp: 70, count: 3),
+            .init(temp: 68, count: 3),
+            .init(temp: 67, count: 2),
+            .init(temp: 66, count: 1),
+            .init(temp: 69, count: 2),
+            .init(temp: 65, count: 0),
+            .init(temp: 91, count: 1),
+            .init(temp: 90, count: 1),
+            .init(temp: 92, count: 1),
+            .init(temp: 93, count: 1),
+            .init(temp: 94, count: 1),
+            .init(temp: 95, count: 0),
+            ],
+            reading:
+                Reading(
+                    tempLow: 65,
+                    tempHigh: 95,
+                    tempMean: 77,
+                    feelsLikeLow: 65,
+                    feelsLikeHigh: 99,
+                    feelsLikeMean: 79,
+                    windSpeedLow: 0,
+                    windSpeedHigh: 23,
+                    windSpeedMean: 8,
+                    humidityLow: 29,
+                    humidityHigh: 100,
+                    humidityMean: 73
+                )
+            ),
+        "115": Historical(
+            range: PlotRange(minXTemp: 34, maxXTemp: 62, maxYPercent: 10),
+            temps: [
+            .init(temp: 44, count: 4),
+            .init(temp: 43, count: 3),
+            .init(temp: 42, count: 2),
+            .init(temp: 41, count: 2),
+            .init(temp: 40, count: 2),
+            .init(temp: 49, count: 8),
+            .init(temp: 50, count: 8),
+            .init(temp: 48, count: 9),
+            .init(temp: 45, count: 4),
+            .init(temp: 38, count: 2),
+            .init(temp: 37, count: 1),
+            .init(temp: 36, count: 1),
+            .init(temp: 35, count: 1),
+            .init(temp: 34, count: 0),
+            .init(temp: 51, count: 5),
+            .init(temp: 52, count: 4),
+            .init(temp: 47, count: 5),
+            .init(temp: 53, count: 8),
+            .init(temp: 46, count: 6),
+            .init(temp: 39, count: 1),
+            .init(temp: 54, count: 6),
+            .init(temp: 55, count: 8),
+            .init(temp: 57, count: 2),
+            .init(temp: 58, count: 2),
+            .init(temp: 59, count: 1),
+            .init(temp: 56, count: 4),
+            .init(temp: 61, count: 0),
+            .init(temp: 60, count: 1),
+            .init(temp: 62, count: 0),
+            ],
+            reading:
+                Reading(
+                    tempLow: 34,
+                    tempHigh: 62,
+                    tempMean: 49,
+                    feelsLikeLow: 52,
+                    feelsLikeHigh: 62,
+                    feelsLikeMean: 55,
+                    windSpeedLow: 0,
+                    windSpeedHigh: 0,
+                    windSpeedMean: 0,
+                    humidityLow: 49,
+                    humidityHigh: 99,
+                    humidityMean: 85
+                )
+            ),
+        "116": Historical(
+            range: PlotRange(minXTemp: 37, maxXTemp: 73, maxYPercent: 12),
+            temps: [
+            .init(temp: 54, count: 9),
+            .init(temp: 52, count: 10),
+            .init(temp: 50, count: 7),
+            .init(temp: 48, count: 5),
+            .init(temp: 55, count: 7),
+            .init(temp: 57, count: 7),
+            .init(temp: 61, count: 11),
+            .init(temp: 63, count: 11),
+            .init(temp: 64, count: 7),
+            .init(temp: 59, count: 9),
+            .init(temp: 66, count: 6),
+            .init(temp: 68, count: 2),
+            .init(temp: 70, count: 1),
+            .init(temp: 72, count: 0),
+            .init(temp: 73, count: 0),
+            .init(temp: 46, count: 4),
+            .init(temp: 45, count: 2),
+            .init(temp: 43, count: 2),
+            .init(temp: 41, count: 1),
+            .init(temp: 39, count: 0),
+            .init(temp: 37, count: 1),
+            ],
+            reading:
+                Reading(
+                    tempLow: 37,
+                    tempHigh: 73,
+                    tempMean: 57,
+                    feelsLikeLow: 26,
+                    feelsLikeHigh: 73,
+                    feelsLikeMean: 56,
+                    windSpeedLow: 0,
+                    windSpeedHigh: 35,
+                    windSpeedMean: 12,
+                    humidityLow: 25,
+                    humidityHigh: 100,
+                    humidityMean: 68
+                )
+            ),
+        "117": Historical(
+            range: PlotRange(minXTemp: 53, maxXTemp: 82, maxYPercent: 12),
+            temps: [
+            .init(temp: 60, count: 6),
+            .init(temp: 59, count: 10),
+            .init(temp: 61, count: 8),
+            .init(temp: 64, count: 6),
+            .init(temp: 66, count: 4),
+            .init(temp: 67, count: 7),
+            .init(temp: 69, count: 2),
+            .init(temp: 71, count: 2),
+            .init(temp: 70, count: 3),
+            .init(temp: 65, count: 3),
+            .init(temp: 63, count: 3),
+            .init(temp: 58, count: 11),
+            .init(temp: 56, count: 9),
+            .init(temp: 57, count: 6),
+            .init(temp: 55, count: 6),
+            .init(temp: 62, count: 4),
+            .init(temp: 54, count: 2),
+            .init(temp: 53, count: 0),
+            .init(temp: 68, count: 3),
+            .init(temp: 72, count: 1),
+            .init(temp: 73, count: 2),
+            .init(temp: 74, count: 1),
+            .init(temp: 76, count: 0),
+            .init(temp: 82, count: 0),
+            .init(temp: 79, count: 0),
+            .init(temp: 78, count: 0),
+            .init(temp: 77, count: 0),
+            .init(temp: 75, count: 0),
+            ],
+            reading:
+                Reading(
+                    tempLow: 53,
+                    tempHigh: 82,
+                    tempMean: 62,
+                    feelsLikeLow: 53,
+                    feelsLikeHigh: 81,
+                    feelsLikeMean: 62,
+                    windSpeedLow: 0,
+                    windSpeedHigh: 26,
+                    windSpeedMean: 12,
+                    humidityLow: 36,
+                    humidityHigh: 97,
+                    humidityMean: 75
+                )
+            ),
+        ]
+    let columns = [
+        GridItem(.adaptive(minimum: 170))
+    ]
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView(.vertical) {
+            VStack(alignment: .center, content: {
+                if let h = historical {
+                    if hSizeClass != .compact {
+                        Text(meeting.city!)
+                            .font(.title)
+                            .bold()
+                            .padding(.top)
+                    } else {
+                        Text(meeting.city!)
+                            .font(.title)
+                            .bold()
+                    }
+                    Text("5-year historical data for the week of \(meeting.month)/\(meeting.day)")
+                        .font(.title3)
+                    GroupBox (
+                        label: Label(" %Time at Temperature", systemImage: "thermometer.sun")
+                            .font(.title)
+                    ) {
+                        Chart {
+                            ForEach(h.temps, id: \.temp) { freq in
+                                if hSizeClass != .compact {
+                                    BarMark(
+                                        x: .value("Temperature", freq.temp),
+                                        y: .value("Frequency", freq.count),
+                                        width: hSizeClass != .compact ? 20 : 2
+                                    )
+                                    .opacity(0.4)
+                                    .foregroundStyle(.green)
+                                    .annotation(position: .bottom, alignment: .center, spacing: 10) {
+                                        Text(verbatim: String(format: "%.0f", freq.temp))
+                                            .font(.caption)
+                                    }
+                                } else {
+                                    BarMark(
+                                        x: .value("Temperature", freq.temp),
+                                        y: .value("Frequency", freq.count),
+                                        width: hSizeClass != .compact ? 20 : 2
+                                    )
+                                    .opacity(0.4)
+                                    .foregroundStyle(.green)
+                                }
+                            }
+                        }
+                        .chartXScale(domain: h.range.minXTemp...h.range.maxXTemp)
+                        .chartXAxis(content: {
+                            AxisMarks { value in
+                                AxisGridLine()
+                                AxisTick()
+                                if hSizeClass != .compact {
+                                    AxisValueLabel(verticalSpacing: 20) {
+                                        if let str = value.as(String.self) {
+                                            Text(str)
+                                        }
+                                    }
+                                } else {
+                                    AxisValueLabel()
+                                }
+                            }
+                        })
+                        .chartYScale(domain: 0...h.range.maxYPercent)
+                        .frame(minWidth: 340, maxWidth: 760, minHeight: 160, maxHeight: 500, alignment: .center)
+                        .padding(.bottom, 20)
+                    }
+                    .groupBoxStyle(PlainGroupBoxStyle())
+                    .padding(.bottom, 10)
+                    LazyVGrid(columns: columns) {
+                        GroupBox {
+                            VStack(alignment: .center) {
+                                Label("Temperature:", systemImage: "thermometer.sun")
+                                    .font(.title3)
+                                HStack {
+                                    Text("Low:")
+                                    Spacer()
+                                    Text("\(h.reading.tempLow)")
+                                }
+                                HStack {
+                                    Text("High:")
+                                    Spacer()
+                                    Text("\(h.reading.tempHigh)")
+                                }
+                                HStack {
+                                    Text("Average:")
+                                    Spacer()
+                                    Text("\(h.reading.tempMean)")
+                                }
+                            }
+                        }
+                        GroupBox {
+                            VStack(alignment: .center) {
+                                Label("Feels like:", systemImage: "thermometer.sun")
+                                    .font(.title3)
+                                HStack {
+                                    Text("Low:")
+                                    Spacer()
+                                    Text("\(h.reading.feelsLikeLow)")
+                                }
+                                HStack {
+                                    Text("High:")
+                                    Spacer()
+                                    Text("\(h.reading.feelsLikeHigh)")
+                                }
+                                HStack {
+                                    Text("Average:")
+                                    Spacer()
+                                    Text("\(h.reading.feelsLikeMean)")
+                                }
+                            }
+                        }
+                        GroupBox {
+                            VStack(alignment: .center) {
+                                Label("Wind Speed:", systemImage: "wind")
+                                    .font(.title3)
+                                HStack {
+                                    Text("Low:")
+                                    Spacer()
+                                    Text("\(h.reading.windSpeedLow) mph")
+                                }
+                                HStack {
+                                    Text("High:")
+                                    Spacer()
+                                    Text("\(h.reading.windSpeedHigh) mph")
+                                }
+                                HStack {
+                                    Text("Average:")
+                                    Spacer()
+                                    Text("\(h.reading.windSpeedMean) mph")
+                                }
+                            }
+                        }
+                        GroupBox {
+                            VStack(alignment: .center) {
+                                Label("Humidity:", systemImage: "humidity")
+                                    .font(.title3)
+                                HStack {
+                                    Text("Low:")
+                                    Spacer()
+                                    Text("\(h.reading.humidityLow)%")
+                                }
+                                HStack {
+                                    Text("High:")
+                                    Spacer()
+                                    Text("\(h.reading.humidityHigh)%")
+                                }
+                                HStack {
+                                    Text("Average:")
+                                    Spacer()
+                                    Text("\(h.reading.humidityMean)%")
+                                }
+                            }
+                        }
+                    }
+                    .frame(minWidth: 370, maxWidth: 760, minHeight: 0, maxHeight: 500, alignment: .center)
+                }
+            })
+        }
+        .onChange(of: meeting) { newValue in
+            historical = data[newValue.number!]
+        }
+        .onAppear {
+            historical = data[meeting.number!]
+        }
     }
 }

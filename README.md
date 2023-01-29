@@ -1,14 +1,21 @@
 *** TODO ***
 
 1. print pdf version of drafts
-2. add local time
-3. detail view moving from open slides to try and open drafts gives error
-4. pdf thumbnails
-5. Add draft / presentation / charter / agenda date to download list
-6. Only gets the first 20 drafts right now
-7. Jump between session and location and back
-8. Load basename document to support useractivity
-9. macOS: app icon
+2. detail view moving from open slides to try and open drafts gives error
+3. pdf thumbnails
+4. Add draft / presentation / charter / agenda date to download list
+5. Only gets the first 20 drafts right now
+6. Jump between session and location and back
+7. Load basename document to support useractivity
+8. macOS: app icon
+9. JSON parse errors
+10. search tokens
+11. dependency graph display as table
+12. share sheet and transferable
+13. selecting 2nd session should show second agenda (oauth-115)
+14. Add date to drafts list
+15. bottom bar on iOS schedule/group lists takes up lots of room
+16. RFC selection from dependency graph should open internally
 
 *** Maybe ***
 
@@ -18,7 +25,6 @@
 4. Use notes app yellow?
 5. Choice of drafts formats
 6. Add keyboard shortcuts for iPad
-7. In group list view, select, then filter, then select crashes?
 
 
 IETF colors:

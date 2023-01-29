@@ -162,10 +162,18 @@ struct LocationDetailView: View {
             if UIDevice.isIPhone {
                 EmptyView()
             } else {
-                WeatherView()
+                if let meeting = selectedMeeting {
+                    WeatherView(meeting: meeting)
+                } else {
+                    Text("Please select Meeting in Sidebar")
+                }
             }
 #else
-            WeatherView()
+            if let meeting = selectedMeeting {
+                WeatherView(meeting: meeting)
+            } else {
+                Text("Please select Meeting in Sidebar")
+            }
 #endif
         }
     }
