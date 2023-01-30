@@ -105,6 +105,16 @@ private extension DateFormatter {
     }()
 }
 
+private func buildDateFormatter(time_zone: String) -> DateFormatter {
+    let formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.dateFormat = "yyyy-MM-dd"
+    formatter.calendar = Calendar(identifier: .iso8601)
+    formatter.timeZone = TimeZone(identifier: time_zone)
+
+    return formatter
+}
+
 private func loadMeetings(context: NSManagedObjectContext, limit: Int32, offset: Int32) async {
     let url: URL
     if limit == 0 {
@@ -123,14 +133,13 @@ private func loadMeetings(context: NSManagedObjectContext, limit: Int32, offset:
     do {
         let (data, _) = try await URLSession.shared.data(from: url)
         do {
-            var meetings: [Meeting] = []
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
             let json_meetings = try decoder.decode(Meetings.self, from: data)
 
             context.performAndWait {
                 for obj in json_meetings.objects {
-                    meetings.append(updateMeeting(context:context, meeting:obj))
+                    updateMeeting(context:context, meeting:obj)
                 }
             }
         } catch DecodingError.dataCorrupted(let context) {
@@ -152,7 +161,7 @@ private func loadMeetings(context: NSManagedObjectContext, limit: Int32, offset:
     }
 }
 
-private func updateMeeting(context: NSManagedObjectContext, meeting: JSONMeeting) -> Meeting {
+private func updateMeeting(context: NSManagedObjectContext, meeting: JSONMeeting) {
     let mtg: Meeting!
 
     let fetchMeeting: NSFetchRequest<Meeting> = Meeting.fetchRequest()
@@ -169,11 +178,13 @@ private func updateMeeting(context: NSManagedObjectContext, meeting: JSONMeeting
         mtg = results?.first
     }
 
+    let dateFormatter = buildDateFormatter(time_zone: meeting.time_zone)
     mtg.acknowledgements = meeting.acknowledgements
     mtg.city = meeting.city
     mtg.country = meeting.country
     mtg.number = meeting.number
     mtg.date = meeting.date
+    mtg.start = dateFormatter.date(from: meeting.date)
     mtg.time_zone = meeting.time_zone
     mtg.updated_at = meeting.updated
     mtg.venue_addr = meeting.venue_addr
@@ -185,7 +196,6 @@ private func updateMeeting(context: NSManagedObjectContext, meeting: JSONMeeting
     catch {
         print("Unable to save Meeting \(meeting.number)")
     }
-    return mtg
 }
 
 public func selectMeeting(context: NSManagedObjectContext, number: String?) -> Meeting? {

@@ -63,7 +63,23 @@ struct WeatherView: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     @ObservedObject var meeting: Meeting
 
-    @State var historical: Historical? = nil
+    @State var weekFormatter: DateFormatter
+
+    init(meeting: Meeting) {
+        self.meeting = meeting
+
+        let formatter = DateFormatter()
+        if Locale.current.measurementSystem == .us {
+            formatter.dateFormat = "MMMM dd"
+        } else {
+            formatter.dateFormat = "dd MMMM"
+        }
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.timeZone = TimeZone(identifier: meeting.time_zone!)
+        formatter.locale = Locale.current
+
+        _weekFormatter = State(initialValue: formatter)
+    }
 
     var data: [String: Historical] = [
         "114": Historical(
@@ -294,20 +310,28 @@ struct WeatherView: View {
         return String(value) + " mph"
     }
 
+    private func setupForMeeting(_ meeting: Meeting) {
+
+    }
     var body: some View {
         ScrollView(.vertical) {
             VStack(alignment: .center, content: {
-                if let h = historical {
+                if let h = data[meeting.number!] {
                     Text(meeting.city!)
                         .font(.title)
                         .bold()
                         .padding(.top)
-                    Text("5-year historical data for the week of \(meeting.month)/\(meeting.day)")
-                        .font(.title3)
-                        .padding(.bottom)
+                    Text("5-year historical data")
+                        .font(.subheadline)
+                    if let start = meeting.start {
+                        Text("For the week of \(start, formatter: weekFormatter)")
+                            .font(.subheadline)
+                    }
                     GroupBox (
-                        label: Label(" % Time at Temperature" + tempUnits(), systemImage: "thermometer.sun")
-                            .font(.title)
+                        label:
+                            Label("  % Time at Temperature  " + tempUnits(), systemImage: "thermometer.sun")
+                                .font(.title3)
+                                .padding(.bottom)
                     ) {
                         Chart {
                             let tfs = adjustTempFrequencies(h.temps)
@@ -382,7 +406,7 @@ struct WeatherView: View {
                         }
                         GroupBox {
                             VStack(alignment: .center) {
-                                Label("Temp" + tempUnits() + ":", systemImage: "thermometer.sun")
+                                Label("Feels Like" + tempUnits() + ":", systemImage: "thermometer.sun")
                                     .font(.title3)
                                 HStack {
                                     Text("Low:")
@@ -445,14 +469,15 @@ struct WeatherView: View {
                         }
                     }
                     .frame(minWidth: 370, maxWidth: 760, minHeight: 0, maxHeight: 500, alignment: .center)
+                } else {
+                    Text("no history data")
                 }
             })
         }
+        /*
         .onChange(of: meeting) { newValue in
             historical = data[newValue.number!]
         }
-        .onAppear {
-            historical = data[meeting.number!]
-        }
+         */
     }
 }
