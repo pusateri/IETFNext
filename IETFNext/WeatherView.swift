@@ -19,16 +19,16 @@ struct PlainGroupBoxStyle: GroupBoxStyle {
 }
 
 struct TempFrequency: Decodable {
-    let temp: Double
-    let count: Int
+    var temp: Int32
+    let count: Int32
 
-    var adjustedTemp: Double {
+    var adjustedTemp: Int32 {
         let ms = Locale.current.measurementSystem
         if ms == .us {
             return temp
         }
-        let temperature = Measurement<UnitTemperature>(value: temp, unit: .fahrenheit)
-        return temperature.converted(to: .celsius).value
+        let temperature = Measurement<UnitTemperature>(value: Double(temp), unit: .fahrenheit)
+        return Int32(round(temperature.converted(to: .celsius).value))
     }
 }
 
@@ -65,11 +65,6 @@ struct WeatherView: View {
 
     @State var historical: Historical? = nil
 
-/*
-    var meetings: [Meeting] = [
-        .init(city: "Yokohama", country: "JP", start: "2023-03-25", days: 7, number: 116, time_zone: "Asia/Tokyo")
-    ]
-*/
     var data: [String: Historical] = [
         "114": Historical(
             range: PlotRange(minXTemp: 65, maxXTemp: 95, maxYPercent: 10),
@@ -265,52 +260,83 @@ struct WeatherView: View {
         GridItem(.adaptive(minimum: 170))
     ]
 
+    private func tempUnits() -> String {
+        if Locale.current.measurementSystem == .metric || Locale.current.measurementSystem == .uk {
+            return " °C"
+        }
+        return " °F"
+    }
+
+    private func adjustTemp(_ value: Int32) -> Int32 {
+        if Locale.current.measurementSystem == .metric || Locale.current.measurementSystem == .uk {
+            let celsius = (Double(value) - 32.0) * 5.0 / 9.0
+            return Int32(round(celsius))
+        }
+        return value
+    }
+
+    private func adjustTempFrequencies(_ values: [TempFrequency]) -> [TempFrequency] {
+        if Locale.current.measurementSystem == .metric || Locale.current.measurementSystem == .uk {
+            let newValues = values.map { t in
+                let newValue = Int32(round((Double(t.temp) - 32.0) * 5.0 / 9.0))
+                return TempFrequency(temp: newValue, count:t.count)
+            }
+            return newValues
+        }
+        return values
+    }
+
+    private func adjustSpeed(_ value: Int32) -> String {
+        if Locale.current.measurementSystem == .metric || Locale.current.measurementSystem == .uk {
+            let kmh = Double(value) * 1.6
+            return String(Int32(round(kmh))) + " km/h"
+        }
+        return String(value) + " mph"
+    }
+
     var body: some View {
         ScrollView(.vertical) {
             VStack(alignment: .center, content: {
                 if let h = historical {
-                    if hSizeClass != .compact {
-                        Text(meeting.city!)
-                            .font(.title)
-                            .bold()
-                            .padding(.top)
-                    } else {
-                        Text(meeting.city!)
-                            .font(.title)
-                            .bold()
-                    }
+                    Text(meeting.city!)
+                        .font(.title)
+                        .bold()
+                        .padding(.top)
                     Text("5-year historical data for the week of \(meeting.month)/\(meeting.day)")
                         .font(.title3)
+                        .padding(.bottom)
                     GroupBox (
-                        label: Label(" %Time at Temperature", systemImage: "thermometer.sun")
+                        label: Label(" % Time at Temperature" + tempUnits(), systemImage: "thermometer.sun")
                             .font(.title)
                     ) {
                         Chart {
-                            ForEach(h.temps, id: \.temp) { freq in
+                            let tfs = adjustTempFrequencies(h.temps)
+                            ForEach(tfs, id: \.temp) { freq in
                                 if hSizeClass != .compact {
                                     BarMark(
                                         x: .value("Temperature", freq.temp),
                                         y: .value("Frequency", freq.count),
-                                        width: hSizeClass != .compact ? 20 : 2
+                                        width: 20
                                     )
                                     .opacity(0.4)
                                     .foregroundStyle(.green)
                                     .annotation(position: .bottom, alignment: .center, spacing: 10) {
-                                        Text(verbatim: String(format: "%.0f", freq.temp))
+                                        Text("\(freq.temp)")
                                             .font(.caption)
                                     }
                                 } else {
                                     BarMark(
                                         x: .value("Temperature", freq.temp),
                                         y: .value("Frequency", freq.count),
-                                        width: hSizeClass != .compact ? 20 : 2
+                                        width: 2
                                     )
                                     .opacity(0.4)
                                     .foregroundStyle(.green)
                                 }
                             }
                         }
-                        .chartXScale(domain: h.range.minXTemp...h.range.maxXTemp)
+                        .padding(.leading, 5)
+                        .chartXScale(domain: adjustTemp(h.range.minXTemp)...adjustTemp(h.range.maxXTemp))
                         .chartXAxis(content: {
                             AxisMarks { value in
                                 AxisGridLine()
@@ -335,43 +361,43 @@ struct WeatherView: View {
                     LazyVGrid(columns: columns) {
                         GroupBox {
                             VStack(alignment: .center) {
-                                Label("Temperature:", systemImage: "thermometer.sun")
+                                Label("Temp" + tempUnits() + ":", systemImage: "thermometer.sun")
                                     .font(.title3)
                                 HStack {
                                     Text("Low:")
                                     Spacer()
-                                    Text("\(h.reading.tempLow)")
+                                    Text("\(adjustTemp(h.reading.tempLow))")
                                 }
                                 HStack {
                                     Text("High:")
                                     Spacer()
-                                    Text("\(h.reading.tempHigh)")
+                                    Text("\(adjustTemp(h.reading.tempHigh))")
                                 }
                                 HStack {
                                     Text("Average:")
                                     Spacer()
-                                    Text("\(h.reading.tempMean)")
+                                    Text("\(adjustTemp(h.reading.tempMean))")
                                 }
                             }
                         }
                         GroupBox {
                             VStack(alignment: .center) {
-                                Label("Feels like:", systemImage: "thermometer.sun")
+                                Label("Temp" + tempUnits() + ":", systemImage: "thermometer.sun")
                                     .font(.title3)
                                 HStack {
                                     Text("Low:")
                                     Spacer()
-                                    Text("\(h.reading.feelsLikeLow)")
+                                    Text("\(adjustTemp(h.reading.feelsLikeLow))")
                                 }
                                 HStack {
                                     Text("High:")
                                     Spacer()
-                                    Text("\(h.reading.feelsLikeHigh)")
+                                    Text("\(adjustTemp(h.reading.feelsLikeHigh))")
                                 }
                                 HStack {
                                     Text("Average:")
                                     Spacer()
-                                    Text("\(h.reading.feelsLikeMean)")
+                                    Text("\(adjustTemp(h.reading.feelsLikeMean))")
                                 }
                             }
                         }
@@ -382,17 +408,17 @@ struct WeatherView: View {
                                 HStack {
                                     Text("Low:")
                                     Spacer()
-                                    Text("\(h.reading.windSpeedLow) mph")
+                                    Text("\(adjustSpeed(h.reading.windSpeedLow))")
                                 }
                                 HStack {
                                     Text("High:")
                                     Spacer()
-                                    Text("\(h.reading.windSpeedHigh) mph")
+                                    Text("\(adjustSpeed(h.reading.windSpeedHigh))")
                                 }
                                 HStack {
                                     Text("Average:")
                                     Spacer()
-                                    Text("\(h.reading.windSpeedMean) mph")
+                                    Text("\(adjustSpeed(h.reading.windSpeedMean))")
                                 }
                             }
                         }
