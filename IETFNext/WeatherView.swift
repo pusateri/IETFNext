@@ -19,16 +19,16 @@ struct PlainGroupBoxStyle: GroupBoxStyle {
 }
 
 struct TempFrequency: Decodable {
-    var temp: Int32
+    var temp: Double
     let count: Int32
 
-    var adjustedTemp: Int32 {
+    var adjustedTemp: Double {
         let ms = Locale.current.measurementSystem
         if ms == .us {
-            return temp
+            return Double(temp)
         }
         let temperature = Measurement<UnitTemperature>(value: Double(temp), unit: .fahrenheit)
-        return Int32(round(temperature.converted(to: .celsius).value))
+        return temperature.converted(to: .celsius).value
     }
 }
 
@@ -283,18 +283,17 @@ struct WeatherView: View {
         return " °F"
     }
 
-    private func adjustTemp(_ value: Int32) -> Int32 {
+    private func adjustTemp(_ value: Int32) -> Double {
         if Locale.current.measurementSystem == .metric || Locale.current.measurementSystem == .uk {
-            let celsius = (Double(value) - 32.0) * 5.0 / 9.0
-            return Int32(round(celsius))
+            return (Double(value) - 32.0) * 5.0 / 9.0
         }
-        return value
+        return Double(value)
     }
 
     private func adjustTempFrequencies(_ values: [TempFrequency]) -> [TempFrequency] {
         if Locale.current.measurementSystem == .metric || Locale.current.measurementSystem == .uk {
             let newValues = values.map { t in
-                let newValue = Int32(round((Double(t.temp) - 32.0) * 5.0 / 9.0))
+                let newValue = (Double(t.temp) - 32.0) * 5.0 / 9.0
                 return TempFrequency(temp: newValue, count:t.count)
             }
             return newValues
@@ -310,9 +309,6 @@ struct WeatherView: View {
         return String(value) + " mph"
     }
 
-    private func setupForMeeting(_ meeting: Meeting) {
-
-    }
     var body: some View {
         ScrollView(.vertical) {
             VStack(alignment: .center, content: {
@@ -336,46 +332,17 @@ struct WeatherView: View {
                         Chart {
                             let tfs = adjustTempFrequencies(h.temps)
                             ForEach(tfs, id: \.temp) { freq in
-                                if hSizeClass != .compact {
-                                    BarMark(
-                                        x: .value("Temperature", freq.temp),
-                                        y: .value("Frequency", freq.count),
-                                        width: 20
-                                    )
-                                    .opacity(0.4)
-                                    .foregroundStyle(.green)
-                                    .annotation(position: .bottom, alignment: .center, spacing: 10) {
-                                        Text("\(freq.temp)")
-                                            .font(.caption)
-                                    }
-                                } else {
-                                    BarMark(
-                                        x: .value("Temperature", freq.temp),
-                                        y: .value("Frequency", freq.count),
-                                        width: 2
-                                    )
-                                    .opacity(0.4)
-                                    .foregroundStyle(.green)
-                                }
+                                BarMark(
+                                    x: .value("Temperature", freq.temp),
+                                    y: .value("Frequency", freq.count),
+                                    width: hSizeClass == .compact ? 2 : 20
+                                )
+                                .opacity(0.4)
+                                .foregroundStyle(.green)
                             }
                         }
                         .padding(.leading, 5)
                         .chartXScale(domain: adjustTemp(h.range.minXTemp)...adjustTemp(h.range.maxXTemp))
-                        .chartXAxis(content: {
-                            AxisMarks { value in
-                                AxisGridLine()
-                                AxisTick()
-                                if hSizeClass != .compact {
-                                    AxisValueLabel(verticalSpacing: 20) {
-                                        if let str = value.as(String.self) {
-                                            Text(str)
-                                        }
-                                    }
-                                } else {
-                                    AxisValueLabel()
-                                }
-                            }
-                        })
                         .chartYScale(domain: 0...h.range.maxYPercent)
                         .frame(minWidth: 340, maxWidth: 760, minHeight: 160, maxHeight: 500, alignment: .center)
                         .padding(.bottom, 20)
@@ -390,17 +357,17 @@ struct WeatherView: View {
                                 HStack {
                                     Text("Low:")
                                     Spacer()
-                                    Text("\(adjustTemp(h.reading.tempLow))")
+                                    Text(verbatim: String(format: "%.0f", round(adjustTemp(h.reading.tempLow))))
                                 }
                                 HStack {
                                     Text("High:")
                                     Spacer()
-                                    Text("\(adjustTemp(h.reading.tempHigh))")
+                                    Text(verbatim: String(format: "%.0f", round(adjustTemp(h.reading.tempHigh))))
                                 }
                                 HStack {
                                     Text("Average:")
                                     Spacer()
-                                    Text("\(adjustTemp(h.reading.tempMean))")
+                                    Text(verbatim: String(format: "%.0f", round(adjustTemp(h.reading.tempMean))))
                                 }
                             }
                         }
@@ -411,17 +378,17 @@ struct WeatherView: View {
                                 HStack {
                                     Text("Low:")
                                     Spacer()
-                                    Text("\(adjustTemp(h.reading.feelsLikeLow))")
+                                    Text(verbatim: String(format: "%.0f", round(adjustTemp(h.reading.feelsLikeLow))))
                                 }
                                 HStack {
                                     Text("High:")
                                     Spacer()
-                                    Text("\(adjustTemp(h.reading.feelsLikeHigh))")
+                                    Text(verbatim: String(format: "%.0f", round(adjustTemp(h.reading.feelsLikeHigh))))
                                 }
                                 HStack {
                                     Text("Average:")
                                     Spacer()
-                                    Text("\(adjustTemp(h.reading.feelsLikeMean))")
+                                    Text(verbatim: String(format: "%.0f", round(adjustTemp(h.reading.feelsLikeMean))))
                                 }
                             }
                         }
@@ -474,10 +441,5 @@ struct WeatherView: View {
                 }
             })
         }
-        /*
-        .onChange(of: meeting) { newValue in
-            historical = data[newValue.number!]
-        }
-         */
     }
 }
