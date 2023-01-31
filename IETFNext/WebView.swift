@@ -86,6 +86,8 @@ struct WebView: UIViewRepresentable {
             // open all links not described here in Safari
             if (url.host == "datatracker.ietf.org" &&
                     (url.path.starts(with: "/meeting") || url.path.starts(with: "/doc/html/"))) ||
+                // useful for rfc graph display but no way to get back
+                //(url.host == "www.rfc-editor.org") && (url.path.starts(with: "/rfc")) ||
                 (url.host == "www.ietf.org") ||
                 (url.scheme == "file") ||
                 (url.scheme == "about") {
