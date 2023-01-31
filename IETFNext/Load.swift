@@ -95,7 +95,7 @@ struct JSONSession: Decodable {
     let group: JSONGroup
     let id: Int32
     let is_bof: Bool
-    let location: String
+    let location: String?
     let minutes: String?
     let modified: Date
     let name: String
@@ -118,6 +118,7 @@ struct JSONPresentation: Decodable {
 enum GroupState: String, Decodable {
     case active
     case bof
+    case dormant
     case proposed
 }
 
@@ -215,10 +216,12 @@ public func loadData(context: NSManagedObjectContext, meeting: Meeting?) async {
 
         var urlrequest = URLRequest(url: url)
         urlrequest.addValue("gzip", forHTTPHeaderField: "Accept-Encoding")
+        /*
         if let lastEtag = meeting.etag {
             urlrequest.addValue(lastEtag, forHTTPHeaderField: "If-None-Match")
             urlrequest.cachePolicy = .reloadIgnoringLocalCacheData
         }
+         */
         do {
             let (data, response) = try await URLSession.shared.data(for: urlrequest)
             guard let httpResponse = response as? HTTPURLResponse else {
@@ -268,8 +271,7 @@ public func loadData(context: NSManagedObjectContext, meeting: Meeting?) async {
                     }
                 }
             } catch DecodingError.dataCorrupted(let context) {
-                print("schedule \(meeting.number!), ")
-                print(context)
+                print("Load schedule \(meeting.number!): \(context)")
             } catch DecodingError.keyNotFound(let key, let context) {
                 print("Key '\(key)' not found:", context.debugDescription)
                 print("codingPath:", context.codingPath)
@@ -308,7 +310,15 @@ public func loadDrafts(context: NSManagedObjectContext, group: Group?, limit: In
             url = url_offset
         }
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await URLSession.shared.data(from: url)
+            guard let httpResponse = response as? HTTPURLResponse else {
+                //print("No HTTP Result")
+                return
+            }
+            guard (200...299).contains(httpResponse.statusCode) else {
+                //print("Http Result \(httpResponse.statusCode): \(url.absoluteString)")
+                return
+            }
             do {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
@@ -321,7 +331,7 @@ public func loadDrafts(context: NSManagedObjectContext, group: Group?, limit: In
                     }
                 }
             } catch DecodingError.dataCorrupted(let context) {
-                print(context)
+                print("Drafts wg \(group.acronym!): \(context)")
             } catch DecodingError.keyNotFound(let key, let context) {
                 print("Key '\(key)' not found:", context.debugDescription)
                 print("codingPath:", context.codingPath)
@@ -370,7 +380,15 @@ public func loadRelatedDrafts(context: NSManagedObjectContext, group: Group?, li
             url = url_offset
         }
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await URLSession.shared.data(from: url)
+            guard let httpResponse = response as? HTTPURLResponse else {
+                //print("No HTTP Result")
+                return
+            }
+            guard (200...299).contains(httpResponse.statusCode) else {
+                //print("Http Result \(httpResponse.statusCode): \(url.absoluteString)")
+                return
+            }
             do {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
@@ -385,7 +403,7 @@ public func loadRelatedDrafts(context: NSManagedObjectContext, group: Group?, li
                     }
                 }
             } catch DecodingError.dataCorrupted(let context) {
-                print(context)
+                print("Related Drafts wg \(group.acronym!): \(context)")
             } catch DecodingError.keyNotFound(let key, let context) {
                 print("Key '\(key)' not found:", context.debugDescription)
                 print("codingPath:", context.codingPath)
@@ -422,7 +440,15 @@ public func loadRecordingDocument(context: NSManagedObjectContext, session: Sess
                     recFormatter.calendar = Calendar(identifier: .iso8601)
                     recFormatter.timeZone = TimeZone(identifier: meeting.time_zone!)
                     let matchTitle = String(format: "Video recording for \(group.acronym!.uppercased()) on \(recFormatter.string(from: session.start!))")
-                    let (data, _) = try await URLSession.shared.data(from: url)
+                    let (data, response) = try await URLSession.shared.data(from: url)
+                    guard let httpResponse = response as? HTTPURLResponse else {
+                        //print("No HTTP Result")
+                        return
+                    }
+                    guard (200...299).contains(httpResponse.statusCode) else {
+                        //print("Http Result \(httpResponse.statusCode): \(url.absoluteString)")
+                        return
+                    }
                     do {
                         let decoder = JSONDecoder()
                         decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
@@ -462,7 +488,7 @@ public func loadRecordingDocument(context: NSManagedObjectContext, session: Sess
                             }
                         }
                     } catch DecodingError.dataCorrupted(let context) {
-                        print(context)
+                        print("Recording document session \(session.name!): \(context)")
                     } catch DecodingError.keyNotFound(let key, let context) {
                         print("Key '\(key)' not found:", context.debugDescription)
                         print("codingPath:", context.codingPath)
@@ -493,7 +519,15 @@ public func loadCharterDocument(context: NSManagedObjectContext, group: Group?) 
             return
         }
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await URLSession.shared.data(from: url)
+            guard let httpResponse = response as? HTTPURLResponse else {
+                //print("No HTTP Result")
+                return
+            }
+            guard (200...299).contains(httpResponse.statusCode) else {
+                //print("Http Result \(httpResponse.statusCode): \(url.absoluteString)")
+                return
+            }
             do {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
@@ -503,7 +537,7 @@ public func loadCharterDocument(context: NSManagedObjectContext, group: Group?) 
                     updateDocument(context: context, group:group, kind:.charter, document:json_doc)
                 }
             } catch DecodingError.dataCorrupted(let context) {
-                print(context)
+                print("Charter: \(context)")
             } catch DecodingError.keyNotFound(let key, let context) {
                 print("Key '\(key)' not found:", context.debugDescription)
                 print("codingPath:", context.codingPath)
@@ -967,10 +1001,12 @@ private func updateSession(context: NSManagedObjectContext, baseURL: URL, meetin
         s.is_bof = session.is_bof
         save = true
     }
-    let loc = findLocation(context: context, meeting:meeting, name:session.location)
-    if s.location != loc {
-        s.location = loc
-        save = true
+    if let location_name = session.location {
+        let loc = findLocation(context: context, meeting:meeting, name:location_name)
+        if s.location != loc {
+            s.location = loc
+            save = true
+        }
     }
     if let minutes = session.minutes {
         let url = URL(string: minutes)

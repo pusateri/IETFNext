@@ -1,6 +1,1285 @@
 {
   "115": [
     {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-satp-03",
+      "duration": "2:00:00",
+      "group": {
+        "acronym": "satp",
+        "name": "Secure Asset Transfer Protocol",
+        "parent": "sec",
+        "state": "bof",
+        "type": "wg"
+      },
+      "id": 108439,
+      "is_bof": true,
+      "location": "Kensington 1",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-satp-202211101300-00",
+      "modified": "2023-01-04T11:21:23Z",
+      "name": "Secure Asset Transfer Protocol",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-satp-chair-slides",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74284/",
+          "rev": "01",
+          "title": "Chair Slides"
+        },
+        {
+          "name": "slides-115-satp-satp-problem-space-goals",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73680/",
+          "rev": "00",
+          "title": "SATP Problem Space & Goals"
+        },
+        {
+          "name": "slides-115-satp-satp-use-case-supply-chain-logistics-trade-finance",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73681/",
+          "rev": "00",
+          "title": "SATP Use-Case: Supply Chain Logistics & Trade Finance"
+        },
+        {
+          "name": "slides-115-satp-satp-use-case-regulated-cbdc-and-finance",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73682/",
+          "rev": "00",
+          "title": "SATP Use-Case: Regulated CBDC and Finance"
+        },
+        {
+          "name": "slides-115-satp-satp-status-report",
+          "order": 5,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73683/",
+          "rev": "00",
+          "title": "SATP Status Report"
+        }
+      ],
+      "session_id": 30002,
+      "session_res_uri": "/api/v1/meeting/session/30002/",
+      "start": "2022-11-10T13:00:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-alto-01",
+      "duration": "2:00:00",
+      "group": {
+        "acronym": "alto",
+        "name": "Application-Layer Traffic Optimization",
+        "parent": "tsv",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108467,
+      "is_bof": false,
+      "location": "Mezzanine 10-11",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-alto-00",
+      "modified": "2023-01-01T05:36:00Z",
+      "name": "Application-Layer Traffic Optimization",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-alto-chairs-slides",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74148/",
+          "rev": "01",
+          "title": "Chairs slides"
+        },
+        {
+          "name": "slides-115-alto-alto-new-transport",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74132/",
+          "rev": "01",
+          "title": "ALTO New Transport v1"
+        },
+        {
+          "name": "slides-115-alto-alto-oam-yang",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74133/",
+          "rev": "01",
+          "title": "ALTO OAM YANG"
+        },
+        {
+          "name": "slides-115-alto-integration-of-alto-with-telefonica-cdn",
+          "order": 6,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74904/",
+          "rev": "00",
+          "title": "Integration of ALTO with Telefonica CDN"
+        },
+        {
+          "name": "slides-115-alto-mowie-for-network-aware-application",
+          "order": 7,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74135/",
+          "rev": "00",
+          "title": "MOWIE for Network Aware Application"
+        },
+        {
+          "name": "slides-115-alto-bsg-in-multi-domain-setting",
+          "order": 8,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74136/",
+          "rev": "01",
+          "title": "BSG in Multi-Domain Setting"
+        },
+        {
+          "name": "slides-115-alto-use-cases-and-framework-of-db-ors",
+          "order": 9,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74134/",
+          "rev": "00",
+          "title": "Use cases and Framework of DB-ORS"
+        },
+        {
+          "name": "slides-115-alto-alto-for-service-edge",
+          "order": 10,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74903/",
+          "rev": "01",
+          "title": "ALTO for service edge"
+        },
+        {
+          "name": "slides-115-alto-cernlhconenrp-alto-deployment-update-v30",
+          "order": 11,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/75024/",
+          "rev": "00",
+          "title": "CERN/LHCONE/NRP ALTO Deployment Update (v3.0)"
+        },
+        {
+          "name": "slides-115-alto-bottleneck-structure-graphs-in-multidomain-networks-introduction-and-requirements-for-alto-draft-giraltyellamraju-alto-bsg-multi",
+          "order": 12,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/75025/",
+          "rev": "00",
+          "title": "Bottleneck Structure Graphs in Multidomain Networks: Introduction and Requirements for ALTO (draft-giraltyellamraju-alto-bsg-multidomain)"
+        }
+      ],
+      "session_id": 29966,
+      "session_res_uri": "/api/v1/meeting/session/29966/",
+      "start": "2022-11-11T09:30:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-emailcore-02",
+      "duration": "1:00:00",
+      "group": {
+        "acronym": "emailcore",
+        "name": "Revision of core Email specifications",
+        "parent": "art",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108442,
+      "is_bof": false,
+      "location": "Richmond 1",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-emailcore-00",
+      "modified": "2022-12-31T07:45:49Z",
+      "name": "Revision of core Email specifications",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-emailcore-condensed-slides-to-be-presented-at-the-session",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74754/",
+          "rev": "00",
+          "title": "Condensed slides to be presented at the session"
+        },
+        {
+          "name": "slides-115-emailcore-full-slides-with-background-information-read-before-the-meeting",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74251/",
+          "rev": "01",
+          "title": "Full slides with background information (read before the meeting)"
+        }
+      ],
+      "session_id": 29841,
+      "session_res_uri": "/api/v1/meeting/session/29841/",
+      "start": "2022-11-10T15:30:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-detnet-05",
+      "duration": "2:00:00",
+      "group": {
+        "acronym": "detnet",
+        "name": "Deterministic Networking",
+        "parent": "rtg",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108345,
+      "is_bof": false,
+      "location": "Richmond 4",
+      "modified": "2022-12-30T08:27:02Z",
+      "name": "Deterministic Networking",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-detnet-01-intro-wg-status-draft-status",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73590/",
+          "rev": "02",
+          "title": "01 - Intro, WG Status, Draft Status"
+        },
+        {
+          "name": "slides-115-detnet-02-ls-on-3gpp-5g-system-acting-as-a-detnet-node",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74194/",
+          "rev": "01",
+          "title": "02 - LS on 3GPP 5G System acting as a Detnet node"
+        },
+        {
+          "name": "slides-115-detnet-03-update-on-oam-documents",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73789/",
+          "rev": "00",
+          "title": "03 - Update on OAM Documents"
+        },
+        {
+          "name": "slides-115-detnet-04-detnet-controller-plane-framework",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73957/",
+          "rev": "01",
+          "title": "04 - DetNet Controller Plane Framework"
+        },
+        {
+          "name": "slides-115-detnet-05-detnet-preof-via-mpls-over-udpip",
+          "order": 5,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73954/",
+          "rev": "00",
+          "title": "05 - DetNet PREOF via MPLS over UDP/IP"
+        },
+        {
+          "name": "slides-115-detnet-06-packet-ordering-function",
+          "order": 6,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73955/",
+          "rev": "00",
+          "title": "06 - DetNet Packet Ordering Function"
+        },
+        {
+          "name": "slides-115-detnet-07-requirements-of-large-scale-deterministic-network",
+          "order": 7,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73836/",
+          "rev": "00",
+          "title": "07 - Requirements of large-scale deterministic network"
+        },
+        {
+          "name": "slides-115-detnet-08-detnet-data-plane-enhancements-for-large-scale-deterministic-networks",
+          "order": 8,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74114/",
+          "rev": "00",
+          "title": "08 - DetNet Data Plane Enhancements for Large-Scale Deterministic Networks"
+        },
+        {
+          "name": "slides-115-detnet-09-asynchronous-deterministic-networking-framework-for-large-scale-networks",
+          "order": 9,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74115/",
+          "rev": "00",
+          "title": "09 - Asynchronous Deterministic Networking Framework for Large-Scale Networks"
+        },
+        {
+          "name": "slides-115-detnet-cyclic-queuing-and-forwarding-for-detnet-ip-and-mpls-data-plane-tcqf-v11",
+          "order": 10,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74076/",
+          "rev": "00",
+          "title": "10 - DetNet Data Plane - Tagged Cyclic Queuing and Forwarding (TCQF) for bounded latency with low jitter in large scale DetNets"
+        },
+        {
+          "name": "slides-115-detnet-11-detnet-enhanced-data-plane",
+          "order": 11,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73827/",
+          "rev": "00",
+          "title": "11 - DetNet Enhanced Data Plane"
+        },
+        {
+          "name": "slides-115-detnet-12-deadline-based-deterministic-forwarding",
+          "order": 12,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73956/",
+          "rev": "00",
+          "title": "12 - Deadline Based Deterministic Forwarding"
+        },
+        {
+          "name": "slides-115-detnet-13-mpls-sub-stack-encapsulation-for-deterministic-latency-action",
+          "order": 13,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73837/",
+          "rev": "00",
+          "title": "13 - MPLS Sub-Stack Encapsulation for Deterministic Latency Action"
+        },
+        {
+          "name": "slides-115-detnet-14-yang-data-model-for-detnet-mapping-with-network-slice",
+          "order": 14,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73838/",
+          "rev": "00",
+          "title": "14 - YANG Data Model for DetNet Mapping with Network Slice"
+        }
+      ],
+      "session_id": 29840,
+      "session_res_uri": "/api/v1/meeting/session/29840/",
+      "start": "2022-11-07T13:00:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-dispatch-05",
+      "agenda_note": "Joint with ARTAREA",
+      "duration": "2:00:00",
+      "group": {
+        "acronym": "dispatch",
+        "name": "Dispatch",
+        "parent": "art",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108332,
+      "is_bof": false,
+      "location": "Kensington 1",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-dispatch-202211070930-00",
+      "modified": "2022-12-28T18:40:49Z",
+      "name": "Dispatch",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-dispatch-chairs-slides",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74124/",
+          "rev": "01",
+          "title": "Chairs Slides"
+        },
+        {
+          "name": "slides-115-dispatch-vcon-the-json-format-for-vcon-conversation-data-container",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74010/",
+          "rev": "00",
+          "title": "vCon: the JSON format for vCon Conversation Data Container"
+        },
+        {
+          "name": "slides-115-dispatch-realm-crossover-with-sip-sasl",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73974/",
+          "rev": "00",
+          "title": "Realm Crossover with SIP-SASL"
+        },
+        {
+          "name": "slides-115-dispatch-dkim-replay-problem-and-possible-solutions",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74167/",
+          "rev": "01",
+          "title": "DKIM Replay: Problem and Possible Solutions"
+        },
+        {
+          "name": "slides-115-dispatch-whep-webrtc-http-egress-protocol",
+          "order": 5,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73844/",
+          "rev": "00",
+          "title": "WHEP: WebRTC-HTTP egress protocol"
+        },
+        {
+          "name": "slides-115-dispatch-ngi-eu-funding",
+          "order": 6,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73795/",
+          "rev": "01",
+          "title": "NGI EU funding"
+        },
+        {
+          "name": "slides-115-dispatch-ebpf-advertisement-for-thursday-side-meeting",
+          "order": 7,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73720/",
+          "rev": "00",
+          "title": "eBPF: Advertisement for Thursday side meeting"
+        },
+        {
+          "name": "slides-115-dispatch-attestable-httpa-httpa",
+          "order": 8,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73796/",
+          "rev": "00",
+          "title": "Attestable HTTPA (HTTPA)"
+        }
+      ],
+      "session_id": 29857,
+      "session_res_uri": "/api/v1/meeting/session/29857/",
+      "start": "2022-11-07T09:30:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-manet-01",
+      "duration": "1:00:00",
+      "group": {
+        "acronym": "manet",
+        "name": "Mobile Ad-hoc Networks",
+        "parent": "rtg",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108446,
+      "is_bof": false,
+      "location": "Mezzanine 1-4",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-manet-202211101530-02",
+      "modified": "2022-12-26T23:57:52Z",
+      "name": "Mobile Ad-hoc Networks",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-manet-chairs-slides",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74924/",
+          "rev": "00",
+          "title": "Chairs' slides"
+        },
+        {
+          "name": "slides-115-manet-dtnma-updates",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74925/",
+          "rev": "00",
+          "title": "DTNMA Updates"
+        }
+      ],
+      "session_id": 29976,
+      "session_res_uri": "/api/v1/meeting/session/29976/",
+      "start": "2022-11-10T15:30:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-lisp-04",
+      "duration": "1:00:00",
+      "group": {
+        "acronym": "lisp",
+        "name": "Locator/ID Separation Protocol",
+        "parent": "rtg",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108392,
+      "is_bof": false,
+      "location": "Richmond 2",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-lisp-202211081630-00",
+      "modified": "2022-12-25T15:11:50Z",
+      "name": "Locator/ID Separation Protocol",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-lisp-chairs-slides",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74432/",
+          "rev": "01",
+          "title": "Chairs' slides"
+        },
+        {
+          "name": "slides-115-lisp-network-hexagonsgeolocation-mobility-edge-network-based-on-h3-and-lisp",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74174/",
+          "rev": "01",
+          "title": "Network-Hexagons:Geolocation Mobility Edge Network Based On H3 and LISP"
+        },
+        {
+          "name": "slides-115-lisp-lisp-geo-coordinate-use-cases",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74176/",
+          "rev": "00",
+          "title": "LISP Geo-Coordinate Use-Cases"
+        },
+        {
+          "name": "slides-115-lisp-lisp-for-satellite-networks",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74175/",
+          "rev": "00",
+          "title": "LISP for Satellite Networks"
+        },
+        {
+          "name": "slides-115-lisp-lisp-site-external-connectivity",
+          "order": 5,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74177/",
+          "rev": "00",
+          "title": "LISP Site External Connectivity"
+        },
+        {
+          "name": "slides-115-lisp-lisp-pubsub",
+          "order": 6,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74565/",
+          "rev": "00",
+          "title": "LISP PubSub"
+        }
+      ],
+      "session_id": 29859,
+      "session_res_uri": "/api/v1/meeting/session/29859/",
+      "start": "2022-11-08T16:30:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-roll-00",
+      "duration": "1:00:00",
+      "group": {
+        "acronym": "roll",
+        "name": "Routing Over Low power and Lossy networks",
+        "parent": "rtg",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108384,
+      "is_bof": false,
+      "location": "Richmond 1",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-roll-202211081500-01",
+      "modified": "2022-12-24T08:26:19Z",
+      "name": "Routing Over Low power and Lossy networks",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-roll-draft-ietf-roll-dao-projection",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73732/",
+          "rev": "00",
+          "title": "draft-ietf-roll-dao-projection"
+        },
+        {
+          "name": "slides-115-roll-draft-ietf-6lo-multicast-registration",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73744/",
+          "rev": "00",
+          "title": "draft-ietf-6lo-multicast-registration"
+        },
+        {
+          "name": "slides-115-roll-roll-ietf115-complete-slide-set",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74238/",
+          "rev": "00",
+          "title": "ROLL-IETF115-Complete-Slide-Set"
+        },
+        {
+          "name": "slides-115-roll-roll-ietf-115-chairs-slides",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74299/",
+          "rev": "00",
+          "title": "ROLL IETF 115 Chairs slides"
+        }
+      ],
+      "session_id": 29909,
+      "session_res_uri": "/api/v1/meeting/session/29909/",
+      "start": "2022-11-08T15:00:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-elegy-01",
+      "duration": "1:30:00",
+      "group": {
+        "acronym": "elegy",
+        "name": "NomCom Eligibility Update",
+        "parent": "gen",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108414,
+      "is_bof": false,
+      "location": "Mezzanine 1-4",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-elegy-202211091500-00",
+      "modified": "2022-12-21T18:49:09Z",
+      "name": "NomCom Eligibility Update",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-elegy-elegy-chair-slides",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74699/",
+          "rev": "01",
+          "title": "ELEGY Chair Slides"
+        },
+        {
+          "name": "slides-115-elegy-are-the-criteria-too-lax",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74758/",
+          "rev": "00",
+          "title": "Are the Criteria Too Lax?"
+        }
+      ],
+      "session_id": 29829,
+      "session_res_uri": "/api/v1/meeting/session/29829/",
+      "start": "2022-11-09T15:00:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-spring-01",
+      "duration": "2:00:00",
+      "group": {
+        "acronym": "spring",
+        "name": "Source Packet Routing in Networking",
+        "parent": "rtg",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108367,
+      "is_bof": false,
+      "location": "Richmond 4",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-spring-01",
+      "modified": "2022-12-20T16:31:00Z",
+      "name": "Source Packet Routing in Networking",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-spring-chairs-slides",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74396/",
+          "rev": "00",
+          "title": "Chairs Slides"
+        },
+        {
+          "name": "slides-115-spring-mpls-network-action-mna-header-encodings",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74004/",
+          "rev": "00",
+          "title": "MPLS Network Action (MNA) Header Encodings"
+        },
+        {
+          "name": "slides-115-spring-srv6-for-inter-layer-network-programming",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73975/",
+          "rev": "00",
+          "title": "SRv6 for Inter-Layer Network Programming"
+        },
+        {
+          "name": "slides-115-spring-encapsulation-of-bfd-for-srv6-policy",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73805/",
+          "rev": "00",
+          "title": "Encapsulation of BFD for SRv6 Policy"
+        },
+        {
+          "name": "slides-115-spring-segment-routing-based-solution-for-hierarchical-ietf-network-slices",
+          "order": 5,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74157/",
+          "rev": "00",
+          "title": "Segment Routing based Solution for Hierarchical IETF Network Slices"
+        },
+        {
+          "name": "slides-115-spring-sr-pmtu-for-sr-policy",
+          "order": 6,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73659/",
+          "rev": "00",
+          "title": "SR-PMTU for SR Policy"
+        },
+        {
+          "name": "slides-115-spring-srv6-and-mpls-interworking",
+          "order": 7,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74397/",
+          "rev": "00",
+          "title": "SRv6 and MPLS interworking"
+        },
+        {
+          "name": "slides-115-spring-sr-policy-group",
+          "order": 8,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74156/",
+          "rev": "00",
+          "title": "SR Policy Group"
+        },
+        {
+          "name": "slides-115-spring-draft-cheng-spring-srv6-resource-programming",
+          "order": 9,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74005/",
+          "rev": "02",
+          "title": "draft-cheng-spring-srv6-resource-programming"
+        },
+        {
+          "name": "slides-115-spring-segment-encoding-and-procedures-for-multicast-vpn-service-in-native-ipv6-network",
+          "order": 10,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73610/",
+          "rev": "00",
+          "title": "Segment Encoding and Procedures For Multicast VPN Service in Native IPv6 Network"
+        },
+        {
+          "name": "slides-115-spring-slides-115-spring-microtap-segment",
+          "order": 11,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74300/",
+          "rev": "00",
+          "title": "slides-115-spring-microtap-segment"
+        }
+      ],
+      "session_id": 29901,
+      "session_res_uri": "/api/v1/meeting/session/29901/",
+      "start": "2022-11-08T09:30:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-core-00",
+      "duration": "2:00:00",
+      "group": {
+        "acronym": "core",
+        "name": "Constrained RESTful Environments",
+        "parent": "art",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108341,
+      "is_bof": false,
+      "location": "Mezzanine 10-11",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-core-00",
+      "modified": "2022-12-20T15:54:10Z",
+      "name": "Constrained RESTful Environments",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-core-chairs-slides",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74034/",
+          "rev": "01",
+          "title": "Chairs slides"
+        },
+        {
+          "name": "slides-115-core-href-cris",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74081/",
+          "rev": "00",
+          "title": "HREF (CRIs)"
+        },
+        {
+          "name": "slides-115-core-conditional-attributes-for-constrained-restful-environments",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73731/",
+          "rev": "00",
+          "title": "Conditional Attributes for Constrained RESTful Environments"
+        },
+        {
+          "name": "slides-115-core-target-attribute-registry",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74056/",
+          "rev": "01",
+          "title": "Target Attribute Registry"
+        },
+        {
+          "name": "slides-115-core-draft-ietf-core-oscore-groupcomm",
+          "order": 5,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74033/",
+          "rev": "00",
+          "title": "draft-ietf-core-oscore-groupcomm"
+        },
+        {
+          "name": "slides-115-core-profiling-edhoc-for-coap-and-oscore-ietf-115-core",
+          "order": 6,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74041/",
+          "rev": "00",
+          "title": "Profiling EDHOC for CoAP and OSCORE - IETF 115 CoRE"
+        },
+        {
+          "name": "slides-115-core-key-update-for-oscore-kudos-ietf-115-core",
+          "order": 7,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74040/",
+          "rev": "00",
+          "title": "Key Update for OSCORE (KUDOS) - IETF 115 CoRE"
+        },
+        {
+          "name": "slides-115-core-dns-over-coap-doc-dns-messages-in-cbor",
+          "order": 8,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74030/",
+          "rev": "01",
+          "title": "DNS over CoAP (DoC) & DNS messages in CBOR"
+        }
+      ],
+      "session_id": 29839,
+      "session_res_uri": "/api/v1/meeting/session/29839/",
+      "start": "2022-11-07T13:00:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-rats-02",
+      "duration": "2:00:00",
+      "group": {
+        "acronym": "rats",
+        "name": "Remote ATtestation ProcedureS",
+        "parent": "sec",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108355,
+      "is_bof": false,
+      "location": "Richmond 3",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-rats-202211071530-00",
+      "modified": "2022-12-20T05:09:22Z",
+      "name": "Remote ATtestation ProcedureS",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-rats-chair-slides",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73648/",
+          "rev": "02",
+          "title": "Chair Slides"
+        },
+        {
+          "name": "slides-115-rats-eat-media-types",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73971/",
+          "rev": "01",
+          "title": "EAT media types"
+        },
+        {
+          "name": "slides-115-rats-eat-status-update-and-issue-resolution",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73972/",
+          "rev": "00",
+          "title": "EAT status update and issue resolution"
+        },
+        {
+          "name": "slides-115-rats-rats-message-wrappers",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74059/",
+          "rev": "00",
+          "title": "RATS Message Wrappers"
+        },
+        {
+          "name": "slides-115-rats-uccs",
+          "order": 5,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74067/",
+          "rev": "01",
+          "title": "UCCS"
+        },
+        {
+          "name": "slides-115-rats-an-eat-serialisation-of-ar4si",
+          "order": 6,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74089/",
+          "rev": "01",
+          "title": "An EAT serialisation of AR4SI"
+        },
+        {
+          "name": "slides-115-rats-secure-routing",
+          "order": 7,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74171/",
+          "rev": "00",
+          "title": "Secure routing"
+        },
+        {
+          "name": "slides-115-rats-attestation-in-tls-and-eap-based-key-attestation",
+          "order": 9,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74290/",
+          "rev": "00",
+          "title": "Attestation in TLS and EAP-based Key Attestation"
+        },
+        {
+          "name": "slides-115-rats-secure-routing-update",
+          "order": 10,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74295/",
+          "rev": "00",
+          "title": "Secure routing-update"
+        },
+        {
+          "name": "slides-115-rats-suit-report-update",
+          "order": 11,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74296/",
+          "rev": "00",
+          "title": "SUIT Report Update"
+        }
+      ],
+      "session_id": 29926,
+      "session_res_uri": "/api/v1/meeting/session/29926/",
+      "start": "2022-11-07T15:30:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-oauth-sessa-00",
+      "duration": "2:00:00",
+      "group": {
+        "acronym": "oauth",
+        "name": "Web Authorization Protocol",
+        "parent": "sec",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108338,
+      "is_bof": false,
+      "location": "Richmond 1",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-oauth-202211070930-01",
+      "modified": "2022-12-19T23:18:25Z",
+      "name": "Web Authorization Protocol",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-oauth-chairs-update",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73825/",
+          "rev": "03",
+          "title": "Chairs Update"
+        },
+        {
+          "name": "slides-115-oauth-sessa-oauth-21-and-browser-based-apps",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73947/",
+          "rev": "00",
+          "title": "OAuth 2.1 and Browser-Based Apps"
+        },
+        {
+          "name": "slides-115-oauth-sessa-sd-jwt",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74111/",
+          "rev": "01",
+          "title": "SD-JWT"
+        },
+        {
+          "name": "slides-115-oauth-sessa-oauth-20-step-up-authentication-challenge-protocol",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73835/",
+          "rev": "00",
+          "title": "OAuth 2.0 Step-up Authentication Challenge Protocol"
+        },
+        {
+          "name": "slides-115-oauth-sessa-interactive-authentication-of-non-interactive-http-requests",
+          "order": 5,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73686/",
+          "rev": "00",
+          "title": "Interactive Authentication of Non-Interactive HTTP Requests"
+        }
+      ],
+      "session_id": 29873,
+      "session_res_uri": "/api/v1/meeting/session/29873/",
+      "start": "2022-11-07T09:30:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-iabopen-01",
+      "duration": "1:00:00",
+      "group": {
+        "acronym": "iabopen",
+        "name": "IAB Open Meeting",
+        "parent": "iab",
+        "state": "active",
+        "type": "ag"
+      },
+      "id": 108390,
+      "is_bof": false,
+      "location": "Kensington 2",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-iabopen-202211081630-01",
+      "modified": "2022-12-16T15:55:47Z",
+      "name": "IAB Open Meeting",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-iabopen-intro",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74509/",
+          "rev": "02",
+          "title": "Intro"
+        },
+        {
+          "name": "slides-115-iabopen-liaison-relationship-ietf-and-ieee-802-russ-housley",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73734/",
+          "rev": "00",
+          "title": "Liaison Relationship: IETF and IEEE 802 - Russ Housley"
+        },
+        {
+          "name": "slides-115-iabopen-m-ten-workshop-recap",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74516/",
+          "rev": "00",
+          "title": "M-TEN workshop recap"
+        },
+        {
+          "name": "slides-115-iabopen-partitioning-as-an-architecture-for-privacy",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74510/",
+          "rev": "00",
+          "title": "Partitioning as an Architecture for Privacy"
+        },
+        {
+          "name": "slides-115-iabopen-ooni-censorship-measurements-in-iran-simone-basso",
+          "order": 5,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74514/",
+          "rev": "00",
+          "title": "OONI Censorship Measurements in Iran - Simone Basso"
+        },
+        {
+          "name": "slides-115-iabopen-irans-mahsa-amini-revolution-protest-crises-and-the-role-of-technology-mahsa-alimardani",
+          "order": 6,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74512/",
+          "rev": "02",
+          "title": "Iran's Mahsa Amini Revolution: Protest Crises and the Role of Technology - Mahsa Alimardani"
+        }
+      ],
+      "session_id": 29945,
+      "session_res_uri": "/api/v1/meeting/session/29945/",
+      "start": "2022-11-08T16:30:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-dnsop-03",
+      "duration": "2:00:00",
+      "group": {
+        "acronym": "dnsop",
+        "name": "Domain Name System Operations",
+        "parent": "ops",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108335,
+      "is_bof": false,
+      "location": "Kensington 1",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-dnsop-00",
+      "modified": "2022-12-13T18:55:39Z",
+      "name": "Domain Name System Operations",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-dnsop-chairs-slides",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74384/",
+          "rev": "01",
+          "title": "Chairs Slides"
+        },
+        {
+          "name": "slides-115-dnsop-alt-tld-chairs-slides",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74383/",
+          "rev": "00",
+          "title": "ALT-TLD chairs slides"
+        },
+        {
+          "name": "slides-115-dnsop-the-alt-special-use-top-level-domain-draft-ietf-dnsop-alt-tld-18",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74422/",
+          "rev": "00",
+          "title": "The ALT Special Use Top Level Domain:\u000bdraft-ietf-dnsop-alt-tld-18"
+        },
+        {
+          "name": "slides-115-dnsop-hackathon-dns-table-result-and-dns-error-reporting",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74426/",
+          "rev": "00",
+          "title": "Hackathon DNS table result and DNS Error Reporting"
+        },
+        {
+          "name": "slides-115-dnsop-negative-caching-of-dns-resolution-failures",
+          "order": 5,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74294/",
+          "rev": "00",
+          "title": "Negative Caching of DNS Resolution Failures"
+        },
+        {
+          "name": "slides-115-dnsop-control-options-for-dns-client-proxies",
+          "order": 6,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74113/",
+          "rev": "00",
+          "title": "Control Options For DNS Client Proxies"
+        },
+        {
+          "name": "slides-115-dnsop-consistency-for-cdscdnskey-and-csync-is-mandatory",
+          "order": 7,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74259/",
+          "rev": "00",
+          "title": "Consistency for CDS/CDNSKEY (and CSYNC) is Mandatory"
+        },
+        {
+          "name": "slides-115-dnsop-multi-signer-key-exchange-mske",
+          "order": 8,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74320/",
+          "rev": "00",
+          "title": "Multi-Signer Key-Exchange (MSKE)"
+        },
+        {
+          "name": "slides-115-dnsop-structured-data-for-filtered-dns",
+          "order": 9,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73724/",
+          "rev": "01",
+          "title": "Structured Data for Filtered DNS"
+        },
+        {
+          "name": "slides-115-dnsop-domain-verification",
+          "order": 10,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74423/",
+          "rev": "00",
+          "title": "Domain Verification"
+        },
+        {
+          "name": "slides-115-dnsop-hackathon-dns-table-result-and-dns-error-reporting-v2",
+          "order": 11,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74441/",
+          "rev": "00",
+          "title": "Hackathon DNS table result and DNS Error Reporting (v2)"
+        }
+      ],
+      "session_id": 29811,
+      "session_res_uri": "/api/v1/meeting/session/29811/",
+      "start": "2022-11-08T09:30:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-mboned-04",
+      "duration": "1:30:00",
+      "group": {
+        "acronym": "mboned",
+        "name": "MBONE Deployment",
+        "parent": "ops",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108408,
+      "is_bof": false,
+      "location": "Mezzanine 1-4",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-mboned-00",
+      "modified": "2022-12-09T17:12:39Z",
+      "name": "MBONE Deployment",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-mboned-agenda",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74674/",
+          "rev": "00",
+          "title": "Agenda"
+        },
+        {
+          "name": "slides-115-mboned-amt-yang",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74233/",
+          "rev": "00",
+          "title": "AMT YANG"
+        },
+        {
+          "name": "slides-115-mboned-multicast-scaling-considerations",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74706/",
+          "rev": "00",
+          "title": "multicast scaling considerations"
+        },
+        {
+          "name": "slides-115-mboned-treedn",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73881/",
+          "rev": "01",
+          "title": "TreeDN"
+        },
+        {
+          "name": "slides-115-mboned-eumetcast-over-amt",
+          "order": 5,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74321/",
+          "rev": "00",
+          "title": "EUMETCast over AMT"
+        },
+        {
+          "name": "slides-115-mboned-amt-to-the-browser-in-the-multicast-menu",
+          "order": 6,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74661/",
+          "rev": "00",
+          "title": "AMT to the Browser in the Multicast Menu"
+        },
+        {
+          "name": "slides-115-mboned-multicast-lessons-learned-from-decades-of-deployment-experience",
+          "order": 7,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74707/",
+          "rev": "00",
+          "title": "Multicast Lessons Learned from Decades of Deployment Experience"
+        }
+      ],
+      "session_id": 29816,
+      "session_res_uri": "/api/v1/meeting/session/29816/",
+      "start": "2022-11-09T13:00:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-calext-01",
+      "duration": "1:00:00",
+      "group": {
+        "acronym": "calext",
+        "name": "Calendaring Extensions",
+        "parent": "art",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108388,
+      "is_bof": false,
+      "location": "Richmond 1",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-calext-202211081630-00",
+      "modified": "2022-12-09T16:21:43Z",
+      "name": "Calendaring Extensions",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-calext-chair-slides",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74467/",
+          "rev": "00",
+          "title": "chair-slides"
+        },
+        {
+          "name": "slides-115-calext-jscalendar",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74298/",
+          "rev": "00",
+          "title": "jscalendar"
+        },
+        {
+          "name": "slides-115-calext-jscontact",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74297/",
+          "rev": "00",
+          "title": "jscontact"
+        },
+        {
+          "name": "slides-115-calext-tasks",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74449/",
+          "rev": "00",
+          "title": "tasks"
+        },
+        {
+          "name": "slides-115-calext-vtodo-start-duration",
+          "order": 5,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74450/",
+          "rev": "00",
+          "title": "vtodo-start-duration"
+        }
+      ],
+      "session_id": 29934,
+      "session_res_uri": "/api/v1/meeting/session/29934/",
+      "start": "2022-11-08T16:30:00Z",
+      "status": "sched"
+    },
+    {
+      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-mpls-02",
+      "duration": "1:00:00",
+      "group": {
+        "acronym": "mpls",
+        "name": "Multiprotocol Label Switching",
+        "parent": "rtg",
+        "state": "active",
+        "type": "wg"
+      },
+      "id": 108393,
+      "is_bof": false,
+      "location": "Kensington 1",
+      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-mpls-202211081630-00",
+      "modified": "2022-12-08T23:35:10Z",
+      "name": "Multiprotocol Label Switching",
+      "objtype": "session",
+      "presentations": [
+        {
+          "name": "slides-115-mpls-01-ietf-115-mpls-wg-status-update",
+          "order": 1,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73817/",
+          "rev": "02",
+          "title": "01 - IETF 115 MPLS WG Status Update"
+        },
+        {
+          "name": "slides-115-mpls-02-mpls-wiki-migration",
+          "order": 2,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74407/",
+          "rev": "01",
+          "title": "02-MPLS Wiki Migration"
+        },
+        {
+          "name": "slides-115-mpls-msd-yang-update",
+          "order": 3,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/74392/",
+          "rev": "00",
+          "title": "03 - MPLS MSD YANG data model"
+        },
+        {
+          "name": "slides-115-mpls-04-simple-two-way-active-measurement-protocol-stamp-for-mpls-label-switched-paths-lsps",
+          "order": 4,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73816/",
+          "rev": "00",
+          "title": "04 - Simple Two-way Active Measurement Protocol (STAMP) for MPLS Label Switched Paths (LSPs)"
+        },
+        {
+          "name": "slides-115-mpls-05-lsp-pingtraceroute-for-enabled-in-situ-oam-capabilities",
+          "order": 5,
+          "resource_uri": "/api/v1/meeting/sessionpresentation/73815/",
+          "rev": "00",
+          "title": "05 - LSP Ping/Traceroute for Enabled In-situ OAM Capabilities."
+        }
+      ],
+      "session_id": 29904,
+      "session_res_uri": "/api/v1/meeting/session/29904/",
+      "start": "2022-11-08T16:30:00Z",
+      "status": "sched"
+    },
+    {
       "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-ntp-00",
       "duration": "1:30:00",
       "group": {
@@ -29,44 +1308,6 @@
       "session_id": 29977,
       "session_res_uri": "/api/v1/meeting/session/29977/",
       "start": "2022-11-11T12:00:00Z",
-      "status": "sched"
-    },
-    {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-emailcore-02",
-      "duration": "1:00:00",
-      "group": {
-        "acronym": "emailcore",
-        "name": "Revision of core Email specifications",
-        "parent": "art",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108442,
-      "is_bof": false,
-      "location": "Richmond 1",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-emailcore-00",
-      "modified": "2022-12-06T07:57:51Z",
-      "name": "Revision of core Email specifications",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-emailcore-condensed-slides-to-be-presented-at-the-session",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74754/",
-          "rev": "00",
-          "title": "Condensed slides to be presented at the session"
-        },
-        {
-          "name": "slides-115-emailcore-full-slides-with-background-information-read-before-the-meeting",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74251/",
-          "rev": "01",
-          "title": "Full slides with background information (read before the meeting)"
-        }
-      ],
-      "session_id": 29841,
-      "session_res_uri": "/api/v1/meeting/session/29841/",
-      "start": "2022-11-10T15:30:00Z",
       "status": "sched"
     },
     {
@@ -382,100 +1623,6 @@
       "status": "sched"
     },
     {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-rats-02",
-      "duration": "2:00:00",
-      "group": {
-        "acronym": "rats",
-        "name": "Remote ATtestation ProcedureS",
-        "parent": "sec",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108355,
-      "is_bof": false,
-      "location": "Richmond 3",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-rats-202211071530-00",
-      "modified": "2022-12-05T00:39:57Z",
-      "name": "Remote ATtestation ProcedureS",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-rats-chair-slides",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73648/",
-          "rev": "02",
-          "title": "Chair Slides"
-        },
-        {
-          "name": "slides-115-rats-eat-media-types",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73971/",
-          "rev": "01",
-          "title": "EAT media types"
-        },
-        {
-          "name": "slides-115-rats-eat-status-update-and-issue-resolution",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73972/",
-          "rev": "00",
-          "title": "EAT status update and issue resolution"
-        },
-        {
-          "name": "slides-115-rats-rats-message-wrappers",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74059/",
-          "rev": "00",
-          "title": "RATS Message Wrappers"
-        },
-        {
-          "name": "slides-115-rats-uccs",
-          "order": 5,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74067/",
-          "rev": "01",
-          "title": "UCCS"
-        },
-        {
-          "name": "slides-115-rats-an-eat-serialisation-of-ar4si",
-          "order": 6,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74089/",
-          "rev": "01",
-          "title": "An EAT serialisation of AR4SI"
-        },
-        {
-          "name": "slides-115-rats-secure-routing",
-          "order": 7,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74171/",
-          "rev": "00",
-          "title": "Secure routing"
-        },
-        {
-          "name": "slides-115-rats-attestation-in-tls-and-eap-based-key-attestation",
-          "order": 9,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74290/",
-          "rev": "00",
-          "title": "Attestation in TLS and EAP-based Key Attestation"
-        },
-        {
-          "name": "slides-115-rats-secure-routing-update",
-          "order": 10,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74295/",
-          "rev": "00",
-          "title": "Secure routing-update"
-        },
-        {
-          "name": "slides-115-rats-suit-report-update",
-          "order": 11,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74296/",
-          "rev": "00",
-          "title": "SUIT Report Update"
-        }
-      ],
-      "session_id": 29926,
-      "session_res_uri": "/api/v1/meeting/session/29926/",
-      "start": "2022-11-07T15:30:00Z",
-      "status": "sched"
-    },
-    {
       "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-idr-01",
       "duration": "2:00:00",
       "group": {
@@ -688,103 +1835,6 @@
       "status": "sched"
     },
     {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-satp-03",
-      "duration": "2:00:00",
-      "group": {
-        "acronym": "satp",
-        "name": "Secure Asset Transfer Protocol",
-        "parent": "sec",
-        "state": "bof",
-        "type": "wg"
-      },
-      "id": 108439,
-      "is_bof": true,
-      "location": "Kensington 1",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-satp-202211101300-00",
-      "modified": "2022-12-03T00:58:42Z",
-      "name": "Secure Asset Transfer Protocol",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-satp-chair-slides",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74284/",
-          "rev": "01",
-          "title": "Chair Slides"
-        },
-        {
-          "name": "slides-115-satp-satp-problem-space-goals",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73680/",
-          "rev": "00",
-          "title": "SATP Problem Space & Goals"
-        },
-        {
-          "name": "slides-115-satp-satp-use-case-supply-chain-logistics-trade-finance",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73681/",
-          "rev": "00",
-          "title": "SATP Use-Case: Supply Chain Logistics & Trade Finance"
-        },
-        {
-          "name": "slides-115-satp-satp-use-case-regulated-cbdc-and-finance",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73682/",
-          "rev": "00",
-          "title": "SATP Use-Case: Regulated CBDC and Finance"
-        },
-        {
-          "name": "slides-115-satp-satp-status-report",
-          "order": 5,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73683/",
-          "rev": "00",
-          "title": "SATP Status Report"
-        }
-      ],
-      "session_id": 30002,
-      "session_res_uri": "/api/v1/meeting/session/30002/",
-      "start": "2022-11-10T13:00:00Z",
-      "status": "sched"
-    },
-    {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-manet-01",
-      "duration": "1:00:00",
-      "group": {
-        "acronym": "manet",
-        "name": "Mobile Ad-hoc Networks",
-        "parent": "rtg",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108446,
-      "is_bof": false,
-      "location": "Mezzanine 1-4",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-manet-202211101530-01",
-      "modified": "2022-12-03T00:29:21Z",
-      "name": "Mobile Ad-hoc Networks",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-manet-chairs-slides",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74924/",
-          "rev": "00",
-          "title": "Chairs' slides"
-        },
-        {
-          "name": "slides-115-manet-dtnma-updates",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74925/",
-          "rev": "00",
-          "title": "DTNMA Updates"
-        }
-      ],
-      "session_id": 29976,
-      "session_res_uri": "/api/v1/meeting/session/29976/",
-      "start": "2022-11-10T15:30:00Z",
-      "status": "sched"
-    },
-    {
       "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-mops-02",
       "duration": "2:00:00",
       "group": {
@@ -841,127 +1891,6 @@
       "session_id": 29876,
       "session_res_uri": "/api/v1/meeting/session/29876/",
       "start": "2022-11-07T09:30:00Z",
-      "status": "sched"
-    },
-    {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-detnet-05",
-      "duration": "2:00:00",
-      "group": {
-        "acronym": "detnet",
-        "name": "Deterministic Networking",
-        "parent": "rtg",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108345,
-      "is_bof": false,
-      "location": "Richmond 4",
-      "modified": "2022-12-02T03:30:04Z",
-      "name": "Deterministic Networking",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-detnet-01-intro-wg-status-draft-status",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73590/",
-          "rev": "02",
-          "title": "01 - Intro, WG Status, Draft Status"
-        },
-        {
-          "name": "slides-115-detnet-02-ls-on-3gpp-5g-system-acting-as-a-detnet-node",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74194/",
-          "rev": "01",
-          "title": "02 - LS on 3GPP 5G System acting as a Detnet node"
-        },
-        {
-          "name": "slides-115-detnet-03-update-on-oam-documents",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73789/",
-          "rev": "00",
-          "title": "03 - Update on OAM Documents"
-        },
-        {
-          "name": "slides-115-detnet-04-detnet-controller-plane-framework",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73957/",
-          "rev": "01",
-          "title": "04 - DetNet Controller Plane Framework"
-        },
-        {
-          "name": "slides-115-detnet-05-detnet-preof-via-mpls-over-udpip",
-          "order": 5,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73954/",
-          "rev": "00",
-          "title": "05 - DetNet PREOF via MPLS over UDP/IP"
-        },
-        {
-          "name": "slides-115-detnet-06-packet-ordering-function",
-          "order": 6,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73955/",
-          "rev": "00",
-          "title": "06 - DetNet Packet Ordering Function"
-        },
-        {
-          "name": "slides-115-detnet-07-requirements-of-large-scale-deterministic-network",
-          "order": 7,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73836/",
-          "rev": "00",
-          "title": "07 - Requirements of large-scale deterministic network"
-        },
-        {
-          "name": "slides-115-detnet-08-detnet-data-plane-enhancements-for-large-scale-deterministic-networks",
-          "order": 8,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74114/",
-          "rev": "00",
-          "title": "08 - DetNet Data Plane Enhancements for Large-Scale Deterministic Networks"
-        },
-        {
-          "name": "slides-115-detnet-09-asynchronous-deterministic-networking-framework-for-large-scale-networks",
-          "order": 9,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74115/",
-          "rev": "00",
-          "title": "09 - Asynchronous Deterministic Networking Framework for Large-Scale Networks"
-        },
-        {
-          "name": "slides-115-detnet-cyclic-queuing-and-forwarding-for-detnet-ip-and-mpls-data-plane-tcqf-v11",
-          "order": 10,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74076/",
-          "rev": "00",
-          "title": "10 - DetNet Data Plane - Tagged Cyclic Queuing and Forwarding (TCQF) for bounded latency with low jitter in large scale DetNets"
-        },
-        {
-          "name": "slides-115-detnet-11-detnet-enhanced-data-plane",
-          "order": 11,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73827/",
-          "rev": "00",
-          "title": "11 - DetNet Enhanced Data Plane"
-        },
-        {
-          "name": "slides-115-detnet-12-deadline-based-deterministic-forwarding",
-          "order": 12,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73956/",
-          "rev": "00",
-          "title": "12 - Deadline Based Deterministic Forwarding"
-        },
-        {
-          "name": "slides-115-detnet-13-mpls-sub-stack-encapsulation-for-deterministic-latency-action",
-          "order": 13,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73837/",
-          "rev": "00",
-          "title": "13 - MPLS Sub-Stack Encapsulation for Deterministic Latency Action"
-        },
-        {
-          "name": "slides-115-detnet-14-yang-data-model-for-detnet-mapping-with-network-slice",
-          "order": 14,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73838/",
-          "rev": "00",
-          "title": "14 - YANG Data Model for DetNet Mapping with Network Slice"
-        }
-      ],
-      "session_id": 29840,
-      "session_res_uri": "/api/v1/meeting/session/29840/",
-      "start": "2022-11-07T13:00:00Z",
       "status": "sched"
     },
     {
@@ -1337,44 +2266,6 @@
       "session_id": 29870,
       "session_res_uri": "/api/v1/meeting/session/29870/",
       "start": "2022-11-07T13:00:00Z",
-      "status": "sched"
-    },
-    {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-elegy-01",
-      "duration": "1:30:00",
-      "group": {
-        "acronym": "elegy",
-        "name": "NomCom Eligibility Update",
-        "parent": "gen",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108414,
-      "is_bof": false,
-      "location": "Mezzanine 1-4",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-elegy-202211091500-00",
-      "modified": "2022-12-01T18:36:49Z",
-      "name": "NomCom Eligibility Update",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-elegy-elegy-chair-slides",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74699/",
-          "rev": "01",
-          "title": "ELEGY Chair Slides"
-        },
-        {
-          "name": "slides-115-elegy-are-the-criteria-too-lax",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74758/",
-          "rev": "00",
-          "title": "Are the Criteria Too Lax?"
-        }
-      ],
-      "session_id": 29829,
-      "session_res_uri": "/api/v1/meeting/session/29829/",
-      "start": "2022-11-09T15:00:00Z",
       "status": "sched"
     },
     {
@@ -2574,65 +3465,6 @@
       "status": "sched"
     },
     {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-calext-01",
-      "duration": "1:00:00",
-      "group": {
-        "acronym": "calext",
-        "name": "Calendaring Extensions",
-        "parent": "art",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108388,
-      "is_bof": false,
-      "location": "Richmond 1",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-calext-202211081630-00",
-      "modified": "2022-11-25T13:13:13Z",
-      "name": "Calendaring Extensions",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-calext-chair-slides",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74467/",
-          "rev": "00",
-          "title": "chair-slides"
-        },
-        {
-          "name": "slides-115-calext-jscalendar",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74298/",
-          "rev": "00",
-          "title": "jscalendar"
-        },
-        {
-          "name": "slides-115-calext-jscontact",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74297/",
-          "rev": "00",
-          "title": "jscontact"
-        },
-        {
-          "name": "slides-115-calext-tasks",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74449/",
-          "rev": "00",
-          "title": "tasks"
-        },
-        {
-          "name": "slides-115-calext-vtodo-start-duration",
-          "order": 5,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74450/",
-          "rev": "00",
-          "title": "vtodo-start-duration"
-        }
-      ],
-      "session_id": 29934,
-      "session_res_uri": "/api/v1/meeting/session/29934/",
-      "start": "2022-11-08T16:30:00Z",
-      "status": "sched"
-    },
-    {
       "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-v6ops-08",
       "duration": "2:00:00",
       "group": {
@@ -2720,107 +3552,6 @@
       "status": "sched"
     },
     {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-spring-01",
-      "duration": "2:00:00",
-      "group": {
-        "acronym": "spring",
-        "name": "Source Packet Routing in Networking",
-        "parent": "rtg",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108367,
-      "is_bof": false,
-      "location": "Richmond 4",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-spring-01",
-      "modified": "2022-11-25T01:16:43Z",
-      "name": "Source Packet Routing in Networking",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-spring-chairs-slides",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74396/",
-          "rev": "00",
-          "title": "Chairs Slides"
-        },
-        {
-          "name": "slides-115-spring-mpls-network-action-mna-header-encodings",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74004/",
-          "rev": "00",
-          "title": "MPLS Network Action (MNA) Header Encodings"
-        },
-        {
-          "name": "slides-115-spring-srv6-for-inter-layer-network-programming",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73975/",
-          "rev": "00",
-          "title": "SRv6 for Inter-Layer Network Programming"
-        },
-        {
-          "name": "slides-115-spring-encapsulation-of-bfd-for-srv6-policy",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73805/",
-          "rev": "00",
-          "title": "Encapsulation of BFD for SRv6 Policy"
-        },
-        {
-          "name": "slides-115-spring-segment-routing-based-solution-for-hierarchical-ietf-network-slices",
-          "order": 5,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74157/",
-          "rev": "00",
-          "title": "Segment Routing based Solution for Hierarchical IETF Network Slices"
-        },
-        {
-          "name": "slides-115-spring-sr-pmtu-for-sr-policy",
-          "order": 6,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73659/",
-          "rev": "00",
-          "title": "SR-PMTU for SR Policy"
-        },
-        {
-          "name": "slides-115-spring-srv6-and-mpls-interworking",
-          "order": 7,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74397/",
-          "rev": "00",
-          "title": "SRv6 and MPLS interworking"
-        },
-        {
-          "name": "slides-115-spring-sr-policy-group",
-          "order": 8,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74156/",
-          "rev": "00",
-          "title": "SR Policy Group"
-        },
-        {
-          "name": "slides-115-spring-draft-cheng-spring-srv6-resource-programming",
-          "order": 9,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74005/",
-          "rev": "02",
-          "title": "draft-cheng-spring-srv6-resource-programming"
-        },
-        {
-          "name": "slides-115-spring-segment-encoding-and-procedures-for-multicast-vpn-service-in-native-ipv6-network",
-          "order": 10,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73610/",
-          "rev": "00",
-          "title": "Segment Encoding and Procedures For Multicast VPN Service in Native IPv6 Network"
-        },
-        {
-          "name": "slides-115-spring-slides-115-spring-microtap-segment",
-          "order": 11,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74300/",
-          "rev": "00",
-          "title": "slides-115-spring-microtap-segment"
-        }
-      ],
-      "session_id": 29901,
-      "session_res_uri": "/api/v1/meeting/session/29901/",
-      "start": "2022-11-08T09:30:00Z",
-      "status": "sched"
-    },
-    {
       "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-maprg-12",
       "duration": "2:00:00",
       "group": {
@@ -2905,86 +3636,6 @@
       "session_id": 29914,
       "session_res_uri": "/api/v1/meeting/session/29914/",
       "start": "2022-11-10T13:00:00Z",
-      "status": "sched"
-    },
-    {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-core-00",
-      "duration": "2:00:00",
-      "group": {
-        "acronym": "core",
-        "name": "Constrained RESTful Environments",
-        "parent": "art",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108341,
-      "is_bof": false,
-      "location": "Mezzanine 10-11",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-core-00",
-      "modified": "2022-11-24T14:51:35Z",
-      "name": "Constrained RESTful Environments",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-core-chairs-slides",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74034/",
-          "rev": "01",
-          "title": "Chairs slides"
-        },
-        {
-          "name": "slides-115-core-href-cris",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74081/",
-          "rev": "00",
-          "title": "HREF (CRIs)"
-        },
-        {
-          "name": "slides-115-core-conditional-attributes-for-constrained-restful-environments",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73731/",
-          "rev": "00",
-          "title": "Conditional Attributes for Constrained RESTful Environments"
-        },
-        {
-          "name": "slides-115-core-target-attribute-registry",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74056/",
-          "rev": "01",
-          "title": "Target Attribute Registry"
-        },
-        {
-          "name": "slides-115-core-draft-ietf-core-oscore-groupcomm",
-          "order": 5,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74033/",
-          "rev": "00",
-          "title": "draft-ietf-core-oscore-groupcomm"
-        },
-        {
-          "name": "slides-115-core-profiling-edhoc-for-coap-and-oscore-ietf-115-core",
-          "order": 6,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74041/",
-          "rev": "00",
-          "title": "Profiling EDHOC for CoAP and OSCORE - IETF 115 CoRE"
-        },
-        {
-          "name": "slides-115-core-key-update-for-oscore-kudos-ietf-115-core",
-          "order": 7,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74040/",
-          "rev": "00",
-          "title": "Key Update for OSCORE (KUDOS) - IETF 115 CoRE"
-        },
-        {
-          "name": "slides-115-core-dns-over-coap-doc-dns-messages-in-cbor",
-          "order": 8,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74030/",
-          "rev": "01",
-          "title": "DNS over CoAP (DoC) & DNS messages in CBOR"
-        }
-      ],
-      "session_id": 29839,
-      "session_res_uri": "/api/v1/meeting/session/29839/",
-      "start": "2022-11-07T13:00:00Z",
       "status": "sched"
     },
     {
@@ -3304,72 +3955,6 @@
       "session_id": 29893,
       "session_res_uri": "/api/v1/meeting/session/29893/",
       "start": "2022-11-09T09:30:00Z",
-      "status": "sched"
-    },
-    {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-lisp-04",
-      "duration": "1:00:00",
-      "group": {
-        "acronym": "lisp",
-        "name": "Locator/ID Separation Protocol",
-        "parent": "rtg",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108392,
-      "is_bof": false,
-      "location": "Richmond 2",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-lisp-202211081630-00",
-      "modified": "2022-11-22T14:43:42Z",
-      "name": "Locator/ID Separation Protocol",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-lisp-chairs-slides",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74432/",
-          "rev": "01",
-          "title": "Chairs' slides"
-        },
-        {
-          "name": "slides-115-lisp-network-hexagonsgeolocation-mobility-edge-network-based-on-h3-and-lisp",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74174/",
-          "rev": "01",
-          "title": "Network-Hexagons:Geolocation Mobility Edge Network Based On H3 and LISP"
-        },
-        {
-          "name": "slides-115-lisp-lisp-geo-coordinate-use-cases",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74176/",
-          "rev": "00",
-          "title": "LISP Geo-Coordinate Use-Cases"
-        },
-        {
-          "name": "slides-115-lisp-lisp-for-satellite-networks",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74175/",
-          "rev": "00",
-          "title": "LISP for Satellite Networks"
-        },
-        {
-          "name": "slides-115-lisp-lisp-site-external-connectivity",
-          "order": 5,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74177/",
-          "rev": "00",
-          "title": "LISP Site External Connectivity"
-        },
-        {
-          "name": "slides-115-lisp-lisp-pubsub",
-          "order": 6,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74565/",
-          "rev": "00",
-          "title": "LISP PubSub"
-        }
-      ],
-      "session_id": 29859,
-      "session_res_uri": "/api/v1/meeting/session/29859/",
-      "start": "2022-11-08T16:30:00Z",
       "status": "sched"
     },
     {
@@ -3869,65 +4454,6 @@
       "status": "sched"
     },
     {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-mpls-02",
-      "duration": "1:00:00",
-      "group": {
-        "acronym": "mpls",
-        "name": "Multiprotocol Label Switching",
-        "parent": "rtg",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108393,
-      "is_bof": false,
-      "location": "Kensington 1",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-mpls-202211081630-00",
-      "modified": "2022-11-18T10:14:27Z",
-      "name": "Multiprotocol Label Switching",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-mpls-01-ietf-115-mpls-wg-status-update",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73817/",
-          "rev": "02",
-          "title": "01 - IETF 115 MPLS WG Status Update"
-        },
-        {
-          "name": "slides-115-mpls-02-mpls-wiki-migration",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74407/",
-          "rev": "01",
-          "title": "02-MPLS Wiki Migration"
-        },
-        {
-          "name": "slides-115-mpls-msd-yang-update",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74392/",
-          "rev": "00",
-          "title": "03 - MPLS MSD YANG data model"
-        },
-        {
-          "name": "slides-115-mpls-04-simple-two-way-active-measurement-protocol-stamp-for-mpls-label-switched-paths-lsps",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73816/",
-          "rev": "00",
-          "title": "04 - Simple Two-way Active Measurement Protocol (STAMP) for MPLS Label Switched Paths (LSPs)"
-        },
-        {
-          "name": "slides-115-mpls-05-lsp-pingtraceroute-for-enabled-in-situ-oam-capabilities",
-          "order": 5,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73815/",
-          "rev": "00",
-          "title": "05 - LSP Ping/Traceroute for Enabled In-situ OAM Capabilities."
-        }
-      ],
-      "session_id": 29904,
-      "session_res_uri": "/api/v1/meeting/session/29904/",
-      "start": "2022-11-08T16:30:00Z",
-      "status": "sched"
-    },
-    {
       "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-bier-01",
       "duration": "1:00:00",
       "group": {
@@ -4005,100 +4531,6 @@
       "session_id": 29915,
       "session_res_uri": "/api/v1/meeting/session/29915/",
       "start": "2022-11-10T15:30:00Z",
-      "status": "sched"
-    },
-    {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-alto-01",
-      "duration": "2:00:00",
-      "group": {
-        "acronym": "alto",
-        "name": "Application-Layer Traffic Optimization",
-        "parent": "tsv",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108467,
-      "is_bof": false,
-      "location": "Mezzanine 10-11",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-alto-00",
-      "modified": "2022-11-18T07:22:33Z",
-      "name": "Application-Layer Traffic Optimization",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-alto-chairs-slides",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74148/",
-          "rev": "01",
-          "title": "Chairs slides"
-        },
-        {
-          "name": "slides-115-alto-alto-new-transport",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74132/",
-          "rev": "01",
-          "title": "ALTO New Transport v1"
-        },
-        {
-          "name": "slides-115-alto-alto-oam-yang",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74133/",
-          "rev": "01",
-          "title": "ALTO OAM YANG"
-        },
-        {
-          "name": "slides-115-alto-integration-of-alto-with-telefonica-cdn",
-          "order": 6,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74904/",
-          "rev": "00",
-          "title": "Integration of ALTO with Telefonica CDN"
-        },
-        {
-          "name": "slides-115-alto-mowie-for-network-aware-application",
-          "order": 7,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74135/",
-          "rev": "00",
-          "title": "MOWIE for Network Aware Application"
-        },
-        {
-          "name": "slides-115-alto-bsg-in-multi-domain-setting",
-          "order": 8,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74136/",
-          "rev": "01",
-          "title": "BSG in Multi-Domain Setting"
-        },
-        {
-          "name": "slides-115-alto-use-cases-and-framework-of-db-ors",
-          "order": 9,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74134/",
-          "rev": "00",
-          "title": "Use cases and Framework of DB-ORS"
-        },
-        {
-          "name": "slides-115-alto-alto-for-service-edge",
-          "order": 10,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74903/",
-          "rev": "01",
-          "title": "ALTO for service edge"
-        },
-        {
-          "name": "slides-115-alto-cernlhconenrp-alto-deployment-update-v30",
-          "order": 11,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/75024/",
-          "rev": "00",
-          "title": "CERN/LHCONE/NRP ALTO Deployment Update (v3.0)"
-        },
-        {
-          "name": "slides-115-alto-bottleneck-structure-graphs-in-multidomain-networks-introduction-and-requirements-for-alto-draft-giraltyellamraju-alto-bsg-multi",
-          "order": 12,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/75025/",
-          "rev": "00",
-          "title": "Bottleneck Structure Graphs in Multidomain Networks: Introduction and Requirements for ALTO (draft-giraltyellamraju-alto-bsg-multidomain)"
-        }
-      ],
-      "session_id": 29966,
-      "session_res_uri": "/api/v1/meeting/session/29966/",
-      "start": "2022-11-11T09:30:00Z",
       "status": "sched"
     },
     {
@@ -4787,65 +5219,6 @@
       "session_id": 29813,
       "session_res_uri": "/api/v1/meeting/session/29813/",
       "start": "2022-11-08T09:30:00Z",
-      "status": "sched"
-    },
-    {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-oauth-sessa-00",
-      "duration": "2:00:00",
-      "group": {
-        "acronym": "oauth",
-        "name": "Web Authorization Protocol",
-        "parent": "sec",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108338,
-      "is_bof": false,
-      "location": "Richmond 1",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-oauth-202211070930-01",
-      "modified": "2022-11-17T13:47:35Z",
-      "name": "Web Authorization Protocol",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-oauth-chairs-update",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73825/",
-          "rev": "03",
-          "title": "Chairs Update"
-        },
-        {
-          "name": "slides-115-oauth-sessa-oauth-21-and-browser-based-apps",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73947/",
-          "rev": "00",
-          "title": "OAuth 2.1 and Browser-Based Apps"
-        },
-        {
-          "name": "slides-115-oauth-sessa-sd-jwt",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74111/",
-          "rev": "01",
-          "title": "SD-JWT"
-        },
-        {
-          "name": "slides-115-oauth-sessa-oauth-20-step-up-authentication-challenge-protocol",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73835/",
-          "rev": "00",
-          "title": "OAuth 2.0 Step-up Authentication Challenge Protocol"
-        },
-        {
-          "name": "slides-115-oauth-sessa-interactive-authentication-of-non-interactive-http-requests",
-          "order": 5,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73686/",
-          "rev": "00",
-          "title": "Interactive Authentication of Non-Interactive HTTP Requests"
-        }
-      ],
-      "session_id": 29873,
-      "session_res_uri": "/api/v1/meeting/session/29873/",
-      "start": "2022-11-07T09:30:00Z",
       "status": "sched"
     },
     {
@@ -5895,87 +6268,6 @@
       "status": "sched"
     },
     {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-dispatch-05",
-      "agenda_note": "Joint with ARTAREA",
-      "duration": "2:00:00",
-      "group": {
-        "acronym": "dispatch",
-        "name": "Dispatch",
-        "parent": "art",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108332,
-      "is_bof": false,
-      "location": "Kensington 1",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-dispatch-202211070930-00",
-      "modified": "2022-11-14T10:16:35Z",
-      "name": "Dispatch",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-dispatch-chairs-slides",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74124/",
-          "rev": "01",
-          "title": "Chairs Slides"
-        },
-        {
-          "name": "slides-115-dispatch-vcon-the-json-format-for-vcon-conversation-data-container",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74010/",
-          "rev": "00",
-          "title": "vCon: the JSON format for vCon Conversation Data Container"
-        },
-        {
-          "name": "slides-115-dispatch-realm-crossover-with-sip-sasl",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73974/",
-          "rev": "00",
-          "title": "Realm Crossover with SIP-SASL"
-        },
-        {
-          "name": "slides-115-dispatch-dkim-replay-problem-and-possible-solutions",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74167/",
-          "rev": "01",
-          "title": "DKIM Replay: Problem and Possible Solutions"
-        },
-        {
-          "name": "slides-115-dispatch-whep-webrtc-http-egress-protocol",
-          "order": 5,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73844/",
-          "rev": "00",
-          "title": "WHEP: WebRTC-HTTP egress protocol"
-        },
-        {
-          "name": "slides-115-dispatch-ngi-eu-funding",
-          "order": 6,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73795/",
-          "rev": "01",
-          "title": "NGI EU funding"
-        },
-        {
-          "name": "slides-115-dispatch-ebpf-advertisement-for-thursday-side-meeting",
-          "order": 7,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73720/",
-          "rev": "00",
-          "title": "eBPF: Advertisement for Thursday side meeting"
-        },
-        {
-          "name": "slides-115-dispatch-attestable-httpa-httpa",
-          "order": 8,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73796/",
-          "rev": "00",
-          "title": "Attestable HTTPA (HTTPA)"
-        }
-      ],
-      "session_id": 29857,
-      "session_res_uri": "/api/v1/meeting/session/29857/",
-      "start": "2022-11-07T09:30:00Z",
-      "status": "sched"
-    },
-    {
       "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-iepg-sessa-01",
       "duration": "2:00:00",
       "group": {
@@ -6434,107 +6726,6 @@
       "status": "sched"
     },
     {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-dnsop-03",
-      "duration": "2:00:00",
-      "group": {
-        "acronym": "dnsop",
-        "name": "Domain Name System Operations",
-        "parent": "ops",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108335,
-      "is_bof": false,
-      "location": "Kensington 1",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-dnsop-00",
-      "modified": "2022-11-11T10:46:26Z",
-      "name": "Domain Name System Operations",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-dnsop-chairs-slides",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74384/",
-          "rev": "01",
-          "title": "Chairs Slides"
-        },
-        {
-          "name": "slides-115-dnsop-alt-tld-chairs-slides",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74383/",
-          "rev": "00",
-          "title": "ALT-TLD chairs slides"
-        },
-        {
-          "name": "slides-115-dnsop-the-alt-special-use-top-level-domain-draft-ietf-dnsop-alt-tld-18",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74422/",
-          "rev": "00",
-          "title": "The ALT Special Use Top Level Domain:\u000bdraft-ietf-dnsop-alt-tld-18"
-        },
-        {
-          "name": "slides-115-dnsop-hackathon-dns-table-result-and-dns-error-reporting",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74426/",
-          "rev": "00",
-          "title": "Hackathon DNS table result and DNS Error Reporting"
-        },
-        {
-          "name": "slides-115-dnsop-negative-caching-of-dns-resolution-failures",
-          "order": 5,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74294/",
-          "rev": "00",
-          "title": "Negative Caching of DNS Resolution Failures"
-        },
-        {
-          "name": "slides-115-dnsop-control-options-for-dns-client-proxies",
-          "order": 6,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74113/",
-          "rev": "00",
-          "title": "Control Options For DNS Client Proxies"
-        },
-        {
-          "name": "slides-115-dnsop-consistency-for-cdscdnskey-and-csync-is-mandatory",
-          "order": 7,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74259/",
-          "rev": "00",
-          "title": "Consistency for CDS/CDNSKEY (and CSYNC) is Mandatory"
-        },
-        {
-          "name": "slides-115-dnsop-multi-signer-key-exchange-mske",
-          "order": 8,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74320/",
-          "rev": "00",
-          "title": "Multi-Signer Key-Exchange (MSKE)"
-        },
-        {
-          "name": "slides-115-dnsop-structured-data-for-filtered-dns",
-          "order": 9,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73724/",
-          "rev": "01",
-          "title": "Structured Data for Filtered DNS"
-        },
-        {
-          "name": "slides-115-dnsop-domain-verification",
-          "order": 10,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74423/",
-          "rev": "00",
-          "title": "Domain Verification"
-        },
-        {
-          "name": "slides-115-dnsop-hackathon-dns-table-result-and-dns-error-reporting-v2",
-          "order": 11,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74441/",
-          "rev": "00",
-          "title": "Hackathon DNS table result and DNS Error Reporting (v2)"
-        }
-      ],
-      "session_id": 29811,
-      "session_res_uri": "/api/v1/meeting/session/29811/",
-      "start": "2022-11-08T09:30:00Z",
-      "status": "sched"
-    },
-    {
       "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-regext-00",
       "duration": "1:00:00",
       "group": {
@@ -6667,58 +6858,6 @@
       "session_id": 29924,
       "session_res_uri": "/api/v1/meeting/session/29924/",
       "start": "2022-11-10T09:30:00Z",
-      "status": "sched"
-    },
-    {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-roll-00",
-      "duration": "1:00:00",
-      "group": {
-        "acronym": "roll",
-        "name": "Routing Over Low power and Lossy networks",
-        "parent": "rtg",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108384,
-      "is_bof": false,
-      "location": "Richmond 1",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-roll-202211081500-00",
-      "modified": "2022-11-10T19:37:39Z",
-      "name": "Routing Over Low power and Lossy networks",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-roll-draft-ietf-roll-dao-projection",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73732/",
-          "rev": "00",
-          "title": "draft-ietf-roll-dao-projection"
-        },
-        {
-          "name": "slides-115-roll-draft-ietf-6lo-multicast-registration",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73744/",
-          "rev": "00",
-          "title": "draft-ietf-6lo-multicast-registration"
-        },
-        {
-          "name": "slides-115-roll-roll-ietf115-complete-slide-set",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74238/",
-          "rev": "00",
-          "title": "ROLL-IETF115-Complete-Slide-Set"
-        },
-        {
-          "name": "slides-115-roll-roll-ietf-115-chairs-slides",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74299/",
-          "rev": "00",
-          "title": "ROLL IETF 115 Chairs slides"
-        }
-      ],
-      "session_id": 29909,
-      "session_res_uri": "/api/v1/meeting/session/29909/",
-      "start": "2022-11-08T15:00:00Z",
       "status": "sched"
     },
     {
@@ -7371,78 +7510,6 @@
       "status": "sched"
     },
     {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-mboned-04",
-      "duration": "1:30:00",
-      "group": {
-        "acronym": "mboned",
-        "name": "MBONE Deployment",
-        "parent": "ops",
-        "state": "active",
-        "type": "wg"
-      },
-      "id": 108408,
-      "is_bof": false,
-      "location": "Mezzanine 1-4",
-      "modified": "2022-11-09T20:17:33Z",
-      "name": "MBONE Deployment",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-mboned-agenda",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74674/",
-          "rev": "00",
-          "title": "Agenda"
-        },
-        {
-          "name": "slides-115-mboned-amt-yang",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74233/",
-          "rev": "00",
-          "title": "AMT YANG"
-        },
-        {
-          "name": "slides-115-mboned-multicast-scaling-considerations",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74706/",
-          "rev": "00",
-          "title": "multicast scaling considerations"
-        },
-        {
-          "name": "slides-115-mboned-treedn",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73881/",
-          "rev": "01",
-          "title": "TreeDN"
-        },
-        {
-          "name": "slides-115-mboned-eumetcast-over-amt",
-          "order": 5,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74321/",
-          "rev": "00",
-          "title": "EUMETCast over AMT"
-        },
-        {
-          "name": "slides-115-mboned-amt-to-the-browser-in-the-multicast-menu",
-          "order": 6,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74661/",
-          "rev": "00",
-          "title": "AMT to the Browser in the Multicast Menu"
-        },
-        {
-          "name": "slides-115-mboned-multicast-lessons-learned-from-decades-of-deployment-experience",
-          "order": 7,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74707/",
-          "rev": "00",
-          "title": "Multicast Lessons Learned from Decades of Deployment Experience"
-        }
-      ],
-      "session_id": 29816,
-      "session_res_uri": "/api/v1/meeting/session/29816/",
-      "start": "2022-11-09T13:00:00Z",
-      "status": "sched"
-    },
-    {
       "id": 858,
       "level_name": "West Wing 3rd Floor",
       "level_sort": 3,
@@ -7727,72 +7794,6 @@
       "session_id": 29834,
       "session_res_uri": "/api/v1/meeting/session/29834/",
       "start": "2022-11-07T15:30:00Z",
-      "status": "sched"
-    },
-    {
-      "agenda": "https://datatracker.ietf.org/meeting/115/materials/agenda-115-iabopen-01",
-      "duration": "1:00:00",
-      "group": {
-        "acronym": "iabopen",
-        "name": "IAB Open Meeting",
-        "parent": "iab",
-        "state": "active",
-        "type": "ag"
-      },
-      "id": 108390,
-      "is_bof": false,
-      "location": "Kensington 2",
-      "minutes": "https://datatracker.ietf.org/meeting/115/materials/minutes-115-iabopen-202211081630-00",
-      "modified": "2022-11-09T08:25:30Z",
-      "name": "IAB Open Meeting",
-      "objtype": "session",
-      "presentations": [
-        {
-          "name": "slides-115-iabopen-intro",
-          "order": 1,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74509/",
-          "rev": "02",
-          "title": "Intro"
-        },
-        {
-          "name": "slides-115-iabopen-liaison-relationship-ietf-and-ieee-802-russ-housley",
-          "order": 2,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/73734/",
-          "rev": "00",
-          "title": "Liaison Relationship: IETF and IEEE 802 - Russ Housley"
-        },
-        {
-          "name": "slides-115-iabopen-m-ten-workshop-recap",
-          "order": 3,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74516/",
-          "rev": "00",
-          "title": "M-TEN workshop recap"
-        },
-        {
-          "name": "slides-115-iabopen-partitioning-as-an-architecture-for-privacy",
-          "order": 4,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74510/",
-          "rev": "00",
-          "title": "Partitioning as an Architecture for Privacy"
-        },
-        {
-          "name": "slides-115-iabopen-ooni-censorship-measurements-in-iran-simone-basso",
-          "order": 5,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74514/",
-          "rev": "00",
-          "title": "OONI Censorship Measurements in Iran - Simone Basso"
-        },
-        {
-          "name": "slides-115-iabopen-irans-mahsa-amini-revolution-protest-crises-and-the-role-of-technology-mahsa-alimardani",
-          "order": 6,
-          "resource_uri": "/api/v1/meeting/sessionpresentation/74512/",
-          "rev": "02",
-          "title": "Iran's Mahsa Amini Revolution: Protest Crises and the Role of Technology - Mahsa Alimardani"
-        }
-      ],
-      "session_id": 29945,
-      "session_res_uri": "/api/v1/meeting/session/29945/",
-      "start": "2022-11-08T16:30:00Z",
       "status": "sched"
     },
     {

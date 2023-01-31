@@ -177,7 +177,9 @@ struct DetailViewUnwrapped: View {
         }
         Task {
             await loadDrafts(context: viewContext, group: group, limit:0, offset:0)
-            await loadCharterDocument(context: viewContext, group: group)
+            if group.type != "rg" {
+                await loadCharterDocument(context: viewContext, group: group)
+            }
             await loadRelatedDrafts(context: viewContext, group: group, limit:0, offset:0)
         }
         // if we don't have a recording URL, go get one. We don't expect it to change once we have it
