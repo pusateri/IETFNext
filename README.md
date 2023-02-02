@@ -5,14 +5,15 @@
 3. Only gets the first 20 drafts right now
 4. Jump between session and location and back
 5. Load basename document to support useractivity
-6. macOS: app icon
-7. search tokens
-8. dependency graph display as table
-9. share sheet and transferable
-10. selecting 2nd session should show second agenda (oauth-115)
-11. Add date to drafts list
-12. bottom bar on iOS schedule/group lists takes up lots of room
-13. RFC selection from dependency graph should open internally
+6. search tokens
+7. dependency graph display as table
+8. share sheet and transferable
+9. selecting 2nd session should show second agenda (oauth-115)
+10. Add date to drafts list
+11. bottom bar on iOS schedule/group lists takes up lots of room
+12. RFC selection from dependency graph should open internally
+13. tabs on macos share same webview
+14. clicking on rfc link says link can't be opened.
 
 *** Maybe ***
 
