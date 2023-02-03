@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppKit
 
 public enum SidebarOption: String {
     case bcp
@@ -18,8 +19,19 @@ public enum SidebarOption: String {
     case std
 }
 
+#if os(macOS)
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        return true
+    }
+}
+#endif
+
 @main
 struct IETFNextApp: App {
+#if os(macOS)
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+#endif
     @State private var showingMeetings = false
     @State var menuSidebarOption: SidebarOption? = nil
     @State var useLocalTime: Bool = false
@@ -28,6 +40,16 @@ struct IETFNextApp: App {
         WindowGroup {
             ContentView(showingMeetings: $showingMeetings, menuSidebarOption: $menuSidebarOption, useLocalTime: $useLocalTime)
                 .environment(\.managedObjectContext, RFCProvider.shared.container.viewContext)
+#if os(macOS)
+                .frame(
+                    minWidth: 1200,
+                    idealWidth: 1800,
+                    maxWidth: .infinity,
+                    minHeight: 700,
+                    idealHeight: 1500,
+                    maxHeight: .infinity
+                )
+#endif
         }
 #if os(macOS)
         .windowToolbarStyle(UnifiedCompactWindowToolbarStyle(showsTitle: false))

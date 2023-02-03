@@ -408,16 +408,6 @@ struct ContentView: View {
                 }
             }
         }
-#if os(macOS)
-        .frame(
-            minWidth: 1200,
-            idealWidth: 1800,
-            maxWidth: .infinity,
-            minHeight: 800,
-            idealHeight: 1500,
-            maxHeight: .infinity
-        )
-#endif
         .sheet(isPresented: $showingMeetings) {
             MeetingListView(selectedMeeting: $selectedMeeting)
 #if os(macOS)

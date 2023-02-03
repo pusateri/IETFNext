@@ -73,7 +73,6 @@ struct GroupListFilteredView: View {
                 .keyboardType(.alphabet)
                 .navigationBarTitleDisplayMode(.inline)
 #endif
-
             }
             .toolbar {
 #if os(macOS)
