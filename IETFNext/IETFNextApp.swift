@@ -19,25 +19,14 @@ public enum SidebarOption: String {
     case std
 }
 
-#if os(macOS)
-class AppDelegate: NSObject, NSApplicationDelegate {
-    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        return true
-    }
-}
-#endif
-
 @main
 struct IETFNextApp: App {
-#if os(macOS)
-    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-#endif
     @State private var showingMeetings = false
     @State var menuSidebarOption: SidebarOption? = nil
     @State var useLocalTime: Bool = false
 
     var body: some Scene {
-        WindowGroup {
+        WindowGroup("Documents") {
             ContentView(showingMeetings: $showingMeetings, menuSidebarOption: $menuSidebarOption, useLocalTime: $useLocalTime)
                 .environment(\.managedObjectContext, RFCProvider.shared.container.viewContext)
 #if os(macOS)
@@ -75,8 +64,6 @@ struct IETFNextApp: App {
                         ]
                     )
                 }
-            }
-            CommandGroup(replacing: .newItem) {
             }
             CommandGroup(replacing: .help) {
             }

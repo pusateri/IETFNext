@@ -16,8 +16,8 @@ struct DetailViewUnwrapped: View {
 
     @FetchRequest<Presentation> var presentationRequest: FetchedResults<Presentation>
     @FetchRequest<Document> var charterRequest: FetchedResults<Document>
-    @ObservedObject var meeting: Meeting
-    @ObservedObject var group: Group
+    @StateObject var meeting: Meeting
+    @StateObject var group: Group
     @Binding var html: String
     @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
@@ -29,12 +29,12 @@ struct DetailViewUnwrapped: View {
     @State var draftURL: String? = nil
     @State var draftTitle: String? = nil
     @State var kind: DocumentKind = .draft
-    @ObservedObject var model: DownloadViewModel = DownloadViewModel.shared
+    @StateObject var model: DownloadViewModel = DownloadViewModel()
 
     init(meeting: Meeting, group: Group, html: Binding<String>, localFileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
 
-        self.meeting = meeting
-        self.group = group
+        self._meeting = StateObject(wrappedValue: meeting)
+        self._group = StateObject(wrappedValue: group)
 
         self._html = html
         self._localFileURL = localFileURL
@@ -398,14 +398,20 @@ struct DetailViewUnwrapped: View {
         .onChange(of: group) { newValue in
             // TODO: slides are combined into the group and all slides are shown for all sessions of group
             presentationRequest.nsPredicate = NSPredicate(format: "session.group = %@", newValue)
+            print("new group: \(newValue.acronym!)")
             updateFor(group: newValue)
         }
+        .onChange(of: model) { newValue in
+            print(newValue)
+        }
         .onChange(of: model.download) { newValue in
+            print("model.download changed")
             if let download = newValue {
                 loadDownloadFile(from:download)
             }
         }
         .onChange(of: model.error) { newValue in
+            print("model.error changed")
             if let err = newValue {
                 if err.starts(with: "Http Result 404:") {
                     if let urlString = draftURL as? NSString {

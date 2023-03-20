@@ -3,8 +3,7 @@
 1. print pdf version of drafts
 2. Add draft / presentation / charter / agenda date to download list
 3. Only gets the first 20 drafts right now
-4. Jump between session and location and back
-5. Load basename document to support useractivity
+4. Jump between session and location and back 5. Load basename document to support useractivity
 6. search tokens
 7. dependency graph display as table
 8. share sheet and transferable
@@ -68,3 +67,9 @@ Core Data store:
 # rm -rf HTTPStorages/com.bangj.IETFNext
 # rm -rf Caches/com.bangj.IETFNext
 # rm Preferences/com.bangj.IETFNext.plist
+
+error:
+
+2023-02-27 20:53:54.821271-0500 IETFNext[81991:6347467] Metal API Validation Enabled
+Load schedule 115: Context(codingPath: [_JSONKey(stringValue: "115", intValue: nil), _JSONKey(stringValue: "Index 98", intValue: 98), CodingKeys(stringValue: "group", intValue: nil), CodingKeys(stringValue: "state", intValue: nil)], debugDescription: "Cannot initialize GroupState from invalid String value abandon", underlyingError: nil)
+

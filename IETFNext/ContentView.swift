@@ -380,6 +380,7 @@ struct ContentView: View {
                     localFileURL: $localFileURL,
                     columnVisibility: $columnVisibility
                 )
+                .navigationSplitViewColumnWidth(min: 270.0, ideal: 320.0, max: 370.0)
             } else {
                 Text("Select View in Sidebar")
             }
@@ -410,9 +411,6 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showingMeetings) {
             MeetingListView(selectedMeeting: $selectedMeeting)
-#if os(macOS)
-            .frame(width: 600, height: 740)
-#endif
         }
         .onChange(of: useLocalTime) { _ in
             sessionFormatter = buildSessionFormatter(meeting: selectedMeeting, useLocalTime: useLocalTime)

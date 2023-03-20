@@ -89,7 +89,7 @@ struct MeetingListView: View {
             }
         }
 #if os(macOS)
-        .frame(width: 600, height: 740)
+        .frame(width: 600, height: 700)
 #endif
     }
 }

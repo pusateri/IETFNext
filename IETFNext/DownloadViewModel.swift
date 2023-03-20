@@ -12,7 +12,6 @@ import UniformTypeIdentifiers
 
 @MainActor
 class DownloadViewModel: NSObject, ObservableObject {
-    static let shared = DownloadViewModel()
     @Published private(set) var isBusy = false
     @Published private(set) var download: Download? = nil
     @Published private(set) var error: String? = nil
