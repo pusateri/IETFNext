@@ -116,10 +116,15 @@ struct JSONPresentation: Decodable {
 }
 
 enum GroupState: String, Decodable {
+    case abandon
     case active
     case bof
+    case bof_conc = "bof-conc"
+    case conclude
     case dormant
     case proposed
+    case replaced
+    case unknown
 }
 
 struct JSONGroup: Decodable {
