@@ -17,7 +17,7 @@ struct DetailView: View {
     var body: some View {
         if let meeting = selectedMeeting {
             if let group = selectedGroup {
-                DetailViewUnwrapped(meeting: meeting, group: group, html: $html, localFileURL: $localFileURL, columnVisibility:$columnVisibility)
+                DetailViewUnwrapped(meeting: meeting, group: group, localFileURL: $localFileURL, columnVisibility:$columnVisibility)
             }
         }
     }

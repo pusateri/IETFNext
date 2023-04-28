@@ -17,8 +17,7 @@ struct DetailViewUnwrapped: View {
     @FetchRequest<Presentation> var presentationRequest: FetchedResults<Presentation>
     @FetchRequest<Document> var charterRequest: FetchedResults<Document>
     @StateObject var meeting: Meeting
-    @StateObject var group: Group
-    @Binding var html: String
+    @ObservedObject var group: Group
     @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
@@ -31,12 +30,11 @@ struct DetailViewUnwrapped: View {
     @State var kind: DocumentKind = .draft
     @StateObject var model: DownloadViewModel = DownloadViewModel()
 
-    init(meeting: Meeting, group: Group, html: Binding<String>, localFileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+    init(meeting: Meeting, group: Group, localFileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
 
         self._meeting = StateObject(wrappedValue: meeting)
-        self._group = StateObject(wrappedValue: group)
+        self.group = group //StateObject(wrappedValue: group)
 
-        self._html = html
         self._localFileURL = localFileURL
         self._columnVisibility = columnVisibility
 
@@ -73,31 +71,6 @@ struct DetailViewUnwrapped: View {
             }
         }
         return download
-    }
-
-    func loadDownloadFile(from:Download) {
-        if let mimeType = from.mimeType {
-            if mimeType == "application/pdf" {
-                if let filename = from.filename {
-                    do {
-                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
-                                                                       in: .userDomainMask,
-                                                                       appropriateFor: nil,
-                                                                       create: false)
-                        html = ""
-                        localFileURL = documentsURL.appendingPathComponent(filename)
-                    } catch {
-                        html = "Error reading pdf file: \(from.filename!)"
-                    }
-                }
-            } else {
-                if let contents = contents2Html(from:from) {
-                    html = contents
-                } else {
-                    html = "Error reading \(from.filename!) error: \(String(describing: model.error))"
-                }
-            }
-        }
     }
 
     func recordingSuffix(session: Session) -> String {
@@ -166,14 +139,7 @@ struct DetailViewUnwrapped: View {
         agendas = uniqueAgendasForSessions(sessions: sessionsForGroup)
         // TODO: don't always load first agenda, load selected session agenda
         if let agenda = agendas.first {
-            let download = fetchDownload(kind:.agenda, url:agenda.url)
-            if let download = download {
-                loadDownloadFile(from:download)
-            } else {
-                Task {
-                    await model.downloadToFile(context:viewContext, url:agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
-                }
-            }
+            model.download = fetchDownload(kind:.agenda, url:agenda.url)
         }
         Task {
             await loadDrafts(context: viewContext, group: group, limit:0, offset:0)
@@ -195,7 +161,8 @@ struct DetailViewUnwrapped: View {
     }
 
     var body: some View {
-        WebView(html:$html, localFileURL:$localFileURL)
+        //WebView(download:$model.download, localFileURL:$localFileURL)
+        Text("\(model.download?.filename ?? "no f selected")")
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text(banner).bold()
@@ -251,7 +218,8 @@ struct DetailViewUnwrapped: View {
                             if let url = URL(string: urlString) {
                                 let download = fetchDownload(kind:.presentation, url:url)
                                 if let download = download {
-                                    loadDownloadFile(from:download)
+                                    print("slide exists")
+                                    //loadDownloadFile(from:download)
                                 } else {
                                     Task {
                                         await model.downloadToFile(context:viewContext, url:url, group:group, kind:.presentation, title: p.title)
@@ -279,7 +247,8 @@ struct DetailViewUnwrapped: View {
                         Button(action: {
                             let download = fetchDownload(kind:.agenda, url:agenda.url)
                             if let download = download {
-                                loadDownloadFile(from:download)
+                                print("agenda exists")
+                                //loadDownloadFile(from:download)
                             } else {
                                 Task {
                                     await model.downloadToFile(context:viewContext, url: agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
@@ -296,7 +265,8 @@ struct DetailViewUnwrapped: View {
                             if let minutes = session.minutes {
                             let download = fetchDownload(kind:.minutes, url:minutes)
                             if let download = download {
-                                loadDownloadFile(from:download)
+                                print("minutes exist")
+                                //loadDownloadFile(from:download)
                             } else {
                                 Task {
                                     await model.downloadToFile(context:viewContext, url: minutes, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
@@ -342,7 +312,8 @@ struct DetailViewUnwrapped: View {
                             if let url = URL(string: urlString) {
                                 let download = fetchDownload(kind:.charter, url:url)
                                 if let download = download {
-                                    loadDownloadFile(from:download)
+                                    print("charter exists")
+                                    //loadDownloadFile(from:download)
                                 } else {
                                     Task {
                                         await model.downloadToFile(context:viewContext, url:url, group:group, kind:.charter, title: "\(group.acronym!.uppercased()) Charter")
@@ -393,7 +364,7 @@ struct DetailViewUnwrapped: View {
 #endif
         }
         .onChange(of: meeting) { newValue in
-            html = BLANK
+            print("meeting changed")
         }
         .onChange(of: group) { newValue in
             // TODO: slides are combined into the group and all slides are shown for all sessions of group
@@ -401,6 +372,7 @@ struct DetailViewUnwrapped: View {
             print("new group: \(newValue.acronym!)")
             updateFor(group: newValue)
         }
+        /*
         .onChange(of: model) { newValue in
             print(newValue)
         }
@@ -420,7 +392,8 @@ struct DetailViewUnwrapped: View {
                         }
                     }
                 } else {
-                    html = PLAIN_PRE + err + PLAIN_POST
+                    //html = PLAIN_PRE + err + PLAIN_POST
+                    print("html version not found, try text")
                 }
             }
         }
@@ -438,6 +411,7 @@ struct DetailViewUnwrapped: View {
                 }
             }
         }
+         */
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .active {
                 updateFor(group: group)

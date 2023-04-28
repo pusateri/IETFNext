@@ -13,7 +13,7 @@ import UniformTypeIdentifiers
 @MainActor
 class DownloadViewModel: NSObject, ObservableObject {
     @Published private(set) var isBusy = false
-    @Published private(set) var download: Download? = nil
+    @Published var download: Download? = nil
     @Published private(set) var error: String? = nil
 
     // This should only be called if there's no Download state for the url

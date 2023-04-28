@@ -10,12 +10,12 @@ import SwiftUI
 struct DownloadDetailView: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Binding var selectedDownload: Download?
-    @Binding var html: String
     @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     var body: some View {
-        WebView(html:$html, localFileURL:$localFileURL)
+        //WebView(download:$selectedDownload, localFileURL:$localFileURL)
+        Text("\(selectedDownload?.filename ?? "no file selected")")
         .toolbar {
             if hSizeClass == .regular {
                 ToolbarItem(placement: .principal) {

@@ -18,7 +18,8 @@ struct RFCDetailView: View {
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     var body: some View {
-        WebView(html:$html, localFileURL:$localFileURL)
+        Text("temporary")
+        //WebView(download: nil, localFileURL:$localFileURL)
         .toolbar {
             ToolbarItemGroup {
                 HStack {

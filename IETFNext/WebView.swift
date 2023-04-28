@@ -10,8 +10,35 @@ import WebKit
 
 #if os(macOS)
 struct WebView: NSViewRepresentable {
-    @Binding var html: String
+    @Binding var download: Download?
     @Binding var localFileURL: URL?
+
+    @State var html: String = ""
+
+    func loadDownloadFile(from:Download) {
+        if let mimeType = from.mimeType {
+            if mimeType == "application/pdf" {
+                if let filename = from.filename {
+                    do {
+                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
+                                                                       in: .userDomainMask,
+                                                                       appropriateFor: nil,
+                                                                       create: false)
+                        html = ""
+                        localFileURL = documentsURL.appendingPathComponent(filename)
+                    } catch {
+                        html = "Error reading pdf file: \(from.filename!)"
+                    }
+                }
+            } else {
+                if let contents = contents2Html(from:from) {
+                    html = contents
+                } else {
+                    html = "Error reading \(from.filename!)"
+                }
+            }
+        }
+    }
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
