@@ -42,7 +42,7 @@ struct JSONMeeting: Decodable {
     let submission_start_day_offset: Int32
     let time_zone: String
     let type: String
-    let updated: Date
+    let updated: String
     let venue_addr: String
     let venue_name: String
 }
@@ -94,15 +94,22 @@ struct MeetingListView: View {
     }
 }
 
-private extension DateFormatter {
-    static let rfc3339: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        formatter.calendar = Calendar(identifier: .iso8601)
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        return formatter
-    }()
+private func buildRFC3339DateFormatter() -> DateFormatter {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+    formatter.calendar = Calendar(identifier: .iso8601)
+    formatter.timeZone = TimeZone(secondsFromGMT: 0)
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    return formatter
+}
+
+private func buildRFC3339FractionalDateFormatter() -> DateFormatter {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.ssss"
+    formatter.calendar = Calendar(identifier: .iso8601)
+    formatter.timeZone = TimeZone(secondsFromGMT: 0)
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    return formatter
 }
 
 private func buildDateFormatter(time_zone: String) -> DateFormatter {
@@ -134,7 +141,7 @@ private func loadMeetings(context: NSManagedObjectContext, limit: Int32, offset:
         let (data, _) = try await URLSession.shared.data(from: url)
         do {
             let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
+            //decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
             let json_meetings = try decoder.decode(Meetings.self, from: data)
 
             context.performAndWait {
@@ -179,6 +186,8 @@ private func updateMeeting(context: NSManagedObjectContext, meeting: JSONMeeting
     }
 
     let dateFormatter = buildDateFormatter(time_zone: meeting.time_zone)
+    let RFC3339DateFormatter = buildRFC3339DateFormatter()
+    let RFC3339FractionalDateFormatter = buildRFC3339FractionalDateFormatter()
     mtg.acknowledgements = meeting.acknowledgements
     mtg.city = meeting.city
     mtg.country = meeting.country
@@ -186,7 +195,10 @@ private func updateMeeting(context: NSManagedObjectContext, meeting: JSONMeeting
     mtg.date = meeting.date
     mtg.start = dateFormatter.date(from: meeting.date)
     mtg.time_zone = meeting.time_zone
-    mtg.updated_at = meeting.updated
+    mtg.updated_at = RFC3339DateFormatter.date(from: meeting.updated)
+    if mtg.updated_at == nil {
+        mtg.updated_at = RFC3339FractionalDateFormatter.date(from: meeting.updated)
+    }
     mtg.venue_addr = meeting.venue_addr
     mtg.venue_name = meeting.venue_name
 
