@@ -144,7 +144,7 @@ struct Documents: Decodable {
 struct JSONDocument: Decodable {
     let abstract: String?
     let ad: String?
-    let expires: Date?
+    let expires: String?
     let external_url: String?
     let group: String?
     let id: Int32
@@ -153,7 +153,7 @@ struct JSONDocument: Decodable {
     let name: String
     let note: String?
     let notify: String?
-    let order: Int32
+    let order: Int32?
     let pages: Int32?
     let resource_uri: String
     let rev: String
@@ -164,7 +164,7 @@ struct JSONDocument: Decodable {
     let stream: String?
     let submissions: [String]?
     let tags: [String]?
-    let time: Date?
+    let time: String
     let title: String
     let type: String
     let uploaded_filename: String?
@@ -209,6 +209,23 @@ private extension DateFormatter {
     }()
 }
 
+private func buildRFC3339DateFormatter() -> DateFormatter {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+    formatter.calendar = Calendar(identifier: .iso8601)
+    formatter.timeZone = TimeZone(secondsFromGMT: 0)
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    return formatter
+}
+
+private func buildRFC3339FractionalDateFormatter() -> DateFormatter {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.ssss"
+    formatter.calendar = Calendar(identifier: .iso8601)
+    formatter.timeZone = TimeZone(secondsFromGMT: 0)
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    return formatter
+}
 
 public func loadData(context: NSManagedObjectContext, meeting: Meeting?) async {
     let baseURL = URL(string: "https://datatracker.ietf.org")
@@ -569,6 +586,10 @@ private func updateDocument(context: NSManagedObjectContext, group: Group, kind:
     var save = false
     let results = try? context.fetch(fetchDocument)
 
+
+    let RFC3339DateFormatter = buildRFC3339DateFormatter()
+    let RFC3339FractionalDateFormatter = buildRFC3339FractionalDateFormatter()
+
     if results?.count == 0 {
         // here you are inserting
         doc = Document(context: context)
@@ -592,8 +613,12 @@ private func updateDocument(context: NSManagedObjectContext, group: Group, kind:
         }
     }
     if let expires = document.expires {
-        if doc.expires != expires {
-            doc.expires = expires
+        var as_date = RFC3339DateFormatter.date(from: expires)
+        if as_date == nil {
+            as_date = RFC3339FractionalDateFormatter.date(from: expires)
+        }
+        if doc.expires != as_date {
+            doc.expires = as_date
             save = true
         }
     }
@@ -638,9 +663,11 @@ private func updateDocument(context: NSManagedObjectContext, group: Group, kind:
             save = true
         }
     }
-    if doc.order != document.order {
-        doc.order = document.order
-        save = true
+    if let order = document.order {
+        if doc.order != order {
+            doc.order = order
+            save = true
+        }
     }
     if let pages = document.pages {
         if doc.pages != pages {
@@ -680,11 +707,13 @@ private func updateDocument(context: NSManagedObjectContext, group: Group, kind:
             save = true
         }
     }
-    if let time = document.time {
-        if doc.time != time {
-            doc.time = time
-            save = true
-        }
+    var as_date = RFC3339DateFormatter.date(from: document.time)
+    if as_date == nil {
+        as_date = RFC3339FractionalDateFormatter.date(from: document.time)
+    }
+    if doc.time != as_date {
+        doc.time = as_date
+        save = true
     }
     if doc.title != document.title {
         doc.title = document.title
