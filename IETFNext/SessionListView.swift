@@ -93,6 +93,9 @@ struct SessionListFilteredView: View {
     @State private var searchText = ""
     @SceneStorage("schedule.selection") var sessionID: Int?
 
+    @State private(set) var activityType: String? = nil
+    @State private(set) var currentActivity: NSUserActivity? = nil
+
     private func fetchSession(session_id: Int32) -> Session? {
         let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
         fetchSession.predicate = NSPredicate(format: "id = %d", session_id)
@@ -100,6 +103,17 @@ struct SessionListFilteredView: View {
         let results = try? viewContext.fetch(fetchSession)
 
         return results?.first
+    }
+
+    private func donateActivity(session: Session) {
+        self.currentActivity = NSUserActivity(activityType: "com.bangj.ietf.selectedSession")
+        self.currentActivity?.title = session.name
+        self.currentActivity?.isEligibleForHandoff = true
+#if !os(macOS)
+        self.currentActivity?.isEligibleForPrediction = true
+#endif
+        self.currentActivity?.persistentIdentifier = String(sessionID ?? 0)
+        self.currentActivity?.becomeCurrent()
     }
 
     var body: some View {
@@ -164,6 +178,7 @@ struct SessionListFilteredView: View {
                 if let session = newValue {
                     sessionID = Int(session.id)
                     selectedGroup = session.group
+                    donateActivity(session: session)
                 } else {
 #if !os(macOS)
                     if UIDevice.isIPhone {
@@ -189,6 +204,15 @@ struct SessionListFilteredView: View {
                     html = BLANK
                 }
             }
+            .onContinueUserActivity("com.bangj.ietf.selectedSession", perform: { userActivity in
+                if let session_str = userActivity.persistentIdentifier {
+                    if let session_id = Int32(session_str) {
+                        if session_id != 0 {
+                            selected = fetchSession(session_id: session_id)
+                        }
+                    }
+                }
+            })
         }
     }
 }
