@@ -63,6 +63,7 @@ struct MeetingListView: View {
                 MeetingListRowView(meeting: mtg)
                     .listRowSeparator(.visible)
             }
+            .frame(minWidth: 600, idealWidth: 600, minHeight: 600, idealHeight: 600)
             .listRowInsets(EdgeInsets())
             .navigationTitle("IETF \(selectedMeeting?.number! ?? "Select Meeting")")
 #if !os(macOS)
@@ -89,7 +90,7 @@ struct MeetingListView: View {
             }
         }
 #if os(macOS)
-        .frame(width: 600, height: 700)
+        .frame(width: 600, height: 600)
 #endif
     }
 }
