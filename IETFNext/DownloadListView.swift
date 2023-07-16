@@ -32,6 +32,25 @@ public func httpEcoding2StringEncoding(encoding: String?) -> String.Encoding {
     return .utf8
 }
 
+public func fetchDownload(context: NSManagedObjectContext, kind:DownloadKind, url:URL) -> Download? {
+    var download: Download?
+
+    context.performAndWait {
+        let fetch: NSFetchRequest<Download> = Download.fetchRequest()
+        fetch.predicate = NSPredicate(format: "basename = %@", url.lastPathComponent)
+
+        let results = try? context.fetch(fetch)
+
+        if results?.count == 0 {
+            download = nil
+        } else {
+                // here you are updating
+            download = results?.first
+        }
+    }
+    return download
+}
+
 public func contents2Html(from: Download) -> String? {
     if let filename = from.filename {
         do {
@@ -103,6 +122,7 @@ struct DownloadListView: View {
         animation: .default)
     private var downloads: SectionedFetchResults<String, Download>
 
+    /*
     private func loadDownloadFile(from:Download) {
         if let mimeType = from.mimeType {
             if mimeType == "application/pdf" {
@@ -127,7 +147,7 @@ struct DownloadListView: View {
             }
         }
     }
-
+*/
     func sizeString(_ size: Int64) -> String {
         var convertedValue: Double = Double(size)
         var multiplyFactor = 0
@@ -242,12 +262,12 @@ struct DownloadListView: View {
             }
             .onChange(of: selectedDownload) { newValue in
                 if let download = newValue {
-                    loadDownloadFile(from: download)
+                    //loadDownloadFile(from: download)
                 }
             }
             .onAppear() {
                 if let download = selectedDownload {
-                    loadDownloadFile(from: download)
+                    //loadDownloadFile(from: download)
                     withAnimation {
                         scrollViewReader.scrollTo(download, anchor: .center)
                     }

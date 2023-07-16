@@ -191,29 +191,10 @@ extension RFCListView {
         }
     }
 
-    private func fetchDownload(kind:DownloadKind, url:URL) -> Download? {
-        var download: Download?
-
-        viewContext.performAndWait {
-            let fetch: NSFetchRequest<Download> = Download.fetchRequest()
-            fetch.predicate = NSPredicate(format: "basename = %@", url.lastPathComponent)
-
-            let results = try? viewContext.fetch(fetch)
-
-            if results?.count == 0 {
-                download = nil
-            } else {
-                // here you are updating
-                download = results?.first
-            }
-        }
-        return download
-    }
-
     private func loadRFC(doc: RFC) {
         let urlString = "https://www.rfc-editor.org/rfc/\(doc.shortLowerName).html"
         if let url = URL(string: urlString) {
-            let download = fetchDownload(kind:.rfc, url:url)
+            let download = fetchDownload(context: viewContext, kind:.rfc, url:url)
             if let download = download {
                 selectedDownload = download
                 loadDownloadFile(from: download)

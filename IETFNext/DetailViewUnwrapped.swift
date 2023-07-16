@@ -54,25 +54,6 @@ struct DetailViewUnwrapped: View {
         )
     }
 
-    public func fetchDownload(kind:DownloadKind, url:URL) -> Download? {
-        var download: Download?
-
-        viewContext.performAndWait {
-            let fetch: NSFetchRequest<Download> = Download.fetchRequest()
-            fetch.predicate = NSPredicate(format: "basename = %@", url.lastPathComponent)
-
-            let results = try? viewContext.fetch(fetch)
-
-            if results?.count == 0 {
-                download = nil
-            } else {
-                // here you are updating
-                download = results?.first
-            }
-        }
-        return download
-    }
-
     func recordingSuffix(session: Session) -> String {
         if let sessions = sessionsForGroup {
             if sessions.count != 1 {
@@ -139,7 +120,15 @@ struct DetailViewUnwrapped: View {
         agendas = uniqueAgendasForSessions(sessions: sessionsForGroup)
         // TODO: don't always load first agenda, load selected session agenda
         if let agenda = agendas.first {
-            model.download = fetchDownload(kind:.agenda, url:agenda.url)
+            model.download = fetchDownload(context: viewContext, kind:.agenda, url:agenda.url)
+            if let download = model.download {
+                print("agenda exist")
+                    //loadDownloadFile(from:download)
+            } else {
+                Task {
+                    await model.downloadToFile(context:viewContext, url: agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
+                }
+            }
         }
         Task {
             await loadDrafts(context: viewContext, group: group, limit:0, offset:0)
@@ -162,7 +151,7 @@ struct DetailViewUnwrapped: View {
 
     var body: some View {
         //WebView(download:$model.download, localFileURL:$localFileURL)
-        Text("\(model.download?.filename ?? "no f selected")")
+        Text("\(model.download?.filename ?? "no download model or filename")")
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text(banner).bold()
@@ -216,7 +205,7 @@ struct DetailViewUnwrapped: View {
                         Button(action: {
                             let urlString = "https://www.ietf.org/proceedings/\(meeting.number!)/slides/\(p.name!)-\(p.rev!).pdf"
                             if let url = URL(string: urlString) {
-                                let download = fetchDownload(kind:.presentation, url:url)
+                                let download = fetchDownload(context: viewContext, kind:.presentation, url:url)
                                 if let download = download {
                                     print("slide exists")
                                     //loadDownloadFile(from:download)
@@ -245,7 +234,7 @@ struct DetailViewUnwrapped: View {
                 Menu {
                     ForEach(agendas) { agenda in
                         Button(action: {
-                            let download = fetchDownload(kind:.agenda, url:agenda.url)
+                            let download = fetchDownload(context: viewContext, kind:.agenda, url:agenda.url)
                             if let download = download {
                                 print("agenda exists")
                                 //loadDownloadFile(from:download)
@@ -263,7 +252,7 @@ struct DetailViewUnwrapped: View {
                         // TODO: Should be only one minutes for all sessions, but check on this
                         if let session = sessionsForGroup?.first {
                             if let minutes = session.minutes {
-                            let download = fetchDownload(kind:.minutes, url:minutes)
+                            let download = fetchDownload(context: viewContext, kind:.minutes, url:minutes)
                             if let download = download {
                                 print("minutes exist")
                                 //loadDownloadFile(from:download)
@@ -310,7 +299,7 @@ struct DetailViewUnwrapped: View {
                         if let rev = charterRequest.first?.rev {
                             let urlString = "https://www.ietf.org/charter/charter-ietf-\(group.acronym!)-\(rev).txt"
                             if let url = URL(string: urlString) {
-                                let download = fetchDownload(kind:.charter, url:url)
+                                let download = fetchDownload(context: viewContext, kind:.charter, url:url)
                                 if let download = download {
                                     print("charter exists")
                                     //loadDownloadFile(from:download)
@@ -369,18 +358,21 @@ struct DetailViewUnwrapped: View {
         .onChange(of: group) { newValue in
             // TODO: slides are combined into the group and all slides are shown for all sessions of group
             presentationRequest.nsPredicate = NSPredicate(format: "session.group = %@", newValue)
-            print("new group: \(newValue.acronym!)")
+            print("onChange group: \(newValue.acronym!)")
             updateFor(group: newValue)
         }
         /*
         .onChange(of: model) { newValue in
             print(newValue)
         }
+         */
         .onChange(of: model.download) { newValue in
             print("model.download changed")
+            /*
             if let download = newValue {
                 loadDownloadFile(from:download)
             }
+             */
         }
         .onChange(of: model.error) { newValue in
             print("model.error changed")
@@ -397,10 +389,11 @@ struct DetailViewUnwrapped: View {
                 }
             }
         }
+        /*
         .onChange(of:draftURL) { newValue in
             if let urlString = newValue {
                 if let url = URL(string:urlString) {
-                    let download = fetchDownload(kind:.draft, url:url)
+                    let download = fetchDownload(context: viewContext, kind:.draft, url:url)
                     if let download = download {
                         loadDownloadFile(from:download)
                     } else {
@@ -418,6 +411,7 @@ struct DetailViewUnwrapped: View {
             }
         }
         .onAppear {
+            print("onAppear group: \(group.acronym!)")
             updateFor(group: group)
         }
     }
