@@ -334,25 +334,12 @@ struct DetailViewUnwrapped: View {
             .frame(width: 600, height: 740)
 #endif
         }
-        .onChange(of: meeting) { newValue in
-            print("meeting changed")
-        }
         .onChange(of: group) { newValue in
             // TODO: slides are combined into the group and all slides are shown for all sessions of group
             presentationRequest.nsPredicate = NSPredicate(format: "session.group = %@", newValue)
-            print("onChange group: \(newValue.acronym!)")
             updateFor(group: newValue)
         }
-        /*
-        .onChange(of: model) { newValue in
-            print(newValue)
-        }
-         */
-        .onChange(of: model.download) { newValue in
-            print("model.download changed")
-        }
         .onChange(of: model.error) { newValue in
-            print("model.error changed")
             if let err = newValue {
                 if err.starts(with: "Http Result 404:") {
                     if let urlString = draftURL as? NSString {
@@ -383,7 +370,6 @@ struct DetailViewUnwrapped: View {
             }
         }
         .onAppear {
-            print("onAppear group: \(group.acronym!)")
             updateFor(group: group)
         }
     }

@@ -232,11 +232,6 @@ struct DownloadListView: View {
                 }
 #endif
             }
-            .onChange(of: selectedDownload) { newValue in
-                if let download = newValue {
-                    print("selected Download changed")
-                }
-            }
             .onAppear() {
                 if let download = selectedDownload {
                     //loadDownloadFile(from: download)
