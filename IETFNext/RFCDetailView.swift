@@ -76,7 +76,7 @@ extension RFCDetailView {
         graph.render(using: .dot, to: .svg) { result in
             guard case .success(let data) = result else { return }
             if let str = String(data: data, encoding: .utf8) {
-                //html = SVG_PRE + str + SVG_POST
+                // XXX html = SVG_PRE + str + SVG_POST
             }
         }
     }

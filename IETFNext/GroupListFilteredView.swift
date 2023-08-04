@@ -38,7 +38,6 @@ struct GroupListFilteredView: View {
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
     @Binding var groupFilterMode: GroupFilterMode
-    @Binding var html: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @State private var searchText = ""
@@ -128,7 +127,7 @@ struct GroupListFilteredView: View {
                     }
                 }
                 if selectedGroup == nil {
-                    html = BLANK
+                    //html = BLANK
                 }
             }
         }

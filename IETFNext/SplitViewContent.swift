@@ -22,8 +22,6 @@ struct SplitViewContent: View {
     @Binding var locationDetailMode: LocationDetailMode
     @Binding var shortTitle: String?
     @Binding var longTitle: String?
-    @Binding var html: String
-    @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
 
@@ -37,26 +35,25 @@ struct SplitViewContent: View {
                     sessionFilterMode: $sessionFilterMode,
                     sessionFormatter: $sessionFormatter,
                     timerangeFormatter: $timerangeFormatter,
-                    html:$html,
                     columnVisibility:$columnVisibility
                 )
                     .keyboardShortcut("s")
             case .groups:
-                GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, groupFilterMode: $groupFilterMode, html:$html, columnVisibility:$columnVisibility)
+                GroupListFilteredView(selectedMeeting: $selectedMeeting, selectedGroup: $selectedGroup, groupFilterMode: $groupFilterMode, columnVisibility:$columnVisibility)
                     .keyboardShortcut("g")
             case .locations:
                 LocationListView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation, locationDetailMode: $locationDetailMode, columnVisibility: $columnVisibility)
                     .keyboardShortcut("l")
             case .rfc:
-                RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, listMode: listMode, shortTitle: $shortTitle, longTitle: $longTitle, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
+                RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, listMode: listMode, shortTitle: $shortTitle, longTitle: $longTitle, columnVisibility: $columnVisibility)
                     .keyboardShortcut("r")
             case .bcp:
-                RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, listMode: listMode, shortTitle: $shortTitle, longTitle: $longTitle, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
+                RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, listMode: listMode, shortTitle: $shortTitle, longTitle: $longTitle, columnVisibility: $columnVisibility)
                     .keyboardShortcut("b")
             case .fyi, .std:
-                RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, listMode: listMode, shortTitle: $shortTitle, longTitle: $longTitle, html:$html, localFileURL:$localFileURL, columnVisibility: $columnVisibility)
+                RFCListView(selectedRFC:$selectedRFC, selectedDownload:$selectedDownload, rfcFilterMode: $rfcFilterMode, listMode: listMode, shortTitle: $shortTitle, longTitle: $longTitle, columnVisibility: $columnVisibility)
             case .download:
-                DownloadListView(selectedDownload:$selectedDownload, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
+                DownloadListView(selectedDownload:$selectedDownload, columnVisibility:$columnVisibility)
                     .keyboardShortcut("d")
             }
         }

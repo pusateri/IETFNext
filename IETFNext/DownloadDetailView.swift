@@ -10,7 +10,6 @@ import SwiftUI
 struct DownloadDetailView: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Binding var selectedDownload: Download?
-    @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     var body: some View {

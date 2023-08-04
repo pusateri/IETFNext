@@ -249,8 +249,6 @@ struct ContentView: View {
     @State var timerangeFormatter: DateFormatter? = nil
     @State var selectedRFC: RFC? = nil
     @State var selectedBCP: RFC? = nil
-    @State var html: String = ""
-    @State var localFileURL: URL? = nil
     @State var sessionFilterMode: SessionFilterMode = .none
     @State var groupFilterMode: GroupFilterMode = .none
     @State var rfcFilterMode: RFCFilterMode = .none
@@ -376,8 +374,6 @@ struct ContentView: View {
                     locationDetailMode: $locationDetailMode,
                     shortTitle: $rfcDetailShortTitle,
                     longTitle: $rfcDetailLongTitle,
-                    html: $html,
-                    localFileURL: $localFileURL,
                     columnVisibility: $columnVisibility
                 )
                 .navigationSplitViewColumnWidth(min: 270.0, ideal: 320.0, max: 370.0)
@@ -396,15 +392,13 @@ struct ContentView: View {
                         locationDetailMode: $locationDetailMode
                     )
                 case .download:
-                    DownloadDetailView(selectedDownload: $selectedDownload, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
+                    DownloadDetailView(selectedDownload: $selectedDownload, columnVisibility:$columnVisibility)
                 case .rfc, .bcp, .fyi, .std:
                         RFCDetailView(selectedRFC: $selectedRFC, selectedDownload: $selectedDownload, shortTitle: $rfcDetailShortTitle, longTitle: $rfcDetailLongTitle, columnVisibility:$columnVisibility)
                 default:
                     DetailView(
                         selectedMeeting:$selectedMeeting,
                         selectedGroup:$selectedGroup,
-                        html:$html,
-                        localFileURL:$localFileURL,
                         columnVisibility:$columnVisibility)
                 }
             }

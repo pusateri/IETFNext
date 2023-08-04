@@ -109,8 +109,6 @@ extension SectionedFetchResults.Section where Result == Download {
 struct DownloadListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Binding var selectedDownload: Download?
-    @Binding var html: String
-    @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @SectionedFetchRequest<String, Download>(
@@ -164,31 +162,6 @@ struct DownloadListView: View {
                 try viewContext.save()
             } catch {
                 print(error.localizedDescription)
-            }
-        }
-    }
-
-    private func loadDownloadFile(from: Download) {
-        if let mimeType = from.mimeType {
-            if mimeType == "application/pdf" {
-                if let filename = from.filename {
-                    do {
-                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
-                                                                       in: .userDomainMask,
-                                                                       appropriateFor: nil,
-                                                                       create: false)
-                        html = ""
-                        localFileURL = documentsURL.appendingPathComponent(filename)
-                    } catch {
-                        html = "Error reading pdf file: \(from.filename!)"
-                    }
-                }
-            } else {
-                if let contents = contents2Html(from:from) {
-                    html = contents
-                } else {
-                    html = "Error reading \(from.filename!)"
-                }
             }
         }
     }
@@ -261,17 +234,15 @@ struct DownloadListView: View {
             }
             .onChange(of: selectedDownload) { newValue in
                 if let download = newValue {
-                    loadDownloadFile(from: download)
+                    print("selected Download changed")
                 }
             }
             .onAppear() {
                 if let download = selectedDownload {
-                    loadDownloadFile(from: download)
+                    //loadDownloadFile(from: download)
                     withAnimation {
                         scrollViewReader.scrollTo(download, anchor: .center)
                     }
-                } else {
-                    html = BLANK
                 }
 
                 if columnVisibility == .all {

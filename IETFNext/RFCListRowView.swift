@@ -26,7 +26,6 @@ struct RFCListRowView: View {
     var listMode: SidebarOption
     @Binding var shortTitle: String?
     @Binding var longTitle: String?
-    @Binding var html: String
 
     var body: some View {
         HStack {
@@ -102,10 +101,10 @@ struct RFCListRowView: View {
                                     .foregroundColor(Color(hex: 0xf6c844))
                                     .padding(.top, 2)
                             } else {
-                                BranchButtonView(rfc: rfc, shortTitle: $shortTitle, longTitle: $longTitle, html: $html)
+                                BranchButtonView(rfc: rfc, shortTitle: $shortTitle, longTitle: $longTitle)
                             }
 #else
-                            BranchButtonView(rfc: rfc, shortTitle: $shortTitle, longTitle: $longTitle, html: $html)
+                            BranchButtonView(rfc: rfc, shortTitle: $shortTitle, longTitle: $longTitle)
 #endif
                         }
                     }
@@ -120,7 +119,6 @@ struct BranchButtonView: View {
     @ObservedObject var rfc: RFC
     @Binding var shortTitle: String?
     @Binding var longTitle: String?
-    @Binding var html: String
 
     var body: some View {
         Button(action: {
@@ -144,7 +142,8 @@ extension BranchButtonView {
         graph.render(using: .dot, to: .svg) { result in
             guard case .success(let data) = result else { return }
             if let str = String(data: data, encoding: .utf8) {
-                html = SVG_PRE + str + SVG_POST
+                // XXX html = SVG_PRE + str + SVG_POST
+                print("SVG needs to load")
             }
         }
     }

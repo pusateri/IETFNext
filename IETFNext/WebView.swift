@@ -11,13 +11,6 @@ import WebKit
 #if os(macOS)
 struct WebView: NSViewRepresentable {
     @Binding var download: Download?
-    @Binding var localFileURL: URL?
-
-    @State var html: String = ""
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator()
-    }
 
     func makeNSView(context: Context) -> WKWebView {
         return WKWebView()
@@ -25,10 +18,10 @@ struct WebView: NSViewRepresentable {
 
     func updateNSView(_ nsView : WKWebView , context : Context) {
         nsView.navigationDelegate = context.coordinator
-        if html.count != 0 {
-            nsView.loadHTMLString(html, baseURL: nil)
-        } else if let url = localFileURL {
-            nsView.loadFileURL(url, allowingReadAccessTo:url)
+        if let d = download {
+            loadDownloadFile(from: d, uiView: nsView)
+        } else {
+            nsView.loadHTMLString(BLANK, baseURL: nil)
         }
     }
 
@@ -57,35 +50,6 @@ struct WebView: NSViewRepresentable {
 struct WebView: UIViewRepresentable {
     @Binding var download: Download?
 
-    private func loadDownloadFile(from: Download, uiView: WKWebView) {
-        if let mimeType = from.mimeType {
-            if mimeType == "application/pdf" {
-                if let filename = from.filename {
-                    do {
-                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
-                                                                       in: .userDomainMask,
-                                                                       appropriateFor: nil,
-                                                                       create: false)
-                        let url = documentsURL.appendingPathComponent(filename)
-                        uiView.loadFileURL(url, allowingReadAccessTo:url)
-                    } catch {
-                        uiView.loadHTMLString("Error reading pdf file: \(from.filename!)", baseURL: nil)
-                    }
-                }
-            } else {
-                if let contents = contents2Html(from:from) {
-                    uiView.loadHTMLString(contents, baseURL: nil)
-                } else {
-                    uiView.loadHTMLString("Error reading \(from.filename!)", baseURL: nil)
-                }
-            }
-        }
-    }
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator()
-    }
-
     func makeUIView(context: Context) -> WKWebView {
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.dataDetectorTypes = [.link]
@@ -99,7 +63,7 @@ struct WebView: UIViewRepresentable {
         if let d = download {
             loadDownloadFile(from: d, uiView: uiView)
         } else {
-            uiView.loadHTMLString("no download", baseURL: nil)
+            uiView.loadHTMLString(BLANK, baseURL: nil)
         }
     }
 
@@ -127,3 +91,34 @@ struct WebView: UIViewRepresentable {
     }
 }
 #endif
+
+extension WebView {
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
+    private func loadDownloadFile(from: Download, uiView: WKWebView) {
+        if let mimeType = from.mimeType {
+            if mimeType == "application/pdf" {
+                if let filename = from.filename {
+                    do {
+                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
+                                                                       in: .userDomainMask,
+                                                                       appropriateFor: nil,
+                                                                       create: false)
+                        let url = documentsURL.appendingPathComponent(filename)
+                        uiView.loadFileURL(url, allowingReadAccessTo:url)
+                    } catch {
+                        uiView.loadHTMLString("Error reading pdf file: \(from.filename!)", baseURL: nil)
+                    }
+                }
+            } else {
+                if let contents = contents2Html(from:from) {
+                    uiView.loadHTMLString(contents, baseURL: nil)
+                } else {
+                    uiView.loadHTMLString("Error reading \(from.filename!)", baseURL: nil)
+                }
+            }
+        }
+    }
+}

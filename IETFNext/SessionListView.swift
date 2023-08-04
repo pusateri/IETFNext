@@ -86,7 +86,6 @@ struct SessionListFilteredView: View {
     @Binding var sessionFilterMode: SessionFilterMode
     @Binding var sessionFormatter: DateFormatter?
     @Binding var timerangeFormatter: DateFormatter?
-    @Binding var html: String
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @State var selected: Session? = nil
@@ -201,7 +200,7 @@ struct SessionListFilteredView: View {
                         }
                     }
                 } else {
-                    html = BLANK
+                    print("SessionListView: no session id")
                 }
             }
             .onContinueUserActivity("com.bangj.ietf.selectedSession", perform: { userActivity in

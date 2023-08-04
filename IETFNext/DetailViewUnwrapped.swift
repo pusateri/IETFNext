@@ -18,8 +18,6 @@ struct DetailViewUnwrapped: View {
     @FetchRequest<Document> var charterRequest: FetchedResults<Document>
     @StateObject var meeting: Meeting
     @ObservedObject var group: Group
-    @Binding var html: String
-    @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @State var sessionsForGroup: [Session]? = nil
@@ -31,13 +29,11 @@ struct DetailViewUnwrapped: View {
     @State var kind: DocumentKind = .draft
     @StateObject var model: DownloadViewModel = DownloadViewModel()
 
-    init(meeting: Meeting, group: Group, html:Binding<String>, localFileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+    init(meeting: Meeting, group: Group, columnVisibility: Binding<NavigationSplitViewVisibility>) {
 
         self._meeting = StateObject(wrappedValue: meeting)
         self.group = group //StateObject(wrappedValue: group)
 
-        self._html = html
-        self._localFileURL = localFileURL
         self._columnVisibility = columnVisibility
 
         _presentationRequest = FetchRequest<Presentation>(
@@ -354,11 +350,6 @@ struct DetailViewUnwrapped: View {
          */
         .onChange(of: model.download) { newValue in
             print("model.download changed")
-            /*
-            if let download = newValue {
-                loadDownloadFile(from:download)
-            }
-             */
         }
         .onChange(of: model.error) { newValue in
             print("model.error changed")
@@ -370,8 +361,7 @@ struct DetailViewUnwrapped: View {
                         }
                     }
                 } else {
-                    // XXX - html = PLAIN_PRE + err + PLAIN_POST
-                    print("html version not found, try text")
+                    print("DetailViewUnwrapped model.error: \(err)")
                 }
             }
         }

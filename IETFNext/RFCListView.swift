@@ -79,8 +79,6 @@ struct RFCListView: View {
     var listMode: SidebarOption
     @Binding var shortTitle: String?
     @Binding var longTitle: String?
-    @Binding var html: String
-    @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @State private var searchText = ""
@@ -95,8 +93,7 @@ struct RFCListView: View {
                         rfcFilterMode: $rfcFilterMode,
                         listMode: listMode,
                         shortTitle: $shortTitle,
-                        longTitle: $longTitle,
-                        html: $html
+                        longTitle: $longTitle
                     )
                     .listRowSeparator(.visible)
                 }
@@ -144,7 +141,7 @@ struct RFCListView: View {
             }
             .onChange(of: model.error) { newValue in
                 if let err = newValue {
-                    html = PLAIN_PRE + err + PLAIN_POST
+                    print("RFCListView model.error: \(err)")
                 }
             }
             .onAppear {
