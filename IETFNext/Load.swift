@@ -293,18 +293,15 @@ public func loadData(context: NSManagedObjectContext, meeting: Meeting?) async {
                     }
                 }
             } catch DecodingError.dataCorrupted(let context) {
-                print("Load schedule \(meeting.number!): \(context)")
+                print("Load Agenda schedule \(meeting.number!): \(context)")
             } catch DecodingError.keyNotFound(let key, let context) {
-                print("Key '\(key)' not found:", context.debugDescription)
-                print("codingPath:", context.codingPath)
+                print("Load Agenda Key '\(key)' not found: \(context.debugDescription), codingPath: \(context.codingPath)" )
             } catch DecodingError.valueNotFound(let value, let context) {
-                print("Value '\(value)' not found:", context.debugDescription)
-                print("codingPath:", context.codingPath)
+                print("Load Agenda Value '\(value)' not found: \(context.debugDescription), codingPath: \(context.codingPath)")
             } catch DecodingError.typeMismatch(let type, let context) {
-                print("Type '\(type)' mismatch:", context.debugDescription)
-                print("codingPath:", context.codingPath)
+                print("Load Agenda Type '\(type)' mismatch: \(context.debugDescription), codingPath: \(context.codingPath)")
             } catch {
-                print("error: ", error)
+                print("Load Agenda unknown error: ", error)
             }
         } catch {
             print("Unexpected agenda format")

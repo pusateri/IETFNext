@@ -398,7 +398,7 @@ struct ContentView: View {
                 case .download:
                     DownloadDetailView(selectedDownload: $selectedDownload, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
                 case .rfc, .bcp, .fyi, .std:
-                    RFCDetailView(selectedRFC: $selectedRFC, shortTitle: $rfcDetailShortTitle, longTitle: $rfcDetailLongTitle, html:$html, localFileURL:$localFileURL, columnVisibility:$columnVisibility)
+                        RFCDetailView(selectedRFC: $selectedRFC, selectedDownload: $selectedDownload, shortTitle: $rfcDetailShortTitle, longTitle: $rfcDetailLongTitle, columnVisibility:$columnVisibility)
                 default:
                     DetailView(
                         selectedMeeting:$selectedMeeting,

@@ -122,32 +122,6 @@ struct DownloadListView: View {
         animation: .default)
     private var downloads: SectionedFetchResults<String, Download>
 
-    /*
-    private func loadDownloadFile(from:Download) {
-        if let mimeType = from.mimeType {
-            if mimeType == "application/pdf" {
-                if let filename = from.filename {
-                    do {
-                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
-                                                                       in: .userDomainMask,
-                                                                       appropriateFor: nil,
-                                                                       create: false)
-                        html = ""
-                        localFileURL = documentsURL.appendingPathComponent(filename)
-                    } catch {
-                        html = "Error reading pdf file: \(from.filename!)"
-                    }
-                }
-            } else {
-                if let contents = contents2Html(from:from) {
-                    html = contents
-                } else {
-                    html = "Error reading \(from.filename!)"
-                }
-            }
-        }
-    }
-*/
     func sizeString(_ size: Int64) -> String {
         var convertedValue: Double = Double(size)
         var multiplyFactor = 0
@@ -190,6 +164,31 @@ struct DownloadListView: View {
                 try viewContext.save()
             } catch {
                 print(error.localizedDescription)
+            }
+        }
+    }
+
+    private func loadDownloadFile(from: Download) {
+        if let mimeType = from.mimeType {
+            if mimeType == "application/pdf" {
+                if let filename = from.filename {
+                    do {
+                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
+                                                                       in: .userDomainMask,
+                                                                       appropriateFor: nil,
+                                                                       create: false)
+                        html = ""
+                        localFileURL = documentsURL.appendingPathComponent(filename)
+                    } catch {
+                        html = "Error reading pdf file: \(from.filename!)"
+                    }
+                }
+            } else {
+                if let contents = contents2Html(from:from) {
+                    html = contents
+                } else {
+                    html = "Error reading \(from.filename!)"
+                }
             }
         }
     }
@@ -262,12 +261,12 @@ struct DownloadListView: View {
             }
             .onChange(of: selectedDownload) { newValue in
                 if let download = newValue {
-                    //loadDownloadFile(from: download)
+                    loadDownloadFile(from: download)
                 }
             }
             .onAppear() {
                 if let download = selectedDownload {
-                    //loadDownloadFile(from: download)
+                    loadDownloadFile(from: download)
                     withAnimation {
                         scrollViewReader.scrollTo(download, anchor: .center)
                     }

@@ -14,8 +14,7 @@ struct DownloadDetailView: View {
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     var body: some View {
-        //WebView(download:$selectedDownload, localFileURL:$localFileURL)
-        Text("\(selectedDownload?.filename ?? "no file selected")")
+        WebView(download:$selectedDownload)
         .toolbar {
             if hSizeClass == .regular {
                 ToolbarItem(placement: .principal) {

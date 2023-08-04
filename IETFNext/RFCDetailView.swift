@@ -11,15 +11,14 @@ struct RFCDetailView: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Binding var selectedRFC: RFC?
+    @Binding var selectedDownload: Download?
     @Binding var shortTitle: String?
     @Binding var longTitle: String?
-    @Binding var html: String
-    @Binding var localFileURL: URL?
+
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     var body: some View {
-        Text("temporary")
-        //WebView(download: nil, localFileURL:$localFileURL)
+        WebView(download:$selectedDownload)
         .toolbar {
             ToolbarItemGroup {
                 HStack {
@@ -77,7 +76,7 @@ extension RFCDetailView {
         graph.render(using: .dot, to: .svg) { result in
             guard case .success(let data) = result else { return }
             if let str = String(data: data, encoding: .utf8) {
-                html = SVG_PRE + str + SVG_POST
+                //html = SVG_PRE + str + SVG_POST
             }
         }
     }

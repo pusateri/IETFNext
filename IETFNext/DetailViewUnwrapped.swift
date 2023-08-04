@@ -18,6 +18,7 @@ struct DetailViewUnwrapped: View {
     @FetchRequest<Document> var charterRequest: FetchedResults<Document>
     @StateObject var meeting: Meeting
     @ObservedObject var group: Group
+    @Binding var html: String
     @Binding var localFileURL: URL?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
@@ -30,11 +31,12 @@ struct DetailViewUnwrapped: View {
     @State var kind: DocumentKind = .draft
     @StateObject var model: DownloadViewModel = DownloadViewModel()
 
-    init(meeting: Meeting, group: Group, localFileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
+    init(meeting: Meeting, group: Group, html:Binding<String>, localFileURL:Binding<URL?>, columnVisibility: Binding<NavigationSplitViewVisibility>) {
 
         self._meeting = StateObject(wrappedValue: meeting)
         self.group = group //StateObject(wrappedValue: group)
 
+        self._html = html
         self._localFileURL = localFileURL
         self._columnVisibility = columnVisibility
 
@@ -121,10 +123,7 @@ struct DetailViewUnwrapped: View {
         // TODO: don't always load first agenda, load selected session agenda
         if let agenda = agendas.first {
             model.download = fetchDownload(context: viewContext, kind:.agenda, url:agenda.url)
-            if let download = model.download {
-                print("agenda exist")
-                    //loadDownloadFile(from:download)
-            } else {
+            if model.download == nil {
                 Task {
                     await model.downloadToFile(context:viewContext, url: agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                 }
@@ -150,8 +149,7 @@ struct DetailViewUnwrapped: View {
     }
 
     var body: some View {
-        //WebView(download:$model.download, localFileURL:$localFileURL)
-        Text("\(model.download?.filename ?? "no download model or filename")")
+        WebView(download:$model.download)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text(banner).bold()
@@ -205,11 +203,8 @@ struct DetailViewUnwrapped: View {
                         Button(action: {
                             let urlString = "https://www.ietf.org/proceedings/\(meeting.number!)/slides/\(p.name!)-\(p.rev!).pdf"
                             if let url = URL(string: urlString) {
-                                let download = fetchDownload(context: viewContext, kind:.presentation, url:url)
-                                if let download = download {
-                                    print("slide exists")
-                                    //loadDownloadFile(from:download)
-                                } else {
+                                model.download = fetchDownload(context: viewContext, kind:.presentation, url:url)
+                                if model.download == nil {
                                     Task {
                                         await model.downloadToFile(context:viewContext, url:url, group:group, kind:.presentation, title: p.title)
                                     }
@@ -234,11 +229,8 @@ struct DetailViewUnwrapped: View {
                 Menu {
                     ForEach(agendas) { agenda in
                         Button(action: {
-                            let download = fetchDownload(context: viewContext, kind:.agenda, url:agenda.url)
-                            if let download = download {
-                                print("agenda exists")
-                                //loadDownloadFile(from:download)
-                            } else {
+                            model.download = fetchDownload(context: viewContext, kind:.agenda, url:agenda.url)
+                            if model.download == nil {
                                 Task {
                                     await model.downloadToFile(context:viewContext, url: agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                                 }
@@ -252,17 +244,14 @@ struct DetailViewUnwrapped: View {
                         // TODO: Should be only one minutes for all sessions, but check on this
                         if let session = sessionsForGroup?.first {
                             if let minutes = session.minutes {
-                            let download = fetchDownload(context: viewContext, kind:.minutes, url:minutes)
-                            if let download = download {
-                                print("minutes exist")
-                                //loadDownloadFile(from:download)
-                            } else {
-                                Task {
-                                    await model.downloadToFile(context:viewContext, url: minutes, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
+                                model.download = fetchDownload(context: viewContext, kind:.minutes, url:minutes)
+                                if model.download == nil {
+                                    Task {
+                                        await model.downloadToFile(context:viewContext, url: minutes, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
+                                    }
                                 }
                             }
                         }
-                    }
                     }) {
                         Text("View Minutes")
                         Image(systemName: "clock")
@@ -299,11 +288,8 @@ struct DetailViewUnwrapped: View {
                         if let rev = charterRequest.first?.rev {
                             let urlString = "https://www.ietf.org/charter/charter-ietf-\(group.acronym!)-\(rev).txt"
                             if let url = URL(string: urlString) {
-                                let download = fetchDownload(context: viewContext, kind:.charter, url:url)
-                                if let download = download {
-                                    print("charter exists")
-                                    //loadDownloadFile(from:download)
-                                } else {
+                                model.download = fetchDownload(context: viewContext, kind:.charter, url:url)
+                                if model.download == nil {
                                     Task {
                                         await model.downloadToFile(context:viewContext, url:url, group:group, kind:.charter, title: "\(group.acronym!.uppercased()) Charter")
                                     }
@@ -384,19 +370,16 @@ struct DetailViewUnwrapped: View {
                         }
                     }
                 } else {
-                    //html = PLAIN_PRE + err + PLAIN_POST
+                    // XXX - html = PLAIN_PRE + err + PLAIN_POST
                     print("html version not found, try text")
                 }
             }
         }
-        /*
         .onChange(of:draftURL) { newValue in
             if let urlString = newValue {
                 if let url = URL(string:urlString) {
-                    let download = fetchDownload(context: viewContext, kind:.draft, url:url)
-                    if let download = download {
-                        loadDownloadFile(from:download)
-                    } else {
+                    model.download = fetchDownload(context: viewContext, kind:.draft, url:url)
+                    if model.download == nil {
                         Task {
                             await model.downloadToFile(context:viewContext, url:url, group:group, kind:.draft, title:draftTitle)
                         }
@@ -404,7 +387,6 @@ struct DetailViewUnwrapped: View {
                 }
             }
         }
-         */
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .active {
                 updateFor(group: group)

@@ -15,31 +15,6 @@ struct WebView: NSViewRepresentable {
 
     @State var html: String = ""
 
-    func loadDownloadFile(from:Download) {
-        if let mimeType = from.mimeType {
-            if mimeType == "application/pdf" {
-                if let filename = from.filename {
-                    do {
-                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
-                                                                       in: .userDomainMask,
-                                                                       appropriateFor: nil,
-                                                                       create: false)
-                        html = ""
-                        localFileURL = documentsURL.appendingPathComponent(filename)
-                    } catch {
-                        html = "Error reading pdf file: \(from.filename!)"
-                    }
-                }
-            } else {
-                if let contents = contents2Html(from:from) {
-                    html = contents
-                } else {
-                    html = "Error reading \(from.filename!)"
-                }
-            }
-        }
-    }
-
     func makeCoordinator() -> Coordinator {
         Coordinator()
     }
@@ -80,8 +55,32 @@ struct WebView: NSViewRepresentable {
 }
 #else
 struct WebView: UIViewRepresentable {
-    @Binding var html: String
-    @Binding var localFileURL: URL?
+    @Binding var download: Download?
+
+    private func loadDownloadFile(from: Download, uiView: WKWebView) {
+        if let mimeType = from.mimeType {
+            if mimeType == "application/pdf" {
+                if let filename = from.filename {
+                    do {
+                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
+                                                                       in: .userDomainMask,
+                                                                       appropriateFor: nil,
+                                                                       create: false)
+                        let url = documentsURL.appendingPathComponent(filename)
+                        uiView.loadFileURL(url, allowingReadAccessTo:url)
+                    } catch {
+                        uiView.loadHTMLString("Error reading pdf file: \(from.filename!)", baseURL: nil)
+                    }
+                }
+            } else {
+                if let contents = contents2Html(from:from) {
+                    uiView.loadHTMLString(contents, baseURL: nil)
+                } else {
+                    uiView.loadHTMLString("Error reading \(from.filename!)", baseURL: nil)
+                }
+            }
+        }
+    }
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -96,10 +95,11 @@ struct WebView: UIViewRepresentable {
 
     func updateUIView(_ uiView : WKWebView , context : Context) {
         uiView.navigationDelegate = context.coordinator
-        if html.count != 0 {
-            uiView.loadHTMLString(html, baseURL: nil)
-        } else if let url = localFileURL {
-            uiView.loadFileURL(url, allowingReadAccessTo:url)
+
+        if let d = download {
+            loadDownloadFile(from: d, uiView: uiView)
+        } else {
+            uiView.loadHTMLString("no download", baseURL: nil)
         }
     }
 

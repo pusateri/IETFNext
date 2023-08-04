@@ -25,6 +25,10 @@
 7. pdf thumbnails
 
 
+*** Potential Settings ***
+
+1. session canceled filter
+
 IETF colors:
 	gray: 0xc0c0c0
 	dark blue: 0x434254, slightly lighter: 1A329D

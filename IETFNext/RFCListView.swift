@@ -140,7 +140,6 @@ struct RFCListView: View {
             .onChange(of: model.download) { newValue in
                 if let download = newValue {
                     selectedDownload = download
-                    loadDownloadFile(from:download)
                 }
             }
             .onChange(of: model.error) { newValue in
@@ -166,30 +165,6 @@ struct RFCListView: View {
 }
 
 extension RFCListView {
-    private func loadDownloadFile(from:Download) {
-        if let mimeType = from.mimeType {
-            if mimeType == "application/pdf" {
-                if let filename = from.filename {
-                    do {
-                        let documentsURL = try FileManager.default.url(for: .documentDirectory,
-                                                                       in: .userDomainMask,
-                                                                       appropriateFor: nil,
-                                                                       create: false)
-                        html = ""
-                        localFileURL = documentsURL.appendingPathComponent(filename)
-                    } catch {
-                        html = "Error reading pdf file: \(from.filename!)"
-                    }
-                }
-            } else {
-                if let contents = contents2Html(from:from) {
-                    html = contents
-                } else {
-                    html = "Error reading \(from.filename!) error: \(String(describing: model.error))"
-                }
-            }
-        }
-    }
 
     private func loadRFC(doc: RFC) {
         let urlString = "https://www.rfc-editor.org/rfc/\(doc.shortLowerName).html"
@@ -197,7 +172,6 @@ extension RFCListView {
             let download = fetchDownload(context: viewContext, kind:.rfc, url:url)
             if let download = download {
                 selectedDownload = download
-                loadDownloadFile(from: download)
             } else {
                 Task {
                     await model.downloadToFile(context:viewContext, url:url, group: nil, kind:.rfc, title: doc.title!)
