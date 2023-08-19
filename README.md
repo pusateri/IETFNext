@@ -11,8 +11,9 @@
 10. Add date to drafts list
 11. bottom bar on iOS schedule/group lists takes up lots of room
 12. RFC selection from dependency graph should open internally
-13. tabs on macos share same webview
-14. clicking on rfc link says link can't be opened.
+13. clicking on rfc links open in Safari
+14. search for rfc number, filter select rfc, select rfc again, clear filter and beach ball
+15. title in downloads on macOS doesn't show up.
 
 *** Maybe ***
 
