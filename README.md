@@ -12,8 +12,8 @@
 11. bottom bar on iOS schedule/group lists takes up lots of room
 12. RFC selection from dependency graph should open internally
 13. clicking on rfc links open in Safari
-14. search for rfc number, filter select rfc, select rfc again, clear filter and beach ball
-15. title in downloads on macOS doesn't show up.
+14. macos: search for rfc number, filter select rfc, select rfc again, clear filter and beach ball
+15. macos: title in downloads doesn't show up.
 
 *** Maybe ***
 
