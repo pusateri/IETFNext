@@ -93,7 +93,8 @@ struct RFCListView: View {
                         rfcFilterMode: $rfcFilterMode,
                         listMode: listMode,
                         shortTitle: $shortTitle,
-                        longTitle: $longTitle
+                        longTitle: $longTitle,
+                        selectedDownload: $selectedDownload
                     )
                     .listRowSeparator(.visible)
                 }

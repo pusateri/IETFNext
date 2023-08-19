@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 import GraphViz
 
 private extension DateFormatter {
@@ -26,6 +27,7 @@ struct RFCListRowView: View {
     var listMode: SidebarOption
     @Binding var shortTitle: String?
     @Binding var longTitle: String?
+    @Binding var selectedDownload: Download?
 
     var body: some View {
         HStack {
@@ -101,10 +103,10 @@ struct RFCListRowView: View {
                                     .foregroundColor(Color(hex: 0xf6c844))
                                     .padding(.top, 2)
                             } else {
-                                BranchButtonView(rfc: rfc, shortTitle: $shortTitle, longTitle: $longTitle)
+                                BranchButtonView(rfc: rfc, shortTitle: $shortTitle, longTitle: $longTitle, selectedDownload: $selectedDownload)
                             }
 #else
-                            BranchButtonView(rfc: rfc, shortTitle: $shortTitle, longTitle: $longTitle)
+                            BranchButtonView(rfc: rfc, shortTitle: $shortTitle, longTitle: $longTitle, selectedDownload: $selectedDownload)
 #endif
                         }
                     }
@@ -119,12 +121,26 @@ struct BranchButtonView: View {
     @ObservedObject var rfc: RFC
     @Binding var shortTitle: String?
     @Binding var longTitle: String?
+    @Binding var selectedDownload: Download?
 
     var body: some View {
         Button(action: {
             longTitle = rfc.title
             shortTitle = rfc.name2
-            showGraph(rfc: rfc, colorScheme: colorScheme)
+            rfc.showGraph(colorScheme: colorScheme) { result in
+                switch result {
+                    case .success(let data):
+                        if let str = String(data: data, encoding: .utf8) {
+                            if let context = rfc.managedObjectContext {
+                                context.performAndWait {
+                                    selectedDownload = rfc.buildSVG(body: str)
+                                }
+                            }
+                        }
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                }
+            }
         }) {
             Image(systemName: "arrow.triangle.pull")
                 .font(Font.system(size: 24, weight: .bold))
@@ -133,18 +149,5 @@ struct BranchButtonView: View {
         }
         .buttonStyle(BorderlessButtonStyle())
         .padding(.top, 2)
-    }
-}
-
-extension BranchButtonView {
-    func showGraph(rfc: RFC, colorScheme: ColorScheme) {
-        let graph = buildGraph(start: rfc, colorScheme: colorScheme)
-        graph.render(using: .dot, to: .svg) { result in
-            guard case .success(let data) = result else { return }
-            if let str = String(data: data, encoding: .utf8) {
-                // XXX html = SVG_PRE + str + SVG_POST
-                print("SVG needs to load")
-            }
-        }
     }
 }

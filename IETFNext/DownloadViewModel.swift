@@ -59,7 +59,24 @@ class DownloadViewModel: NSObject, ObservableObject {
                     }
 
                     context.performAndWait {
-                        self.download = createDownloadState(context:context, basename:basename, filename:suggested, mimeType: httpResponse.mimeType, encoding: httpResponse.textEncodingName, fileSize:httpResponse.expectedContentLength, ETag: httpResponse.value(forHTTPHeaderField: "ETag"), group:group, kind:kind, title:title)
+                        let fetch: NSFetchRequest<Download> = Download.fetchRequest()
+                        fetch.predicate = NSPredicate(format: "basename = %@", basename)
+
+                        let results = try? context.fetch(fetch)
+
+                        if results?.count == 0 {
+                            let dl = Download.create(context:context, basename:basename, filename:suggested, mimeType: httpResponse.mimeType, encoding: httpResponse.textEncodingName, fileSize:httpResponse.expectedContentLength, ETag: httpResponse.value(forHTTPHeaderField: "ETag"), group:group, kind:kind, title:title)
+                            do {
+                                try context.save()
+                            }
+                            catch {
+                                print("Unable to save Download: \(basename)")
+                            }
+                            self.download = dl
+                        } else {
+                            self.download = results?.first
+                            print("Download \(basename) already exists")
+                        }
                     }
                 } else {
                     // This shouldn't happen but the moveItem will fail if there's something already there
@@ -76,41 +93,5 @@ class DownloadViewModel: NSObject, ObservableObject {
         } catch {
             self.error = error.localizedDescription
         }
-    }
-
-    func createDownloadState(context: NSManagedObjectContext, basename:String, filename:String, mimeType: String?, encoding: String?, fileSize: Int64, ETag: String?, group: Group?, kind:DownloadKind, title: String?) -> Download {
-
-        let fetch: NSFetchRequest<Download> = Download.fetchRequest()
-        fetch.predicate = NSPredicate(format: "basename = %@", basename)
-
-        var download: Download!
-        let results = try? context.fetch(fetch)
-
-        if results?.count == 0 {
-            // here you are inserting
-            let name:NSString = filename as NSString
-            download = Download(context: context)
-            download.basename = basename
-            download.mimeType = mimeType
-            download.filename = filename
-            download.filesize = fileSize
-            download.etag = ETag
-            download.ext = name.pathExtension
-            download.group = group
-            download.kind = kind.rawValue
-            download.encoding = encoding
-            download.title = title
-            do {
-                try context.save()
-            }
-            catch {
-                print("Unable to save Download: \(basename)")
-            }
-        } else {
-            // here you are updating
-            download = results?.first
-            print("Download \(download.basename!) already exists")
-        }
-        return download
     }
 }

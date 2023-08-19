@@ -16,6 +16,7 @@ public enum DownloadKind: String {
     case minutes
     case presentation
     case rfc
+    case svg
 }
 
 public func httpEcoding2StringEncoding(encoding: String?) -> String.Encoding {
@@ -81,6 +82,8 @@ public func contents2Html(from: Download) -> String? {
                         }
                     }
                     return contents
+                } else if from.mimeType == "image/svg+xml" {
+                    return SVG_PRE + contents + SVG_POST
                 }
             } catch {
                 return "Unable to read downloaded file: \(url.absoluteString)"
@@ -149,10 +152,10 @@ struct DownloadListView: View {
                         let savedURL = documentsURL.appendingPathComponent(filename)
                         do {
                             try FileManager.default.removeItem(at: savedURL)
-                            viewContext.delete(download)
                         } catch {
                             print(error.localizedDescription)
                         }
+                        viewContext.delete(download)
                     } catch {
                         print("couldn't create fileURL to delete download: \(filename), error \(error.localizedDescription)")
                     }
@@ -198,8 +201,13 @@ struct DownloadListView: View {
                     .listRowSeparator(.visible)
                 } header: {
                     HStack {
-                        Text(section.id == "rfc" ? "RFC" : section.id.capitalized)
-                            .foregroundColor(.accentColor)
+                        if section.id == "rfc" || section.id == "svg" {
+                            Text(section.id.uppercased())
+                                .foregroundColor(.accentColor)
+                        } else {
+                            Text(section.id.capitalized)
+                                .foregroundColor(.accentColor)
+                        }
                         Spacer()
                         Text("\(sizeString(section.sectionSize))")
                             .foregroundColor(.accentColor)

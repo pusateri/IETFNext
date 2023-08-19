@@ -32,7 +32,20 @@ struct RFCDetailView: View {
                     Spacer()
                     if let rfc = selectedRFC, rfc.branch == true {
                         Button(action: {
-                            showGraph(rfc: rfc, colorScheme: colorScheme)
+                            rfc.showGraph(colorScheme: colorScheme) { result in
+                                switch result {
+                                    case .success(let data):
+                                        if let str = String(data: data, encoding: .utf8) {
+                                            if let context = rfc.managedObjectContext {
+                                                context.performAndWait {
+                                                    selectedDownload = rfc.buildSVG(body: str)
+                                                }
+                                            }
+                                        }
+                                    case .failure(let error):
+                                        print(error.localizedDescription)
+                                }
+                            }
                         }) {
                             Image(systemName: "arrow.triangle.pull")
                                 .bold()
@@ -69,16 +82,3 @@ struct RFCDetailView: View {
         }
     }
 }
-
-extension RFCDetailView {
-    func showGraph(rfc: RFC, colorScheme: ColorScheme) {
-        let graph = buildGraph(start: rfc, colorScheme: colorScheme)
-        graph.render(using: .dot, to: .svg) { result in
-            guard case .success(let data) = result else { return }
-            if let str = String(data: data, encoding: .utf8) {
-                // XXX html = SVG_PRE + str + SVG_POST
-            }
-        }
-    }
-}
-

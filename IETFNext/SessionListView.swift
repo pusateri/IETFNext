@@ -199,8 +199,6 @@ struct SessionListFilteredView: View {
                             scrollViewReader.scrollTo(session, anchor: .center)
                         }
                     }
-                } else {
-                    print("SessionListView: no session id")
                 }
             }
             .onContinueUserActivity("com.bangj.ietf.selectedSession", perform: { userActivity in
