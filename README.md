@@ -14,6 +14,8 @@
 13. clicking on rfc links open in Safari
 14. macos: search for rfc number, filter select rfc, select rfc again, clear filter and beach ball
 15. macos: title in downloads doesn't show up.
+16. video recording is no longer found
+17. old meeting number shows up in detail view
 
 *** Maybe ***
 
