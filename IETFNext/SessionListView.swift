@@ -17,7 +17,7 @@ extension DynamicFetchRequestView where T : Session {
         var search_criteria = searchText.isEmpty ? "" : "((name contains[cd] %@) OR (group.acronym contains[cd] %@)) AND "
         var args: [CVarArg] = searchText.isEmpty ? [] : [searchText, searchText]
 
-        search_criteria += "(meeting.number = %@) AND (status != \"canceled\")"
+        search_criteria += "(meeting.number = %@) AND (status == \"sched\")"
         args.append(meeting.wrappedValue?.number ?? "0")
 
         switch(filterMode.wrappedValue) {
