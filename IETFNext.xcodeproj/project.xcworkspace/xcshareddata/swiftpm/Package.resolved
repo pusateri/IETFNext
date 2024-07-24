@@ -1,4 +1,5 @@
 {
+  "originHash" : "4d6fefed2441c14987d607518e57b1735d7c331d3cb7e1d7c820333111be97e7",
   "pins" : [
     {
       "identity" : "graphviz",
@@ -37,5 +38,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

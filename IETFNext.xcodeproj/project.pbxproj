@@ -21,6 +21,12 @@
 		F82FFEAC2964C8FF007AA54A /* RFCParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FFEAB2964C8FE007AA54A /* RFCParser.swift */; };
 		F82FFEAF2965D897007AA54A /* RFCListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FFEAE2965D897007AA54A /* RFCListView.swift */; };
 		F83750612978741400EBABB4 /* SplitViewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83750602978741400EBABB4 /* SplitViewContent.swift */; };
+		F845061C2C1CB16600EC5CBE /* EventDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84506152C1CB16600EC5CBE /* EventDataStore.swift */; };
+		F845061D2C1CB16600EC5CBE /* EventDataStore+FullAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84506162C1CB16600EC5CBE /* EventDataStore+FullAccess.swift */; };
+		F845061E2C1CB16600EC5CBE /* EventStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84506172C1CB16600EC5CBE /* EventStoreError.swift */; };
+		F845061F2C1CB16600EC5CBE /* EventStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84506182C1CB16600EC5CBE /* EventStoreManager.swift */; };
+		F84506202C1CB16600EC5CBE /* EventStoreManager+FullAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84506192C1CB16600EC5CBE /* EventStoreManager+FullAccess.swift */; };
+		F84506212C1CB16600EC5CBE /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = F845061A2C1CB16600EC5CBE /* LICENSE.txt */; };
 		F855A19929803C1F00CDE2C9 /* UIDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F855A19829803C1F00CDE2C9 /* UIDevice+Extension.swift */; };
 		F85D55C0295E05F900569A77 /* DetailViewUnwrapped.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55BF295E05F900569A77 /* DetailViewUnwrapped.swift */; };
 		F85D55C2295E72B100569A77 /* MacOSCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D55C1295E72B100569A77 /* MacOSCompat.swift */; };
@@ -39,6 +45,9 @@
 		F884CA3029762AF7004B45C7 /* RFCListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F884CA2F29762AF7004B45C7 /* RFCListRowView.swift */; };
 		F884CA3229762C99004B45C7 /* Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = F884CA3129762C99004B45C7 /* Graph.swift */; };
 		F88B7E5C2960931B00F770C9 /* LocationPhotoMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88B7E5B2960931B00F770C9 /* LocationPhotoMenuView.swift */; };
+		F896CFAF2C4ED06A009A3DFD /* Group+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F896CFAE2C4ED06A009A3DFD /* Group+Extension.swift */; };
+		F896CFB12C4EDABE009A3DFD /* Session+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F896CFB02C4EDABE009A3DFD /* Session+Extension.swift */; };
+		F896CFB32C4EE2A6009A3DFD /* EKEvent+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F896CFB22C4EE2A6009A3DFD /* EKEvent+Extension.swift */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListView.swift */; };
@@ -101,6 +110,12 @@
 		F82FFEAE2965D897007AA54A /* RFCListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCListView.swift; sourceTree = "<group>"; };
 		F837505F2978527000EBABB4 /* IETFNext 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 7.xcdatamodel"; sourceTree = "<group>"; };
 		F83750602978741400EBABB4 /* SplitViewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewContent.swift; sourceTree = "<group>"; };
+		F84506152C1CB16600EC5CBE /* EventDataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDataStore.swift; sourceTree = "<group>"; };
+		F84506162C1CB16600EC5CBE /* EventDataStore+FullAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "EventDataStore+FullAccess.swift"; sourceTree = "<group>"; };
+		F84506172C1CB16600EC5CBE /* EventStoreError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventStoreError.swift; sourceTree = "<group>"; };
+		F84506182C1CB16600EC5CBE /* EventStoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventStoreManager.swift; sourceTree = "<group>"; };
+		F84506192C1CB16600EC5CBE /* EventStoreManager+FullAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "EventStoreManager+FullAccess.swift"; sourceTree = "<group>"; };
+		F845061A2C1CB16600EC5CBE /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		F855A19829803C1F00CDE2C9 /* UIDevice+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Extension.swift"; sourceTree = "<group>"; };
 		F85D55BF295E05F900569A77 /* DetailViewUnwrapped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewUnwrapped.swift; sourceTree = "<group>"; };
 		F85D55C1295E72B100569A77 /* MacOSCompat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacOSCompat.swift; sourceTree = "<group>"; };
@@ -116,6 +131,10 @@
 		F884CA2F29762AF7004B45C7 /* RFCListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCListRowView.swift; sourceTree = "<group>"; };
 		F884CA3129762C99004B45C7 /* Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
 		F88B7E5B2960931B00F770C9 /* LocationPhotoMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPhotoMenuView.swift; sourceTree = "<group>"; };
+		F896CFAE2C4ED06A009A3DFD /* Group+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Group+Extension.swift"; sourceTree = "<group>"; };
+		F896CFB02C4EDABE009A3DFD /* Session+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Extension.swift"; sourceTree = "<group>"; };
+		F896CFB22C4EE2A6009A3DFD /* EKEvent+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EKEvent+Extension.swift"; sourceTree = "<group>"; };
+		F896CFB42C4F12D7009A3DFD /* IETFNext 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 10.xcdatamodel"; sourceTree = "<group>"; };
 		F8C913352980B2580004D458 /* IETFNext 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 8.xcdatamodel"; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
@@ -175,6 +194,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F845061B2C1CB16600EC5CBE /* Apple */ = {
+			isa = PBXGroup;
+			children = (
+				F84506152C1CB16600EC5CBE /* EventDataStore.swift */,
+				F84506162C1CB16600EC5CBE /* EventDataStore+FullAccess.swift */,
+				F84506172C1CB16600EC5CBE /* EventStoreError.swift */,
+				F84506182C1CB16600EC5CBE /* EventStoreManager.swift */,
+				F84506192C1CB16600EC5CBE /* EventStoreManager+FullAccess.swift */,
+				F845061A2C1CB16600EC5CBE /* LICENSE.txt */,
+			);
+			path = Apple;
+			sourceTree = "<group>";
+		};
 		F8E9B9902934101200CA6F09 = {
 			isa = PBXGroup;
 			children = (
@@ -198,6 +230,7 @@
 		F8E9B99B2934101200CA6F09 /* IETFNext */ = {
 			isa = PBXGroup;
 			children = (
+				F845061B2C1CB16600EC5CBE /* Apple */,
 				F8E127CA29450ED7004A35E8 /* Info.plist */,
 				F8E127C82943F13B004A35E8 /* Revision.swift */,
 				F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */,
@@ -212,7 +245,9 @@
 				F80CA26629469B60002AD2C6 /* DownloadListView.swift */,
 				F80CA270294920D9002AD2C6 /* DownloadViewModel.swift */,
 				F8249B2D2979DC83004B66DF /* DynamicFetchRequestView.swift */,
+				F896CFB22C4EE2A6009A3DFD /* EKEvent+Extension.swift */,
 				F884CA3129762C99004B45C7 /* Graph.swift */,
+				F896CFAE2C4ED06A009A3DFD /* Group+Extension.swift */,
 				F85D55C9295F86DC00569A77 /* GroupFilterMenu.swift */,
 				F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */,
 				F85D55C7295F85B200569A77 /* GroupListTitleView.swift */,
@@ -234,6 +269,7 @@
 				F8F129C2297752A90096B3D4 /* RFCListTitleView.swift */,
 				F82FFEAB2964C8FE007AA54A /* RFCParser.swift */,
 				F85D99BA2968C55000DE37E0 /* RFCProvider.swift */,
+				F896CFB02C4EDABE009A3DFD /* Session+Extension.swift */,
 				F85D55C3295F71DB00569A77 /* SessionFilterMenu.swift */,
 				F8E9BA162937EB2C00CA6F09 /* SessionListRowView.swift */,
 				F80CA26C2947BC73002AD2C6 /* SessionListLocationView.swift */,
@@ -393,6 +429,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F84506212C1CB16600EC5CBE /* LICENSE.txt in Resources */,
 				F8E9B9AA2934101300CA6F09 /* Preview Assets.xcassets in Resources */,
 				F8E9B9A62934101300CA6F09 /* Assets.xcassets in Resources */,
 			);
@@ -445,12 +482,16 @@
 				F80CA271294920D9002AD2C6 /* DownloadViewModel.swift in Sources */,
 				F85D55C6295F7A7500569A77 /* SessionListTitleView.swift in Sources */,
 				F8E9BA112935624100CA6F09 /* LocationListView.swift in Sources */,
+				F845061C2C1CB16600EC5CBE /* EventDataStore.swift in Sources */,
 				F82FFEA529624ED1007AA54A /* DownloadDetailView.swift in Sources */,
 				F8F129C3297752A90096B3D4 /* RFCListTitleView.swift in Sources */,
+				F896CFAF2C4ED06A009A3DFD /* Group+Extension.swift in Sources */,
 				F80382882A8FE378002517CF /* Download+Extension.swift in Sources */,
 				F865B9F2295930AB00C3DB13 /* LocationDetailView.swift in Sources */,
 				F8E9BA1329366A4000CA6F09 /* MeetingListRowView.swift in Sources */,
 				F85D55C2295E72B100569A77 /* MacOSCompat.swift in Sources */,
+				F845061D2C1CB16600EC5CBE /* EventDataStore+FullAccess.swift in Sources */,
+				F896CFB32C4EE2A6009A3DFD /* EKEvent+Extension.swift in Sources */,
 				F85D55C4295F71DB00569A77 /* SessionFilterMenu.swift in Sources */,
 				F8E9B9D32935070D00CA6F09 /* MeetingListView.swift in Sources */,
 				F807990D2985AC960014F210 /* WeatherView.swift in Sources */,
@@ -464,6 +505,8 @@
 				F8E9B9CD2934295E00CA6F09 /* Load.swift in Sources */,
 				F85D99BB2968C55000DE37E0 /* RFCProvider.swift in Sources */,
 				F83750612978741400EBABB4 /* SplitViewContent.swift in Sources */,
+				F845061E2C1CB16600EC5CBE /* EventStoreError.swift in Sources */,
+				F845061F2C1CB16600EC5CBE /* EventStoreManager.swift in Sources */,
 				F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */,
 				F8E127C92943F13B004A35E8 /* Revision.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
@@ -474,6 +517,8 @@
 				F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */,
 				F85D55C0295E05F900569A77 /* DetailViewUnwrapped.swift in Sources */,
 				F8E9B9A42934101200CA6F09 /* ContentView.swift in Sources */,
+				F896CFB12C4EDABE009A3DFD /* Session+Extension.swift in Sources */,
+				F84506202C1CB16600EC5CBE /* EventStoreManager+FullAccess.swift in Sources */,
 				F85D99BD2968C9C500DE37E0 /* IETFNextError.swift in Sources */,
 				F85D99C32968CC9E00DE37E0 /* RFC+Extension.swift in Sources */,
 				F85D55C8295F85B200569A77 /* GroupListTitleView.swift in Sources */,
@@ -664,10 +709,10 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 0.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNext;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -711,10 +756,10 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 0.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNext;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -924,6 +969,7 @@
 		F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F896CFB42C4F12D7009A3DFD /* IETFNext 10.xcdatamodel */,
 				F807994C298853DC0014F210 /* IETFNext 9.xcdatamodel */,
 				F8C913352980B2580004D458 /* IETFNext 8.xcdatamodel */,
 				F837505F2978527000EBABB4 /* IETFNext 7.xcdatamodel */,
@@ -934,7 +980,7 @@
 				F80CA26329469780002AD2C6 /* IETFNext 2.xcdatamodel */,
 				F8E9B9A12934101200CA6F09 /* IETFNext.xcdatamodel */,
 			);
-			currentVersion = F807994C298853DC0014F210 /* IETFNext 9.xcdatamodel */;
+			currentVersion = F896CFB42C4F12D7009A3DFD /* IETFNext 10.xcdatamodel */;
 			path = IETFNext.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

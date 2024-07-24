@@ -282,6 +282,7 @@ struct ContentView: View {
     private var rfcs: FetchedResults<RFC>
 
     @StateObject fileprivate var viewModel = ChoiceViewModel()
+    @StateObject private var storeManager: EventStoreManager = EventStoreManager()
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
@@ -462,6 +463,10 @@ struct ContentView: View {
                 try? await rfcProvider.fetchRFCs()
                 rfcIndexLastTime = String(now)
             }
+        }
+        .environmentObject(storeManager)
+        .task {
+            await storeManager.listenForCalendarChanges()
         }
     }
 }

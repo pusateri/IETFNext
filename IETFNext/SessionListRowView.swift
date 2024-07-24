@@ -10,6 +10,7 @@ import SwiftUI
 
 struct SessionListRowView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject var storeManager: EventStoreManager
     @ObservedObject var session: Session
     @ObservedObject var group: Group
     @Binding var timerangeFormatter: DateFormatter?
@@ -20,6 +21,7 @@ struct SessionListRowView: View {
             Button(action: {
                 group.favorite.toggle()
                 saveFavorite()
+                updateCalendar(group: group, meeting: session.meeting!)
             }) {
                 Image(systemName: group.favorite == true ? "star.fill" : "star")
                     .font(Font.system(size: 24, weight: .bold))
@@ -55,6 +57,26 @@ struct SessionListRowView: View {
                 try viewContext.save()
             } catch {
                 print("Unable to save Session group (\(group.acronym!)) favorite \(session.name!)")
+            }
+        }
+    }
+    func updateCalendar(group: Group, meeting: Meeting) {
+        Task {
+            do {
+                if !storeManager.isWriteOnlyOrFullAccessAuthorized {
+                    try await storeManager.setupEventStore()
+                }
+                if let sessions = group.groupSessionsIn(meeting: meeting) {
+                    for session in sessions {
+                        if group.favorite == true {
+                            await session.createEvent(storeManager: storeManager)
+                        } else {
+                            await session.deleteEvent(storeManager: storeManager)
+                        }
+                    }
+                }
+            } catch {
+                print("pushToCalendar error: \(error.localizedDescription)")
             }
         }
     }
