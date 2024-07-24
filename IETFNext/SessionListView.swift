@@ -27,7 +27,7 @@ extension DynamicFetchRequestView where T : Session {
                 search_criteria += " AND (is_bof = true)"
             case .now:
                 now = Date()
-                search_criteria += " AND (start > %@) AND (end < %@)"
+                search_criteria += " AND (start < %@) AND (end > %@)"
                 args.append(now as CVarArg)
                 args.append(now as CVarArg)
             case .today:
