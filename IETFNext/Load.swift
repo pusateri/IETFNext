@@ -457,7 +457,7 @@ public func loadRecordingDocument(context: NSManagedObjectContext, session: Sess
                     recFormatter.locale = Locale(identifier: Locale.current.identifier)
                     recFormatter.dateFormat = "yyyy-MM-dd' at 'HH:mm:ss"
                     recFormatter.calendar = Calendar(identifier: .iso8601)
-                    recFormatter.timeZone = TimeZone(identifier: meeting.time_zone!)
+                    recFormatter.timeZone = TimeZone.gmt
                     let matchTitle = String(format: "Video recording for \(group.acronym!.uppercased()) on \(recFormatter.string(from: session.start!))")
                     let (data, response) = try await URLSession.shared.data(from: url)
                     guard let httpResponse = response as? HTTPURLResponse else {
@@ -474,7 +474,7 @@ public func loadRecordingDocument(context: NSManagedObjectContext, session: Sess
                         let json_docs = try decoder.decode(Documents.self, from: data)
 
                         for obj in json_docs.objects {
-                            if obj.title == matchTitle {
+                            if obj.title.caseInsensitiveCompare(matchTitle) == .orderedSame {
                                 if let external_url = obj.external_url {
                                     let components = URLComponents(string: external_url)
                                     if let components = components, components.host == "www.youtube.com" {
