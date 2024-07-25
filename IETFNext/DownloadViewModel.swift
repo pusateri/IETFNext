@@ -61,7 +61,6 @@ class DownloadViewModel: NSObject, ObservableObject {
                     context.performAndWait {
                         let fetch: NSFetchRequest<Download> = Download.fetchRequest()
                         fetch.predicate = NSPredicate(format: "basename = %@", basename)
-                        //print("basename = \(basename)")
                         let results = try? context.fetch(fetch)
 
                         if results?.count == 0 {
@@ -79,7 +78,6 @@ class DownloadViewModel: NSObject, ObservableObject {
                         }
                     }
                 } else {
-                    //print("savedURL path: \(savedURL.path)")
                     // This shouldn't happen but the moveItem will fail if there's something already there
                     self.error = "file found with no Download state, removing: \(basename)"
                     do {

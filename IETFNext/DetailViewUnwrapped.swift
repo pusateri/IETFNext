@@ -337,8 +337,6 @@ struct DetailViewUnwrapped: View {
         .onChange(of: group) { newValue in
             // TODO: slides are combined into the group and all slides are shown for all sessions of group
             presentationRequest.nsPredicate = NSPredicate(format: "session.group = %@", newValue)
-            //print("updateFor group change: \(String(describing: newValue.acronym))")
-            updateFor(group: newValue)
         }
         .onChange(of: model.error) { newValue in
             if let err = newValue {
@@ -367,12 +365,10 @@ struct DetailViewUnwrapped: View {
         }
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .active {
-                //print("updateFor group newPhase: \(String(describing: group.acronym))")
                 updateFor(group: group)
             }
         }
         .onAppear {
-            //print("updateFor onAppear: \(String(describing: group.acronym))")
             updateFor(group: group)
         }
     }
