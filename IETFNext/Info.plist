@@ -16,6 +16,8 @@
 		<string>youtube</string>
 	</array>
 	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>Favorites will be automatically added to your Calendar</string>
+	<string>Favorites will be automatically added/removed in Calendar</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Favorites will be automatically added/removed in Calendar</string>
 </dict>
 </plist>
