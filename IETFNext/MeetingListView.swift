@@ -42,7 +42,7 @@ struct JSONMeeting: Decodable {
     let submission_start_day_offset: Int32
     let time_zone: String
     let type: String
-    let updated: String
+    let updated: String?
     let venue_addr: String
     let venue_name: String
 }
@@ -195,9 +195,11 @@ private func updateMeeting(context: NSManagedObjectContext, meeting: JSONMeeting
     mtg.date = meeting.date
     mtg.start = dateFormatter.date(from: meeting.date)
     mtg.time_zone = meeting.time_zone
-    mtg.updated_at = RFC3339DateFormatter.date(from: meeting.updated)
-    if mtg.updated_at == nil {
-        mtg.updated_at = RFC3339FractionalDateFormatter.date(from: meeting.updated)
+    if let updated = meeting.updated {
+        mtg.updated_at = RFC3339DateFormatter.date(from: updated)
+        if mtg.updated_at == nil {
+            mtg.updated_at = RFC3339FractionalDateFormatter.date(from: updated)
+        }
     }
     mtg.venue_addr = meeting.venue_addr
     mtg.venue_name = meeting.venue_name
