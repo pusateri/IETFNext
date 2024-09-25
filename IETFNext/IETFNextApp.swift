@@ -24,12 +24,13 @@ public enum SidebarOption: String {
 @main
 struct IETFNextApp: App {
     @State private var showingMeetings = false
+    @State private var showingCalendars = false
     @State var menuSidebarOption: SidebarOption? = nil
     @State var useLocalTime: Bool = false
 
     var body: some Scene {
         WindowGroup("Documents") {
-            ContentView(showingMeetings: $showingMeetings, menuSidebarOption: $menuSidebarOption, useLocalTime: $useLocalTime)
+            ContentView(showingMeetings: $showingMeetings, showingCalendars: $showingCalendars, menuSidebarOption: $menuSidebarOption, useLocalTime: $useLocalTime)
                 .environment(\.managedObjectContext, RFCProvider.shared.container.viewContext)
 #if os(macOS)
                 .frame(

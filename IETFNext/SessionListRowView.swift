@@ -66,6 +66,7 @@ struct SessionListRowView: View {
                 if !storeManager.isWriteOnlyOrFullAccessAuthorized {
                     try await storeManager.setupEventStore()
                 }
+                await storeManager.setIETFNextCalendar()
                 if let sessions = group.groupSessionsIn(meeting: meeting) {
                     for session in sessions {
                         if group.favorite == true {

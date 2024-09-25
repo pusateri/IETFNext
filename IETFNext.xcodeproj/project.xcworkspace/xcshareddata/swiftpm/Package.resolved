@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pusateri/GraphViz",
       "state" : {
-        "revision" : "9a9639b0431cd3935d609c51a0c0b00739c590da",
-        "version" : "0.5.4"
+        "revision" : "5292ab945a9803201d9632778e3015eaf3eaa6a0",
+        "version" : "0.5.5"
       }
     },
     {

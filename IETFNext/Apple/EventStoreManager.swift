@@ -25,7 +25,7 @@ class EventStoreManager: ObservableObject {
     }
     
     var isWriteOnlyOrFullAccessAuthorized: Bool {
-        if #available(iOS 17.0, *) {
+        if #available(iOS 17.0, macOS 14.0, *) {
             return ((authorizationStatus == .writeOnly) || (authorizationStatus == .fullAccess))
         } else {
             // Fall back on earlier versions.

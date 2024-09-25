@@ -10,7 +10,7 @@ import EventKit
 extension EventDataStore {
     
     var isFullAccessAuthorized: Bool {
-        if #available(iOS 17.0, *) {
+        if #available(iOS 17.0, macOS 14.0, *) {
             EKEventStore.authorizationStatus(for: .event) == .fullAccess
         } else {
             // Fall back on earlier versions.
@@ -20,7 +20,7 @@ extension EventDataStore {
 
     /// Prompts the user for full-access authorization to Calendar.
     private func requestFullAccess() async throws -> Bool {
-        if #available(iOS 17.0, *) {
+        if #available(iOS 17.0, macOS 14.0, *) {
             return try await eventStore.requestFullAccessToEvents()
         } else {
             // Fall back on earlier versions.

@@ -304,7 +304,7 @@ public func loadData(context: NSManagedObjectContext, meeting: Meeting?) async {
                 print("Load Agenda unknown error: ", error)
             }
         } catch {
-            print("Unexpected agenda format")
+            print("Unable to read URL: \(url.absoluteString). Check network connection.")
         }
     }
 }

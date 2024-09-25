@@ -38,6 +38,7 @@
 		F85D99BD2968C9C500DE37E0 /* IETFNextError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D99BC2968C9C500DE37E0 /* IETFNextError.swift */; };
 		F85D99C32968CC9E00DE37E0 /* RFC+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85D99C22968CC9E00DE37E0 /* RFC+Extension.swift */; };
 		F865B9F2295930AB00C3DB13 /* LocationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F865B9F1295930AB00C3DB13 /* LocationDetailView.swift */; };
+		F8782D162C93A53200821284 /* CalendarChooser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8782D152C93A53200821284 /* CalendarChooser.swift */; };
 		F87E0F42294FD45800E1E1A8 /* MarkdownKit in Frameworks */ = {isa = PBXBuildFile; productRef = F87E0F41294FD45800E1E1A8 /* MarkdownKit */; };
 		F884CA292974CF45004B45C7 /* graphvizFramework in Frameworks */ = {isa = PBXBuildFile; productRef = F884CA282974CF45004B45C7 /* graphvizFramework */; };
 		F884CA2C2974CF5F004B45C7 /* GraphViz in Frameworks */ = {isa = PBXBuildFile; productRef = F884CA2B2974CF5F004B45C7 /* GraphViz */; };
@@ -127,6 +128,7 @@
 		F85D99BC2968C9C500DE37E0 /* IETFNextError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextError.swift; sourceTree = "<group>"; };
 		F85D99C22968CC9E00DE37E0 /* RFC+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RFC+Extension.swift"; sourceTree = "<group>"; };
 		F865B9F1295930AB00C3DB13 /* LocationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailView.swift; sourceTree = "<group>"; };
+		F8782D152C93A53200821284 /* CalendarChooser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarChooser.swift; sourceTree = "<group>"; };
 		F884CA2D29762A72004B45C7 /* BCPListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BCPListView.swift; sourceTree = "<group>"; };
 		F884CA2F29762AF7004B45C7 /* RFCListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCListRowView.swift; sourceTree = "<group>"; };
 		F884CA3129762C99004B45C7 /* Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 				F8E9B99C2934101200CA6F09 /* IETFNextApp.swift */,
 				F8E127BB293BFE1B004A35E8 /* AreaColors.swift */,
 				F884CA2D29762A72004B45C7 /* BCPListView.swift */,
+				F8782D152C93A53200821284 /* CalendarChooser.swift */,
 				F8E9B9A32934101200CA6F09 /* ContentView.swift */,
 				F8E127C12940E254004A35E8 /* DetailView.swift */,
 				F85D55BF295E05F900569A77 /* DetailViewUnwrapped.swift */,
@@ -527,6 +530,7 @@
 				F884CA3229762C99004B45C7 /* Graph.swift in Sources */,
 				F80CA26729469B60002AD2C6 /* DownloadListView.swift in Sources */,
 				F88B7E5C2960931B00F770C9 /* LocationPhotoMenuView.swift in Sources */,
+				F8782D162C93A53200821284 /* CalendarChooser.swift in Sources */,
 				F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */,
 				F80CA275294ABA24002AD2C6 /* HTML.swift in Sources */,
 				F82FFEAF2965D897007AA54A /* RFCListView.swift in Sources */,
@@ -688,7 +692,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"IETFNext/Preview Content\"";
 				DEVELOPMENT_TEAM = H34JG5K6Q7;
@@ -713,7 +717,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
-				MARKETING_VERSION = 0.9.5;
+				MARKETING_VERSION = 0.9.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNext;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -735,7 +739,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"IETFNext/Preview Content\"";
 				DEVELOPMENT_TEAM = H34JG5K6Q7;
@@ -760,7 +764,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.5;
-				MARKETING_VERSION = 0.9.5;
+				MARKETING_VERSION = 0.9.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNext;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -937,7 +941,7 @@
 			repositoryURL = "https://github.com/pusateri/GraphViz.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.4;
+				minimumVersion = 0.5.5;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

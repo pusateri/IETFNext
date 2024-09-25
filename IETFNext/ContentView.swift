@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import EventKit
 
 extension Bundle {
     var releaseVersionNumber: String {
@@ -236,7 +237,9 @@ enum LocationDetailMode: String {
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.scenePhase) var scenePhase
+    
     @Binding var showingMeetings: Bool
+    @Binding var showingCalendars: Bool
     @Binding var menuSidebarOption: SidebarOption?
     @Binding var useLocalTime: Bool
 
@@ -255,6 +258,7 @@ struct ContentView: View {
     @State var rfcDetailShortTitle: String? = nil
     @State var rfcDetailLongTitle: String? = nil
     @State var locationDetailMode: LocationDetailMode = .none
+    @State private var calendar: EKCalendar?
 
     @State var listSelection: SidebarOption? = nil
     @SceneStorage("top.detailSelection") var detailSelection: SidebarOption?
@@ -349,6 +353,15 @@ struct ContentView: View {
                             Label("Change Meeting", systemImage: "airplane.departure")
                         }
                         .keyboardShortcut("a")
+                        /*
+                         * not yet
+                        Button(action: {
+                            showingCalendars.toggle()
+                        }) {
+                            Label("Select Calendar", systemImage: "calendar")
+                        }
+                        .keyboardShortcut("z")
+                         */
                         Toggle("Use Local Time", isOn: $useLocalTime)
                         Label("Version \(Bundle.main.releaseVersionNumber).\(Bundle.main.buildVersionNumber) (\(Git.kRevisionNumber))", systemImage: "v.circle")
                     }
@@ -406,6 +419,11 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showingMeetings) {
             MeetingListView(selectedMeeting: $selectedMeeting)
+        }
+        .sheet(isPresented: $showingCalendars) {
+#if !os(macOS)
+            CalendarChooser(calendar: $calendar)
+#endif
         }
         .onChange(of: useLocalTime) { _ in
             sessionFormatter = buildSessionFormatter(meeting: selectedMeeting, useLocalTime: useLocalTime)
@@ -465,9 +483,12 @@ struct ContentView: View {
             }
         }
         .environmentObject(storeManager)
+        /*
+         * TODO: deal with deleted calendar entries
         .task {
             await storeManager.listenForCalendarChanges()
         }
+         */
     }
 }
 

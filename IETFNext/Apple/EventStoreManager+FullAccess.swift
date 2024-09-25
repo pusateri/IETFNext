@@ -34,7 +34,7 @@ extension EventStoreManager {
         try await dataStore.removeEvent(event)
     }
 
-    func setIETFNextCalendar() {
+    func setIETFNextCalendar() async {
         let calendars = dataStore.eventStore.calendars(for: .event)
 
         if (ietfNextCalendar == nil) {

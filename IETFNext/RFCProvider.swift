@@ -91,7 +91,8 @@ class RFCProvider {
         let string = String(decoding: data, as: UTF8.self)
         do {
             let xml = try XML.parse(string)
-            logger.debug("Received \(xml["rfc-index"].sequence.count) records.")
+            let num = xml["rfc-index"]["rfc-entry"].all?.count
+            logger.debug("Received \(num ?? 0) records.")
 
             logger.debug("Start importing rfc data to the store...")
             try await importRFCs(from: xml["rfc-index"])
