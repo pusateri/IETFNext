@@ -116,16 +116,18 @@ struct SessionListFilteredView: View {
     }
 
     var body: some View {
-        ScrollViewReader { scrollViewReader in
+        ScrollViewReader { scrollViewProxy in
             DynamicFetchRequestView(withMeeting: $selectedMeeting, searchText: searchText, filterMode: $sessionFilterMode) { results in
-
                 if let formatter = sessionFormatter {
                     let groupByDate = Dictionary(grouping: results, by: {
                         formatter.string(from: $0.start!)
                     })
                     List(selection: $selected) {
                         ForEach(groupByDate.keys.sorted(), id: \.self) { section in
-                            Section(header: Text(section).foregroundColor(.primary)) {
+                            Section(header:
+                                        Text(section.components(separatedBy: ":")[0])
+                                        .foregroundColor(.primary)
+                                    ) {
                                 ForEach(groupByDate[section]!, id: \.self) { session in
                                     if let session_group = session.group {
                                         SessionListRowView(session: session, group: session_group, timerangeFormatter: $timerangeFormatter)
@@ -133,11 +135,23 @@ struct SessionListFilteredView: View {
                                     }
                                 }
                             }
+                            .id(section)
                         }
                     }
                     .listStyle(.inset)
                     .searchable(text: $searchText, placement: .automatic, prompt: "Session name or Group acronym")
                     .disableAutocorrection(true)
+                    .overlay(alignment: .trailing) {
+                        VStack {
+                            ForEach(groupByDate.keys.sorted(), id: \.self) { section in
+                                Button(action: {
+                                    scrollViewProxy.scrollTo(section, anchor: .top)
+                                }) {
+                                    Text(section.components(separatedBy: ":")[1])
+                                }
+                            }
+                        }
+                    }
 #if !os(macOS)
                     .autocapitalization(.none)
                     .keyboardType(.alphabet)
@@ -196,7 +210,7 @@ struct SessionListFilteredView: View {
                     selected = fetchSession(session_id: Int32(session_id))
                     if let session = selected {
                         withAnimation {
-                            scrollViewReader.scrollTo(session, anchor: .center)
+                            scrollViewProxy.scrollTo(session, anchor: .center)
                         }
                     }
                 }

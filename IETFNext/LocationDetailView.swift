@@ -83,7 +83,7 @@ struct LocationDetailView: View {
                                 })
                                 List {
                                     ForEach(groupByDate.keys.sorted(), id: \.self) { section in
-                                        Section(header: Text(section).foregroundColor(.accentColor)) {
+                                        Section(header: Text(section.components(separatedBy: ":")[0]).foregroundColor(.accentColor)) {
                                             ForEach(groupByDate[section]!, id: \.self) { session in
                                                 VStack(alignment: .leading) {
                                                     HStack {

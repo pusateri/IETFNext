@@ -498,7 +498,7 @@ extension ContentView {
     private func buildSessionFormatter(meeting: Meeting?, useLocalTime: Bool) -> DateFormatter {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: Locale.current.identifier)
-        formatter.dateFormat = "yyyy-MM-dd EEEE"
+        formatter.dateFormat = "yyyy-MM-dd EEEE:EEE"
         formatter.calendar = Calendar(identifier: .iso8601)
         if useLocalTime {
             formatter.timeZone = TimeZone.current
