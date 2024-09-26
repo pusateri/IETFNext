@@ -30,9 +30,17 @@ struct SessionListRowView: View {
             }
             .buttonStyle(BorderlessButtonStyle())
             VStack(alignment: .leading) {
-                Text("\(session.name!) (\(group.acronym!))")
-                    .bold()
-                    .foregroundColor(.primary)
+                HStack {
+                    Text("\(session.name!) (\(group.acronym!))")
+                        .bold()
+                        .foregroundColor(.primary)
+                    if let loc = session.location {
+                        Spacer()
+                        Text("\(loc.level_name!)")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                    }
+                }
                 HStack {
                     if let formatter = timerangeFormatter {
                         Text("\(formatter.string(from: session.start!))-\(formatter.string(from: session.end!))")
