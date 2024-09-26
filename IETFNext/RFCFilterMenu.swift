@@ -14,6 +14,13 @@ struct RFCFilterMenu: View {
         Menu {
             Section("Filter") {
                 Button(action: {
+                    rfcFilterMode = .none
+                }) {
+                    Text(RFCFilterMode.none.label)
+                    Image(systemName: RFCFilterMode.none.image)
+                }
+                .keyboardShortcut(nil)
+                Button(action: {
                     rfcFilterMode = .bcp
                 }) {
                     Text(RFCFilterMode.bcp.label)
@@ -32,13 +39,6 @@ struct RFCFilterMenu: View {
                 }) {
                     Text(RFCFilterMode.std.label)
                     Image(systemName: RFCFilterMode.std.image)
-                }
-                .keyboardShortcut(nil)
-                Button(action: {
-                    rfcFilterMode = .none
-                }) {
-                    Text(RFCFilterMode.none.label)
-                    Image(systemName: RFCFilterMode.none.image)
                 }
                 .keyboardShortcut(nil)
             }

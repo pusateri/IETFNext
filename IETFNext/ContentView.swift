@@ -37,8 +37,10 @@ enum RFCFilterMode: String, CompoundEnum {
 
     var image: String {
         switch(self) {
-        case .bcp, .std, .fyi, .none:
+        case .bcp, .std, .fyi:
             return "doc.plaintext"
+        case .none:
+            return "circle.slash"
         }
     }
     var label: String {
@@ -50,7 +52,7 @@ enum RFCFilterMode: String, CompoundEnum {
         case .std:
             return "Show STDs"
         case .none:
-            return "No Filter (All RFCs)"
+            return "Clear Filter"
         }
     }
     var short: String {
@@ -111,7 +113,7 @@ enum SessionFilterMode: String, CompoundEnum {
         case .bofs:
             return "Show BoFs"
         case .none:
-            return "No Filter"
+            return "Clear Filter"
         case .area_art:
             return "ART Area"
         case .area_gen:

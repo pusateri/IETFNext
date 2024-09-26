@@ -14,6 +14,12 @@ struct SessionFilterMenu: View {
         Menu {
             Section("Common Filters") {
                 Button(action: {
+                    sessionFilterMode = .none
+                }) {
+                    Text(SessionFilterMode.none.label)
+                    Image(systemName: SessionFilterMode.none.image)
+                }
+                Button(action: {
                     sessionFilterMode = .favorites
                 }) {
                     Text(SessionFilterMode.favorites.label)
@@ -36,12 +42,6 @@ struct SessionFilterMenu: View {
                 }) {
                     Text(SessionFilterMode.today.label)
                     Image(systemName: SessionFilterMode.today.image)
-                }
-                Button(action: {
-                    sessionFilterMode = .none
-                }) {
-                    Text(SessionFilterMode.none.label)
-                    Image(systemName: SessionFilterMode.none.image)
                 }
             }
             Section("Filter by Area") {
