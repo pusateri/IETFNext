@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pusateri/GraphvizFrameworkPkg",
       "state" : {
-        "revision" : "4a6121afdaabf8b5748b653225fa567f9a22969e",
-        "version" : "0.2.1"
+        "revision" : "0d309fd6f8517ba179570175073c227a71565b0e",
+        "version" : "0.2.2"
       }
     },
     {
