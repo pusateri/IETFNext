@@ -42,19 +42,19 @@ extension DynamicFetchRequestView where T : RFC {
                         search_criteria += " AND "
                     }
                     search_criteria += "bcp != nil"
-                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.bcp, ascending: true)]
+                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.bcp, ascending: false)]
                 } else if listMode == .fyi {
                     if !search_criteria.isEmpty {
                         search_criteria += " AND "
                     }
                     search_criteria += "fyi != nil"
-                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.fyi, ascending: true)]
+                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.fyi, ascending: false)]
                 } else if listMode == .std {
                     if !search_criteria.isEmpty {
                         search_criteria += " AND "
                     }
                     search_criteria += "std != nil"
-                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.std, ascending: true)]
+                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.std, ascending: false)]
                 } else {
                     sortDescriptors = [NSSortDescriptor(keyPath: \RFC.name, ascending: false)]
                 }
