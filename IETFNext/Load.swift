@@ -111,7 +111,7 @@ struct JSONPresentation: Decodable {
     let name: String
     let order: Int32
     let resource_uri: String
-    let rev: String
+    let rev: String?
     let title: String
 }
 
@@ -988,7 +988,9 @@ private func updatePresentation(context: NSManagedObjectContext, presentation: J
     if p.title != presentation.title {
         p.title = presentation.title
     }
-    if p.rev != presentation.rev {
+    if presentation.rev == nil {
+        p.rev = "00"
+    } else if p.rev != presentation.rev {
         p.rev = presentation.rev
     }
 
