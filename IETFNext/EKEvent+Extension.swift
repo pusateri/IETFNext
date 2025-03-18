@@ -17,5 +17,8 @@ extension EKEvent {
         self.startDate = session.start
         self.endDate = session.end
         self.timeZone = TimeZone.gmt
+        if let loc = session.location {
+            self.location = loc.name
+        }
     }
 }
