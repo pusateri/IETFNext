@@ -80,6 +80,9 @@ extension DynamicFetchRequestView where T : Session {
 }
 
 struct SessionListFilteredView: View {
+    /// Horizontal space reserved at the end of each row for the floating day-index capsule.
+    private static let dayIndexWidth: CGFloat = 48
+
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Binding var selectedMeeting: Meeting?
@@ -132,6 +135,8 @@ struct SessionListFilteredView: View {
                                 ForEach(groupByDate[section]!, id: \.self) { session in
                                     if let session_group = session.group {
                                         SessionListRowView(session: session, group: session_group, timerangeFormatter: $timerangeFormatter)
+                                            // Leave room so the floating day index doesn't cover room names.
+                                            .padding(.trailing, Self.dayIndexWidth)
                                             .listRowSeparator(.visible)
                                     }
                                 }
@@ -152,6 +157,9 @@ struct SessionListFilteredView: View {
                                 }) {
                                     Text(section.components(separatedBy: ":")[1])
                                 }
+                                // Plain text buttons; on macOS the default bordered style drew a
+                                // separate bezel for each day inside the glass capsule.
+                                .buttonStyle(.borderless)
                                 .accessibilityLabel("Jump to \(section.components(separatedBy: ":")[0])")
                             }
                         }

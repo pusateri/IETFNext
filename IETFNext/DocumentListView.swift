@@ -78,6 +78,8 @@ struct DocumentListView: View {
                 }
                 .listStyle(.inset)
             }
+            // A navigation title shows in the sheet on macOS; the principal item below doesn't.
+            .navigationTitle(wg)
 #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
 #endif
@@ -87,11 +89,13 @@ struct DocumentListView: View {
                         dismiss()
                     }
                 }
+#if !os(macOS)
                 ToolbarItem(placement: .principal) {
                     Text(wg)
                         .foregroundColor(.primary)
                         .font(.headline)
                 }
+#endif
             }
 #if os(macOS)
             .frame(width: 600, height: 620)

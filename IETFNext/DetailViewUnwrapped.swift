@@ -173,10 +173,9 @@ struct DetailViewUnwrapped: View {
             }
         }
         .sheet(isPresented: $showingDocuments) {
+            // DocumentListView sizes itself on macOS. The old 740pt frame here was taller than the
+            // 700pt minimum window height, pushing the sheet's Cancel button off-screen.
             DocumentListView(wg:group.acronym!, urlString:$draftURL, titleString:$draftTitle, kind:$kind)
-#if os(macOS)
-            .frame(width: 600, height: 740)
-#endif
         }
         .onChange(of: group) { newValue in
             // TODO: slides are combined into the group and all slides are shown for all sessions of group

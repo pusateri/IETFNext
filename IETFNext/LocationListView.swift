@@ -89,11 +89,15 @@ struct LocationListView: View {
             ToolbarItem(placement: .navigation) {
                 if let meeting = selectedMeeting {
                     if let venue = meeting.venue_name {
-                        VStack {
+                        // One line: the compact window toolbar clipped a stacked two-line title.
+                        HStack(spacing: 6) {
                             Text("Rooms")
                                 .font(.headline)
                             Text(venue)
                                 .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
                         }
                     }
                 }
