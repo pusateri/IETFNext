@@ -8,13 +8,15 @@
 import Foundation
 import CoreData
 import UniformTypeIdentifiers
+import Observation
 
 
 @MainActor
-class DownloadViewModel: NSObject, ObservableObject {
-    @Published private(set) var isBusy = false
-    @Published var download: Download? = nil
-    @Published private(set) var error: String? = nil
+@Observable
+final class DownloadViewModel {
+    private(set) var isBusy = false
+    var download: Download? = nil
+    private(set) var error: String? = nil
 
     // This should only be called if there's no Download state for the url
     // TODO: deal with an agenda changing from .md to .txt to .html (save and check Etag)

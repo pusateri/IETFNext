@@ -10,7 +10,7 @@ import SwiftUI
 
 struct SessionListRowView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var storeManager: EventStoreManager
+    @Environment(EventStoreManager.self) private var storeManager
     @ObservedObject var session: Session
     @ObservedObject var group: Group
     @Binding var timerangeFormatter: DateFormatter?

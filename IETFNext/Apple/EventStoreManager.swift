@@ -6,17 +6,21 @@ The data model for the app.
 */
 
 import EventKit
+import Observation
 
 @MainActor
-class EventStoreManager: ObservableObject {
+@Observable
+final class EventStoreManager {
     /// Contains fetched events when the app receives a full-access authorization status.
-    @Published var events: [EKEvent]
+    var events: [EKEvent]
     
     /// Specifies the authorization status for the app.
-    @Published var authorizationStatus: EKAuthorizationStatus
+    var authorizationStatus: EKAuthorizationStatus
     
     let dataStore: EventDataStore
-    var ietfNextCalendar: EKCalendar?
+
+    /// Cached calendar used for favorites; not displayed, so changes don't need to invalidate views.
+    @ObservationIgnored var ietfNextCalendar: EKCalendar?
 
     init(store: EventDataStore = EventDataStore()) {
         self.dataStore = store

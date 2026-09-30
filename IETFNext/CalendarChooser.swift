@@ -20,7 +20,7 @@ struct CalendarChooser: UIViewControllerRepresentable {
     typealias UIViewControllerType = UINavigationController
     
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var storeManager: EventStoreManager
+    @Environment(EventStoreManager.self) private var storeManager
     
     /// Keeps track of the calendar the user selected in the calendar chooser view controller.
     @Binding var calendar: EKCalendar?

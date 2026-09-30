@@ -82,7 +82,7 @@ struct RFCListView: View {
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     @State private var searchText = ""
-    @StateObject var model: DownloadViewModel = DownloadViewModel()
+    @State private var model = DownloadViewModel()
 
     var body: some View {
         ScrollViewReader { scrollViewReader in

@@ -226,8 +226,10 @@ extension Choice {
     ]
 }
 
-private class ChoiceViewModel: ObservableObject {
-    @Published var sections: [SectionChoice] = Choice.sectionChoices
+@MainActor
+@Observable
+private final class ChoiceViewModel {
+    var sections: [SectionChoice] = Choice.sectionChoices
 }
 
 enum LocationDetailMode: String {
@@ -287,8 +289,8 @@ struct ContentView: View {
         animation: .default)
     private var rfcs: FetchedResults<RFC>
 
-    @StateObject fileprivate var viewModel = ChoiceViewModel()
-    @StateObject private var storeManager: EventStoreManager = EventStoreManager()
+    @State fileprivate var viewModel = ChoiceViewModel()
+    @State private var storeManager = EventStoreManager()
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
@@ -484,7 +486,7 @@ struct ContentView: View {
                 rfcIndexLastTime = String(now)
             }
         }
-        .environmentObject(storeManager)
+        .environment(storeManager)
         /*
          * TODO: deal with deleted calendar entries
         .task {

@@ -16,7 +16,8 @@ struct DetailViewUnwrapped: View {
 
     @FetchRequest<Presentation> var presentationRequest: FetchedResults<Presentation>
     @FetchRequest<Document> var charterRequest: FetchedResults<Document>
-    @StateObject var meeting: Meeting
+    // Core Data objects are passed in, not owned, so observe them rather than using @StateObject.
+    @ObservedObject var meeting: Meeting
     @ObservedObject var group: Group
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
@@ -27,12 +28,12 @@ struct DetailViewUnwrapped: View {
     @State var draftURL: String? = nil
     @State var draftTitle: String? = nil
     @State var kind: DocumentKind = .draft
-    @StateObject var model: DownloadViewModel = DownloadViewModel()
+    @State private var model = DownloadViewModel()
 
     init(meeting: Meeting, group: Group, columnVisibility: Binding<NavigationSplitViewVisibility>) {
 
-        self._meeting = StateObject(wrappedValue: meeting)
-        self.group = group //StateObject(wrappedValue: group)
+        self.meeting = meeting
+        self.group = group
 
         self._columnVisibility = columnVisibility
 
