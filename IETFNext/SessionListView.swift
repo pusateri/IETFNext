@@ -123,25 +123,31 @@ struct SessionListFilteredView: View {
         ScrollViewReader { scrollViewProxy in
             DynamicFetchRequestView(withMeeting: $selectedMeeting, searchText: searchText, filterMode: $sessionFilterMode) { results in
                 if let formatter = sessionFormatter {
-                    let groupByDate = Dictionary(grouping: results, by: {
-                        formatter.string(from: $0.start!)
-                    })
+                    // Grouped once per render and shared by the list and the day index.
+                    // Sessions without a group are dropped here rather than producing empty rows.
+                    let days = SessionDaySection.sections(from: results, formatter: formatter, requireGroup: true)
                     List(selection: $selected) {
-                        ForEach(groupByDate.keys.sorted(), id: \.self) { section in
+                        ForEach(days) { day in
                             Section(header:
-                                        Text(section.components(separatedBy: ":")[0])
+                                        Text(day.title)
                                         .foregroundColor(.primary)
                                     ) {
-                                ForEach(groupByDate[section]!, id: \.self) { session in
-                                    if let session_group = session.group {
-                                        SessionListRowView(session: session, group: session_group, timerangeFormatter: $timerangeFormatter)
-                                            // Leave room so the floating day index doesn't cover room names.
-                                            .padding(.trailing, Self.dayIndexWidth)
-                                            .listRowSeparator(.visible)
+                                // `id: \.self` is the managed object's identity, and it doubles as
+                                // the selection tag, which must be a `Session` to match `selected`.
+                                ForEach(day.sessions, id: \.self) { session in
+                                    // Single-root row: the VStack keeps the row unary so List can
+                                    // use its fast path (a bare `if` made each row 0 or 1 views).
+                                    VStack {
+                                        if let session_group = session.group {
+                                            SessionListRowView(session: session, group: session_group, timerangeFormatter: $timerangeFormatter)
+                                        }
                                     }
+                                    // Leave room so the floating day index doesn't cover room names.
+                                    .padding(.trailing, Self.dayIndexWidth)
+                                    .listRowSeparator(.visible)
                                 }
                             }
-                            .id(section)
+                            .id(day.id)
                         }
                     }
                     .listStyle(.inset)
@@ -151,16 +157,16 @@ struct SessionListFilteredView: View {
                         // Custom day index floating over the list: a Liquid Glass surface keeps
                         // it legible over row content.
                         VStack {
-                            ForEach(groupByDate.keys.sorted(), id: \.self) { section in
+                            ForEach(days) { day in
                                 Button(action: {
-                                    scrollViewProxy.scrollTo(section, anchor: .top)
+                                    scrollViewProxy.scrollTo(day.id, anchor: .top)
                                 }) {
-                                    Text(section.components(separatedBy: ":")[1])
+                                    Text(day.shortDay)
                                 }
                                 // Plain text buttons; on macOS the default bordered style drew a
                                 // separate bezel for each day inside the glass capsule.
                                 .buttonStyle(.borderless)
-                                .accessibilityLabel("Jump to \(section.components(separatedBy: ":")[0])")
+                                .accessibilityLabel("Jump to \(day.title)")
                             }
                         }
                         .padding(.vertical, 8)

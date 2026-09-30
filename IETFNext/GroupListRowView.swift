@@ -44,3 +44,12 @@ struct GroupListRowView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview("Group row") {
+    List {
+        GroupListRowView(group: PreviewData.group)
+    }
+    .environment(\.managedObjectContext, PreviewData.context)
+}
+#endif

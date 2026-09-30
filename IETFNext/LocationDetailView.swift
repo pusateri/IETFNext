@@ -81,13 +81,11 @@ struct LocationDetailView: View {
                         DynamicFetchRequestView(selectedMeeting: selectedMeeting, selectedLocation: selectedLocation) { results in
 
                             if let formatter = sessionFormatter {
-                                let groupByDate = Dictionary(grouping: results, by: {
-                                    formatter.string(from: $0.start!)
-                                })
                                 List {
-                                    ForEach(groupByDate.keys.sorted(), id: \.self) { section in
-                                        Section(header: Text(section.components(separatedBy: ":")[0]).foregroundColor(.accentColor)) {
-                                            ForEach(groupByDate[section]!, id: \.self) { session in
+                                    // Grouped once per render (see SessionDaySection).
+                                    ForEach(SessionDaySection.sections(from: results, formatter: formatter)) { day in
+                                        Section(header: Text(day.title).foregroundColor(.accentColor)) {
+                                            ForEach(day.sessions, id: \.self) { session in
                                                 VStack(alignment: .leading) {
                                                     HStack {
                                                         if let formatter = timerangeFormatter {

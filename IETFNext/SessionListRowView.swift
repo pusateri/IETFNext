@@ -45,6 +45,9 @@ struct SessionListRowView: View {
                     if let formatter = timerangeFormatter {
                         Text("\(formatter.string(from: session.start!))-\(formatter.string(from: session.end!))")
                             .foregroundColor(.primary)
+                            // Keep "0900-1100" on one line in narrow columns; the room name wraps instead.
+                            .lineLimit(1)
+                            .fixedSize(horizontal: true, vertical: false)
                     }
                     Spacer()
                     if let loc = session.location {
@@ -69,4 +72,15 @@ struct SessionListRowView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview("Session row") {
+    @Previewable @State var formatter: DateFormatter? = PreviewData.timerangeFormatter
+    List {
+        SessionListRowView(session: PreviewData.session, group: PreviewData.group, timerangeFormatter: $formatter)
+    }
+    .environment(\.managedObjectContext, PreviewData.context)
+    .environment(EventStoreManager())
+}
+#endif
 

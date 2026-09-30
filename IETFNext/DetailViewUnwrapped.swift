@@ -292,7 +292,7 @@ extension DetailViewUnwrapped {
 
     private var slidesMenu: some View {
         Menu {
-            ForEach(presentationRequest, id: \.self) { p in
+            ForEach(presentationRequest) { p in
                 Button(action: {
                     let urlString = "https://www.ietf.org/proceedings/\(meeting.number!)/slides/\(p.name!)-\(p.rev!).pdf"
                     if let url = URL(string: urlString) {

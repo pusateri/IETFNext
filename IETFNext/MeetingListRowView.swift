@@ -32,3 +32,11 @@ struct MeetingListRowView: View {
     }
 }
 
+#if DEBUG
+#Preview("Meeting row") {
+    List {
+        MeetingListRowView(meeting: PreviewData.meeting)
+    }
+}
+#endif
+

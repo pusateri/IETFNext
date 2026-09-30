@@ -232,6 +232,36 @@ private final class ChoiceViewModel {
     var sections: [SectionChoice] = Choice.sectionChoices
 }
 
+/// Count beside an RFC-type sidebar row. Each count owns its fetch and filters in the store,
+/// so ContentView no longer holds every RFC or re-scans ~10k of them three times each time it
+/// re-renders (which is on every selection change). Only this view updates when RFCs change.
+private struct RFCCountText: View {
+    @FetchRequest private var rfcs: FetchedResults<RFC>
+
+    init(predicate: NSPredicate?) {
+        _rfcs = FetchRequest(
+            sortDescriptors: [NSSortDescriptor(keyPath: \RFC.name, ascending: false)],
+            predicate: predicate
+        )
+    }
+
+    var body: some View {
+        Text("\(rfcs.count)")
+            .foregroundColor(.secondary)
+    }
+}
+
+/// Count beside the Downloads sidebar row; see `RFCCountText`.
+private struct DownloadCountText: View {
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Download.basename, ascending: true)])
+    private var downloads: FetchedResults<Download>
+
+    var body: some View {
+        Text("\(downloads.count)")
+            .foregroundColor(.secondary)
+    }
+}
+
 enum LocationDetailMode: String {
     case location
     case none
@@ -279,16 +309,6 @@ struct ContentView: View {
             Text("IETF")
         }
     }
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Download.basename, ascending: true)],
-        animation: .default)
-    private var downloads: FetchedResults<Download>
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \RFC.name, ascending: false)],
-        animation: .default)
-    private var rfcs: FetchedResults<RFC>
-
     @State fileprivate var viewModel = ChoiceViewModel()
     @State private var storeManager = EventStoreManager()
 
@@ -297,7 +317,7 @@ struct ContentView: View {
             List(viewModel.sections, selection: $listSelection) { section in
                 if section.id == "IETF" {
                     Section(header: first_header) {
-                        ForEach(section.choices, id:\.self) { choice in
+                        ForEach(section.choices) { choice in
                             NavigationLink(value: choice.id) {
                                 Label {
                                     Text(choice.text)
@@ -310,7 +330,7 @@ struct ContentView: View {
                     }
                 } else {
                     Section(header: Text(section.id)) {
-                        ForEach(section.choices, id:\.self) { choice in
+                        ForEach(section.choices) { choice in
                             NavigationLink(value: choice.id) {
                                 Label {
                                     HStack {
@@ -319,20 +339,15 @@ struct ContentView: View {
                                         Spacer()
                                         switch(choice.id) {
                                         case .download:
-                                            Text("\(downloads.count)")
-                                                .foregroundColor(.secondary)
+                                            DownloadCountText()
                                         case .rfc:
-                                            Text("\(rfcs.count)")
-                                                .foregroundColor(.secondary)
+                                            RFCCountText(predicate: nil)
                                         case .bcp:
-                                            Text("\(rfcs.compactMap { $0.bcp }.count)")
-                                                .foregroundColor(.secondary)
+                                            RFCCountText(predicate: NSPredicate(format: "bcp != nil"))
                                         case .fyi:
-                                            Text("\(rfcs.compactMap { $0.fyi }.count)")
-                                                .foregroundColor(.secondary)
+                                            RFCCountText(predicate: NSPredicate(format: "fyi != nil"))
                                         case .std:
-                                            Text("\(rfcs.compactMap { $0.std }.count)")
-                                                .foregroundColor(.secondary)
+                                            RFCCountText(predicate: NSPredicate(format: "std != nil"))
                                         default:
                                             Text("")
                                         }
