@@ -59,7 +59,7 @@ struct RFCDetailView: View {
             }
 #if !os(macOS)
             if hSizeClass == .regular {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
                         switch (columnVisibility) {
                             case .detailOnly:

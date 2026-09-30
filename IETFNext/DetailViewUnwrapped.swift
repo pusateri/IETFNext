@@ -11,7 +11,6 @@ import CoreData
 struct DetailViewUnwrapped: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.scenePhase) var scenePhase
-    @Environment(\.presentationMode) var presentation
     @Environment(\.horizontalSizeClass) var sizeClass
 
     @FetchRequest<Presentation> var presentationRequest: FetchedResults<Presentation>
@@ -151,178 +150,26 @@ struct DetailViewUnwrapped: View {
 
     var body: some View {
         WebView(download:$model.download)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text(banner).bold()
-            }
+        .navigationTitle(banner)
 #if !os(macOS)
-            if sizeClass == .regular {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        switch (columnVisibility) {
-                            case .detailOnly:
-                                withAnimation {
-                                    columnVisibility = .doubleColumn
-                                }
-
-                            default:
-                                withAnimation {
-                                    columnVisibility = .detailOnly
-                                }
-                        }
-                    }) {
-                        switch (columnVisibility) {
-                            case .detailOnly:
-                                Label("Expand", systemImage: "arrow.down.right.and.arrow.up.left")
-                            default:
-                                Label("Contract", systemImage: "arrow.up.left.and.arrow.down.right")
-                        }
-                    }
-                }
-            }
+        .navigationBarTitleDisplayMode(.inline)
 #endif
-            ToolbarItemGroup {
-                Spacer()
-                Button(action: {
-                    group.favorite.toggle()
-                    saveFavorite(group: group)
-                }) {
-                    Image(systemName: group.favorite == true ? "star.fill" : "star")
-                        .foregroundColor(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xf6c844))
-#if os(macOS)
-                        .overlay {
-                            Image(systemName: "star")
-                                .imageScale(.large)
-                                .foregroundColor(.black)
-                        }
-#endif
-                }
-                .buttonStyle(BorderlessButtonStyle())
-
-                Menu {
-                    ForEach(presentationRequest, id: \.self) { p in
-                        Button(action: {
-                            let urlString = "https://www.ietf.org/proceedings/\(meeting.number!)/slides/\(p.name!)-\(p.rev!).pdf"
-                            if let url = URL(string: urlString) {
-                                model.download = fetchDownload(context: viewContext, kind:.presentation, url:url)
-                                if model.download == nil {
-                                    model.startDownload(context:viewContext, url:url, group:group, kind:.presentation, title: p.title)
-                                }
-                            }
-                        }) {
-                            Text(p.title!)
-                            Image(systemName: "square.stack")
-                        }
-                    }
-                }
-                label: {
-                    Label("Slides", systemImage: "rectangle.on.rectangle.angled")
-                }
-
-                Button(action: {
-                    showingDocuments.toggle()
-                }) {
-                    Label("Documents", systemImage: "doc")
-                }
-
-                Menu {
-                    ForEach(agendas) { agenda in
-                        Button(action: {
-                            model.download = fetchDownload(context: viewContext, kind:.agenda, url:agenda.url)
-                            if model.download == nil {
-                                model.startDownload(context:viewContext, url: agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
-                            }
-                        }) {
-                            Text("\(agenda.desc)")
-                            Image(systemName: "list.bullet.clipboard")
-                        }
-                    }
-                    Button(action: {
-                        // TODO: Should be only one minutes for all sessions, but check on this
-                        if let session = sessionsForGroup?.first {
-                            if let minutes = session.minutes {
-                                model.download = fetchDownload(context: viewContext, kind:.minutes, url:minutes)
-                                if model.download == nil {
-                                    model.startDownload(context:viewContext, url: minutes, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
-                                }
-                            }
-                        }
-                    }) {
-                        Text("View Minutes")
-                        Image(systemName: "clock")
-                    }
-                    .disabled(sessionsForGroup?.first?.minutes == nil)
-                    ForEach(sessionsForGroup ?? []) { session in
-                        Button(action: {
-                            if let url = session.recording {
-#if os(macOS)
-                                if let youtubeID = url.host {
-                                    if let youtube = URL(string: "https://www.youtube.com/embed/\(youtubeID)") {
-                                        NSWorkspace.shared.open(youtube)
-                                    }
-                                }
-#else
-                                if UIApplication.shared.canOpenURL(url) {
-                                    UIApplication.shared.open(url)
-                                } else {
-                                    if let youtubeID = url.host {
-                                        if let youtube = URL(string: "https://www.youtube.com/embed/\(youtubeID)") {
-                                            UIApplication.shared.open(youtube)
-                                        }
-                                    }
-                                }
-#endif
-                            }
-                        }) {
-                            Text("View Recording\(recordingSuffix(session:session))")
-                            Image(systemName: "play")
-                        }
-                        .disabled(session.recording == nil)
-                    }
-                    Button(action: {
-                        if let rev = charterRequest.first?.rev {
-                            let urlString = "https://www.ietf.org/charter/charter-ietf-\(group.acronym!)-\(rev).txt"
-                            if let url = URL(string: urlString) {
-                                model.download = fetchDownload(context: viewContext, kind:.charter, url:url)
-                                if model.download == nil {
-                                    model.startDownload(context:viewContext, url:url, group:group, kind:.charter, title: "\(group.acronym!.uppercased()) Charter")
-                                }
-                            }
-                        }
-                    }) {
-                        if let rev = charterRequest.first?.rev {
-                            Text("View Charter (v\(rev))")
-                        } else {
-                            Text("View Charter")
-                        }
-                        Image(systemName: "pencil")
-                    }
-                    .disabled(charterRequest.first == nil)
-                    Button(action: {
-                        var url: URL? = nil
-                        // rewrite acronym for some working groups mailing lists
-                        if group.acronym! == "httpbis" {
-                            url = URL(string: "https://lists.w3.org/Archives/Public/ietf-http-wg/")
-                        } else if group.acronym! == "6man" {
-                            url = URL(string: "https://mailarchive.ietf.org/arch/browse/ipv6/")
-                        } else {
-                            url = URL(string: "https://mailarchive.ietf.org/arch/browse/\(group.acronym!)/")
-                        }
-                        if let url = url {
-#if os(macOS)
-                            NSWorkspace.shared.open(url)
-#else
-                            UIApplication.shared.open(url)
-#endif
-                        }
-                    }) {
-                        Text("Mailing List Archive")
-                        Image(systemName: "envelope")
-                    }
-                }
-                label: {
-                    Label("More", systemImage: "ellipsis.circle")
-                }
+        .toolbar {
+            if #available(iOS 27, *) {
+                leadingToolbarItems
+                // If the bar runs out of room, overflow Slides and Documents first and keep
+                // Favorite and More. (On iPhone 17 Pro the system truncates a long title
+                // before overflowing any of these, so this doesn't by itself free title space.)
+                ToolbarItem { favoriteButton }
+                    .visibilityPriority(.high)
+                ToolbarItem { slidesMenu }
+                    .visibilityPriority(.low)
+                ToolbarItem { documentsButton }
+                    .visibilityPriority(.low)
+                ToolbarItem { moreMenu }
+                    .visibilityPriority(.high)
+            } else {
+                legacyToolbarItems
             }
         }
         .sheet(isPresented: $showingDocuments) {
@@ -367,8 +214,211 @@ struct DetailViewUnwrapped: View {
             updateFor(group: group)
             await loadGroupMetadata(group: group)
         }
-        .onDisappear {
-            model.cancelDownload()
+        // Downloads are not cancelled on disappear: on iPhone the collapsed split view reuses
+        // this view across pushes, and the disappear from popping the previous group can
+        // arrive after the next group's download has started, silently cancelling it.
+        // The model still cancels an older download when a newer one is requested.
+    }
+}
+
+// MARK: - Toolbar
+
+extension DetailViewUnwrapped {
+    /// Items shared by both toolbar layouts.
+    @ToolbarContentBuilder
+    private var leadingToolbarItems: some ToolbarContent {
+#if os(macOS)
+        // The macOS window toolbar hides the window title, so show the group name here.
+        ToolbarItem(placement: .principal) {
+            Text(banner).bold()
+        }
+#else
+        if sizeClass == .regular {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: {
+                    switch (columnVisibility) {
+                        case .detailOnly:
+                            withAnimation {
+                                columnVisibility = .doubleColumn
+                            }
+
+                        default:
+                            withAnimation {
+                                columnVisibility = .detailOnly
+                            }
+                    }
+                }) {
+                    switch (columnVisibility) {
+                        case .detailOnly:
+                            Label("Expand", systemImage: "arrow.down.right.and.arrow.up.left")
+                        default:
+                            Label("Contract", systemImage: "arrow.up.left.and.arrow.down.right")
+                    }
+                }
+            }
+        }
+#endif
+    }
+
+    /// Toolbar for OS versions without `visibilityPriority` (iOS 26.x).
+    @ToolbarContentBuilder
+    private var legacyToolbarItems: some ToolbarContent {
+        leadingToolbarItems
+        ToolbarItemGroup {
+            favoriteButton
+            slidesMenu
+            documentsButton
+            moreMenu
+        }
+    }
+
+    private var favoriteButton: some View {
+        Button(action: {
+            group.favorite.toggle()
+            saveFavorite(group: group)
+        }) {
+            Image(systemName: group.favorite == true ? "star.fill" : "star")
+                .foregroundColor(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xf6c844))
+#if os(macOS)
+                .overlay {
+                    Image(systemName: "star")
+                        .imageScale(.large)
+                        // Outline adapts to dark mode (was hardcoded black).
+                        .foregroundStyle(.primary)
+                }
+#endif
+        }
+        .buttonStyle(BorderlessButtonStyle())
+    }
+
+    private var slidesMenu: some View {
+        Menu {
+            ForEach(presentationRequest, id: \.self) { p in
+                Button(action: {
+                    let urlString = "https://www.ietf.org/proceedings/\(meeting.number!)/slides/\(p.name!)-\(p.rev!).pdf"
+                    if let url = URL(string: urlString) {
+                        model.download = fetchDownload(context: viewContext, kind:.presentation, url:url)
+                        if model.download == nil {
+                            model.startDownload(context:viewContext, url:url, group:group, kind:.presentation, title: p.title)
+                        }
+                    }
+                }) {
+                    Text(p.title!)
+                    Image(systemName: "square.stack")
+                }
+            }
+        }
+        label: {
+            Label("Slides", systemImage: "rectangle.on.rectangle.angled")
+        }
+    }
+
+    private var documentsButton: some View {
+        Button(action: {
+            showingDocuments.toggle()
+        }) {
+            Label("Documents", systemImage: "doc")
+        }
+    }
+
+    private var moreMenu: some View {
+        Menu {
+            ForEach(agendas) { agenda in
+                Button(action: {
+                    model.download = fetchDownload(context: viewContext, kind:.agenda, url:agenda.url)
+                    if model.download == nil {
+                        model.startDownload(context:viewContext, url: agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
+                    }
+                }) {
+                    Text("\(agenda.desc)")
+                    Image(systemName: "list.bullet.clipboard")
+                }
+            }
+            Button(action: {
+                // TODO: Should be only one minutes for all sessions, but check on this
+                if let session = sessionsForGroup?.first {
+                    if let minutes = session.minutes {
+                        model.download = fetchDownload(context: viewContext, kind:.minutes, url:minutes)
+                        if model.download == nil {
+                            model.startDownload(context:viewContext, url: minutes, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
+                        }
+                    }
+                }
+            }) {
+                Text("View Minutes")
+                Image(systemName: "clock")
+            }
+            .disabled(sessionsForGroup?.first?.minutes == nil)
+            ForEach(sessionsForGroup ?? []) { session in
+                Button(action: {
+                    if let url = session.recording {
+#if os(macOS)
+                        if let youtubeID = url.host {
+                            if let youtube = URL(string: "https://www.youtube.com/embed/\(youtubeID)") {
+                                NSWorkspace.shared.open(youtube)
+                            }
+                        }
+#else
+                        if UIApplication.shared.canOpenURL(url) {
+                            UIApplication.shared.open(url)
+                        } else {
+                            if let youtubeID = url.host {
+                                if let youtube = URL(string: "https://www.youtube.com/embed/\(youtubeID)") {
+                                    UIApplication.shared.open(youtube)
+                                }
+                            }
+                        }
+#endif
+                    }
+                }) {
+                    Text("View Recording\(recordingSuffix(session:session))")
+                    Image(systemName: "play")
+                }
+                .disabled(session.recording == nil)
+            }
+            Button(action: {
+                if let rev = charterRequest.first?.rev {
+                    let urlString = "https://www.ietf.org/charter/charter-ietf-\(group.acronym!)-\(rev).txt"
+                    if let url = URL(string: urlString) {
+                        model.download = fetchDownload(context: viewContext, kind:.charter, url:url)
+                        if model.download == nil {
+                            model.startDownload(context:viewContext, url:url, group:group, kind:.charter, title: "\(group.acronym!.uppercased()) Charter")
+                        }
+                    }
+                }
+            }) {
+                if let rev = charterRequest.first?.rev {
+                    Text("View Charter (v\(rev))")
+                } else {
+                    Text("View Charter")
+                }
+                Image(systemName: "pencil")
+            }
+            .disabled(charterRequest.first == nil)
+            Button(action: {
+                var url: URL? = nil
+                // rewrite acronym for some working groups mailing lists
+                if group.acronym! == "httpbis" {
+                    url = URL(string: "https://lists.w3.org/Archives/Public/ietf-http-wg/")
+                } else if group.acronym! == "6man" {
+                    url = URL(string: "https://mailarchive.ietf.org/arch/browse/ipv6/")
+                } else {
+                    url = URL(string: "https://mailarchive.ietf.org/arch/browse/\(group.acronym!)/")
+                }
+                if let url = url {
+#if os(macOS)
+                    NSWorkspace.shared.open(url)
+#else
+                    UIApplication.shared.open(url)
+#endif
+                }
+            }) {
+                Text("Mailing List Archive")
+                Image(systemName: "envelope")
+            }
+        }
+        label: {
+            Label("More", systemImage: "ellipsis.circle")
         }
     }
 }

@@ -58,7 +58,7 @@ struct MeetingListView: View {
     private var meetings: FetchedResults<Meeting>
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List(meetings, id: \.self, selection: $selectedMeeting) { mtg in
                 MeetingListRowView(meeting: mtg)
                     .listRowSeparator(.visible)

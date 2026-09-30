@@ -20,6 +20,7 @@ let venuePhotos = [
 
 struct LocationListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @SectionedFetchRequest<String, Location> var fetchRequest: SectionedFetchResults<String, Location>
     @Binding var selectedLocation: Location?
     @Binding var selectedMeeting: Meeting?
@@ -116,7 +117,8 @@ struct LocationListView: View {
 #if os(macOS)
                     LocationPhotoMenuView(selectedMeeting: $selectedMeeting, locationDetailMode: $locationDetailMode)
 #else
-                    if !UIDevice.isIPhone {
+                    // Photos show in the detail column, which isn't beside the list when collapsed.
+                    if horizontalSizeClass != .compact {
                         LocationPhotoMenuView(selectedMeeting: $selectedMeeting, locationDetailMode: $locationDetailMode)
                     }
 #endif
@@ -163,7 +165,8 @@ struct LocationListView: View {
                     Button(action: {
                         locationDetailMode = .weather
 #if !os(macOS)
-                        if UIDevice.isIPhone {
+                        // When collapsed there's no visible detail column, so present weather as a sheet.
+                        if horizontalSizeClass == .compact {
                             showingWeather.toggle()
                         }
 #endif

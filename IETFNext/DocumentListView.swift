@@ -46,7 +46,7 @@ struct DocumentListView: View {
     }
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(alignment: .center) {
                 Picker("", selection: $kind) {
                     Text("Active Drafts")

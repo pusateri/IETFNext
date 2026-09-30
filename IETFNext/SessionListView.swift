@@ -81,6 +81,7 @@ extension DynamicFetchRequestView where T : Session {
 
 struct SessionListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
     @Binding var sessionFilterMode: SessionFilterMode
@@ -142,6 +143,8 @@ struct SessionListFilteredView: View {
                     .searchable(text: $searchText, placement: .automatic, prompt: "Session name or Group acronym")
                     .disableAutocorrection(true)
                     .overlay(alignment: .trailing) {
+                        // Custom day index floating over the list: a Liquid Glass surface keeps
+                        // it legible over row content.
                         VStack {
                             ForEach(groupByDate.keys.sorted(), id: \.self) { section in
                                 Button(action: {
@@ -149,8 +152,14 @@ struct SessionListFilteredView: View {
                                 }) {
                                     Text(section.components(separatedBy: ":")[1])
                                 }
+                                .accessibilityLabel("Jump to \(section.components(separatedBy: ":")[0])")
                             }
                         }
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 6)
+                        .glassEffect(.regular.interactive(), in: .capsule)
+                        .padding(.trailing, 4)
+                        .accessibilityIdentifier("schedule.dayIndex")
                     }
 #if !os(macOS)
                     .autocapitalization(.none)
@@ -194,7 +203,9 @@ struct SessionListFilteredView: View {
                     donateActivity(session: session)
                 } else {
 #if !os(macOS)
-                    if UIDevice.isIPhone {
+                    // In a collapsed split view, backing out of the detail clears the selection;
+                    // forget the saved session too so it isn't re-selected on return.
+                    if horizontalSizeClass == .compact {
                         sessionID = nil
                     }
 #endif

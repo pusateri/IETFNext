@@ -31,6 +31,7 @@ struct LocationDetailView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Environment(\.verticalSizeClass) var vSizeClass
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     // Read-only inputs are passed by value so ContentView depends on them and the detail
     // column updates when a room is picked (see DetailView).
@@ -118,7 +119,8 @@ struct LocationDetailView: View {
                     }
                 }
             }
-            .background(colorScheme == .light ? .white : .black)
+            // System background adapts to light/dark and elevated contexts (was hardcoded white/black).
+            .background(.background)
     #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
     #endif
@@ -161,7 +163,8 @@ struct LocationDetailView: View {
             }
         case .weather:
 #if !os(macOS)
-            if UIDevice.isIPhone {
+            // When collapsed, LocationListView presents weather as a sheet instead.
+            if horizontalSizeClass == .compact {
                 EmptyView()
             } else {
                 if let meeting = selectedMeeting {

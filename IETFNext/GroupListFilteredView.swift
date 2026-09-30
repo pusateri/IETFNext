@@ -34,6 +34,7 @@ extension DynamicSectionedFetchRequestView where T : Group {
 
 struct GroupListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
@@ -106,7 +107,9 @@ struct GroupListFilteredView: View {
                     groupShort = group.acronym!
                 } else {
 #if !os(macOS)
-                    if UIDevice.isIPhone {
+                    // In a collapsed split view, backing out of the detail clears the selection;
+                    // forget the saved group too so it isn't re-selected on return.
+                    if horizontalSizeClass == .compact {
                         groupShort = nil
                     }
 #endif

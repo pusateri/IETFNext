@@ -22,6 +22,7 @@ private extension DateFormatter {
 
 
 struct RFCListRowView: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @ObservedObject var rfc: RFC
     @Binding var rfcFilterMode: RFCFilterMode
     var listMode: SidebarOption
@@ -97,7 +98,8 @@ struct RFCListRowView: View {
                             .foregroundColor(.secondary)
                         if rfc.branch {
 #if !os(macOS)
-                            if UIDevice.isIPhone {
+                            // When collapsed the graph would replace the list, so show a static badge.
+                            if horizontalSizeClass == .compact {
                                 Image(systemName: "arrow.triangle.pull")
                                     .font(Font.system(size: 24, weight: .bold))
                                     .foregroundColor(Color(hex: 0xf6c844))

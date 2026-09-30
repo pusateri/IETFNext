@@ -19,7 +19,7 @@ import SwiftUI
 struct CalendarChooser: UIViewControllerRepresentable {
     typealias UIViewControllerType = UINavigationController
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @Environment(EventStoreManager.self) private var storeManager
     
     /// Keeps track of the calendar the user selected in the calendar chooser view controller.
@@ -66,12 +66,12 @@ struct CalendarChooser: UIViewControllerRepresentable {
         /// The system calls this when the user taps Done in the UI. Save the user's choice.
         func calendarChooserDidFinish(_ calendarChooser: EKCalendarChooser) {
             parent.calendar = calendarChooser.selectedCalendars.first
-            parent.presentationMode.wrappedValue.dismiss()
+            parent.dismiss()
         }
         
         /// The system calls this when the user taps Cancel in the UI. Dismiss the calendar chooser.
         func calendarChooserDidCancel(_ calendarChooser: EKCalendarChooser) {
-            parent.presentationMode.wrappedValue.dismiss()
+            parent.dismiss()
         }
     }
 }
