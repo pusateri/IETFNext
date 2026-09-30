@@ -323,12 +323,7 @@ struct WeatherView: View {
                         Text("For the week of \(start, formatter: weekFormatter)")
                             .font(.subheadline)
                     }
-                    GroupBox (
-                        label:
-                            Label("  % Time at Temperature  " + tempUnits(), systemImage: "thermometer.sun")
-                                .font(.title3)
-                                .padding(.bottom)
-                    ) {
+                    GroupBox {
                         Chart {
                             let tfs = adjustTempFrequencies(h.temps)
                             ForEach(tfs, id: \.temp) { freq in
@@ -346,6 +341,10 @@ struct WeatherView: View {
                         .chartYScale(domain: 0...h.range.maxYPercent)
                         .frame(minWidth: 340, maxWidth: 760, minHeight: 160, maxHeight: 500, alignment: .center)
                         .padding(.bottom, 20)
+                    } label: {
+                        Label("  % Time at Temperature  " + tempUnits(), systemImage: "thermometer.sun")
+                                .font(.title3)
+                                .padding(.bottom)
                     }
                     .groupBoxStyle(PlainGroupBoxStyle())
                     .padding(.bottom, 10)

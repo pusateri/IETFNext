@@ -31,12 +31,8 @@ final class EventStoreManager {
         self.authorizationStatus = EKEventStore.authorizationStatus(for: .event)
     }
     
+    // The deployment target is iOS/macOS 26, so the pre-17 `.authorized` fallback branch was dead code.
     var isWriteOnlyOrFullAccessAuthorized: Bool {
-        if #available(iOS 17.0, macOS 14.0, *) {
-            return ((authorizationStatus == .writeOnly) || (authorizationStatus == .fullAccess))
-        } else {
-            // Fall back on earlier versions.
-            return authorizationStatus == .authorized
-        }
+        authorizationStatus == .writeOnly || authorizationStatus == .fullAccess
     }
 }

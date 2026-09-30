@@ -15,18 +15,18 @@ struct MeetingListRowView: View {
         VStack(alignment: .leading) {
             HStack {
                 Text("IETF \(meeting.number!)")
-                    .foregroundColor(.primary)
+                    .foregroundStyle(.primary)
                     .font(.title3.bold())
                 Spacer()
                 Text("\(meeting.date!)")
-                    .foregroundColor(.primary)
+                    .foregroundStyle(.primary)
             }
             HStack {
                 Text("\(meeting.city!)")
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                 Spacer()
                 Text("(\(meeting.time_zone!))")
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             }
         }
     }

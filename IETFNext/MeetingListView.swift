@@ -75,7 +75,7 @@ struct MeetingListView: View {
                     }
                 }
             }
-            .onChange(of: selectedMeeting) { newValue in
+            .onChange(of: selectedMeeting) { _, newValue in
                 if let meeting = newValue {
                     UserDefaults.standard.set(meeting.number!, forKey:"MeetingNumber")
                     // Meeting data is loaded by ContentView's `.task(id: selectedMeeting)`,

@@ -57,19 +57,21 @@ struct GroupListFilteredView: View {
         ScrollViewReader { scrollViewReader in
             DynamicSectionedFetchRequestView(withMeeting: $selectedMeeting, searchText: searchText, filterMode: $groupFilterMode) { results in
                 List(results, selection: $selectedGroup) { section in
-                    Section(header: Text(section.id).textCase(.uppercase).foregroundColor(.accentColor)) {
+                    Section {
                         ForEach(section, id: \.self) { group in
                             GroupListRowView(group:group)
                                 .listRowSeparator(.visible)
                         }
+                    } header: {
+                        Text(section.id).textCase(.uppercase).foregroundStyle(Color.accentColor)
                     }
                     .headerProminence(.increased)
                 }
                 .listStyle(.inset)
                 .searchable(text: $searchText, placement: .automatic, prompt: "Group acronym, name, or BOF")
-                .disableAutocorrection(true)
+                .autocorrectionDisabled()
 #if !os(macOS)
-                .autocapitalization(.none)
+                .textInputAutocapitalization(.never)
                 .keyboardType(.alphabet)
                 .navigationBarTitleDisplayMode(.inline)
 #endif
@@ -95,14 +97,14 @@ struct GroupListFilteredView: View {
                             if let city = meeting.city {
                                 Text("IETF \(number) (\(city))")
                                     .font(.subheadline)
-                                    .foregroundColor(.accentColor)
+                                    .foregroundStyle(Color.accentColor)
                             }
                         }
                     }
                 }
 #endif
             }
-            .onChange(of: selectedGroup) { newValue in
+            .onChange(of: selectedGroup) { _, newValue in
                 if let group = newValue {
                     groupShort = group.acronym!
                 } else {

@@ -13,12 +13,12 @@ struct SessionListTitleView: View {
     var body: some View {
         VStack {
             Text("Schedule")
-                .foregroundColor(.primary)
+                .foregroundStyle(.primary)
                 .font(.headline)
             if sessionFilterMode != .none {
                 Text("\("Filter: \(sessionFilterMode.short)")")
                     .font(.footnote)
-                    .foregroundColor(.accentColor)
+                    .foregroundStyle(Color.accentColor)
             }
         }
     }

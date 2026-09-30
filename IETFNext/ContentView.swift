@@ -247,7 +247,7 @@ private struct RFCCountText: View {
 
     var body: some View {
         Text("\(rfcs.count)")
-            .foregroundColor(.secondary)
+            .foregroundStyle(.secondary)
     }
 }
 
@@ -258,7 +258,7 @@ private struct DownloadCountText: View {
 
     var body: some View {
         Text("\(downloads.count)")
-            .foregroundColor(.secondary)
+            .foregroundStyle(.secondary)
     }
 }
 
@@ -316,26 +316,28 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             List(viewModel.sections, selection: $listSelection) { section in
                 if section.id == "IETF" {
-                    Section(header: first_header) {
+                    Section {
                         ForEach(section.choices) { choice in
                             NavigationLink(value: choice.id) {
                                 Label {
                                     Text(choice.text)
-                                        .foregroundColor(.primary)
+                                        .foregroundStyle(.primary)
                                 } icon: {
                                     Image(systemName: choice.imageName)
                                 }
                             }
                         }
+                    } header: {
+                        first_header
                     }
                 } else {
-                    Section(header: Text(section.id)) {
+                    Section {
                         ForEach(section.choices) { choice in
                             NavigationLink(value: choice.id) {
                                 Label {
                                     HStack {
                                         Text(choice.text)
-                                            .foregroundColor(.primary)
+                                            .foregroundStyle(.primary)
                                         Spacer()
                                         switch(choice.id) {
                                         case .download:
@@ -357,6 +359,8 @@ struct ContentView: View {
                                 }
                             }
                         }
+                    } header: {
+                        Text(section.id)
                     }
                 }
             }
@@ -444,21 +448,21 @@ struct ContentView: View {
             CalendarChooser(calendar: $calendar)
 #endif
         }
-        .onChange(of: useLocalTime) { _ in
+        .onChange(of: useLocalTime) {
             sessionFormatter = buildSessionFormatter(meeting: selectedMeeting, useLocalTime: useLocalTime)
             timerangeFormatter = buildRangeFormatter(meeting: selectedMeeting, useLocalTime: useLocalTime)
             UserDefaults.standard.set(useLocalTime, forKey:"UseLocalTime")
         }
-        .onChange(of: selectedMeeting) { newValue in
+        .onChange(of: selectedMeeting) { _, newValue in
             sessionFormatter = buildSessionFormatter(meeting: newValue, useLocalTime: useLocalTime)
             timerangeFormatter = buildRangeFormatter(meeting: newValue, useLocalTime: useLocalTime)
         }
-        .onChange(of: listSelection) { newValue in
+        .onChange(of: listSelection) { _, newValue in
             if let ls = newValue {
                 detailSelection = ls
             }
         }
-        .onChange(of: menuSidebarOption) { newValue in
+        .onChange(of: menuSidebarOption) { _, newValue in
             detailSelection = newValue
         }
         .onAppear {

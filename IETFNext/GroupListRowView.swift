@@ -21,15 +21,17 @@ struct GroupListRowView: View {
             }) {
                 Image(systemName: group.favorite ? "star.fill" : "star")
                     .font(Font.system(size: 32, weight: .bold))
-                    .foregroundColor(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xf6c844))
+                    .foregroundStyle(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xf6c844))
             }
-            .buttonStyle(BorderlessButtonStyle())
+            .buttonStyle(.borderless)
+            .accessibilityLabel(group.favorite ? "Remove \(group.acronym ?? "group") from favorites" : "Add \(group.acronym ?? "group") to favorites")
+            .accessibilityIdentifier("group.favorite")
             VStack(alignment: .leading) {
                 Text(group.acronym!)
-                    .foregroundColor(.primary)
+                    .foregroundStyle(.primary)
                     .bold()
                 Text(group.name!)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             }
         }
     }

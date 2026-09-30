@@ -177,20 +177,20 @@ struct DownloadListView: View {
                         VStack(alignment: .leading) {
                             HStack {
                                 Text("\(download.title ?? download.group?.acronym ?? "Unknown")")
-                                    .foregroundColor(.primary)
+                                    .foregroundStyle(.primary)
                                 Spacer()
                                 Text(download.group?.acronym ?? "")
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                             }
                             .padding(.all, 2)
                             HStack {
                                 Text(download.filename ?? "path/absent")
                                     .font(.subheadline)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                                 Spacer()
                                 Text(sizeString(download.filesize))
                                     .font(.subheadline)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                             }
                             .padding(.all, 2)
                         }
@@ -203,14 +203,14 @@ struct DownloadListView: View {
                     HStack {
                         if section.id == "rfc" || section.id == "svg" {
                             Text(section.id.uppercased())
-                                .foregroundColor(.accentColor)
+                                .foregroundStyle(Color.accentColor)
                         } else {
                             Text(section.id.capitalized)
-                                .foregroundColor(.accentColor)
+                                .foregroundStyle(Color.accentColor)
                         }
                         Spacer()
                         Text("\(sizeString(section.sectionSize))")
-                            .foregroundColor(.accentColor)
+                            .foregroundStyle(Color.accentColor)
                             .font(.subheadline)
                     }
                 }
@@ -221,13 +221,13 @@ struct DownloadListView: View {
 #if os(macOS)
                 ToolbarItem(placement: .navigation) {
                     Text("Downloads")
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                         .font(.headline)
                 }
 #else
                 ToolbarItem(placement: .principal) {
                     Text("Downloads")
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                         .font(.headline)
                 }
                 ToolbarItem(placement: .primaryAction) {
@@ -236,7 +236,7 @@ struct DownloadListView: View {
                 ToolbarItem(placement: .bottomBar) {
                     Text("Total: \(sizeString(downloads.totalSize))")
                         .font(.subheadline)
-                        .foregroundColor(.accentColor)
+                        .foregroundStyle(Color.accentColor)
                 }
 #endif
             }

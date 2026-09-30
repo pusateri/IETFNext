@@ -58,26 +58,28 @@ struct LocationListView: View {
 
     var body: some View {
         List(fetchRequest, selection: $selectedLocation) { section in
-            Section(header: Text(section.id).foregroundColor(.accentColor)) {
+            Section {
                 ForEach(section, id: \.self) { location in
                     HStack {
                         Text(location.name ?? "Unknown")
-                            .foregroundColor(.primary)
+                            .foregroundStyle(.primary)
                             .font(.title3)
                             .padding(.all, 2)
                         Spacer()
                         if location.sessions?.count ?? 0 == 1 {
                             Text("1 Session")
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                                 .padding(.all, 2)
                         } else {
                             Text("\(location.sessions?.count ?? 0) Sessions")
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                                 .padding(.all, 2)
                         }
                     }
                     .listRowSeparator(.visible)
                 }
+            } header: {
+                Text(section.id).foregroundStyle(Color.accentColor)
             }
         }
         .listStyle(.inset)
@@ -192,7 +194,7 @@ struct LocationListView: View {
                         if let city = meeting.city {
                             Text("IETF \(number) (\(city))")
                                 .font(.subheadline)
-                                .foregroundColor(.accentColor)
+                                .foregroundStyle(Color.accentColor)
                         }
                     }
                 }
@@ -206,12 +208,12 @@ struct LocationListView: View {
                 Text("Please select Meeting in Sidebar")
             }
         }
-        .onChange(of: selectedMeeting) { newValue in
+        .onChange(of: selectedMeeting) { _, newValue in
             if let meeting = newValue {
                 fetchRequest.nsPredicate = NSPredicate(format: "meeting.number = %@", meeting.number!)
             }
         }
-        .onChange(of: selectedLocation) { newValue in
+        .onChange(of: selectedLocation) { _, newValue in
             if let _ = newValue {
                 locationDetailMode = .location
             }

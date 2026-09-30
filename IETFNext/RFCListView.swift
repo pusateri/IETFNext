@@ -100,9 +100,9 @@ struct RFCListView: View {
                 }
                 .listStyle(.inset)
                 .searchable(text: $searchText, placement: .automatic, prompt: "Number or Title string")
-                .disableAutocorrection(true)
+                .autocorrectionDisabled()
 #if !os(macOS)
-                .autocapitalization(.none)
+                .textInputAutocapitalization(.never)
                 .keyboardType(.alphabet)
                 .navigationBarTitleDisplayMode(.inline)
 #endif
@@ -128,19 +128,19 @@ struct RFCListView: View {
                 }
 #endif
             }
-            .onChange(of: selectedRFC) { newValue in
+            .onChange(of: selectedRFC) { _, newValue in
                 if let rfc = newValue {
                     longTitle = rfc.title
                     shortTitle = rfc.name2
                     loadRFC(doc: rfc)
                 }
             }
-            .onChange(of: model.download) { newValue in
+            .onChange(of: model.download) { _, newValue in
                 if let download = newValue {
                     selectedDownload = download
                 }
             }
-            .onChange(of: model.error) { newValue in
+            .onChange(of: model.error) { _, newValue in
                 if let err = newValue {
                     print("RFCListView model.error: \(err)")
                 }

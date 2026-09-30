@@ -41,68 +41,68 @@ struct RFCListRowView: View {
                         case .bcp:
                             Text("\(rfc.presentBCP)")
                                 .font(.title3.bold())
-                                .foregroundColor(.primary)
+                                .foregroundStyle(.primary)
                             Spacer()
                             Text("\(rfc.name2)")
                                 .font(.body)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                         case .fyi:
                             Text("\(rfc.presentFYI)")
                                 .font(.title3.bold())
-                                .foregroundColor(.primary)
+                                .foregroundStyle(.primary)
                             Spacer()
                             Text("\(rfc.name2)")
                                 .font(.body)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                         case .std:
                             Text("\(rfc.presentSTD)")
                                 .font(.title3.bold())
-                                .foregroundColor(.primary)
+                                .foregroundStyle(.primary)
                             Spacer()
                             Text("\(rfc.name2)")
                                 .font(.body)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                         default:
                             Text("\(rfc.name2)")
                                 .font(.title3.bold())
-                                .foregroundColor(.primary)
+                                .foregroundStyle(.primary)
                             Spacer()
                             switch(rfcFilterMode) {
                                 case .bcp:
                                     Text("\(rfc.presentBCP)")
                                         .font(.body)
-                                        .foregroundColor(.secondary)
+                                        .foregroundStyle(.secondary)
                                 case .fyi:
                                     Text("\(rfc.presentFYI)")
                                         .font(.body)
-                                        .foregroundColor(.secondary)
+                                        .foregroundStyle(.secondary)
                                 case .std:
                                     Text("\(rfc.presentSTD)")
                                         .font(.body)
-                                        .foregroundColor(.secondary)
+                                        .foregroundStyle(.secondary)
                                 case .none:
                                     Text("\(rfc.shortStatus) \(rfc.shortStream)")
                                         .font(.body)
-                                        .foregroundColor(.secondary)
+                                        .foregroundStyle(.secondary)
                             }
                     }
                 }
                 HStack {
                     Text("\(rfc.title!)")
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                     Spacer()
                     VStack {
                         Text("\(DateFormatter.simpleFormatter.string(from: rfc.published!))")
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                         if rfc.branch {
 #if !os(macOS)
                             // When collapsed the graph would replace the list, so show a static badge.
                             if horizontalSizeClass == .compact {
                                 Image(systemName: "arrow.triangle.pull")
                                     .font(Font.system(size: 24, weight: .bold))
-                                    .foregroundColor(Color(hex: 0xf6c844))
+                                    .foregroundStyle(Color(hex: 0xf6c844))
                                     .padding(.top, 2)
                             } else {
                                 BranchButtonView(rfc: rfc, shortTitle: $shortTitle, longTitle: $longTitle, selectedDownload: $selectedDownload)
@@ -146,10 +146,12 @@ struct BranchButtonView: View {
         }) {
             Image(systemName: "arrow.triangle.pull")
                 .font(Font.system(size: 24, weight: .bold))
-                .foregroundColor(Color(hex: 0xf6c844))
+                .foregroundStyle(Color(hex: 0xf6c844))
 
         }
-        .buttonStyle(BorderlessButtonStyle())
+        .buttonStyle(.borderless)
+        .accessibilityLabel("Show \(rfc.name2) relationship graph")
+        .accessibilityIdentifier("rfc.graph")
         .padding(.top, 2)
     }
 }

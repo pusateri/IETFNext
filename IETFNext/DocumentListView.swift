@@ -61,13 +61,13 @@ struct DocumentListView: View {
                         VStack(alignment: .leading) {
                             Text(d.title!)
                                 .font(.title2)
-                                .foregroundColor(.primary)
+                                .foregroundStyle(.primary)
 #if os(macOS)
                                 .padding(.all, 3)
 #endif
                             Text("\(d.name!)-\(d.rev!)")
                                 .font(.headline)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
 #if os(macOS)
                                 .padding(.bottom, 3)
 #endif
@@ -92,7 +92,7 @@ struct DocumentListView: View {
 #if !os(macOS)
                 ToolbarItem(placement: .principal) {
                     Text(wg)
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                         .font(.headline)
                 }
 #endif
@@ -101,7 +101,7 @@ struct DocumentListView: View {
             .frame(width: 600, height: 620)
 #endif
         }
-        .onChange(of: selectedDocument) { newValue in
+        .onChange(of: selectedDocument) { _, newValue in
             if let d = newValue {
                 dismiss()
                 // htmlized

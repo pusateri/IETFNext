@@ -13,12 +13,12 @@ struct RFCListTitleView: View {
     var body: some View {
         VStack {
             Text("Standards")
-                .foregroundColor(.primary)
+                .foregroundStyle(.primary)
                 .font(.headline)
             if rfcFilterMode != .none {
                 Text("\("Filter: \(rfcFilterMode.short)")")
                     .font(.footnote)
-                    .foregroundColor(.accentColor)
+                    .foregroundStyle(Color.accentColor)
             }
         }
     }

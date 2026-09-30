@@ -52,8 +52,10 @@ struct RFCDetailView: View {
                         }) {
                             Image(systemName: "arrow.triangle.pull")
                                 .bold()
-                                .foregroundColor(Color(hex: 0xf6c844))
+                                .foregroundStyle(Color(hex: 0xf6c844))
                         }
+                        .accessibilityLabel("Show relationship graph")
+                        .accessibilityIdentifier("rfcDetail.graph")
                     }
                 }
             }

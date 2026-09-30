@@ -128,10 +128,7 @@ struct SessionListFilteredView: View {
                     let days = SessionDaySection.sections(from: results, formatter: formatter, requireGroup: true)
                     List(selection: $selected) {
                         ForEach(days) { day in
-                            Section(header:
-                                        Text(day.title)
-                                        .foregroundColor(.primary)
-                                    ) {
+                            Section {
                                 // `id: \.self` is the managed object's identity, and it doubles as
                                 // the selection tag, which must be a `Session` to match `selected`.
                                 ForEach(day.sessions, id: \.self) { session in
@@ -146,13 +143,18 @@ struct SessionListFilteredView: View {
                                     .padding(.trailing, Self.dayIndexWidth)
                                     .listRowSeparator(.visible)
                                 }
+                            } header: {
+                                // `Color.primary`, not hierarchical `.primary`: inside a section
+                                // header the hierarchical style resolves to the header's grey.
+                                Text(day.title)
+                                    .foregroundStyle(Color.primary)
                             }
                             .id(day.id)
                         }
                     }
                     .listStyle(.inset)
                     .searchable(text: $searchText, placement: .automatic, prompt: "Session name or Group acronym")
-                    .disableAutocorrection(true)
+                    .autocorrectionDisabled()
                     .overlay(alignment: .trailing) {
                         // Custom day index floating over the list: a Liquid Glass surface keeps
                         // it legible over row content.
@@ -176,7 +178,7 @@ struct SessionListFilteredView: View {
                         .accessibilityIdentifier("schedule.dayIndex")
                     }
 #if !os(macOS)
-                    .autocapitalization(.none)
+                    .textInputAutocapitalization(.never)
                     .keyboardType(.alphabet)
                     .navigationBarTitleDisplayMode(.inline)
 #endif
@@ -203,14 +205,14 @@ struct SessionListFilteredView: View {
                             if let city = meeting.city {
                                 Text("IETF \(number) (\(city))")
                                     .font(.subheadline)
-                                    .foregroundColor(.accentColor)
+                                    .foregroundStyle(Color.accentColor)
                             }
                         }
                     }
                 }
 #endif
             }
-            .onChange(of: selected) { newValue in
+            .onChange(of: selected) { _, newValue in
                 if let session = newValue {
                     sessionID = Int(session.id)
                     selectedGroup = session.group

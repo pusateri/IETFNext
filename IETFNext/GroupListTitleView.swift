@@ -13,12 +13,12 @@ struct GroupListTitleView: View {
     var body: some View {
         VStack {
             Text("Groups")
-                .foregroundColor(.primary)
+                .foregroundStyle(.primary)
                 .font(.headline)
             if groupFilterMode == .favorites {
                 Text("\("Filter: Favorites")")
                     .font(.footnote)
-                    .foregroundColor(.accentColor)
+                    .foregroundStyle(Color.accentColor)
             }
         }
     }

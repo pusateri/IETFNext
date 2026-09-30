@@ -26,25 +26,27 @@ struct SessionListRowView: View {
                 Image(systemName: group.favorite == true ? "star.fill" : "star")
                     .font(Font.system(size: 24, weight: .bold))
                     .imageScale(.large)
-                    .foregroundColor(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xf6c844))
+                    .foregroundStyle(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xf6c844))
             }
-            .buttonStyle(BorderlessButtonStyle())
+            .buttonStyle(.borderless)
+            .accessibilityLabel(group.favorite ? "Remove \(group.acronym ?? "group") from favorites" : "Add \(group.acronym ?? "group") to favorites")
+            .accessibilityIdentifier("session.favorite")
             VStack(alignment: .leading) {
                 HStack {
                     Text("\(session.name!) (\(group.acronym!))")
                         .bold()
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                     if let loc = session.location {
                         Spacer()
                         Text("\(loc.level_name!)")
                             .font(.footnote)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
                 }
                 HStack {
                     if let formatter = timerangeFormatter {
                         Text("\(formatter.string(from: session.start!))-\(formatter.string(from: session.end!))")
-                            .foregroundColor(.primary)
+                            .foregroundStyle(.primary)
                             // Keep "0900-1100" on one line in narrow columns; the room name wraps instead.
                             .lineLimit(1)
                             .fixedSize(horizontal: true, vertical: false)
@@ -52,10 +54,10 @@ struct SessionListRowView: View {
                     Spacer()
                     if let loc = session.location {
                         Text("\(loc.name!)")
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     } else {
                         Text("Unspecified")
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
                 }
             }

@@ -177,11 +177,11 @@ struct DetailViewUnwrapped: View {
             // 700pt minimum window height, pushing the sheet's Cancel button off-screen.
             DocumentListView(wg:group.acronym!, urlString:$draftURL, titleString:$draftTitle, kind:$kind)
         }
-        .onChange(of: group) { newValue in
+        .onChange(of: group) { _, newValue in
             // TODO: slides are combined into the group and all slides are shown for all sessions of group
             presentationRequest.nsPredicate = NSPredicate(format: "session.group = %@", newValue)
         }
-        .onChange(of: model.error) { newValue in
+        .onChange(of: model.error) { _, newValue in
             if let err = newValue {
                 if err.starts(with: "Http Result 404:") {
                     if let urlString = draftURL as? NSString {
@@ -194,7 +194,7 @@ struct DetailViewUnwrapped: View {
                 }
             }
         }
-        .onChange(of:draftURL) { newValue in
+        .onChange(of:draftURL) { _, newValue in
             if let urlString = newValue {
                 if let url = URL(string:urlString) {
                     model.download = fetchDownload(context: viewContext, kind:.draft, url:url)
@@ -277,7 +277,7 @@ extension DetailViewUnwrapped {
             saveFavorite(group: group)
         }) {
             Image(systemName: group.favorite == true ? "star.fill" : "star")
-                .foregroundColor(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xf6c844))
+                .foregroundStyle(Color(hex: areaColors[group.areaKey ?? "ietf"] ?? 0xf6c844))
 #if os(macOS)
                 .overlay {
                     Image(systemName: "star")
@@ -287,7 +287,9 @@ extension DetailViewUnwrapped {
                 }
 #endif
         }
-        .buttonStyle(BorderlessButtonStyle())
+        .buttonStyle(.borderless)
+        .accessibilityLabel(group.favorite ? "Remove from favorites" : "Add to favorites")
+        .accessibilityIdentifier("detail.favorite")
     }
 
     private var slidesMenu: some View {

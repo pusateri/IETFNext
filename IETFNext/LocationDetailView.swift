@@ -49,7 +49,7 @@ struct LocationDetailView: View {
                     if let level = location.level_name, level != "Uncategorized" {
                         Text("\(location.level_name!)")
                             .font(.title2)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                             .padding(.top)
                     }
                     if let url = location.map {
@@ -84,23 +84,23 @@ struct LocationDetailView: View {
                                 List {
                                     // Grouped once per render (see SessionDaySection).
                                     ForEach(SessionDaySection.sections(from: results, formatter: formatter)) { day in
-                                        Section(header: Text(day.title).foregroundColor(.accentColor)) {
+                                        Section {
                                             ForEach(day.sessions, id: \.self) { session in
                                                 VStack(alignment: .leading) {
                                                     HStack {
                                                         if let formatter = timerangeFormatter {
                                                             Text("\(formatter.string(from: session.start!))-\(formatter.string(from: session.end!))")
                                                                 .font(.title3)
-                                                                .foregroundColor(.primary)
+                                                                .foregroundStyle(.primary)
                                                         }
                                                         Spacer()
                                                         Text("\(session.group?.acronym ?? "")")
-                                                            .foregroundColor(.primary)
+                                                            .foregroundStyle(.primary)
                                                             .font(.subheadline)
                                                     }
                                                     .padding(.all, 2)
                                                     Text(session.name!)
-                                                        .foregroundColor(.secondary)
+                                                        .foregroundStyle(.secondary)
                                                         .font(.subheadline)
     #if os(macOS)
                                                         .padding(.bottom, 5)
@@ -108,6 +108,8 @@ struct LocationDetailView: View {
                                                 }
                                                 .listRowSeparator(.visible)
                                             }
+                                        } header: {
+                                            Text(day.title).foregroundStyle(Color.accentColor)
                                         }
                                     }
                                 }
