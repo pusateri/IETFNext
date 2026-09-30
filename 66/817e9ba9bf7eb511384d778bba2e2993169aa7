@@ -1,0 +1,52 @@
+IETFNext/Apple/EventStoreManager.swift
+  h_8be2082ac7c1ab 34,36
+IETFNext/ContentView.swift
+  h_8be2082ac7c1ab 250,261,319,324,330-331,334,340,362-363,451,456,460,465
+IETFNext/DetailViewUnwrapped.swift
+  h_8be2082ac7c1ab 180,184,197,280,290-292
+IETFNext/DocumentListView.swift
+  h_8be2082ac7c1ab 64,70,95,104
+IETFNext/DownloadListView.swift
+  h_8be2082ac7c1ab 180,183,189,193,206,209,213,224,230,239
+IETFNext/GroupListFilteredView.swift
+  h_8be2082ac7c1ab 60,65-66,72,74,100,107
+IETFNext/GroupListRowView.swift
+  h_8be2082ac7c1ab 24,26-28,31,34
+IETFNext/GroupListTitleView.swift
+  h_8be2082ac7c1ab 16,21
+IETFNext/LocationDetailView.swift
+  h_8be2082ac7c1ab 52,87,94,98,103,111-112
+IETFNext/LocationListView.swift
+  h_8be2082ac7c1ab 61,65,71,75,81-82,197,211,216
+IETFNext/MeetingListRowView.swift
+  h_8be2082ac7c1ab 18,22,26,29
+IETFNext/MeetingListView.swift
+  h_8be2082ac7c1ab 78
+IETFNext/RFCDetailView.swift
+  h_8be2082ac7c1ab 55,57-58
+IETFNext/RFCListRowView.swift
+  h_8be2082ac7c1ab 44,48,52,56,60,64,68,74,78,82,86,93,98,105,149,152-154
+IETFNext/RFCListTitleView.swift
+  h_8be2082ac7c1ab 16,21
+IETFNext/RFCListView.swift
+  h_8be2082ac7c1ab 103,105,131,138,143
+IETFNext/SessionListRowView.swift
+  h_8be2082ac7c1ab 29,31-33,38,43,49,57,60
+IETFNext/SessionListTitleView.swift
+  h_8be2082ac7c1ab 16,21
+IETFNext/SessionListView.swift
+  h_8be2082ac7c1ab 131,146-150,157,181,208,215
+IETFNext/WeatherView.swift
+  h_8be2082ac7c1ab 326,344-347
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "66817e9ba9bf7eb511384d778bba2e2993169aa7",
+  "prompts": {},
+  "humans": {
+    "h_8be2082ac7c1ab": {
+      "author": "Tom Pusateri <pusateri@bangj.com>"
+    }
+  }
+}
