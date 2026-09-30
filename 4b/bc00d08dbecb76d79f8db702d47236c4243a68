@@ -1,0 +1,32 @@
+IETFNext.xcodeproj/project.pbxproj
+  h_8be2082ac7c1ab 51,139,288,534
+IETFNext/ContentView.swift
+  h_8be2082ac7c1ab 235-264,320,333,342,344,346,348,350
+IETFNext/DetailViewUnwrapped.swift
+  h_8be2082ac7c1ab 295
+IETFNext/GroupListRowView.swift
+  h_8be2082ac7c1ab 47-55
+IETFNext/LocationDetailView.swift
+  h_8be2082ac7c1ab 85-88
+IETFNext/MeetingListRowView.swift
+  h_8be2082ac7c1ab 35-42
+IETFNext/PreviewData.swift
+  h_8be2082ac7c1ab 1-98
+IETFNext/Session+Extension.swift
+  h_8be2082ac7c1ab 12-44
+IETFNext/SessionListRowView.swift
+  h_8be2082ac7c1ab 48-50,76-86
+IETFNext/SessionListView.swift
+  h_8be2082ac7c1ab 126-128,130,132,135-143,145-147,150,160,162,164,169
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4bbc00d08dbecb76d79f8db702d47236c4243a68",
+  "prompts": {},
+  "humans": {
+    "h_8be2082ac7c1ab": {
+      "author": "Tom Pusateri <pusateri@bangj.com>"
+    }
+  }
+}
