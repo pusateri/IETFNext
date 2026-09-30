@@ -1,0 +1,14 @@
+PLAN.md
+  h_8be2082ac7c1ab 1-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bd204af18dfeba30ba2894790e2651bb7beb62cf",
+  "prompts": {},
+  "humans": {
+    "h_8be2082ac7c1ab": {
+      "author": "Tom Pusateri <pusateri@bangj.com>"
+    }
+  }
+}
