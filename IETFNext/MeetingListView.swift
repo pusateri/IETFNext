@@ -78,9 +78,8 @@ struct MeetingListView: View {
             .onChange(of: selectedMeeting) { newValue in
                 if let meeting = newValue {
                     UserDefaults.standard.set(meeting.number!, forKey:"MeetingNumber")
-                    Task {
-                        await loadData(context: viewContext, meeting: meeting)
-                    }
+                    // Meeting data is loaded by ContentView's `.task(id: selectedMeeting)`,
+                    // which outlives this sheet and cancels if the meeting changes again.
                 }
                 dismiss()
             }

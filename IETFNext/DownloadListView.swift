@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 import MarkdownKit
 
-public enum DownloadKind: String {
+public enum DownloadKind: String, Sendable {
     case agenda
     case charter
     case draft

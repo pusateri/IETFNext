@@ -403,20 +403,20 @@ struct ContentView: View {
                 switch(ds) {
                 case .locations:
                     LocationDetailView(
-                        selectedMeeting: $selectedMeeting,
-                        selectedLocation: $selectedLocation,
+                        selectedMeeting: selectedMeeting,
+                        selectedLocation: selectedLocation,
                         sessionFormatter: $sessionFormatter,
                         timerangeFormatter: $timerangeFormatter,
-                        locationDetailMode: $locationDetailMode
+                        locationDetailMode: locationDetailMode
                     )
                 case .download:
                     DownloadDetailView(selectedDownload: $selectedDownload, columnVisibility:$columnVisibility)
                 case .rfc, .bcp, .fyi, .std:
-                        RFCDetailView(selectedRFC: $selectedRFC, selectedDownload: $selectedDownload, shortTitle: $rfcDetailShortTitle, longTitle: $rfcDetailLongTitle, columnVisibility:$columnVisibility)
+                        RFCDetailView(selectedRFC: selectedRFC, selectedDownload: $selectedDownload, shortTitle: rfcDetailShortTitle, longTitle: rfcDetailLongTitle, columnVisibility:$columnVisibility)
                 default:
                     DetailView(
-                        selectedMeeting:$selectedMeeting,
-                        selectedGroup:$selectedGroup,
+                        selectedMeeting: selectedMeeting,
+                        selectedGroup: selectedGroup,
                         columnVisibility:$columnVisibility)
                 }
             }
@@ -450,14 +450,10 @@ struct ContentView: View {
             useLocalTime = UserDefaults.standard.bool(forKey:"UseLocalTime")
 
             if let number = UserDefaults.standard.string(forKey:"MeetingNumber") {
-                viewContext.performAndWait {
-                    selectedMeeting = selectMeeting(context: viewContext, number: number)
+                selectedMeeting = viewContext.performAndWait {
+                    selectMeeting(context: viewContext, number: number)
                 }
-                if let meeting = selectedMeeting {
-                    Task {
-                        await loadData(context: viewContext, meeting: meeting)
-                    }
-                } else {
+                if selectedMeeting == nil {
                     showingMeetings.toggle()
                 }
             } else {
@@ -465,6 +461,13 @@ struct ContentView: View {
             }
             if detailSelection == nil {
                 columnVisibility = .all
+            }
+        }
+        // Loads schedule data for the selected meeting, both the one restored at launch and
+        // one picked in the meeting sheet. Restarts (cancelling the old load) if it changes.
+        .task(id: selectedMeeting) {
+            if let meeting = selectedMeeting {
+                await loadData(context: viewContext, meeting: meeting)
             }
         }
         .task {

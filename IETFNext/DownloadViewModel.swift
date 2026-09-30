@@ -18,6 +18,24 @@ final class DownloadViewModel {
     var download: Download? = nil
     private(set) var error: String? = nil
 
+    /// The in-flight download started by `startDownload`. Owned here so it can be cancelled.
+    @ObservationIgnored private var downloadTask: Task<Void, Never>?
+
+    /// Starts a download owned by this model. A newer request cancels an older one that is
+    /// still in flight, so the most recent selection is the one that ends up displayed.
+    func startDownload(context: NSManagedObjectContext, url: URL, group: Group?, kind: DownloadKind, title: String?) {
+        downloadTask?.cancel()
+        downloadTask = Task {
+            await downloadToFile(context: context, url: url, group: group, kind: kind, title: title)
+        }
+    }
+
+    /// Cancels any in-flight download, e.g. when the owning screen goes away.
+    func cancelDownload() {
+        downloadTask?.cancel()
+        downloadTask = nil
+    }
+
     // This should only be called if there's no Download state for the url
     // TODO: deal with an agenda changing from .md to .txt to .html (save and check Etag)
     func downloadToFile(context: NSManagedObjectContext, url: URL, group: Group?, kind:DownloadKind, title: String?) async {
@@ -42,6 +60,8 @@ final class DownloadViewModel {
             var urlrequest = URLRequest(url: url)
             urlrequest.addValue("text/markdown, text/html;q=0.9, text/plain;q=0.8", forHTTPHeaderField: "Accept")
             let (localURL, response) = try await URLSession.shared.download(for: urlrequest)
+            // A newer request superseded this one; don't overwrite its result.
+            try Task.checkCancellation()
             guard let httpResponse = response as? HTTPURLResponse else {
                 self.error = "No HTTP Result"
                 return
@@ -60,23 +80,27 @@ final class DownloadViewModel {
                         return
                     }
 
-                    context.performAndWait {
+                    // Pass the group by objectID (Sendable) and re-resolve it inside the context's queue.
+                    // Return the result instead of mutating main-actor state from inside the closure.
+                    let groupID = group?.objectID
+                    self.download = context.performAndWait { () -> Download? in
                         let fetch: NSFetchRequest<Download> = Download.fetchRequest()
                         fetch.predicate = NSPredicate(format: "basename = %@", basename)
                         let results = try? context.fetch(fetch)
 
                         if results?.count == 0 {
-                            let dl = Download.create(context:context, basename:basename, filename:suggested, mimeType: httpResponse.mimeType, encoding: httpResponse.textEncodingName, fileSize:httpResponse.expectedContentLength, ETag: httpResponse.value(forHTTPHeaderField: "ETag"), group:group, kind:kind, title:title)
+                            let contextGroup = groupID.flatMap { context.object(with: $0) as? Group }
+                            let dl = Download.create(context:context, basename:basename, filename:suggested, mimeType: httpResponse.mimeType, encoding: httpResponse.textEncodingName, fileSize:httpResponse.expectedContentLength, ETag: httpResponse.value(forHTTPHeaderField: "ETag"), group:contextGroup, kind:kind, title:title)
                             do {
                                 try context.save()
                             }
                             catch {
                                 print("Unable to save Download: \(basename)")
                             }
-                            self.download = dl
+                            return dl
                         } else {
-                            self.download = results?.first
                             print("Download \(basename) already exists")
+                            return results?.first
                         }
                     }
                 } else {
@@ -91,6 +115,10 @@ final class DownloadViewModel {
             } else {
                 self.error = "no suggested filename from download for: \(basename)"
             }
+        } catch is CancellationError {
+            // Superseded or the screen went away; not an error worth surfacing.
+        } catch let urlError as URLError where urlError.code == .cancelled {
+            // URLSession reports task cancellation as URLError.cancelled.
         } catch {
             self.error = error.localizedDescription
         }

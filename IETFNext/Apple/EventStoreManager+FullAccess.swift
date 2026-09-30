@@ -6,8 +6,36 @@ The data model for the app.
 */
 
 import EventKit
+import CoreData
 
 extension EventStoreManager {
+    /// Adds or removes calendar events for a group's sessions after its favorite state changes.
+    /// The work is owned by this app-lifetime manager rather than the list row that triggered it,
+    /// since rows can scroll away mid-update. Updates are chained so rapid toggles apply in order.
+    func updateCalendar(for group: Group, in meeting: Meeting) {
+        let previous = calendarUpdateTask
+        calendarUpdateTask = Task {
+            await previous?.value
+            do {
+                if !isWriteOnlyOrFullAccessAuthorized {
+                    try await setupEventStore()
+                }
+                await setIETFNextCalendar()
+                if let sessions = group.groupSessionsIn(meeting: meeting) {
+                    for session in sessions {
+                        if group.favorite == true {
+                            await session.createEvent(storeManager: self)
+                        } else {
+                            await session.deleteEvent(storeManager: self)
+                        }
+                    }
+                }
+            } catch {
+                print("pushToCalendar error: \(error.localizedDescription)")
+            }
+        }
+    }
+
     /*
         Listens for event store changes, which are always posted on the main thread. When the app receives a full access authorization status, it
         fetches all events occuring within a month in all the user's calendars.

@@ -29,6 +29,7 @@ struct DetailViewUnwrapped: View {
     @State var draftTitle: String? = nil
     @State var kind: DocumentKind = .draft
     @State private var model = DownloadViewModel()
+    @State private var refreshCount = 0
 
     init(meeting: Meeting, group: Group, columnVisibility: Binding<NavigationSplitViewVisibility>) {
 
@@ -113,6 +114,13 @@ struct DetailViewUnwrapped: View {
         }
     }
 
+    /// Identifies one run of the group-loading task: it restarts when the group changes
+    /// or when the scene becomes active again (tracked by `refreshCount`).
+    private struct GroupTaskKey: Equatable {
+        let group: NSManagedObjectID
+        let refresh: Int
+    }
+
     private func updateFor(group: Group) {
         banner = group.acronym!
         sessionsForGroup = findSessionsForGroup(meeting:meeting, group:group)
@@ -121,27 +129,23 @@ struct DetailViewUnwrapped: View {
         if let agenda = agendas.first {
             model.download = fetchDownload(context: viewContext, kind:.agenda, url:agenda.url)
             if model.download == nil {
-                Task {
-                    await model.downloadToFile(context:viewContext, url: agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
-                }
+                model.startDownload(context:viewContext, url: agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
             }
         }
-        Task {
-            await loadDrafts(context: viewContext, group: group, limit:0, offset:0)
-            if group.type != "rg" {
-                await loadCharterDocument(context: viewContext, group: group)
-            }
-            await loadRelatedDrafts(context: viewContext, group: group, limit:0, offset:0)
+    }
+
+    /// Loads drafts, charter, related drafts and recordings for the group.
+    /// Runs inside `.task(id:)`, so it is cancelled when the view disappears or the group changes.
+    private func loadGroupMetadata(group: Group) async {
+        await loadDrafts(context: viewContext, group: group, limit:0, offset:0)
+        if group.type != "rg" {
+            await loadCharterDocument(context: viewContext, group: group)
         }
+        await loadRelatedDrafts(context: viewContext, group: group, limit:0, offset:0)
         // if we don't have a recording URL, go get one. We don't expect it to change once we have it
-        if let allSessions = sessionsForGroup {
-            for s in allSessions {
-                if s.recording == nil {
-                    Task {
-                        await loadRecordingDocument(context: viewContext, session: s)
-                    }
-                }
-            }
+        for s in sessionsForGroup ?? [] where s.recording == nil {
+            if Task.isCancelled { return }
+            await loadRecordingDocument(context: viewContext, session: s)
         }
     }
 
@@ -202,9 +206,7 @@ struct DetailViewUnwrapped: View {
                             if let url = URL(string: urlString) {
                                 model.download = fetchDownload(context: viewContext, kind:.presentation, url:url)
                                 if model.download == nil {
-                                    Task {
-                                        await model.downloadToFile(context:viewContext, url:url, group:group, kind:.presentation, title: p.title)
-                                    }
+                                    model.startDownload(context:viewContext, url:url, group:group, kind:.presentation, title: p.title)
                                 }
                             }
                         }) {
@@ -228,9 +230,7 @@ struct DetailViewUnwrapped: View {
                         Button(action: {
                             model.download = fetchDownload(context: viewContext, kind:.agenda, url:agenda.url)
                             if model.download == nil {
-                                Task {
-                                    await model.downloadToFile(context:viewContext, url: agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
-                                }
+                                model.startDownload(context:viewContext, url: agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                             }
                         }) {
                             Text("\(agenda.desc)")
@@ -243,9 +243,7 @@ struct DetailViewUnwrapped: View {
                             if let minutes = session.minutes {
                                 model.download = fetchDownload(context: viewContext, kind:.minutes, url:minutes)
                                 if model.download == nil {
-                                    Task {
-                                        await model.downloadToFile(context:viewContext, url: minutes, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
-                                    }
+                                    model.startDownload(context:viewContext, url: minutes, group:group, kind:.minutes, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
                                 }
                             }
                         }
@@ -287,9 +285,7 @@ struct DetailViewUnwrapped: View {
                             if let url = URL(string: urlString) {
                                 model.download = fetchDownload(context: viewContext, kind:.charter, url:url)
                                 if model.download == nil {
-                                    Task {
-                                        await model.downloadToFile(context:viewContext, url:url, group:group, kind:.charter, title: "\(group.acronym!.uppercased()) Charter")
-                                    }
+                                    model.startDownload(context:viewContext, url:url, group:group, kind:.charter, title: "\(group.acronym!.uppercased()) Charter")
                                 }
                             }
                         }
@@ -357,20 +353,22 @@ struct DetailViewUnwrapped: View {
                 if let url = URL(string:urlString) {
                     model.download = fetchDownload(context: viewContext, kind:.draft, url:url)
                     if model.download == nil {
-                        Task {
-                            await model.downloadToFile(context:viewContext, url:url, group:group, kind:.draft, title:draftTitle)
-                        }
+                        model.startDownload(context:viewContext, url:url, group:group, kind:.draft, title:draftTitle)
                     }
                 }
             }
         }
-        .onChange(of: scenePhase) { newPhase in
+        .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {
-                updateFor(group: group)
+                refreshCount += 1
             }
         }
-        .onAppear {
+        .task(id: GroupTaskKey(group: group.objectID, refresh: refreshCount)) {
             updateFor(group: group)
+            await loadGroupMetadata(group: group)
+        }
+        .onDisappear {
+            model.cancelDownload()
         }
     }
 }

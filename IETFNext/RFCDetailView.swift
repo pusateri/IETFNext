@@ -10,10 +10,13 @@ import SwiftUI
 struct RFCDetailView: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-    @Binding var selectedRFC: RFC?
+    // Read-only inputs are passed by value so ContentView depends on them and the detail
+    // column updates on selection (see DetailView). selectedDownload stays a binding because
+    // the graph button replaces the displayed document.
+    let selectedRFC: RFC?
     @Binding var selectedDownload: Download?
-    @Binding var shortTitle: String?
-    @Binding var longTitle: String?
+    let shortTitle: String?
+    let longTitle: String?
 
     @Binding var columnVisibility: NavigationSplitViewVisibility
 

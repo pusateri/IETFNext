@@ -7,7 +7,8 @@
 
 import CoreData
 import OSLog
-import SwiftyXMLParser
+// SwiftyXMLParser predates Sendable annotations; its accessor is only read inside taskContext.perform.
+@preconcurrency import SwiftyXMLParser
 
 class RFCProvider {
 
@@ -114,6 +115,8 @@ class RFCProvider {
 
         var updates: [String: [String]] = [:]
         var obsoletes: [String: [String]] = [:]
+        // Capture the Sendable logger rather than the non-Sendable provider.
+        let logger = self.logger
         await taskContext.perform {
             for rfc in from["rfc-entry"] {
                 updateRFC(context: taskContext, xml: rfc, obsoletes: &obsoletes, updates: &updates)
@@ -142,7 +145,7 @@ class RFCProvider {
                 try taskContext.save()
             }
             catch {
-                self.logger.debug("Unable to save after adding updates/obsoletes")
+                logger.debug("Unable to save after adding updates/obsoletes")
             }
         }
         logger.debug("Successfully inserted data.")

@@ -227,6 +227,11 @@ private func buildRFC3339FractionalDateFormatter() -> DateFormatter {
     return formatter
 }
 
+// TODO(concurrency): These loaders are nonisolated but receive the main-queue viewContext and
+// its managed objects, then read/write them off the context's queue (e.g. `meeting.etag`,
+// `group.acronym`) and capture them in @Sendable `performAndWait` closures. Before enabling
+// Swift 6 mode: decode JSON off the main actor, pass NSManagedObjectIDs (Sendable) across, and
+// apply changes inside `context.perform` (or a background context), re-resolving objects by ID.
 public func loadData(context: NSManagedObjectContext, meeting: Meeting?) async {
     let baseURL = URL(string: "https://datatracker.ietf.org")
 

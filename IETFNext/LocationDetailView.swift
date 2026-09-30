@@ -9,12 +9,12 @@ import SwiftUI
 
 
 extension DynamicFetchRequestView where T : Session {
-    init(selectedMeeting: Binding<Meeting?>, selectedLocation: Binding<Location?>, @ViewBuilder content: @escaping (FetchedResults<T>) -> Content) {
+    init(selectedMeeting: Meeting?, selectedLocation: Location?, @ViewBuilder content: @escaping (FetchedResults<T>) -> Content) {
 
         var predicate = NSPredicate(value: false)
 
-        if let loc = selectedLocation.wrappedValue {
-            if let meeting = selectedMeeting.wrappedValue {
+        if let loc = selectedLocation {
+            if let meeting = selectedMeeting {
                 predicate = NSPredicate(format: "(meeting.number = %@) AND (location.name = %@) AND (status != \"canceled\")", meeting.number!, loc.name!)
             }
         }
@@ -32,11 +32,13 @@ struct LocationDetailView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Environment(\.verticalSizeClass) var vSizeClass
 
-    @Binding var selectedMeeting: Meeting?
-    @Binding var selectedLocation: Location?
+    // Read-only inputs are passed by value so ContentView depends on them and the detail
+    // column updates when a room is picked (see DetailView).
+    let selectedMeeting: Meeting?
+    let selectedLocation: Location?
     @Binding var sessionFormatter: DateFormatter?
     @Binding var timerangeFormatter: DateFormatter?
-    @Binding var locationDetailMode: LocationDetailMode
+    let locationDetailMode: LocationDetailMode
 
     var body: some View {
         switch(locationDetailMode) {
@@ -75,7 +77,7 @@ struct LocationDetailView: View {
                         }
                     }
                     if vSizeClass != .compact {
-                        DynamicFetchRequestView(selectedMeeting: $selectedMeeting, selectedLocation: $selectedLocation) { results in
+                        DynamicFetchRequestView(selectedMeeting: selectedMeeting, selectedLocation: selectedLocation) { results in
 
                             if let formatter = sessionFormatter {
                                 let groupByDate = Dictionary(grouping: results, by: {

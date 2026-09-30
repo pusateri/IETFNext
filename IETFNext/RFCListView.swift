@@ -171,9 +171,9 @@ extension RFCListView {
             if let download = download {
                 selectedDownload = download
             } else {
-                Task {
-                    await model.downloadToFile(context:viewContext, url:url, group: nil, kind:.rfc, title: doc.title!)
-                }
+                // Owned by the model; a newer selection cancels this one. Not cancelled on
+                // disappear because on iPhone this list disappears when the RFC detail is pushed.
+                model.startDownload(context:viewContext, url:url, group: nil, kind:.rfc, title: doc.title!)
             }
         }
     }

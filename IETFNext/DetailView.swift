@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct DetailView: View {
-    @Binding var selectedMeeting: Meeting?
-    @Binding var selectedGroup: Group?
+    // Read-only inputs are passed by value, not as bindings. Passing the values makes the
+    // owner (ContentView) depend on them, so the split view's detail column updates when a
+    // group is picked. With bindings, the first group or session picked after launch never
+    // reached this view and the detail pane stayed blank.
+    let selectedMeeting: Meeting?
+    let selectedGroup: Group?
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     var body: some View {

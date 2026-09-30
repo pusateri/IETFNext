@@ -22,6 +22,9 @@ final class EventStoreManager {
     /// Cached calendar used for favorites; not displayed, so changes don't need to invalidate views.
     @ObservationIgnored var ietfNextCalendar: EKCalendar?
 
+    /// Most recent favorite-to-calendar sync. Each new sync waits on this so updates apply in order.
+    @ObservationIgnored var calendarUpdateTask: Task<Void, Never>?
+
     init(store: EventDataStore = EventDataStore()) {
         self.dataStore = store
         self.events = []
