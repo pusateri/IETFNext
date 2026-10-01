@@ -32,15 +32,20 @@ struct SessionListRowView: View {
             .accessibilityLabel(group.favorite ? "Remove \(group.acronym ?? "group") from favorites" : "Add \(group.acronym ?? "group") to favorites")
             .accessibilityIdentifier("session.favorite")
             VStack(alignment: .leading) {
-                HStack {
+                // Tight spacing so the wrapped title runs close to the floor name.
+                HStack(spacing: 4) {
                     Text("\(session.name!) (\(group.acronym!))")
                         .bold()
                         .foregroundStyle(.primary)
                     if let loc = session.location {
-                        Spacer()
+                        Spacer(minLength: 4)
+                        // Floor names are short ("Mezzanine Level"); keep them on one line at
+                        // their natural width so the title takes all the remaining space.
                         Text("\(loc.level_name!)")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .fixedSize(horizontal: true, vertical: false)
                     }
                 }
                 HStack {
@@ -52,12 +57,15 @@ struct SessionListRowView: View {
                             .fixedSize(horizontal: true, vertical: false)
                     }
                     Spacer()
+                    // Keep wrapped room names against the trailing edge.
                     if let loc = session.location {
                         Text("\(loc.name!)")
                             .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.trailing)
                     } else {
                         Text("Unspecified")
                             .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.trailing)
                     }
                 }
             }
@@ -81,6 +89,18 @@ struct SessionListRowView: View {
     List {
         SessionListRowView(session: PreviewData.session, group: PreviewData.group, timerangeFormatter: $formatter)
     }
+    .environment(\.managedObjectContext, PreviewData.context)
+    .environment(EventStoreManager())
+}
+
+#Preview("Session row, narrow column") {
+    // Mirrors the schedule list's narrow content column (about 320pt, e.g. iPad portrait).
+    @Previewable @State var formatter: DateFormatter? = PreviewData.timerangeFormatter
+    List {
+        SessionListRowView(session: PreviewData.session, group: PreviewData.group, timerangeFormatter: $formatter)
+    }
+    .listStyle(.inset)
+    .frame(width: 320)
     .environment(\.managedObjectContext, PreviewData.context)
     .environment(EventStoreManager())
 }

@@ -54,8 +54,8 @@ enum PreviewData {
     static let location: Location = {
         let location = Location(context: context)
         location.id = 1
-        location.name = "Stolz 2"
-        location.level_name = "Level 1"
+        location.name = "Grand Park Hall 2"
+        location.level_name = "Mezzanine Level"
         location.modified = Date()
         location.meeting = meeting
         return location

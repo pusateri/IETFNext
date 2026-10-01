@@ -80,9 +80,6 @@ extension DynamicFetchRequestView where T : Session {
 }
 
 struct SessionListFilteredView: View {
-    /// Horizontal space reserved at the end of each row for the floating day-index capsule.
-    private static let dayIndexWidth: CGFloat = 48
-
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Binding var selectedMeeting: Meeting?
@@ -139,8 +136,6 @@ struct SessionListFilteredView: View {
                                             SessionListRowView(session: session, group: session_group, timerangeFormatter: $timerangeFormatter)
                                         }
                                     }
-                                    // Leave room so the floating day index doesn't cover room names.
-                                    .padding(.trailing, Self.dayIndexWidth)
                                     .listRowSeparator(.visible)
                                 }
                             } header: {
@@ -156,8 +151,8 @@ struct SessionListFilteredView: View {
                     .searchable(text: $searchText, placement: .automatic, prompt: "Session name or Group acronym")
                     .autocorrectionDisabled()
                     .overlay(alignment: .trailing) {
-                        // Custom day index floating over the list: a Liquid Glass surface keeps
-                        // it legible over row content.
+                        // Day index floating directly over the list, with no background, so it
+                        // doesn't take width from the rows.
                         VStack {
                             ForEach(days) { day in
                                 Button(action: {
@@ -165,16 +160,9 @@ struct SessionListFilteredView: View {
                                 }) {
                                     Text(day.shortDay)
                                 }
-                                // Plain text buttons; on macOS the default bordered style drew a
-                                // separate bezel for each day inside the glass capsule.
-                                .buttonStyle(.borderless)
                                 .accessibilityLabel("Jump to \(day.title)")
                             }
                         }
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 6)
-                        .glassEffect(.regular.interactive(), in: .capsule)
-                        .padding(.trailing, 4)
                         .accessibilityIdentifier("schedule.dayIndex")
                     }
 #if !os(macOS)
