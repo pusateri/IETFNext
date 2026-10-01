@@ -116,6 +116,8 @@ struct DetailViewUnwrapped: View {
     /// Identifies one run of the group-loading task: it restarts when the group changes
     /// or when the scene becomes active again (tracked by `refreshCount`).
     private struct GroupTaskKey: Equatable {
+        /// Included so changing meetings reloads sessions, agendas and recordings for the new meeting.
+        let meeting: NSManagedObjectID
         let group: NSManagedObjectID
         let refresh: Int
     }
@@ -130,6 +132,11 @@ struct DetailViewUnwrapped: View {
             if model.download == nil {
                 model.startDownload(context:viewContext, url: agenda.url, group:group, kind:.agenda, title: "IETF \(meeting.number!) (\(meeting.city!)) \(group.acronym!.uppercased())")
             }
+        } else {
+            // No agenda for this group at this meeting (e.g. after changing meetings): clear the
+            // previous document rather than leaving another meeting's or group's agenda on screen.
+            model.cancelDownload()
+            model.download = nil
         }
     }
 
@@ -181,6 +188,11 @@ struct DetailViewUnwrapped: View {
             // TODO: slides are combined into the group and all slides are shown for all sessions of group
             presentationRequest.nsPredicate = NSPredicate(format: "session.group = %@", newValue)
         }
+        .onChange(of: meeting) { _, newValue in
+            // The fetch request's predicate is only applied in init, so refresh the Slides menu for
+            // the new meeting, matching init's meeting-and-group filter.
+            presentationRequest.nsPredicate = NSPredicate(format: "(session.meeting = %@) AND (session.group = %@)", newValue, group)
+        }
         .onChange(of: model.error) { _, newValue in
             if let err = newValue {
                 if err.starts(with: "Http Result 404:") {
@@ -209,7 +221,7 @@ struct DetailViewUnwrapped: View {
                 refreshCount += 1
             }
         }
-        .task(id: GroupTaskKey(group: group.objectID, refresh: refreshCount)) {
+        .task(id: GroupTaskKey(meeting: meeting.objectID, group: group.objectID, refresh: refreshCount)) {
             updateFor(group: group)
             await loadGroupMetadata(group: group)
         }

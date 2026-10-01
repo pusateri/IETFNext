@@ -30,6 +30,12 @@ final class DownloadViewModel {
         }
     }
 
+    /// Cancels any in-flight download so it can't replace what the screen shows now.
+    func cancelDownload() {
+        downloadTask?.cancel()
+        downloadTask = nil
+    }
+
     // This should only be called if there's no Download state for the url
     // TODO: deal with an agenda changing from .md to .txt to .html (save and check Etag)
     func downloadToFile(context: NSManagedObjectContext, url: URL, group: Group?, kind:DownloadKind, title: String?) async {
