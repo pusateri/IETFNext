@@ -32,23 +32,20 @@ struct SessionListRowView: View {
             .accessibilityLabel(group.favorite ? "Remove \(group.acronym ?? "group") from favorites" : "Add \(group.acronym ?? "group") to favorites")
             .accessibilityIdentifier("session.favorite")
             VStack(alignment: .leading) {
-                // Tight spacing so the wrapped title runs close to the floor name.
+                // Minimal spacing so the title runs close to the floor name.
                 HStack(spacing: 4) {
                     Text("\(session.name!) (\(group.acronym!))")
                         .bold()
                         .foregroundStyle(.primary)
                     if let loc = session.location {
-                        Spacer(minLength: 4)
-                        // Floor names are short ("Mezzanine Level"); keep them on one line at
-                        // their natural width so the title takes all the remaining space.
+                        Spacer(minLength: 0)
                         Text("\(loc.level_name!)")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
-                            .lineLimit(1)
-                            .fixedSize(horizontal: true, vertical: false)
+                            .modifier(TrailingLocationWidth())
                     }
                 }
-                HStack {
+                HStack(spacing: 4) {
                     if let formatter = timerangeFormatter {
                         Text("\(formatter.string(from: session.start!))-\(formatter.string(from: session.end!))")
                             .foregroundStyle(.primary)
@@ -56,17 +53,10 @@ struct SessionListRowView: View {
                             .lineLimit(1)
                             .fixedSize(horizontal: true, vertical: false)
                     }
-                    Spacer()
-                    // Keep wrapped room names against the trailing edge.
-                    if let loc = session.location {
-                        Text("\(loc.name!)")
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.trailing)
-                    } else {
-                        Text("Unspecified")
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.trailing)
-                    }
+                    Spacer(minLength: 0)
+                    Text(session.location?.name ?? "Unspecified")
+                        .foregroundStyle(.secondary)
+                        .modifier(TrailingLocationWidth())
                 }
             }
         }
@@ -80,6 +70,44 @@ struct SessionListRowView: View {
                 print("Unable to save Session group (\(group.acronym!)) favorite \(session.name!)")
             }
         }
+    }
+}
+
+/// Caps the floor and room names at a fixed maximum width. Short names keep their natural width,
+/// so no gap opens next to the title; longer names wrap within the cap, right-aligned.
+private struct TrailingLocationWidth: ViewModifier {
+    /// The cap, scaled with Dynamic Type so larger text sizes still fit a word per line.
+    @ScaledMetric(relativeTo: .body) private var maxWidth: CGFloat = 90
+
+    func body(content: Content) -> some View {
+        MaxWidthLayout(maxWidth: maxWidth) {
+            content
+                .multilineTextAlignment(.trailing)
+        }
+    }
+}
+
+/// Sizes its single child to the child's natural width, but no wider than `maxWidth`
+/// (or the space offered); text wraps within that width. Unlike `.frame(maxWidth:)`,
+/// it doesn't take the whole maximum when the child is narrower.
+private struct MaxWidthLayout: Layout {
+    var maxWidth: CGFloat
+
+    private func width(for proposal: ProposedViewSize, child: LayoutSubview) -> CGFloat {
+        let ideal = child.sizeThatFits(.unspecified).width
+        return min(ideal, maxWidth, proposal.width ?? .infinity)
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        guard let child = subviews.first else { return .zero }
+        let width = width(for: proposal, child: child)
+        return child.sizeThatFits(ProposedViewSize(width: width, height: nil))
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        guard let child = subviews.first else { return }
+        child.place(at: CGPoint(x: bounds.maxX, y: bounds.midY), anchor: .trailing,
+                    proposal: ProposedViewSize(width: bounds.width, height: nil))
     }
 }
 
