@@ -160,7 +160,7 @@ struct SessionListFilteredView: View {
                                 }) {
                                     Text(day.shortDay)
                                 }
-                                .accessibilityLabel("Jump to \(day.title)")
+                                .accessibilityLabel("Jump to \(day.weekday)")
                             }
                         }
                         .accessibilityIdentifier("schedule.dayIndex")

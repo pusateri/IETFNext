@@ -22,6 +22,10 @@ struct SessionDaySection: Identifiable {
     let title: String
     /// Short day for the jump index, e.g. "Mon".
     let shortDay: String
+    /// Full day of the week, e.g. "Monday" (the title without its date).
+    var weekday: String {
+        title.split(separator: " ").last.map(String.init) ?? title
+    }
     /// Sessions in fetch order.
     let sessions: [Session]
 
