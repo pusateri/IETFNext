@@ -1,0 +1,14 @@
+IETFNext.xcodeproj/project.pbxproj
+  h_8be2082ac7c1ab 725,775
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "aa0654f37ad3b20035211021dd61201447d2cf44",
+  "prompts": {},
+  "humans": {
+    "h_8be2082ac7c1ab": {
+      "author": "Tom Pusateri <pusateri@bangj.com>"
+    }
+  }
+}
