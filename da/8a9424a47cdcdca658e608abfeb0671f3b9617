@@ -1,0 +1,14 @@
+IETFNext/Load.swift
+  h_8be2082ac7c1ab 202-203,232-248,250-268,270-298,301-306,308-316,318-346,348-352,357-375,381,383-388,390-402,407,409-414,416-438,440-444,447,449-452,458-472
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "da8a9424a47cdcdca658e608abfeb0671f3b9617",
+  "prompts": {},
+  "humans": {
+    "h_8be2082ac7c1ab": {
+      "author": "Tom Pusateri <pusateri@bangj.com>"
+    }
+  }
+}
