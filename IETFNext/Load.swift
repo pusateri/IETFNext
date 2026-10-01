@@ -199,6 +199,8 @@ extension Schedule: Decodable {
 }
 
 private extension DateFormatter {
+    // Used by JSONDecoder in `fetchDecoded`, off the main actor. DateFormatter is Sendable,
+    // and this instance is never mutated after creation.
     static let rfc3339: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
@@ -227,150 +229,147 @@ private func buildRFC3339FractionalDateFormatter() -> DateFormatter {
     return formatter
 }
 
-// TODO(concurrency): These loaders are nonisolated but receive the main-queue viewContext and
-// its managed objects, then read/write them off the context's queue (e.g. `meeting.etag`,
-// `group.acronym`) and capture them in @Sendable `performAndWait` closures. Before enabling
-// Swift 6 mode: decode JSON off the main actor, pass NSManagedObjectIDs (Sendable) across, and
-// apply changes inside `context.perform` (or a background context), re-resolving objects by ID.
+// MARK: - Loaders
+//
+// Concurrency model:
+// - Each loader is @MainActor. It reads the values it needs from managed objects in the
+//   main-queue view context (meeting.number, group.acronym, ...) and applies results back to
+//   that context directly, which is correct for a main-queue context on the main thread.
+// - The network request and JSON decoding run off the main actor in `fetchDecoded`, which only
+//   exchanges Sendable values: a URLRequest goes in, decoded structs and header strings come out.
+// No managed object or context crosses an isolation boundary, so no @Sendable
+// `performAndWait` closures are needed.
+
+/// A decoded response body plus the HTTP headers the loaders use.
+private struct Fetched<Value: Sendable>: Sendable {
+    let value: Value
+    let etag: String?
+    let lastModified: String?
+}
+
+/// Performs `request` and decodes a `Value` from the body, off the main actor.
+///
+/// Returns nil after logging on a network, HTTP status, or decoding failure. The loaders
+/// previously logged and returned in the same cases.
+@concurrent
+private func fetchDecoded<Value: Decodable & Sendable>(
+    _ type: Value.Type,
+    request: URLRequest,
+    label: String,
+    logHTTPErrors: Bool = false
+) async -> Fetched<Value>? {
+    let urlString = request.url?.absoluteString ?? "?"
+    let data: Data
+    let response: URLResponse
+    do {
+        (data, response) = try await URLSession.shared.data(for: request)
+    } catch {
+        print("\(label): unable to read URL: \(urlString). Check network connection.")
+        return nil
+    }
+    guard let httpResponse = response as? HTTPURLResponse else {
+        if logHTTPErrors { print("No HTTP Result") }
+        return nil
+    }
+    guard (200...299).contains(httpResponse.statusCode) else {
+        if logHTTPErrors { print("Http Result \(httpResponse.statusCode): \(urlString)") }
+        return nil
+    }
+    do {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
+        let value = try decoder.decode(Value.self, from: data)
+        return Fetched(
+            value: value,
+            etag: httpResponse.value(forHTTPHeaderField: "ETag"),
+            lastModified: httpResponse.value(forHTTPHeaderField: "Last-Modified")
+        )
+    } catch DecodingError.dataCorrupted(let context) {
+        print("\(label): \(context)")
+    } catch DecodingError.keyNotFound(let key, let context) {
+        print("\(label): Key '\(key)' not found: \(context.debugDescription), codingPath: \(context.codingPath)")
+    } catch DecodingError.valueNotFound(let value, let context) {
+        print("\(label): Value '\(value)' not found: \(context.debugDescription), codingPath: \(context.codingPath)")
+    } catch DecodingError.typeMismatch(let type, let context) {
+        print("\(label): Type '\(type)' mismatch: \(context.debugDescription), codingPath: \(context.codingPath)")
+    } catch {
+        print("\(label): error: ", error)
+    }
+    return nil
+}
+
+/// The loaders mutate `context` directly on the main actor, so it must be the main-queue view context.
+@MainActor
+private func assertMainQueue(_ context: NSManagedObjectContext) {
+    assert(context.concurrencyType == .mainQueueConcurrencyType,
+           "Loaders apply changes directly on the main actor; pass the main-queue view context")
+}
+
+@MainActor
 public func loadData(context: NSManagedObjectContext, meeting: Meeting?) async {
-    let baseURL = URL(string: "https://datatracker.ietf.org")
+    assertMainQueue(context)
+    guard let meeting, let number = meeting.number else { return }
+    guard let baseURL = URL(string: "https://datatracker.ietf.org"),
+          let url = URL(string: "/meeting/\(number)/agenda.json", relativeTo: baseURL) else {
+        print("Invalid URL")
+        return
+    }
 
-    if let meeting = meeting {
-        guard let url = URL(string: "/meeting/\(meeting.number!)/agenda.json", relativeTo:baseURL) else {
-            print("Invalid URL")
-            return
+    var urlrequest = URLRequest(url: url)
+    urlrequest.addValue("gzip", forHTTPHeaderField: "Accept-Encoding")
+    /*
+    if let lastEtag = meeting.etag {
+        urlrequest.addValue(lastEtag, forHTTPHeaderField: "If-None-Match")
+        urlrequest.cachePolicy = .reloadIgnoringLocalCacheData
+    }
+     */
+    guard let fetched = await fetchDecoded([String: [Schedule]].self, request: urlrequest,
+                                           label: "Load Agenda schedule \(number)", logHTTPErrors: true) else {
+        return
+    }
+    if let etag = fetched.etag {
+        meeting.etag = etag
+    }
+    if let modified = fetched.lastModified {
+        meeting.lastModified = modified
+    }
+    let objs = fetched.value[number] ?? []
+
+    // first pass get dependencies
+    for obj in objs {
+        switch(obj) {
+        case .location(let loc):
+            updateLocation(context: context, meeting: meeting, location: loc)
+        case .parent(let area):
+            updateArea(context: context, parent: area)
+        case .session(_):
+            continue
         }
-
-        var urlrequest = URLRequest(url: url)
-        urlrequest.addValue("gzip", forHTTPHeaderField: "Accept-Encoding")
-        /*
-        if let lastEtag = meeting.etag {
-            urlrequest.addValue(lastEtag, forHTTPHeaderField: "If-None-Match")
-            urlrequest.cachePolicy = .reloadIgnoringLocalCacheData
-        }
-         */
-        do {
-            let (data, response) = try await URLSession.shared.data(for: urlrequest)
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("No HTTP Result")
-                return
-            }
-            guard (200...299).contains(httpResponse.statusCode) else {
-                print("Http Result \(httpResponse.statusCode): \(url.absoluteString)")
-                return
-            }
-            if let etag = httpResponse.value(forHTTPHeaderField: "ETag") {
-                meeting.etag = etag
-            }
-            if let modified = httpResponse.value(forHTTPHeaderField: "Last-Modified") {
-                meeting.lastModified = modified
-            }
-            do {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
-                let messages = try decoder.decode([String:[Schedule]].self, from: data)
-                let objs = messages[meeting.number!] ?? []
-
-                context.performAndWait {
-                    // first pass get dependencies
-                    for obj in objs {
-                        switch(obj) {
-                        case .location(let loc):
-                            updateLocation(context: context, meeting:meeting, location:loc)
-                        case .parent(let area):
-                            updateArea(context: context, parent:area)
-                        case .session(_):
-                            continue
-                        }
-                    }
-                    // second pass get sessions
-                    for obj in objs {
-                        switch(obj) {
-                        case .location(_):
-                            continue
-                        case .parent(_):
-                            continue
-                        case .session(let JSONsession):
-                            if let baseURL = baseURL {
-                                updateSession(context: context, baseURL: baseURL, meeting:meeting, session:JSONsession)
-                            }
-                        }
-                    }
-                }
-            } catch DecodingError.dataCorrupted(let context) {
-                print("Load Agenda schedule \(meeting.number!): \(context)")
-            } catch DecodingError.keyNotFound(let key, let context) {
-                print("Load Agenda Key '\(key)' not found: \(context.debugDescription), codingPath: \(context.codingPath)" )
-            } catch DecodingError.valueNotFound(let value, let context) {
-                print("Load Agenda Value '\(value)' not found: \(context.debugDescription), codingPath: \(context.codingPath)")
-            } catch DecodingError.typeMismatch(let type, let context) {
-                print("Load Agenda Type '\(type)' mismatch: \(context.debugDescription), codingPath: \(context.codingPath)")
-            } catch {
-                print("Load Agenda unknown error: ", error)
-            }
-        } catch {
-            print("Unable to read URL: \(url.absoluteString). Check network connection.")
+    }
+    // second pass get sessions
+    for obj in objs {
+        if case .session(let JSONsession) = obj {
+            updateSession(context: context, baseURL: baseURL, meeting: meeting, session: JSONsession)
         }
     }
 }
 
+@MainActor
 public func loadDrafts(context: NSManagedObjectContext, group: Group?, limit: Int32, offset: Int32) async {
-    let url: URL
-
-    if let group = group {
-        let urlString = "https://datatracker.ietf.org/api/v1/doc/document/?group__acronym=\(group.acronym!)&type=draft&states__slug__contains=active"
-
-        if offset == 0 {
-            guard let url0 = URL(string: urlString) else {
-                print("Invalid URL")
-                return
-            }
-            url = url0
-        } else {
-            guard let url_offset = URL(string: urlString + "limit=\(limit)&offset=\(offset)") else {
-                print("Invalid URL")
-                return
-            }
-            url = url_offset
-        }
-        do {
-            let (data, response) = try await URLSession.shared.data(from: url)
-            guard let httpResponse = response as? HTTPURLResponse else {
-                //print("No HTTP Result")
-                return
-            }
-            guard (200...299).contains(httpResponse.statusCode) else {
-                //print("Http Result \(httpResponse.statusCode): \(url.absoluteString)")
-                return
-            }
-            do {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
-                let json_docs = try decoder.decode(Documents.self, from: data)
-
-                context.performAndWait {
-                    group.documents = Set<Group>() as NSSet
-                    for obj in json_docs.objects {
-                        updateDocument(context: context, group:group, kind:.draft, document:obj)
-                    }
-                }
-            } catch DecodingError.dataCorrupted(let context) {
-                print("Drafts wg \(group.acronym!): \(context)")
-            } catch DecodingError.keyNotFound(let key, let context) {
-                print("Key '\(key)' not found:", context.debugDescription)
-                print("codingPath:", context.codingPath)
-            } catch DecodingError.valueNotFound(let value, let context) {
-                print("Value '\(value)' not found:", context.debugDescription)
-                print("codingPath:", context.codingPath)
-            } catch DecodingError.typeMismatch(let type, let context) {
-                print("Type '\(type)' mismatch:", context.debugDescription)
-                print("codingPath:", context.codingPath)
-            } catch {
-                print("error: ", error)
-            }
-        } catch {
-            print("Unexpected Meeting format")
-        }
+    assertMainQueue(context)
+    guard let group, let acronym = group.acronym else { return }
+    let urlString = "https://datatracker.ietf.org/api/v1/doc/document/?group__acronym=\(acronym)&type=draft&states__slug__contains=active"
+    let url = offset == 0 ? URL(string: urlString) : URL(string: urlString + "limit=\(limit)&offset=\(offset)")
+    guard let url else {
+        print("Invalid URL")
+        return
+    }
+    guard let fetched = await fetchDecoded(Documents.self, request: URLRequest(url: url), label: "Drafts wg \(acronym)") else {
+        return
+    }
+    group.documents = Set<Group>() as NSSet
+    for obj in fetched.value.objects {
+        updateDocument(context: context, group: group, kind: .draft, document: obj)
     }
 }
 
@@ -379,205 +378,96 @@ public func loadDrafts(context: NSManagedObjectContext, group: Group?, limit: In
     // What we really want is "states": ["/api/v1/doc/state/3/",
     // http://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-ietf-ippm-*&type=draft&states__slug__contains=rfc&limit=85
 
+@MainActor
 public func loadRelatedDrafts(context: NSManagedObjectContext, group: Group?, limit: Int32, offset: Int32) async {
-    let url: URL
-
-    if let group = group {
-        var urlString: String = "https://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-(?!ietf-\(group.acronym!))[A-Za-z0-9]*-\(group.acronym!)-*&type=draft&states__slug__contains=active"
-        if let area = group.area {
-            if area.name == "irtf" {
-                urlString = "https://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-(?!irtf-\(group.acronym!))[A-Za-z0-9]*-\(group.acronym!)-*&type=draft&states__slug__contains=active"
-            }
+    assertMainQueue(context)
+    guard let group, let acronym = group.acronym else { return }
+    var urlString: String = "https://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-(?!ietf-\(acronym))[A-Za-z0-9]*-\(acronym)-*&type=draft&states__slug__contains=active"
+    if let area = group.area {
+        if area.name == "irtf" {
+            urlString = "https://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-(?!irtf-\(acronym))[A-Za-z0-9]*-\(acronym)-*&type=draft&states__slug__contains=active"
         }
-
-        if offset == 0 {
-            guard let url0 = URL(string: urlString) else {
-                print("Invalid Related Draft URL")
-                return
-            }
-            url = url0
-        } else {
-            guard let url_offset = URL(string: urlString + "limit=\(limit)&offset=\(offset)") else {
-                print("Invalid Related Draft URL offset")
-                return
-            }
-            url = url_offset
-        }
-        do {
-            let (data, response) = try await URLSession.shared.data(from: url)
-            guard let httpResponse = response as? HTTPURLResponse else {
-                //print("No HTTP Result")
-                return
-            }
-            guard (200...299).contains(httpResponse.statusCode) else {
-                //print("Http Result \(httpResponse.statusCode): \(url.absoluteString)")
-                return
-            }
-            do {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
-                let json_docs = try decoder.decode(Documents.self, from: data)
-
-                context.performAndWait {
-                    group.relatedDocs = Set<Group>() as NSSet
-                    for obj in json_docs.objects {
-                        if !obj.name.starts(with: "draft-ietf-\(group.acronym!)") {
-                            updateDocument(context: context, group:group, kind:.related, document:obj)
-                        }
-                    }
-                }
-            } catch DecodingError.dataCorrupted(let context) {
-                print("Related Drafts wg \(group.acronym!): \(context)")
-            } catch DecodingError.keyNotFound(let key, let context) {
-                print("Key '\(key)' not found:", context.debugDescription)
-                print("codingPath:", context.codingPath)
-            } catch DecodingError.valueNotFound(let value, let context) {
-                print("Value '\(value)' not found:", context.debugDescription)
-                print("codingPath:", context.codingPath)
-            } catch DecodingError.typeMismatch(let type, let context) {
-                print("Type '\(type)' mismatch:", context.debugDescription)
-                print("codingPath:", context.codingPath)
-            } catch {
-                print("error: ", error)
-            }
-        } catch {
-            print("Unexpected Meeting format")
+    }
+    let url = offset == 0 ? URL(string: urlString) : URL(string: urlString + "limit=\(limit)&offset=\(offset)")
+    guard let url else {
+        print(offset == 0 ? "Invalid Related Draft URL" : "Invalid Related Draft URL offset")
+        return
+    }
+    guard let fetched = await fetchDecoded(Documents.self, request: URLRequest(url: url), label: "Related Drafts wg \(acronym)") else {
+        return
+    }
+    group.relatedDocs = Set<Group>() as NSSet
+    for obj in fetched.value.objects {
+        if !obj.name.starts(with: "draft-ietf-\(acronym)") {
+            updateDocument(context: context, group: group, kind: .related, document: obj)
         }
     }
 }
 
+@MainActor
 public func loadRecordingDocument(context: NSManagedObjectContext, session: Session?) async {
-    if let session = session {
-        if let meeting = session.meeting {
-            if let group = session.group {
-                let urlString = "https://datatracker.ietf.org/api/v1/doc/document/?name__contains=recording-\(meeting.number!)&external_url__contains=youtube&group__acronym=\(group.acronym!)"
+    assertMainQueue(context)
+    guard let session,
+          let number = session.meeting?.number,
+          let acronym = session.group?.acronym,
+          let start = session.start else {
+        return
+    }
+    let urlString = "https://datatracker.ietf.org/api/v1/doc/document/?name__contains=recording-\(number)&external_url__contains=youtube&group__acronym=\(acronym)"
+    guard let url = URL(string: urlString) else {
+        print("Invalid URL: \(urlString)")
+        return
+    }
+    // 2022-11-09 at 13:00:00
+    let recFormatter = DateFormatter()
+    recFormatter.locale = Locale(identifier: Locale.current.identifier)
+    recFormatter.dateFormat = "yyyy-MM-dd' at 'HH:mm:ss"
+    recFormatter.calendar = Calendar(identifier: .iso8601)
+    recFormatter.timeZone = TimeZone.gmt
+    let matchTitle = "Video recording for \(acronym.uppercased()) on \(recFormatter.string(from: start))"
 
-                guard let url = URL(string: urlString) else {
-                    print("Invalid URL: \(urlString)")
-                    return
-                }
-                do {
-                    // 2022-11-09 at 13:00:00
-                    let recFormatter = DateFormatter()
-                    recFormatter.locale = Locale(identifier: Locale.current.identifier)
-                    recFormatter.dateFormat = "yyyy-MM-dd' at 'HH:mm:ss"
-                    recFormatter.calendar = Calendar(identifier: .iso8601)
-                    recFormatter.timeZone = TimeZone.gmt
-                    let matchTitle = String(format: "Video recording for \(group.acronym!.uppercased()) on \(recFormatter.string(from: session.start!))")
-                    let (data, response) = try await URLSession.shared.data(from: url)
-                    guard let httpResponse = response as? HTTPURLResponse else {
-                        //print("No HTTP Result")
-                        return
-                    }
-                    guard (200...299).contains(httpResponse.statusCode) else {
-                        //print("Http Result \(httpResponse.statusCode): \(url.absoluteString)")
-                        return
-                    }
-                    do {
-                        let decoder = JSONDecoder()
-                        decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
-                        let json_docs = try decoder.decode(Documents.self, from: data)
-
-                        for obj in json_docs.objects {
-                            if obj.title.caseInsensitiveCompare(matchTitle) == .orderedSame {
-                                if let external_url = obj.external_url {
-                                    let components = URLComponents(string: external_url)
-                                    if let components = components, components.host == "www.youtube.com" {
-                                        if let query = components.query {
-                                            let pairs = query.components(separatedBy: "&")
-                                            for pair in pairs {
-                                                let kv = pair.components(separatedBy: "=")
-                                                if kv.count == 2 && kv.first == "v" {
-                                                    if let youtubeID = kv.last {
-                                                        guard let youtubeUrl = URL(string: "youtube://\(youtubeID)") else {
-                                                            print("Invalid External recording URL: \(external_url)")
-                                                            return
-                                                        }
-
-                                                        context.performAndWait {
-                                                            session.recording = youtubeUrl
-                                                            do {
-                                                                try context.save()
-                                                            }
-                                                            catch {
-                                                                print("Unable to save recording in Session: \(session.name!)")
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } catch DecodingError.dataCorrupted(let context) {
-                        print("Recording document session \(session.name!): \(context)")
-                    } catch DecodingError.keyNotFound(let key, let context) {
-                        print("Key '\(key)' not found:", context.debugDescription)
-                        print("codingPath:", context.codingPath)
-                    } catch DecodingError.valueNotFound(let value, let context) {
-                        print("Value '\(value)' not found:", context.debugDescription)
-                        print("codingPath:", context.codingPath)
-                    } catch DecodingError.typeMismatch(let type, let context) {
-                        print("Type '\(type)' mismatch:", context.debugDescription)
-                        print("codingPath:", context.codingPath)
-                    } catch {
-                        print("error: ", error)
-                    }
-                } catch {
-                    print("Unexpected recording format")
-                }
+    guard let fetched = await fetchDecoded(Documents.self, request: URLRequest(url: url),
+                                           label: "Recording document session \(session.name ?? "")") else {
+        return
+    }
+    for obj in fetched.value.objects where obj.title.caseInsensitiveCompare(matchTitle) == .orderedSame {
+        guard let external_url = obj.external_url,
+              let components = URLComponents(string: external_url),
+              components.host == "www.youtube.com",
+              let query = components.query else {
+            continue
+        }
+        for pair in query.components(separatedBy: "&") {
+            let kv = pair.components(separatedBy: "=")
+            guard kv.count == 2, kv.first == "v", let youtubeID = kv.last else { continue }
+            guard let youtubeUrl = URL(string: "youtube://\(youtubeID)") else {
+                print("Invalid External recording URL: \(external_url)")
+                return
+            }
+            session.recording = youtubeUrl
+            do {
+                try context.save()
+            }
+            catch {
+                print("Unable to save recording in Session: \(session.name ?? "")")
             }
         }
     }
 }
 
+@MainActor
 public func loadCharterDocument(context: NSManagedObjectContext, group: Group?) async {
-
-    if let group = group {
-        let urlString = "https://datatracker.ietf.org/api/v1/doc/document/charter-ietf-\(group.acronym!)/"
-
-        guard let url = URL(string: urlString) else {
-            print("Invalid URL: \(urlString)")
-            return
-        }
-        do {
-            let (data, response) = try await URLSession.shared.data(from: url)
-            guard let httpResponse = response as? HTTPURLResponse else {
-                //print("No HTTP Result")
-                return
-            }
-            guard (200...299).contains(httpResponse.statusCode) else {
-                //print("Http Result \(httpResponse.statusCode): \(url.absoluteString)")
-                return
-            }
-            do {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .formatted(DateFormatter.rfc3339)
-                let json_doc = try decoder.decode(JSONDocument.self, from: data)
-
-                context.performAndWait {
-                    updateDocument(context: context, group:group, kind:.charter, document:json_doc)
-                }
-            } catch DecodingError.dataCorrupted(let context) {
-                print("Charter: \(context)")
-            } catch DecodingError.keyNotFound(let key, let context) {
-                print("Key '\(key)' not found:", context.debugDescription)
-                print("codingPath:", context.codingPath)
-            } catch DecodingError.valueNotFound(let value, let context) {
-                print("Value '\(value)' not found:", context.debugDescription)
-                print("codingPath:", context.codingPath)
-            } catch DecodingError.typeMismatch(let type, let context) {
-                print("Type '\(type)' mismatch:", context.debugDescription)
-                print("codingPath:", context.codingPath)
-            } catch {
-                print("error: ", error)
-            }
-        } catch {
-            print("Unexpected Meeting format")
-        }
+    assertMainQueue(context)
+    guard let group, let acronym = group.acronym else { return }
+    let urlString = "https://datatracker.ietf.org/api/v1/doc/document/charter-ietf-\(acronym)/"
+    guard let url = URL(string: urlString) else {
+        print("Invalid URL: \(urlString)")
+        return
     }
+    guard let fetched = await fetchDecoded(JSONDocument.self, request: URLRequest(url: url), label: "Charter") else {
+        return
+    }
+    updateDocument(context: context, group: group, kind: .charter, document: fetched.value)
 }
 
 private func updateDocument(context: NSManagedObjectContext, group: Group, kind: DocumentKind, document: JSONDocument) {
