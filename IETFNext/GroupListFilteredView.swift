@@ -68,6 +68,7 @@ struct GroupListFilteredView: View {
                     .headerProminence(.increased)
                 }
                 .listStyle(.inset)
+                .meetingBar(selectedMeeting)
                 .searchable(text: $searchText, placement: .automatic, prompt: "Group acronym, name, or BOF")
                 .autocorrectionDisabled()
 #if !os(macOS)
@@ -90,17 +91,6 @@ struct GroupListFilteredView: View {
                 }
                 ToolbarItem(placement: .primaryAction) {
                     GroupFilterMenu(groupFilterMode: $groupFilterMode)
-                }
-                ToolbarItem(placement: .bottomBar) {
-                    if let meeting = selectedMeeting {
-                        if let number = meeting.number {
-                            if let city = meeting.city {
-                                Text("IETF \(number) (\(city))")
-                                    .font(.subheadline)
-                                    .foregroundStyle(Color.accentColor)
-                            }
-                        }
-                    }
                 }
 #endif
             }

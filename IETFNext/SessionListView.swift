@@ -148,6 +148,7 @@ struct SessionListFilteredView: View {
                         }
                     }
                     .listStyle(.inset)
+                    .meetingBar(selectedMeeting)
                     .searchable(text: $searchText, placement: .automatic, prompt: "Session name or Group acronym")
                     .autocorrectionDisabled()
                     .overlay(alignment: .trailing) {
@@ -186,17 +187,6 @@ struct SessionListFilteredView: View {
                 }
                 ToolbarItem(placement: .primaryAction) {
                     SessionFilterMenu(sessionFilterMode: $sessionFilterMode)
-                }
-                ToolbarItem(placement: .bottomBar) {
-                    if let meeting = selectedMeeting {
-                        if let number = meeting.number {
-                            if let city = meeting.city {
-                                Text("IETF \(number) (\(city))")
-                                    .font(.subheadline)
-                                    .foregroundStyle(Color.accentColor)
-                            }
-                        }
-                    }
                 }
 #endif
             }

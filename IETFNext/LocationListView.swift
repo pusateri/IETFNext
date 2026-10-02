@@ -83,6 +83,7 @@ struct LocationListView: View {
             }
         }
         .listStyle(.inset)
+        .meetingBar(selectedMeeting)
 #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
@@ -188,17 +189,6 @@ struct LocationListView: View {
                 }
             }
 #if !os(macOS)
-            ToolbarItem(placement: .bottomBar) {
-                if let meeting = selectedMeeting {
-                    if let number = meeting.number {
-                        if let city = meeting.city {
-                            Text("IETF \(number) (\(city))")
-                                .font(.subheadline)
-                                .foregroundStyle(Color.accentColor)
-                        }
-                    }
-                }
-            }
 #endif
         }
         .sheet(isPresented: $showingWeather) {

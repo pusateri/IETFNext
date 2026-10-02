@@ -262,6 +262,41 @@ private struct DownloadCountText: View {
     }
 }
 
+extension View {
+    /// Pins a short centered label in a bar above the list. It stays put while the list scrolls:
+    /// `safeAreaBar` insets the list so no rows are hidden, and extends the scroll-edge effect so
+    /// rows fade under the bar. This replaces bottom-toolbar labels, which iOS 26 squeezed into
+    /// a small circle floating over the list. iOS only; the Mac shows this information elsewhere.
+    @ViewBuilder
+    func pinnedListLabel(_ text: String?, identifier: String) -> some View {
+#if os(macOS)
+        self
+#else
+        safeAreaBar(edge: .top) {
+            if let text {
+                Text(text)
+                    .font(.subheadline)
+                    .foregroundStyle(Color.accentColor)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.horizontal)
+                    .padding(.vertical, 6)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier(identifier)
+            }
+        }
+#endif
+    }
+
+    /// Pins the selected meeting, e.g. "IETF 126 (Vienna)", above the list.
+    func meetingBar(_ meeting: Meeting?) -> some View {
+        var text: String? = nil
+        if let number = meeting?.number, let city = meeting?.city {
+            text = "IETF \(number) (\(city))"
+        }
+        return pinnedListLabel(text, identifier: "meetingBar")
+    }
+}
+
 enum LocationDetailMode: String {
     case location
     case none

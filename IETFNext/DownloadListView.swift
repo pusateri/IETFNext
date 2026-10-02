@@ -217,6 +217,7 @@ struct DownloadListView: View {
                 .headerProminence(.increased)
             }
             .listStyle(.inset)
+            .pinnedListLabel("Total: \(sizeString(downloads.totalSize))", identifier: "downloadsTotal")
             .toolbar {
 #if os(macOS)
                 ToolbarItem(placement: .navigation) {
@@ -232,11 +233,6 @@ struct DownloadListView: View {
                 }
                 ToolbarItem(placement: .primaryAction) {
                     EditButton()
-                }
-                ToolbarItem(placement: .bottomBar) {
-                    Text("Total: \(sizeString(downloads.totalSize))")
-                        .font(.subheadline)
-                        .foregroundStyle(Color.accentColor)
                 }
 #endif
             }
