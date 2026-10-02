@@ -1,0 +1,20 @@
+IETFNext.xcodeproj/project.pbxproj
+  h_8be2082ac7c1ab 52-53,142-143,293-294,491,508
+IETFNext/FloorMapImage.swift
+  h_8be2082ac7c1ab 1-110
+IETFNext/LocationDetailView.swift
+  h_8be2082ac7c1ab 56-62,101-103
+IETFNext/ZoomableContainer.swift
+  h_8be2082ac7c1ab 1-253
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "25a09c53d50c84e6961df8d45d1a891cd2af33d0",
+  "prompts": {},
+  "humans": {
+    "h_8be2082ac7c1ab": {
+      "author": "Tom Pusateri <pusateri@bangj.com>"
+    }
+  }
+}
