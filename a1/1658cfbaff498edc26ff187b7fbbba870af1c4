@@ -1,0 +1,22 @@
+IETFNext/ContentView.swift
+  h_8be2082ac7c1ab 265-299
+IETFNext/DownloadListView.swift
+  h_8be2082ac7c1ab 220
+IETFNext/GroupListFilteredView.swift
+  h_8be2082ac7c1ab 71
+IETFNext/LocationListView.swift
+  h_8be2082ac7c1ab 86
+IETFNext/SessionListView.swift
+  h_8be2082ac7c1ab 151
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a11658cfbaff498edc26ff187b7fbbba870af1c4",
+  "prompts": {},
+  "humans": {
+    "h_8be2082ac7c1ab": {
+      "author": "Tom Pusateri <pusateri@bangj.com>"
+    }
+  }
+}
