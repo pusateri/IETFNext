@@ -49,6 +49,8 @@
 		F896CFB12C4EDABE009A3DFD /* Session+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F896CFB02C4EDABE009A3DFD /* Session+Extension.swift */; };
 		F896CFB32C4EE2A6009A3DFD /* EKEvent+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F896CFB22C4EE2A6009A3DFD /* EKEvent+Extension.swift */; };
 		F8BB6626306DAAC50029D778 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB6625306DAAC50029D778 /* PreviewData.swift */; };
+		F8BB6628306F2FEF0029D778 /* ZoomableContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB6627306F2FEF0029D778 /* ZoomableContainer.swift */; };
+		F8BB662A306F3FCA0029D778 /* FloorMapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB6629306F3FCA0029D778 /* FloorMapImage.swift */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListView.swift */; };
@@ -137,6 +139,8 @@
 		F896CFB22C4EE2A6009A3DFD /* EKEvent+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EKEvent+Extension.swift"; sourceTree = "<group>"; };
 		F896CFB42C4F12D7009A3DFD /* IETFNext 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 10.xcdatamodel"; sourceTree = "<group>"; };
 		F8BB6625306DAAC50029D778 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
+		F8BB6627306F2FEF0029D778 /* ZoomableContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableContainer.swift; sourceTree = "<group>"; };
+		F8BB6629306F3FCA0029D778 /* FloorMapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorMapImage.swift; sourceTree = "<group>"; };
 		F8C913352980B2580004D458 /* IETFNext 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 8.xcdatamodel"; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
@@ -286,6 +290,8 @@
 				F8E9B9A02934101200CA6F09 /* IETFNext.xcdatamodeld */,
 				F8E9B9A82934101300CA6F09 /* Preview Content */,
 				F8BB6625306DAAC50029D778 /* PreviewData.swift */,
+				F8BB6627306F2FEF0029D778 /* ZoomableContainer.swift */,
+				F8BB6629306F3FCA0029D778 /* FloorMapImage.swift */,
 			);
 			path = IETFNext;
 			sourceTree = "<group>";
@@ -482,6 +488,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F82FFEAC2964C8FF007AA54A /* RFCParser.swift in Sources */,
+				F8BB662A306F3FCA0029D778 /* FloorMapImage.swift in Sources */,
 				F80CA271294920D9002AD2C6 /* DownloadViewModel.swift in Sources */,
 				F85D55C6295F7A7500569A77 /* SessionListTitleView.swift in Sources */,
 				F8E9BA112935624100CA6F09 /* LocationListView.swift in Sources */,
@@ -498,6 +505,7 @@
 				F85D55C4295F71DB00569A77 /* SessionFilterMenu.swift in Sources */,
 				F8E9B9D32935070D00CA6F09 /* MeetingListView.swift in Sources */,
 				F807990D2985AC960014F210 /* WeatherView.swift in Sources */,
+				F8BB6628306F2FEF0029D778 /* ZoomableContainer.swift in Sources */,
 				F8249B30297ABB1F004B66DF /* RFCDetailView.swift in Sources */,
 				F80CA269294778FA002AD2C6 /* GroupListRowView.swift in Sources */,
 				F80CA26D2947BC73002AD2C6 /* SessionListLocationView.swift in Sources */,

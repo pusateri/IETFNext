@@ -53,29 +53,13 @@ struct LocationDetailView: View {
                             .padding(.top)
                     }
                     if let url = location.map {
-                        AsyncImage(url: url, transaction: Transaction(animation: .spring())) { phase in
-                            switch phase {
-                            case .empty:
-                                ProgressView()
-                            case .success(let image):
-                                if colorScheme == .light {
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                        .transition(.scale)
-                                } else if colorScheme == .dark {
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                        .transition(.scale)
-                                        .colorInvert()
-                                }
-                            case .failure(_):
-                                EmptyView()
-                            @unknown default:
-                                EmptyView()
-                            }
-                        }
+                        // Zoomable map with its blank margins trimmed (see FloorMapImage).
+                        FloorMapImage(url: url)
+                            .accessibilityLabel("Floor map")
+                            .accessibilityIdentifier("location.map")
+                            // A new room starts at the fitted (un-zoomed) map, even when rooms on
+                            // the same floor share a map image.
+                            .id(location.objectID)
                     }
                     if vSizeClass != .compact {
                         DynamicFetchRequestView(selectedMeeting: selectedMeeting, selectedLocation: selectedLocation) { results in
@@ -114,6 +98,9 @@ struct LocationDetailView: View {
                                     }
                                 }
                                 .listStyle(.inset)
+                                // Start the session list right below the map instead of after
+                                // the list's default top margin.
+                                .contentMargins(.top, 0, for: .scrollContent)
                             }
                         }
                     }
