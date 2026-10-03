@@ -21,6 +21,7 @@ let venuePhotos = [
 struct LocationListView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.appNavigator) private var navigator
     @SectionedFetchRequest<String, Location> var fetchRequest: SectionedFetchResults<String, Location>
     @Binding var selectedLocation: Location?
     @Binding var selectedMeeting: Meeting?
@@ -43,6 +44,19 @@ struct LocationListView: View {
         self._selectedLocation = selectedLocation
         self._locationDetailMode = locationDetailMode
         self._columnVisibility = columnVisibility
+    }
+
+    /// Selects the room an App Intent asked to show, if there is one. The
+    /// `selectedLocation` change handler switches the detail to the room's map.
+    private func selectRoutedLocation() {
+        guard let id = navigator.take(\.locationID) else {
+            return
+        }
+        let fetchLocation: NSFetchRequest<Location> = Location.fetchRequest()
+        fetchLocation.predicate = NSPredicate(format: "id = %d", id)
+        if let location = (try? viewContext.fetch(fetchLocation))?.first {
+            selectedLocation = location
+        }
     }
 
     private func escapedAddress(meeting: Meeting) -> String? {
@@ -214,6 +228,10 @@ struct LocationListView: View {
                     columnVisibility = .doubleColumn
                 }
             }
+            selectRoutedLocation()
+        }
+        .onChange(of: navigator.routed) {
+            selectRoutedLocation()
         }
     }
 }

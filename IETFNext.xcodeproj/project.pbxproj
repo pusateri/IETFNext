@@ -51,6 +51,10 @@
 		F8BB6626306DAAC50029D778 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB6625306DAAC50029D778 /* PreviewData.swift */; };
 		F8BB6628306F2FEF0029D778 /* ZoomableContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB6627306F2FEF0029D778 /* ZoomableContainer.swift */; };
 		F8BB662A306F3FCA0029D778 /* FloorMapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB6629306F3FCA0029D778 /* FloorMapImage.swift */; };
+		F8BB662D30709D110029D778 /* NavigationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB662C30709D110029D778 /* NavigationRequest.swift */; };
+		F8BB662F30709D190029D778 /* AppNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB662E30709D190029D778 /* AppNavigator.swift */; };
+		F8BB663130709D200029D778 /* IntentDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB663030709D200029D778 /* IntentDataStore.swift */; };
+		F8BB663330709D2D0029D778 /* SessionPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB663230709D2D0029D778 /* SessionPredicate.swift */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListView.swift */; };
@@ -141,6 +145,10 @@
 		F8BB6625306DAAC50029D778 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		F8BB6627306F2FEF0029D778 /* ZoomableContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableContainer.swift; sourceTree = "<group>"; };
 		F8BB6629306F3FCA0029D778 /* FloorMapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorMapImage.swift; sourceTree = "<group>"; };
+		F8BB662C30709D110029D778 /* NavigationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRequest.swift; sourceTree = "<group>"; };
+		F8BB662E30709D190029D778 /* AppNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNavigator.swift; sourceTree = "<group>"; };
+		F8BB663030709D200029D778 /* IntentDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentDataStore.swift; sourceTree = "<group>"; };
+		F8BB663230709D2D0029D778 /* SessionPredicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPredicate.swift; sourceTree = "<group>"; };
 		F8C913352980B2580004D458 /* IETFNext 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 8.xcdatamodel"; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
@@ -211,6 +219,16 @@
 				F845061A2C1CB16600EC5CBE /* LICENSE.txt */,
 			);
 			path = Apple;
+			sourceTree = "<group>";
+		};
+		F8BB662B30709D0A0029D778 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				F8BB662C30709D110029D778 /* NavigationRequest.swift */,
+				F8BB662E30709D190029D778 /* AppNavigator.swift */,
+				F8BB663030709D200029D778 /* IntentDataStore.swift */,
+			);
+			path = Intents;
 			sourceTree = "<group>";
 		};
 		F8E9B9902934101200CA6F09 = {
@@ -292,6 +310,8 @@
 				F8BB6625306DAAC50029D778 /* PreviewData.swift */,
 				F8BB6627306F2FEF0029D778 /* ZoomableContainer.swift */,
 				F8BB6629306F3FCA0029D778 /* FloorMapImage.swift */,
+				F8BB662B30709D0A0029D778 /* Intents */,
+				F8BB663230709D2D0029D778 /* SessionPredicate.swift */,
 			);
 			path = IETFNext;
 			sourceTree = "<group>";
@@ -492,10 +512,12 @@
 				F80CA271294920D9002AD2C6 /* DownloadViewModel.swift in Sources */,
 				F85D55C6295F7A7500569A77 /* SessionListTitleView.swift in Sources */,
 				F8E9BA112935624100CA6F09 /* LocationListView.swift in Sources */,
+				F8BB662F30709D190029D778 /* AppNavigator.swift in Sources */,
 				F845061C2C1CB16600EC5CBE /* EventDataStore.swift in Sources */,
 				F82FFEA529624ED1007AA54A /* DownloadDetailView.swift in Sources */,
 				F8F129C3297752A90096B3D4 /* RFCListTitleView.swift in Sources */,
 				F896CFAF2C4ED06A009A3DFD /* Group+Extension.swift in Sources */,
+				F8BB662D30709D110029D778 /* NavigationRequest.swift in Sources */,
 				F80382882A8FE378002517CF /* Download+Extension.swift in Sources */,
 				F865B9F2295930AB00C3DB13 /* LocationDetailView.swift in Sources */,
 				F8E9BA1329366A4000CA6F09 /* MeetingListRowView.swift in Sources */,
@@ -539,8 +561,10 @@
 				F88B7E5C2960931B00F770C9 /* LocationPhotoMenuView.swift in Sources */,
 				F8782D162C93A53200821284 /* CalendarChooser.swift in Sources */,
 				F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */,
+				F8BB663330709D2D0029D778 /* SessionPredicate.swift in Sources */,
 				F8BB6626306DAAC50029D778 /* PreviewData.swift in Sources */,
 				F80CA275294ABA24002AD2C6 /* HTML.swift in Sources */,
+				F8BB663130709D200029D778 /* IntentDataStore.swift in Sources */,
 				F82FFEAF2965D897007AA54A /* RFCListView.swift in Sources */,
 				F8E9BA152936B5FA00CA6F09 /* WebView.swift in Sources */,
 			);

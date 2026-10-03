@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppIntents
 #if os(macOS)
 import AppKit
 #endif
@@ -27,6 +28,15 @@ struct IETFNextApp: App {
     @State private var showingCalendars = false
     @State var menuSidebarOption: SidebarOption? = nil
     @State var useLocalTime: Bool = false
+
+    init() {
+        // Registered here, not from a view, because Siri and Shortcuts can launch the
+        // app without showing any UI and run an intent straight away.
+        let dataStore = IntentDataStore.shared
+        let navigator = AppNavigator.shared
+        AppDependencyManager.shared.add(dependency: dataStore)
+        AppDependencyManager.shared.add(dependency: navigator)
+    }
 
     var body: some Scene {
         WindowGroup("Documents") {

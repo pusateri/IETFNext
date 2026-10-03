@@ -35,6 +35,7 @@ extension DynamicSectionedFetchRequestView where T : Group {
 struct GroupListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.appNavigator) private var navigator
 
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
@@ -51,6 +52,19 @@ struct GroupListFilteredView: View {
         let results = try? viewContext.fetch(fetchGroup)
 
         return results?.first
+    }
+
+    /// Selects the group an App Intent asked to show, if there is one.
+    @discardableResult
+    private func selectRoutedGroup(scrollViewReader: ScrollViewProxy) -> Bool {
+        guard let acronym = navigator.take(\.groupAcronym), let group = fetchGroup(short: acronym) else {
+            return false
+        }
+        selectedGroup = group
+        withAnimation {
+            scrollViewReader.scrollTo(group, anchor: .center)
+        }
+        return true
     }
 
     var body: some View {
@@ -113,6 +127,10 @@ struct GroupListFilteredView: View {
                         columnVisibility = .doubleColumn
                     }
                 }
+                // A group requested by an App Intent replaces the saved selection.
+                if selectRoutedGroup(scrollViewReader: scrollViewReader) {
+                    return
+                }
                 // Restoring a selection in a collapsed split view would push the detail
                 // instead of showing the list.
                 if horizontalSizeClass != .compact, let short = groupShort {
@@ -126,6 +144,9 @@ struct GroupListFilteredView: View {
                 if selectedGroup == nil {
                     //html = BLANK
                 }
+            }
+            .onChange(of: navigator.routed) {
+                selectRoutedGroup(scrollViewReader: scrollViewReader)
             }
         }
     }

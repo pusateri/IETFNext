@@ -12,76 +12,19 @@ import CoreData
 extension DynamicFetchRequestView where T : Session {
 
     init(withMeeting meeting: Binding<Meeting?>, searchText: String, filterMode: Binding<SessionFilterMode>, @ViewBuilder content: @escaping (FetchedResults<T>) -> Content) {
-
-        var now: Date
-        var search_criteria = searchText.isEmpty ? "" : "((name contains[cd] %@) OR (group.acronym contains[cd] %@)) AND "
-        var args: [CVarArg] = searchText.isEmpty ? [] : [searchText, searchText]
-
-        search_criteria += "(meeting.number = %@) AND (status contains \"sched\")"
-        args.append(meeting.wrappedValue?.number ?? "0")
-
-        switch(filterMode.wrappedValue) {
-            case .favorites:
-                search_criteria += " AND (group.favorite = true)"
-            case .bofs:
-                search_criteria += " AND (is_bof = true)"
-            case .now:
-                now = Date()
-                search_criteria += " AND (start < %@) AND (end > %@)"
-                args.append(now as CVarArg)
-                args.append(now as CVarArg)
-            case .today:
-                now = Date()
-                let calendar = Calendar.current
-                let begin = calendar.startOfDay(for: now)
-                let end = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: now)
-                if let end = end {
-                    search_criteria += " AND (start > %@) AND (end < %@)"
-                    args.append(begin as CVarArg)
-                    args.append(end as CVarArg)
-                } else {
-                        // we should NEVER hit this case but we don't want it to crash unexpectedly
-                    search_criteria += " AND (start > %@)"
-                    args.append(begin as CVarArg)
-                }
-            case .none:
-                break
-            case .area_art:
-                search_criteria += " AND (group.area.name = \"art\")"
-            case .area_gen:
-                search_criteria += " AND (group.area.name = \"gen\")"
-            case .area_iab:
-                search_criteria += " AND (group.area.name = \"iab\")"
-            case .area_ietf:
-                search_criteria += " AND (group.area.name = \"ietf\")"
-            case .area_int:
-                search_criteria += " AND (group.area.name = \"int\")"
-            case .area_irtf:
-                search_criteria += " AND (group.area.name = \"irtf\")"
-            case .area_ops:
-                search_criteria += " AND (group.area.name = \"ops\")"
-            case .area_rtg:
-                search_criteria += " AND (group.area.name = \"rtg\")"
-            case .area_sec:
-                search_criteria += " AND (group.area.name = \"sec\")"
-            case .area_tsv:
-                search_criteria += " AND (group.area.name = \"tsv\")"
-        }
-
-        let predicate = NSPredicate(format: search_criteria, argumentArray: args)
-
-        let sortDescriptors = [
-            NSSortDescriptor(keyPath: \Session.start, ascending: true),
-            NSSortDescriptor(keyPath: \Session.end, ascending: false),
-            NSSortDescriptor(keyPath: \Session.name, ascending: true),
-        ]
-        self.init( withPredicate: predicate, andSortDescriptor: sortDescriptors, content: content)
+        let predicate = SessionPredicate.make(
+            meetingNumber: meeting.wrappedValue?.number,
+            searchText: searchText,
+            filterMode: filterMode.wrappedValue
+        )
+        self.init( withPredicate: predicate, andSortDescriptor: SessionPredicate.sortDescriptors, content: content)
     }
 }
 
 struct SessionListFilteredView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.appNavigator) private var navigator
     @Binding var selectedMeeting: Meeting?
     @Binding var selectedGroup: Group?
     @Binding var sessionFilterMode: SessionFilterMode
@@ -103,6 +46,19 @@ struct SessionListFilteredView: View {
         let results = try? viewContext.fetch(fetchSession)
 
         return results?.first
+    }
+
+    /// Selects the session an App Intent asked to show, if there is one.
+    @discardableResult
+    private func selectRoutedSession(scrollViewProxy: ScrollViewProxy) -> Bool {
+        guard let id = navigator.take(\.sessionID), let session = fetchSession(session_id: id) else {
+            return false
+        }
+        selected = session
+        withAnimation {
+            scrollViewProxy.scrollTo(session, anchor: .center)
+        }
+        return true
     }
 
     private func donateActivity(session: Session) {
@@ -211,6 +167,10 @@ struct SessionListFilteredView: View {
                         columnVisibility = .doubleColumn
                     }
                 }
+                // A session requested by an App Intent replaces the saved selection.
+                if selectRoutedSession(scrollViewProxy: scrollViewProxy) {
+                    return
+                }
                 // Restoring a selection in a collapsed split view would push the detail
                 // instead of showing the list.
                 if horizontalSizeClass != .compact, let session_id = sessionID {
@@ -221,6 +181,9 @@ struct SessionListFilteredView: View {
                         }
                     }
                 }
+            }
+            .onChange(of: navigator.routed) {
+                selectRoutedSession(scrollViewProxy: scrollViewProxy)
             }
             .onContinueUserActivity("com.bangj.ietf.selectedSession", perform: { userActivity in
                 if let session_str = userActivity.persistentIdentifier {

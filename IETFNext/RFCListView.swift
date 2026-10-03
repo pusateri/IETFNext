@@ -73,6 +73,7 @@ extension DynamicFetchRequestView where T : RFC {
 
 struct RFCListView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.appNavigator) private var navigator
     @Binding var selectedRFC: RFC?
     @Binding var selectedDownload: Download?
     @Binding var rfcFilterMode: RFCFilterMode
@@ -146,7 +147,9 @@ struct RFCListView: View {
                 }
             }
             .onAppear {
-                if let doc = selectedRFC {
+                // An RFC requested by an App Intent replaces the current selection; the
+                // `selectedRFC` change handler loads it.
+                if !selectRoutedRFC(scrollViewReader: scrollViewReader), let doc = selectedRFC {
                     loadRFC(doc: doc)
                     withAnimation {
                         scrollViewReader.scrollTo(doc, anchor: .center)
@@ -158,11 +161,27 @@ struct RFCListView: View {
                     }
                 }
             }
+            .onChange(of: navigator.routed) {
+                selectRoutedRFC(scrollViewReader: scrollViewReader)
+            }
         }
     }
 }
 
 extension RFCListView {
+
+    /// Selects the RFC an App Intent asked to show, if there is one.
+    @discardableResult
+    private func selectRoutedRFC(scrollViewReader: ScrollViewProxy) -> Bool {
+        guard let name = navigator.take(\.rfcName), let rfc = findRFC(context: viewContext, name: name) else {
+            return false
+        }
+        selectedRFC = rfc
+        withAnimation {
+            scrollViewReader.scrollTo(rfc, anchor: .center)
+        }
+        return true
+    }
 
     private func loadRFC(doc: RFC) {
         let urlString = "https://www.rfc-editor.org/rfc/\(doc.shortLowerName).html"

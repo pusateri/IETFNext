@@ -307,7 +307,8 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    
+    @Environment(\.appNavigator) private var navigator
+
     @Binding var showingMeetings: Bool
     @Binding var showingCalendars: Bool
     @Binding var menuSidebarOption: SidebarOption?
@@ -526,6 +527,11 @@ struct ContentView: View {
             if detailSelection == nil {
                 columnVisibility = .all
             }
+            // An intent that launched the app set its request before this view existed.
+            routePendingNavigation()
+        }
+        .onChange(of: navigator.pending) {
+            routePendingNavigation()
         }
         // Loads schedule data for the selected meeting, both the one restored at launch and
         // one picked in the meeting sheet. Restarts (cancelling the old load) if it changes.
@@ -567,6 +573,43 @@ extension ContentView {
     // A content List with a non-nil selection pushes its detail as soon as it appears in a
     // collapsed split view, so a selection left by another sidebar section would skip
     // straight past the list.
+    /// Shows the meeting and sidebar section for a request made by an App Intent, then
+    /// hands the request to that section's list, which selects the item.
+    private func routePendingNavigation() {
+        guard let request = navigator.pending else {
+            return
+        }
+        if let number = meetingNumber(for: request), number != selectedMeeting?.number,
+           let meeting = selectMeeting(context: viewContext, number: number) {
+            selectedMeeting = meeting
+            UserDefaults.standard.set(number, forKey: IntentDataStore.meetingNumberKey)
+        }
+        let section = request.section
+        if section != detailSelection {
+            clearSelectionsForSectionChange()
+        }
+        detailSelection = section
+        listSelection = section
+        _ = navigator.route()
+    }
+
+    /// The meeting a requested session or location belongs to. Groups and RFCs aren't
+    /// tied to a meeting, so requests for them keep the current one.
+    private func meetingNumber(for request: NavigationRequest) -> String? {
+        switch request {
+        case .session(let id):
+            let fetchSession: NSFetchRequest<Session> = Session.fetchRequest()
+            fetchSession.predicate = NSPredicate(format: "id = %d", id)
+            return (try? viewContext.fetch(fetchSession))?.first?.meeting?.number
+        case .location(let id):
+            let fetchLocation: NSFetchRequest<Location> = Location.fetchRequest()
+            fetchLocation.predicate = NSPredicate(format: "id = %d", id)
+            return (try? viewContext.fetch(fetchLocation))?.first?.meeting?.number
+        case .group, .rfc:
+            return nil
+        }
+    }
+
     private func clearSelectionsForSectionChange() {
         // selectedDownload is shared by the RFC and Download lists but is the List
         // selection only in Downloads, so a value left by the RFC list would push
