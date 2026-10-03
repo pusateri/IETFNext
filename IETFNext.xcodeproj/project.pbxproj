@@ -55,6 +55,14 @@
 		F8BB662F30709D190029D778 /* AppNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB662E30709D190029D778 /* AppNavigator.swift */; };
 		F8BB663130709D200029D778 /* IntentDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB663030709D200029D778 /* IntentDataStore.swift */; };
 		F8BB663330709D2D0029D778 /* SessionPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB663230709D2D0029D778 /* SessionPredicate.swift */; };
+		F8BB66363070A1190029D778 /* SessionEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66353070A1190029D778 /* SessionEntity.swift */; };
+		F8BB66383070A11D0029D778 /* SessionEntityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66373070A11D0029D778 /* SessionEntityQuery.swift */; };
+		F8BB663A3070A1220029D778 /* GroupEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66393070A1220029D778 /* GroupEntity.swift */; };
+		F8BB663C3070A1250029D778 /* GroupEntityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB663B3070A1250029D778 /* GroupEntityQuery.swift */; };
+		F8BB663E3070A1300029D778 /* RFCEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB663D3070A1300029D778 /* RFCEntity.swift */; };
+		F8BB66403070A1340029D778 /* RFCEntityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB663F3070A1340029D778 /* RFCEntityQuery.swift */; };
+		F8BB66423070A1630029D778 /* IntentDataStore+Entities.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66413070A1630029D778 /* IntentDataStore+Entities.swift */; };
+		F8BB66443070A16D0029D778 /* SpotlightIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66433070A16D0029D778 /* SpotlightIndexer.swift */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListView.swift */; };
@@ -149,6 +157,14 @@
 		F8BB662E30709D190029D778 /* AppNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNavigator.swift; sourceTree = "<group>"; };
 		F8BB663030709D200029D778 /* IntentDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentDataStore.swift; sourceTree = "<group>"; };
 		F8BB663230709D2D0029D778 /* SessionPredicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPredicate.swift; sourceTree = "<group>"; };
+		F8BB66353070A1190029D778 /* SessionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionEntity.swift; sourceTree = "<group>"; };
+		F8BB66373070A11D0029D778 /* SessionEntityQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionEntityQuery.swift; sourceTree = "<group>"; };
+		F8BB66393070A1220029D778 /* GroupEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEntity.swift; sourceTree = "<group>"; };
+		F8BB663B3070A1250029D778 /* GroupEntityQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupEntityQuery.swift; sourceTree = "<group>"; };
+		F8BB663D3070A1300029D778 /* RFCEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCEntity.swift; sourceTree = "<group>"; };
+		F8BB663F3070A1340029D778 /* RFCEntityQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCEntityQuery.swift; sourceTree = "<group>"; };
+		F8BB66413070A1630029D778 /* IntentDataStore+Entities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IntentDataStore+Entities.swift"; sourceTree = "<group>"; };
+		F8BB66433070A16D0029D778 /* SpotlightIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotlightIndexer.swift; sourceTree = "<group>"; };
 		F8C913352980B2580004D458 /* IETFNext 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 8.xcdatamodel"; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
@@ -227,8 +243,24 @@
 				F8BB662C30709D110029D778 /* NavigationRequest.swift */,
 				F8BB662E30709D190029D778 /* AppNavigator.swift */,
 				F8BB663030709D200029D778 /* IntentDataStore.swift */,
+				F8BB66343070A10E0029D778 /* Entities */,
+				F8BB66413070A1630029D778 /* IntentDataStore+Entities.swift */,
+				F8BB66433070A16D0029D778 /* SpotlightIndexer.swift */,
 			);
 			path = Intents;
+			sourceTree = "<group>";
+		};
+		F8BB66343070A10E0029D778 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				F8BB66353070A1190029D778 /* SessionEntity.swift */,
+				F8BB66373070A11D0029D778 /* SessionEntityQuery.swift */,
+				F8BB66393070A1220029D778 /* GroupEntity.swift */,
+				F8BB663B3070A1250029D778 /* GroupEntityQuery.swift */,
+				F8BB663D3070A1300029D778 /* RFCEntity.swift */,
+				F8BB663F3070A1340029D778 /* RFCEntityQuery.swift */,
+			);
+			path = Entities;
 			sourceTree = "<group>";
 		};
 		F8E9B9902934101200CA6F09 = {
@@ -509,25 +541,33 @@
 			files = (
 				F82FFEAC2964C8FF007AA54A /* RFCParser.swift in Sources */,
 				F8BB662A306F3FCA0029D778 /* FloorMapImage.swift in Sources */,
+				F8BB66383070A11D0029D778 /* SessionEntityQuery.swift in Sources */,
+				F8BB66423070A1630029D778 /* IntentDataStore+Entities.swift in Sources */,
 				F80CA271294920D9002AD2C6 /* DownloadViewModel.swift in Sources */,
 				F85D55C6295F7A7500569A77 /* SessionListTitleView.swift in Sources */,
+				F8BB66403070A1340029D778 /* RFCEntityQuery.swift in Sources */,
 				F8E9BA112935624100CA6F09 /* LocationListView.swift in Sources */,
 				F8BB662F30709D190029D778 /* AppNavigator.swift in Sources */,
 				F845061C2C1CB16600EC5CBE /* EventDataStore.swift in Sources */,
+				F8BB66443070A16D0029D778 /* SpotlightIndexer.swift in Sources */,
 				F82FFEA529624ED1007AA54A /* DownloadDetailView.swift in Sources */,
 				F8F129C3297752A90096B3D4 /* RFCListTitleView.swift in Sources */,
 				F896CFAF2C4ED06A009A3DFD /* Group+Extension.swift in Sources */,
 				F8BB662D30709D110029D778 /* NavigationRequest.swift in Sources */,
 				F80382882A8FE378002517CF /* Download+Extension.swift in Sources */,
+				F8BB66363070A1190029D778 /* SessionEntity.swift in Sources */,
 				F865B9F2295930AB00C3DB13 /* LocationDetailView.swift in Sources */,
 				F8E9BA1329366A4000CA6F09 /* MeetingListRowView.swift in Sources */,
 				F85D55C2295E72B100569A77 /* MacOSCompat.swift in Sources */,
+				F8BB663C3070A1250029D778 /* GroupEntityQuery.swift in Sources */,
 				F845061D2C1CB16600EC5CBE /* EventDataStore+FullAccess.swift in Sources */,
 				F896CFB32C4EE2A6009A3DFD /* EKEvent+Extension.swift in Sources */,
+				F8BB663A3070A1220029D778 /* GroupEntity.swift in Sources */,
 				F85D55C4295F71DB00569A77 /* SessionFilterMenu.swift in Sources */,
 				F8E9B9D32935070D00CA6F09 /* MeetingListView.swift in Sources */,
 				F807990D2985AC960014F210 /* WeatherView.swift in Sources */,
 				F8BB6628306F2FEF0029D778 /* ZoomableContainer.swift in Sources */,
+				F8BB663E3070A1300029D778 /* RFCEntity.swift in Sources */,
 				F8249B30297ABB1F004B66DF /* RFCDetailView.swift in Sources */,
 				F80CA269294778FA002AD2C6 /* GroupListRowView.swift in Sources */,
 				F80CA26D2947BC73002AD2C6 /* SessionListLocationView.swift in Sources */,

@@ -538,6 +538,11 @@ struct ContentView: View {
         .task(id: selectedMeeting) {
             if let meeting = selectedMeeting {
                 await loadData(context: viewContext, meeting: meeting)
+                if let number = meeting.number, !Task.isCancelled {
+                    let indexer = SpotlightIndexer(dataStore: .shared)
+                    try? await indexer.indexSessions(meetingNumber: number)
+                    try? await indexer.indexGroups()
+                }
             }
         }
         .task {
@@ -554,10 +559,12 @@ struct ContentView: View {
             // if we haven't checked within the check interval, check now (still using our ETag)
             // TODO: make RFC list refreshable
             let now = Date().timeIntervalSince1970
-            if now - last_check > check_interval {
+            let refreshIndex = now - last_check > check_interval
+            if refreshIndex {
                 try? await rfcProvider.fetchRFCs()
                 rfcIndexLastTime = String(now)
             }
+            try? await SpotlightIndexer(dataStore: .shared).indexRFCs(indexRefreshed: refreshIndex)
         }
         .environment(storeManager)
         /*
