@@ -1,0 +1,18 @@
+IETFNext/ContentView.swift
+  h_8be2082ac7c1ab 451-453,500-505,510-513
+IETFNext/RFC+Extension.swift
+  h_8be2082ac7c1ab 15
+IETFNext/RFCListView.swift
+  h_8be2082ac7c1ab 59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3ceaacb699c0e1a14b4a6e7ea51af767dc6a0adc",
+  "prompts": {},
+  "humans": {
+    "h_8be2082ac7c1ab": {
+      "author": "Tom Pusateri <pusateri@bangj.com>"
+    }
+  }
+}
