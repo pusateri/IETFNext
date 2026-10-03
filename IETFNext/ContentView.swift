@@ -448,6 +448,9 @@ struct ContentView: View {
                     longTitle: $rfcDetailLongTitle,
                     columnVisibility: $columnVisibility
                 )
+                // A new identity per list makes the compact split view track the new List's
+                // selection; otherwise row taps in Downloads after visiting RFCs don't push.
+                .id(listMode)
                 .navigationSplitViewColumnWidth(min: 270.0, ideal: 320.0, max: 370.0)
             } else {
                 Text("Select View in Sidebar")
@@ -494,10 +497,20 @@ struct ContentView: View {
         }
         .onChange(of: listSelection) { _, newValue in
             if let ls = newValue {
+                if ls != detailSelection {
+                    // selectedDownload is shared by the RFC and Download lists but is the List
+                    // selection only in Downloads, so a value left by the RFC list would push
+                    // straight to a stale detail. RFCListView reloads its download on appear.
+                    selectedDownload = nil
+                }
                 detailSelection = ls
             }
         }
         .onChange(of: menuSidebarOption) { _, newValue in
+            if newValue != detailSelection {
+                // see listSelection above
+                selectedDownload = nil
+            }
             detailSelection = newValue
         }
         .onAppear {

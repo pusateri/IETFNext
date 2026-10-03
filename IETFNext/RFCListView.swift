@@ -56,7 +56,7 @@ extension DynamicFetchRequestView where T : RFC {
                     search_criteria += "std != nil"
                     sortDescriptors = [NSSortDescriptor(keyPath: \RFC.std, ascending: false)]
                 } else {
-                    sortDescriptors = [NSSortDescriptor(keyPath: \RFC.name, ascending: false)]
+                    sortDescriptors = [NSSortDescriptor(key: "name", ascending: false, selector: #selector(NSString.localizedStandardCompare(_:)))]
                 }
         }
 

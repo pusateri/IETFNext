@@ -12,7 +12,7 @@ import CoreData
 extension RFC {
     var name2: String {
         if let compact = name {
-            return compact.enumerated().compactMap({ ($0  == 3) ? " \($1)" : "\($1)" }).joined()
+            return compact.replacingOccurrences(of: "RFC", with: "RFC ")
         }
         return "Unnamed"
     }
