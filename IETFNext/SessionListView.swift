@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import AppIntents
 
 
 extension DynamicFetchRequestView where T : Session {
@@ -69,6 +70,8 @@ struct SessionListFilteredView: View {
         self.currentActivity?.isEligibleForPrediction = true
 #endif
         self.currentActivity?.persistentIdentifier = String(sessionID ?? 0)
+        // Lets Siri resolve "this session" and learn which sessions get opened.
+        self.currentActivity?.appEntityIdentifier = EntityIdentifier(for: SessionEntity.self, identifier: Int(session.id))
         self.currentActivity?.becomeCurrent()
     }
 

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import AppIntents
 
 struct DetailViewUnwrapped: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -107,6 +108,7 @@ struct DetailViewUnwrapped: View {
         if viewContext.hasChanges {
             do {
                 try viewContext.save()
+                IntentsSync.favoriteChanged(groupAcronym: group.acronym)
             } catch {
                 print("Unable to save Session favorite \(group.acronym!)")
             }
@@ -225,6 +227,8 @@ struct DetailViewUnwrapped: View {
             updateFor(group: group)
             await loadGroupMetadata(group: group)
         }
+        // Lets Siri resolve "this group" to the one on screen.
+        .appEntityIdentifier(group.acronym.map { EntityIdentifier(for: GroupEntity.self, identifier: $0) })
         // Downloads are not cancelled on disappear: on iPhone the collapsed split view reuses
         // this view across pushes, and the disappear from popping the previous group can
         // arrive after the next group's download has started, silently cancelling it.

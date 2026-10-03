@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppIntents
 
 struct RFCDetailView: View {
     @Environment(\.horizontalSizeClass) var hSizeClass
@@ -85,5 +86,7 @@ struct RFCDetailView: View {
             }
 #endif
         }
+        // Lets Siri resolve "this RFC" to the one on screen.
+        .appEntityIdentifier(selectedRFC?.name.map { EntityIdentifier(for: RFCEntity.self, identifier: $0) })
     }
 }

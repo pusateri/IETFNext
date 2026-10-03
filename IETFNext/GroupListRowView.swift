@@ -40,6 +40,7 @@ struct GroupListRowView: View {
         if viewContext.hasChanges {
             do {
                 try viewContext.save()
+                IntentsSync.favoriteChanged(groupAcronym: group.acronym)
             } catch {
                 print("Unable to save Group \(group.acronym!) favorite")
             }

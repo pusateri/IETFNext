@@ -75,6 +75,7 @@
 		F8BB665A3070A4C20029D778 /* FindSessionsIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66593070A4C20029D778 /* FindSessionsIntent.swift */; };
 		F8BB665C3070A4C70029D778 /* WhereIsGroupMeetingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB665B3070A4C70029D778 /* WhereIsGroupMeetingIntent.swift */; };
 		F8BB665E3070A4D30029D778 /* IETFNextShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB665D3070A4D30029D778 /* IETFNextShortcuts.swift */; };
+		F8BB66603070A6DE0029D778 /* IntentsSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB665F3070A6DE0029D778 /* IntentsSync.swift */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListView.swift */; };
@@ -189,6 +190,7 @@
 		F8BB66593070A4C20029D778 /* FindSessionsIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindSessionsIntent.swift; sourceTree = "<group>"; };
 		F8BB665B3070A4C70029D778 /* WhereIsGroupMeetingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhereIsGroupMeetingIntent.swift; sourceTree = "<group>"; };
 		F8BB665D3070A4D30029D778 /* IETFNextShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextShortcuts.swift; sourceTree = "<group>"; };
+		F8BB665F3070A6DE0029D778 /* IntentsSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentsSync.swift; sourceTree = "<group>"; };
 		F8C913352980B2580004D458 /* IETFNext 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 8.xcdatamodel"; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 				F8BB66593070A4C20029D778 /* FindSessionsIntent.swift */,
 				F8BB665B3070A4C70029D778 /* WhereIsGroupMeetingIntent.swift */,
 				F8BB665D3070A4D30029D778 /* IETFNextShortcuts.swift */,
+				F8BB665F3070A6DE0029D778 /* IntentsSync.swift */,
 			);
 			path = Intents;
 			sourceTree = "<group>";
@@ -588,6 +591,7 @@
 				F8BB665C3070A4C70029D778 /* WhereIsGroupMeetingIntent.swift in Sources */,
 				F8BB662F30709D190029D778 /* AppNavigator.swift in Sources */,
 				F845061C2C1CB16600EC5CBE /* EventDataStore.swift in Sources */,
+				F8BB66603070A6DE0029D778 /* IntentsSync.swift in Sources */,
 				F8BB66443070A16D0029D778 /* SpotlightIndexer.swift in Sources */,
 				F82FFEA529624ED1007AA54A /* DownloadDetailView.swift in Sources */,
 				F8BB66503070A4840029D778 /* OpenGroupIntent.swift in Sources */,

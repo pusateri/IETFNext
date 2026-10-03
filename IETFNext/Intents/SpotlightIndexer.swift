@@ -45,6 +45,14 @@ struct SpotlightIndexer: Sendable {
         try await CSSearchableIndex.default().indexAppEntities(dataStore.allGroups())
     }
 
+    /// Updates specific groups, for example after one becomes a favorite.
+    func indexGroups(acronyms: [String]) async throws {
+        guard CSSearchableIndex.isIndexingAvailable() else {
+            return
+        }
+        try await CSSearchableIndex.default().indexAppEntities(dataStore.groups(acronyms: acronyms))
+    }
+
     func indexRFCs() async throws {
         guard CSSearchableIndex.isIndexingAvailable() else {
             return

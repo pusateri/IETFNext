@@ -66,6 +66,7 @@ struct SessionListRowView: View {
         if viewContext.hasChanges {
             do {
                 try viewContext.save()
+                IntentsSync.favoriteChanged(groupAcronym: group.acronym)
             } catch {
                 print("Unable to save Session group (\(group.acronym!)) favorite \(session.name!)")
             }
