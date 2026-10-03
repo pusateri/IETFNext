@@ -306,6 +306,7 @@ enum LocationDetailMode: String {
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.scenePhase) var scenePhase
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
     @Binding var showingMeetings: Bool
     @Binding var showingCalendars: Bool
@@ -498,18 +499,14 @@ struct ContentView: View {
         .onChange(of: listSelection) { _, newValue in
             if let ls = newValue {
                 if ls != detailSelection {
-                    // selectedDownload is shared by the RFC and Download lists but is the List
-                    // selection only in Downloads, so a value left by the RFC list would push
-                    // straight to a stale detail. RFCListView reloads its download on appear.
-                    selectedDownload = nil
+                    clearSelectionsForSectionChange()
                 }
                 detailSelection = ls
             }
         }
         .onChange(of: menuSidebarOption) { _, newValue in
             if newValue != detailSelection {
-                // see listSelection above
-                selectedDownload = nil
+                clearSelectionsForSectionChange()
             }
             detailSelection = newValue
         }
@@ -567,6 +564,22 @@ struct ContentView: View {
 }
 
 extension ContentView {
+    // A content List with a non-nil selection pushes its detail as soon as it appears in a
+    // collapsed split view, so a selection left by another sidebar section would skip
+    // straight past the list.
+    private func clearSelectionsForSectionChange() {
+        // selectedDownload is shared by the RFC and Download lists but is the List
+        // selection only in Downloads, so a value left by the RFC list would push
+        // straight to a stale detail. RFCListView reloads its download on appear.
+        selectedDownload = nil
+        if horizontalSizeClass == .compact {
+            // selectedGroup is set by both the Schedule and Working Groups lists.
+            selectedGroup = nil
+            selectedLocation = nil
+            selectedRFC = nil
+        }
+    }
+
     private func buildSessionFormatter(meeting: Meeting?, useLocalTime: Bool) -> DateFormatter {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: Locale.current.identifier)

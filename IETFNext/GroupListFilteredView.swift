@@ -113,7 +113,9 @@ struct GroupListFilteredView: View {
                         columnVisibility = .doubleColumn
                     }
                 }
-                if let short = groupShort {
+                // Restoring a selection in a collapsed split view would push the detail
+                // instead of showing the list.
+                if horizontalSizeClass != .compact, let short = groupShort {
                     selectedGroup = fetchGroup(short: short)
                     if let group = selectedGroup {
                         withAnimation {

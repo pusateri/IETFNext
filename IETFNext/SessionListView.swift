@@ -211,7 +211,9 @@ struct SessionListFilteredView: View {
                         columnVisibility = .doubleColumn
                     }
                 }
-                if let session_id = sessionID {
+                // Restoring a selection in a collapsed split view would push the detail
+                // instead of showing the list.
+                if horizontalSizeClass != .compact, let session_id = sessionID {
                     selected = fetchSession(session_id: Int32(session_id))
                     if let session = selected {
                         withAnimation {
