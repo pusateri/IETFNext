@@ -29,7 +29,7 @@ extension IntentDataStore {
         guard !ids.isEmpty else {
             return []
         }
-        return try await fetchSessions(
+        return try await fetchScheduledSessions(
             predicate: NSPredicate(format: "id IN %@", ids),
             limit: nil
         )
@@ -41,7 +41,7 @@ extension IntentDataStore {
         guard let number = currentMeetingNumber() else {
             return []
         }
-        return try await fetchSessions(
+        return try await fetchScheduledSessions(
             predicate: SessionPredicate.make(meetingNumber: number, searchText: text, filterMode: .none),
             limit: limit
         )
@@ -54,7 +54,7 @@ extension IntentDataStore {
         }
         let schedule = SessionPredicate.make(meetingNumber: number, filterMode: favoritesOnly ? .favorites : .none)
         let notEnded = NSPredicate(format: "end > %@", date as NSDate)
-        return try await fetchSessions(
+        return try await fetchScheduledSessions(
             predicate: NSCompoundPredicate(andPredicateWithSubpredicates: [schedule, notEnded]),
             limit: limit
         )
@@ -62,13 +62,13 @@ extension IntentDataStore {
 
     /// Every scheduled session at a meeting, for Spotlight.
     func allSessions(meetingNumber: String) async throws -> [SessionEntity] {
-        try await fetchSessions(
+        try await fetchScheduledSessions(
             predicate: SessionPredicate.make(meetingNumber: meetingNumber, filterMode: .none),
             limit: nil
         )
     }
 
-    private func fetchSessions(predicate: NSPredicate, limit: Int?) async throws -> [SessionEntity] {
+    func fetchScheduledSessions(predicate: NSPredicate, limit: Int?) async throws -> [SessionEntity] {
         try await read { context in
             let request: NSFetchRequest<Session> = Session.fetchRequest()
             request.predicate = predicate

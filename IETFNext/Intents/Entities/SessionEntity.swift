@@ -65,11 +65,33 @@ struct SessionEntity: AppEntity, IndexedEntity {
 
     /// For example "Mon 10:00 – 11:30", in `timeZone`.
     var timeRange: String {
+        "\(startDescription) – \(end.formatted(timeStyle))"
+    }
+
+    /// The start day and time, for example "Mon 10:00", in `timeZone`.
+    var startDescription: String {
         var day = Date.FormatStyle.dateTime.weekday(.abbreviated).hour().minute()
         day.timeZone = timeZone
+        return start.formatted(day)
+    }
+
+    /// The start time only, for example "10:00", in `timeZone`.
+    var startTime: String {
+        start.formatted(timeStyle)
+    }
+
+    /// The room and floor, for example "Grand Park Hall 2, Mezzanine Level".
+    var place: String? {
+        guard let room else {
+            return nil
+        }
+        return [room, floor].compactMap(\.self).joined(separator: ", ")
+    }
+
+    private var timeStyle: Date.FormatStyle {
         var time = Date.FormatStyle.dateTime.hour().minute()
         time.timeZone = timeZone
-        return "\(start.formatted(day)) – \(end.formatted(time))"
+        return time
     }
 
     /// Returns `nil` for sessions the schedule list doesn't show (no group or no times).

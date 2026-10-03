@@ -63,6 +63,18 @@
 		F8BB66403070A1340029D778 /* RFCEntityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB663F3070A1340029D778 /* RFCEntityQuery.swift */; };
 		F8BB66423070A1630029D778 /* IntentDataStore+Entities.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66413070A1630029D778 /* IntentDataStore+Entities.swift */; };
 		F8BB66443070A16D0029D778 /* SpotlightIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66433070A16D0029D778 /* SpotlightIndexer.swift */; };
+		F8BB66463070A4050029D778 /* SessionTimeframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66453070A4050029D778 /* SessionTimeframe.swift */; };
+		F8BB66483070A40C0029D778 /* IntentDataStore+Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66473070A40C0029D778 /* IntentDataStore+Schedule.swift */; };
+		F8BB664A3070A4180029D778 /* IETFIntentError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66493070A4180029D778 /* IETFIntentError.swift */; };
+		F8BB664E3070A4810029D778 /* OpenSessionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB664D3070A4810029D778 /* OpenSessionIntent.swift */; };
+		F8BB66503070A4840029D778 /* OpenGroupIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB664F3070A4840029D778 /* OpenGroupIntent.swift */; };
+		F8BB66523070A4870029D778 /* OpenRFCIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66513070A4870029D778 /* OpenRFCIntent.swift */; };
+		F8BB66543070A48A0029D778 /* ShowRoomMapIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66533070A48A0029D778 /* ShowRoomMapIntent.swift */; };
+		F8BB66563070A4950029D778 /* SessionsSnippetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66553070A4950029D778 /* SessionsSnippetView.swift */; };
+		F8BB66583070A4970029D778 /* SessionsSnippetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66573070A4970029D778 /* SessionsSnippetIntent.swift */; };
+		F8BB665A3070A4C20029D778 /* FindSessionsIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66593070A4C20029D778 /* FindSessionsIntent.swift */; };
+		F8BB665C3070A4C70029D778 /* WhereIsGroupMeetingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB665B3070A4C70029D778 /* WhereIsGroupMeetingIntent.swift */; };
+		F8BB665E3070A4D30029D778 /* IETFNextShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB665D3070A4D30029D778 /* IETFNextShortcuts.swift */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListView.swift */; };
@@ -165,6 +177,18 @@
 		F8BB663F3070A1340029D778 /* RFCEntityQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCEntityQuery.swift; sourceTree = "<group>"; };
 		F8BB66413070A1630029D778 /* IntentDataStore+Entities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IntentDataStore+Entities.swift"; sourceTree = "<group>"; };
 		F8BB66433070A16D0029D778 /* SpotlightIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotlightIndexer.swift; sourceTree = "<group>"; };
+		F8BB66453070A4050029D778 /* SessionTimeframe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTimeframe.swift; sourceTree = "<group>"; };
+		F8BB66473070A40C0029D778 /* IntentDataStore+Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IntentDataStore+Schedule.swift"; sourceTree = "<group>"; };
+		F8BB66493070A4180029D778 /* IETFIntentError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFIntentError.swift; sourceTree = "<group>"; };
+		F8BB664D3070A4810029D778 /* OpenSessionIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSessionIntent.swift; sourceTree = "<group>"; };
+		F8BB664F3070A4840029D778 /* OpenGroupIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGroupIntent.swift; sourceTree = "<group>"; };
+		F8BB66513070A4870029D778 /* OpenRFCIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRFCIntent.swift; sourceTree = "<group>"; };
+		F8BB66533070A48A0029D778 /* ShowRoomMapIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowRoomMapIntent.swift; sourceTree = "<group>"; };
+		F8BB66553070A4950029D778 /* SessionsSnippetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsSnippetView.swift; sourceTree = "<group>"; };
+		F8BB66573070A4970029D778 /* SessionsSnippetIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsSnippetIntent.swift; sourceTree = "<group>"; };
+		F8BB66593070A4C20029D778 /* FindSessionsIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindSessionsIntent.swift; sourceTree = "<group>"; };
+		F8BB665B3070A4C70029D778 /* WhereIsGroupMeetingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhereIsGroupMeetingIntent.swift; sourceTree = "<group>"; };
+		F8BB665D3070A4D30029D778 /* IETFNextShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextShortcuts.swift; sourceTree = "<group>"; };
 		F8C913352980B2580004D458 /* IETFNext 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 8.xcdatamodel"; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
@@ -246,6 +270,18 @@
 				F8BB66343070A10E0029D778 /* Entities */,
 				F8BB66413070A1630029D778 /* IntentDataStore+Entities.swift */,
 				F8BB66433070A16D0029D778 /* SpotlightIndexer.swift */,
+				F8BB66453070A4050029D778 /* SessionTimeframe.swift */,
+				F8BB66473070A40C0029D778 /* IntentDataStore+Schedule.swift */,
+				F8BB66493070A4180029D778 /* IETFIntentError.swift */,
+				F8BB664D3070A4810029D778 /* OpenSessionIntent.swift */,
+				F8BB664F3070A4840029D778 /* OpenGroupIntent.swift */,
+				F8BB66513070A4870029D778 /* OpenRFCIntent.swift */,
+				F8BB66533070A48A0029D778 /* ShowRoomMapIntent.swift */,
+				F8BB66553070A4950029D778 /* SessionsSnippetView.swift */,
+				F8BB66573070A4970029D778 /* SessionsSnippetIntent.swift */,
+				F8BB66593070A4C20029D778 /* FindSessionsIntent.swift */,
+				F8BB665B3070A4C70029D778 /* WhereIsGroupMeetingIntent.swift */,
+				F8BB665D3070A4D30029D778 /* IETFNextShortcuts.swift */,
 			);
 			path = Intents;
 			sourceTree = "<group>";
@@ -541,21 +577,28 @@
 			files = (
 				F82FFEAC2964C8FF007AA54A /* RFCParser.swift in Sources */,
 				F8BB662A306F3FCA0029D778 /* FloorMapImage.swift in Sources */,
+				F8BB664E3070A4810029D778 /* OpenSessionIntent.swift in Sources */,
 				F8BB66383070A11D0029D778 /* SessionEntityQuery.swift in Sources */,
 				F8BB66423070A1630029D778 /* IntentDataStore+Entities.swift in Sources */,
 				F80CA271294920D9002AD2C6 /* DownloadViewModel.swift in Sources */,
 				F85D55C6295F7A7500569A77 /* SessionListTitleView.swift in Sources */,
+				F8BB66483070A40C0029D778 /* IntentDataStore+Schedule.swift in Sources */,
 				F8BB66403070A1340029D778 /* RFCEntityQuery.swift in Sources */,
 				F8E9BA112935624100CA6F09 /* LocationListView.swift in Sources */,
+				F8BB665C3070A4C70029D778 /* WhereIsGroupMeetingIntent.swift in Sources */,
 				F8BB662F30709D190029D778 /* AppNavigator.swift in Sources */,
 				F845061C2C1CB16600EC5CBE /* EventDataStore.swift in Sources */,
 				F8BB66443070A16D0029D778 /* SpotlightIndexer.swift in Sources */,
 				F82FFEA529624ED1007AA54A /* DownloadDetailView.swift in Sources */,
+				F8BB66503070A4840029D778 /* OpenGroupIntent.swift in Sources */,
 				F8F129C3297752A90096B3D4 /* RFCListTitleView.swift in Sources */,
 				F896CFAF2C4ED06A009A3DFD /* Group+Extension.swift in Sources */,
 				F8BB662D30709D110029D778 /* NavigationRequest.swift in Sources */,
 				F80382882A8FE378002517CF /* Download+Extension.swift in Sources */,
+				F8BB66463070A4050029D778 /* SessionTimeframe.swift in Sources */,
+				F8BB66543070A48A0029D778 /* ShowRoomMapIntent.swift in Sources */,
 				F8BB66363070A1190029D778 /* SessionEntity.swift in Sources */,
+				F8BB66583070A4970029D778 /* SessionsSnippetIntent.swift in Sources */,
 				F865B9F2295930AB00C3DB13 /* LocationDetailView.swift in Sources */,
 				F8E9BA1329366A4000CA6F09 /* MeetingListRowView.swift in Sources */,
 				F85D55C2295E72B100569A77 /* MacOSCompat.swift in Sources */,
@@ -579,12 +622,14 @@
 				F85D99BB2968C55000DE37E0 /* RFCProvider.swift in Sources */,
 				F83750612978741400EBABB4 /* SplitViewContent.swift in Sources */,
 				F845061E2C1CB16600EC5CBE /* EventStoreError.swift in Sources */,
+				F8BB66563070A4950029D778 /* SessionsSnippetView.swift in Sources */,
 				F845061F2C1CB16600EC5CBE /* EventStoreManager.swift in Sources */,
 				F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */,
 				F8E127C92943F13B004A35E8 /* Revision.swift in Sources */,
 				F8E9B9A22934101200CA6F09 /* IETFNext.xcdatamodeld in Sources */,
 				F884CA3029762AF7004B45C7 /* RFCListRowView.swift in Sources */,
 				F8249B2E2979DC83004B66DF /* DynamicFetchRequestView.swift in Sources */,
+				F8BB665A3070A4C20029D778 /* FindSessionsIntent.swift in Sources */,
 				F8F129C529776E970096B3D4 /* RFCFilterMenu.swift in Sources */,
 				F8E127C62942BF18004A35E8 /* DocumentListView.swift in Sources */,
 				F85D55C0295E05F900569A77 /* DetailViewUnwrapped.swift in Sources */,
@@ -592,6 +637,7 @@
 				F896CFB12C4EDABE009A3DFD /* Session+Extension.swift in Sources */,
 				F84506202C1CB16600EC5CBE /* EventStoreManager+FullAccess.swift in Sources */,
 				F85D99BD2968C9C500DE37E0 /* IETFNextError.swift in Sources */,
+				F8BB664A3070A4180029D778 /* IETFIntentError.swift in Sources */,
 				F85D99C32968CC9E00DE37E0 /* RFC+Extension.swift in Sources */,
 				F85D55C8295F85B200569A77 /* GroupListTitleView.swift in Sources */,
 				F85D55CA295F86DC00569A77 /* GroupFilterMenu.swift in Sources */,
@@ -601,6 +647,8 @@
 				F88B7E5C2960931B00F770C9 /* LocationPhotoMenuView.swift in Sources */,
 				F8782D162C93A53200821284 /* CalendarChooser.swift in Sources */,
 				F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */,
+				F8BB665E3070A4D30029D778 /* IETFNextShortcuts.swift in Sources */,
+				F8BB66523070A4870029D778 /* OpenRFCIntent.swift in Sources */,
 				F8BB663330709D2D0029D778 /* SessionPredicate.swift in Sources */,
 				F8BB6626306DAAC50029D778 /* PreviewData.swift in Sources */,
 				F80CA275294ABA24002AD2C6 /* HTML.swift in Sources */,

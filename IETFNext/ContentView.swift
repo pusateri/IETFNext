@@ -542,6 +542,8 @@ struct ContentView: View {
                     let indexer = SpotlightIndexer(dataStore: .shared)
                     try? await indexer.indexSessions(meetingNumber: number)
                     try? await indexer.indexGroups()
+                    // Siri phrases that name a group draw on the groups meeting this week.
+                    IETFNextShortcuts.updateAppShortcutParameters()
                 }
             }
         }
