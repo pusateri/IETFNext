@@ -13,8 +13,8 @@ import CoreData
 extension IntentDataStore {
 
     /// The time zone the app shows a meeting's times in, matching `ContentView`'s formatters.
-    static func displayTimeZone(for meeting: Meeting?) -> TimeZone {
-        if UserDefaults.standard.bool(forKey: "UseLocalTime") {
+    static func displayTimeZone(for meeting: Meeting?, useLocalTime: Bool) -> TimeZone {
+        if useLocalTime {
             return .current
         }
         if let identifier = meeting?.time_zone, let timeZone = TimeZone(identifier: identifier) {
@@ -69,7 +69,8 @@ extension IntentDataStore {
     }
 
     func fetchScheduledSessions(predicate: NSPredicate, limit: Int?) async throws -> [SessionEntity] {
-        try await read { context in
+        let useLocalTime = defaults.bool(forKey: Self.useLocalTimeKey)
+        return try await read { context in
             let request: NSFetchRequest<Session> = Session.fetchRequest()
             request.predicate = predicate
             request.sortDescriptors = SessionPredicate.sortDescriptors
@@ -78,7 +79,7 @@ extension IntentDataStore {
                 request.fetchLimit = limit
             }
             return try context.fetch(request).compactMap { session in
-                SessionEntity(session: session, timeZone: Self.displayTimeZone(for: session.meeting))
+                SessionEntity(session: session, timeZone: Self.displayTimeZone(for: session.meeting, useLocalTime: useLocalTime))
             }
         }
     }

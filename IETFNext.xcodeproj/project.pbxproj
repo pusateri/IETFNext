@@ -76,6 +76,11 @@
 		F8BB665C3070A4C70029D778 /* WhereIsGroupMeetingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB665B3070A4C70029D778 /* WhereIsGroupMeetingIntent.swift */; };
 		F8BB665E3070A4D30029D778 /* IETFNextShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB665D3070A4D30029D778 /* IETFNextShortcuts.swift */; };
 		F8BB66603070A6DE0029D778 /* IntentsSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB665F3070A6DE0029D778 /* IntentsSync.swift */; };
+		F8BB66623070A7FB0029D778 /* IntentsTestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66613070A7FB0029D778 /* IntentsTestStore.swift */; };
+		F8BB66643070A8090029D778 /* RFCEntityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66633070A8090029D778 /* RFCEntityTests.swift */; };
+		F8BB66663070A80E0029D778 /* AppNavigatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66653070A80E0029D778 /* AppNavigatorTests.swift */; };
+		F8BB66683070A8280029D778 /* IntentScheduleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66673070A8280029D778 /* IntentScheduleTests.swift */; };
+		F8BB666A3070A8350029D778 /* IntentQueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB66693070A8350029D778 /* IntentQueryTests.swift */; };
 		F8E127BC293BFE1B004A35E8 /* AreaColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BB293BFE1B004A35E8 /* AreaColors.swift */; };
 		F8E127BE293E46FA004A35E8 /* GroupListFilteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */; };
 		F8E127C0293EA7A4004A35E8 /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E127BF293EA7A4004A35E8 /* SessionListView.swift */; };
@@ -191,6 +196,11 @@
 		F8BB665B3070A4C70029D778 /* WhereIsGroupMeetingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhereIsGroupMeetingIntent.swift; sourceTree = "<group>"; };
 		F8BB665D3070A4D30029D778 /* IETFNextShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IETFNextShortcuts.swift; sourceTree = "<group>"; };
 		F8BB665F3070A6DE0029D778 /* IntentsSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentsSync.swift; sourceTree = "<group>"; };
+		F8BB66613070A7FB0029D778 /* IntentsTestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentsTestStore.swift; sourceTree = "<group>"; };
+		F8BB66633070A8090029D778 /* RFCEntityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RFCEntityTests.swift; sourceTree = "<group>"; };
+		F8BB66653070A80E0029D778 /* AppNavigatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNavigatorTests.swift; sourceTree = "<group>"; };
+		F8BB66673070A8280029D778 /* IntentScheduleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentScheduleTests.swift; sourceTree = "<group>"; };
+		F8BB66693070A8350029D778 /* IntentQueryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentQueryTests.swift; sourceTree = "<group>"; };
 		F8C913352980B2580004D458 /* IETFNext 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "IETFNext 8.xcdatamodel"; sourceTree = "<group>"; };
 		F8E127BB293BFE1B004A35E8 /* AreaColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreaColors.swift; sourceTree = "<group>"; };
 		F8E127BD293E46FA004A35E8 /* GroupListFilteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupListFilteredView.swift; sourceTree = "<group>"; };
@@ -399,6 +409,11 @@
 			isa = PBXGroup;
 			children = (
 				F8E9B9B32934101300CA6F09 /* IETFNextTests.swift */,
+				F8BB66613070A7FB0029D778 /* IntentsTestStore.swift */,
+				F8BB66633070A8090029D778 /* RFCEntityTests.swift */,
+				F8BB66653070A80E0029D778 /* AppNavigatorTests.swift */,
+				F8BB66673070A8280029D778 /* IntentScheduleTests.swift */,
+				F8BB66693070A8350029D778 /* IntentQueryTests.swift */,
 			);
 			path = IETFNextTests;
 			sourceTree = "<group>";
@@ -667,6 +682,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8E9B9B42934101300CA6F09 /* IETFNextTests.swift in Sources */,
+				F8BB66683070A8280029D778 /* IntentScheduleTests.swift in Sources */,
+				F8BB66663070A80E0029D778 /* AppNavigatorTests.swift in Sources */,
+				F8BB66623070A7FB0029D778 /* IntentsTestStore.swift in Sources */,
+				F8BB666A3070A8350029D778 /* IntentQueryTests.swift in Sources */,
+				F8BB66643070A8090029D778 /* RFCEntityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -920,8 +940,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MACOSX_DEPLOYMENT_TARGET = 26.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNextTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -942,8 +962,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
-				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MACOSX_DEPLOYMENT_TARGET = 26.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bangj.IETFNextTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
