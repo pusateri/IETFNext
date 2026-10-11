@@ -142,18 +142,26 @@ struct DetailViewUnwrapped: View {
         }
     }
 
-    /// Loads drafts, charter, related drafts and recordings for the group.
-    /// Runs inside `.task(id:)`, so it is cancelled when the view disappears or the group changes.
+    /// Loads drafts, charter, related drafts and recordings for the group in parallel.
+    /// Each load is an unstructured task so it runs to completion: the calling `.task(id:)`
+    /// restarts on scene activation and group changes, and is cancelled on disappear, which
+    /// would otherwise cancel in-flight requests. Each loader only updates its own group.
     private func loadGroupMetadata(group: Group) async {
-        await loadDrafts(context: viewContext, group: group, limit:0, offset:0)
+        let context = viewContext
+        var loads: [Task<Void, Never>] = [
+            Task { await loadDrafts(context: context, group: group, limit:0, offset:0) },
+            Task { await loadRelatedDrafts(context: context, group: group, limit:0, offset:0) },
+        ]
         if group.type != "rg" {
-            await loadCharterDocument(context: viewContext, group: group)
+            loads.append(Task { await loadCharterDocument(context: context, group: group) })
         }
-        await loadRelatedDrafts(context: viewContext, group: group, limit:0, offset:0)
         // if we don't have a recording URL, go get one. We don't expect it to change once we have it
         for s in sessionsForGroup ?? [] where s.recording == nil {
-            if Task.isCancelled { return }
-            await loadRecordingDocument(context: viewContext, session: s)
+            loads.append(Task { await loadRecordingDocument(context: context, session: s) })
+        }
+        // Awaiting a task's value doesn't forward cancellation to it.
+        for load in loads {
+            await load.value
         }
     }
 

@@ -264,7 +264,7 @@ private func fetchDecoded<Value: Decodable & Sendable>(
     do {
         (data, response) = try await URLSession.shared.data(for: request)
     } catch {
-        print("\(label): unable to read URL: \(urlString). Check network connection.")
+        print("\(label): \(error)")
         return nil
     }
     guard let httpResponse = response as? HTTPURLResponse else {
@@ -364,7 +364,7 @@ public func loadDrafts(context: NSManagedObjectContext, group: Group?, limit: In
         print("Invalid URL")
         return
     }
-    guard let fetched = await fetchDecoded(Documents.self, request: URLRequest(url: url), label: "Drafts wg \(acronym)") else {
+    guard let fetched = await fetchDecoded(Documents.self, request: URLRequest(url: url), label: "Drafts wg \(acronym)", logHTTPErrors: true) else {
         return
     }
     group.documents = Set<Group>() as NSSet
@@ -393,7 +393,7 @@ public func loadRelatedDrafts(context: NSManagedObjectContext, group: Group?, li
         print(offset == 0 ? "Invalid Related Draft URL" : "Invalid Related Draft URL offset")
         return
     }
-    guard let fetched = await fetchDecoded(Documents.self, request: URLRequest(url: url), label: "Related Drafts wg \(acronym)") else {
+    guard let fetched = await fetchDecoded(Documents.self, request: URLRequest(url: url), label: "Related Drafts wg \(acronym)", logHTTPErrors: true) else {
         return
     }
     group.relatedDocs = Set<Group>() as NSSet
@@ -427,7 +427,7 @@ public func loadRecordingDocument(context: NSManagedObjectContext, session: Sess
     let matchTitle = "Video recording for \(acronym.uppercased()) on \(recFormatter.string(from: start))"
 
     guard let fetched = await fetchDecoded(Documents.self, request: URLRequest(url: url),
-                                           label: "Recording document session \(session.name ?? "")") else {
+                                           label: "Recording document session \(session.name ?? "")", logHTTPErrors: true) else {
         return
     }
     for obj in fetched.value.objects where obj.title.caseInsensitiveCompare(matchTitle) == .orderedSame {
@@ -464,7 +464,7 @@ public func loadCharterDocument(context: NSManagedObjectContext, group: Group?) 
         print("Invalid URL: \(urlString)")
         return
     }
-    guard let fetched = await fetchDecoded(JSONDocument.self, request: URLRequest(url: url), label: "Charter") else {
+    guard let fetched = await fetchDecoded(JSONDocument.self, request: URLRequest(url: url), label: "Charter", logHTTPErrors: true) else {
         return
     }
     updateDocument(context: context, group: group, kind: .charter, document: fetched.value)
