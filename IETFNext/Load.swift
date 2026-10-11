@@ -359,7 +359,7 @@ public func loadDrafts(context: NSManagedObjectContext, group: Group?, limit: In
     assertMainQueue(context)
     guard let group, let acronym = group.acronym else { return }
     let urlString = "https://datatracker.ietf.org/api/v1/doc/document/?group__acronym=\(acronym)&type=draft&states__slug__contains=active"
-    let url = offset == 0 ? URL(string: urlString) : URL(string: urlString + "limit=\(limit)&offset=\(offset)")
+    let url = offset == 0 ? URL(string: urlString) : URL(string: urlString + "&limit=\(limit)&offset=\(offset)")
     guard let url else {
         print("Invalid URL")
         return
@@ -388,7 +388,7 @@ public func loadRelatedDrafts(context: NSManagedObjectContext, group: Group?, li
             urlString = "https://datatracker.ietf.org/api/v1/doc/document/?name__regex=draft-(?!irtf-\(acronym))[A-Za-z0-9]*-\(acronym)-*&type=draft&states__slug__contains=active"
         }
     }
-    let url = offset == 0 ? URL(string: urlString) : URL(string: urlString + "limit=\(limit)&offset=\(offset)")
+    let url = offset == 0 ? URL(string: urlString) : URL(string: urlString + "&limit=\(limit)&offset=\(offset)")
     guard let url else {
         print(offset == 0 ? "Invalid Related Draft URL" : "Invalid Related Draft URL offset")
         return
