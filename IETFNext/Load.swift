@@ -413,9 +413,9 @@ public func loadRecordingDocument(context: NSManagedObjectContext, session: Sess
           let start = session.start else {
         return
     }
-    let urlString = "https://datatracker.ietf.org/api/v1/doc/document/?name__contains=recording-\(number)&external_url__contains=youtube&group__acronym=\(acronym)"
+    let urlString = "https://datatracker.ietf.org/api/v1/doc/document/?name__contains=recording-\(number)&external_url__contains=youtu&group__acronym=\(acronym)"
     guard let url = URL(string: urlString) else {
-        print("Invalid URL: \(urlString)")
+        print("loadRecordingDocument Invalid URL: \(urlString)")
         return
     }
     // 2022-11-09 at 13:00:00
@@ -424,33 +424,50 @@ public func loadRecordingDocument(context: NSManagedObjectContext, session: Sess
     recFormatter.dateFormat = "yyyy-MM-dd' at 'HH:mm:ss"
     recFormatter.calendar = Calendar(identifier: .iso8601)
     recFormatter.timeZone = TimeZone.gmt
-    let matchTitle = "Video recording for \(acronym.uppercased()) on \(recFormatter.string(from: start))"
 
     guard let fetched = await fetchDecoded(Documents.self, request: URLRequest(url: url),
                                            label: "Recording document session \(session.name ?? "")", logHTTPErrors: true) else {
         return
     }
-    for obj in fetched.value.objects where obj.title.caseInsensitiveCompare(matchTitle) == .orderedSame {
-        guard let external_url = obj.external_url,
-              let components = URLComponents(string: external_url),
-              components.host == "www.youtube.com",
-              let query = components.query else {
+    var save = false
+    let pattern = /.*recording\s+for\s+(?<group>[\w\d-]+)\s+on\s+(?<start>[\d-]+\s+at\s+[\d:]+)/
+    for obj in fetched.value.objects {
+        guard let match = obj.title.firstMatch(of: pattern) else {
             continue
         }
-        for pair in query.components(separatedBy: "&") {
-            let kv = pair.components(separatedBy: "=")
-            guard kv.count == 2, kv.first == "v", let youtubeID = kv.last else { continue }
-            guard let youtubeUrl = URL(string: "youtube://\(youtubeID)") else {
-                print("Invalid External recording URL: \(external_url)")
-                return
+        // match the correct session if there's multiple
+        guard match.start == recFormatter.string(from: start) else {
+            continue
+        }
+        guard let external_url = obj.external_url,
+              let components = URLComponents(string: external_url) else {
+            continue
+        }
+        if components.host == "www.youtube.com" {
+            guard let query = components.query else {
+                continue
             }
-            session.recording = youtubeUrl
-            do {
-                try context.save()
+            for pair in query.components(separatedBy: "&") {
+                let kv = pair.components(separatedBy: "=")
+                guard kv.count == 2, kv.first == "v", let youtubeID = kv.last else { continue }
+                guard let youtubeUrl = URL(string: "https://youtu.be/\(youtubeID)") else {
+                    print("Invalid External recording URL: \(external_url)")
+                    return
+                }
+                session.recording = youtubeUrl
+                save = true
             }
-            catch {
-                print("Unable to save recording in Session: \(session.name ?? "")")
-            }
+        } else if components.host == "youtu.be" {
+            session.recording = URL(string: external_url)
+            save = true
+        }
+    }
+    if save {
+        do {
+            try context.save()
+        }
+        catch {
+            print("Unable to save recording in Session: \(session.name ?? "")")
         }
     }
 }
