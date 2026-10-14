@@ -118,13 +118,16 @@ class RFCProvider {
         // Capture the Sendable logger rather than the non-Sendable provider.
         let logger = self.logger
         await taskContext.perform {
+            // Load existing objects once so lookups during the import are dictionary hits
+            // instead of a fetch request per RFC/author/format/keyword.
+            let cache = RFCImportCache(context: taskContext)
             for rfc in from["rfc-entry"] {
-                updateRFC(context: taskContext, xml: rfc, obsoletes: &obsoletes, updates: &updates)
+                updateRFC(context: taskContext, cache: cache, xml: rfc, obsoletes: &obsoletes, updates: &updates)
             }
             for update in updates {
-                if let rfc = findRFC(context: taskContext, name: update.key) {
+                if let rfc = cache.rfcs[update.key] {
                     for item in update.value {
-                        if let updated = findRFC(context: taskContext, name: item) {
+                        if let updated = cache.rfcs[item] {
                             //print("\(rfc.name!) updates \(updated.name!)")
                             rfc.addToUpdates(updated)
                         }
@@ -132,9 +135,9 @@ class RFCProvider {
                 }
             }
             for obsolete in obsoletes {
-                if let rfc = findRFC(context: taskContext, name: obsolete.key) {
+                if let rfc = cache.rfcs[obsolete.key] {
                     for item in obsolete.value {
-                        if let obsoleted = findRFC(context: taskContext, name: item) {
+                        if let obsoleted = cache.rfcs[item] {
                             //print("\(rfc.name!) obsoletes \(obsoleted.name!)")
                             rfc.addToObsoletes(obsoleted)
                         }
@@ -145,7 +148,7 @@ class RFCProvider {
                 try taskContext.save()
             }
             catch {
-                logger.debug("Unable to save after adding updates/obsoletes")
+                logger.debug("Unable to save imported RFCs: \(error.localizedDescription)")
             }
         }
         logger.debug("Successfully inserted data.")

@@ -35,22 +35,45 @@ private extension DateFormatter {
     }()
 }
 
-private func updateAuthor(context: NSManagedObjectContext, name: String?) -> Author? {
+/// In-memory lookup tables used during a bulk RFC import. Fetching each table once up front
+/// avoids running a fetch request (a full table scan, since these attributes are unindexed)
+/// for every RFC, author, format and keyword in the index.
+final class RFCImportCache {
+    var rfcs: [String: RFC] = [:]
+    var authors: [String: Author] = [:]
+    var formats: [String: DocFormat] = [:]
+    var keywords: [String: Keykeyword] = [:]
+
+    init(context: NSManagedObjectContext) {
+        rfcs = Self.load(RFC.fetchRequest(), context: context, key: \.name)
+        authors = Self.load(Author.fetchRequest(), context: context, key: \.name)
+        formats = Self.load(DocFormat.fetchRequest(), context: context, key: \.format)
+        keywords = Self.load(Keykeyword.fetchRequest(), context: context, key: \.key)
+    }
+
+    private static func load<T: NSManagedObject>(_ request: NSFetchRequest<T>, context: NSManagedObjectContext, key: KeyPath<T, String?>) -> [String: T] {
+        let results = (try? context.fetch(request)) ?? []
+        var map: [String: T] = [:]
+        map.reserveCapacity(results.count)
+        for object in results {
+            if let k = object[keyPath: key], map[k] == nil {
+                map[k] = object
+            }
+        }
+        return map
+    }
+}
+
+private func updateAuthor(context: NSManagedObjectContext, cache: RFCImportCache, name: String?) -> Author? {
     if let name = name {
-        let a: Author!
+        let a: Author
 
-        let fetchAuthor: NSFetchRequest<Author> = Author.fetchRequest()
-        fetchAuthor.predicate = NSPredicate(format: "name = %@", name)
-
-        let results = try? context.fetch(fetchAuthor)
-
-        if results?.count == 0 {
-            // here you are inserting
+        if let existing = cache.authors[name] {
+            a = existing
+        } else {
             a = Author(context: context)
             a.name = name
-        } else {
-            // here you are updating
-            a = results?.first
+            cache.authors[name] = a
         }
         /*
          * this is too naive
@@ -72,47 +95,27 @@ private func updateAuthor(context: NSManagedObjectContext, name: String?) -> Aut
     return nil
 }
 
-private func updateFormat(context: NSManagedObjectContext, format: String?) -> DocFormat? {
+private func updateFormat(context: NSManagedObjectContext, cache: RFCImportCache, format: String?) -> DocFormat? {
     if let format = format {
-        let f: DocFormat!
-
-        let fetchFormat: NSFetchRequest<DocFormat> = DocFormat.fetchRequest()
-        fetchFormat.predicate = NSPredicate(format: "format = %@", format)
-
-        let results = try? context.fetch(fetchFormat)
-
-        if results?.count == 0 {
-            // here you are inserting
-            f = DocFormat(context: context)
-            f.format = format
-        } else {
-            // here you are updating
-            f = results?.first
+        if let existing = cache.formats[format] {
+            return existing
         }
-
+        let f = DocFormat(context: context)
+        f.format = format
+        cache.formats[format] = f
         return f
     }
     return nil
 }
 
-private func updateKeyword(context: NSManagedObjectContext, key: String?) -> Keykeyword? {
+private func updateKeyword(context: NSManagedObjectContext, cache: RFCImportCache, key: String?) -> Keykeyword? {
     if let key = key {
-        let k: Keykeyword!
-
-        let fetchKeyword: NSFetchRequest<Keykeyword> = Keykeyword.fetchRequest()
-        fetchKeyword.predicate = NSPredicate(format: "key = %@", key)
-
-        let results = try? context.fetch(fetchKeyword)
-
-        if results?.count == 0 {
-            // here you are inserting
-            k = Keykeyword(context: context)
-            k.key = key
-        } else {
-            // here you are updating
-            k = results?.first
+        if let existing = cache.keywords[key] {
+            return existing
         }
-
+        let k = Keykeyword(context: context)
+        k.key = key
+        cache.keywords[key] = k
         return k
     }
     return nil
@@ -127,36 +130,37 @@ func findRFC(context: NSManagedObjectContext, name: String) -> RFC? {
     return results?.first
  }
 
-func updateRFC(context: NSManagedObjectContext, xml: XML.Accessor, obsoletes: inout [String: [String]], updates: inout [String: [String]]) {
+func updateRFC(context: NSManagedObjectContext, cache: RFCImportCache, xml: XML.Accessor, obsoletes: inout [String: [String]], updates: inout [String: [String]]) {
     var up = [String]()
     var ob = [String]()
     guard let name = xml["doc-id"].text else {
         return
     }
-    if let _ = findRFC(context: context, name: name) {
+    if cache.rfcs[name] != nil {
         // Since older entries don't change, we just return if we have a match
         return
     }
 
     let rfc = RFC(context: context)
     rfc.name = name
+    cache.rfcs[name] = rfc
 
     for author in xml["author"] {
-        if let author_obj = updateAuthor(context: context, name:author["name"].text) {
+        if let author_obj = updateAuthor(context: context, cache: cache, name:author["name"].text) {
             if rfc.authors?.contains(author_obj) != nil {
                 rfc.addToAuthors(author_obj)
             }
         }
     }
     for format in xml["format"]["file-format"] {
-        if let format_obj = updateFormat(context: context, format: format.text) {
+        if let format_obj = updateFormat(context: context, cache: cache, format: format.text) {
             if rfc.formats?.contains(format_obj) != nil {
                 rfc.addToFormats(format_obj)
             }
         }
     }
     for keyword in xml["keywords"]["kw"] {
-        if let kw_obj = updateKeyword(context: context, key: keyword.text) {
+        if let kw_obj = updateKeyword(context: context, cache: cache, key: keyword.text) {
             if rfc.keykeywords?.contains(kw_obj) != nil {
                 rfc.addToKeykeywords(kw_obj)
             }
@@ -245,12 +249,5 @@ func updateRFC(context: NSManagedObjectContext, xml: XML.Accessor, obsoletes: in
             }
         }
     }
-    do {
-        try context.save()
-    }
-    catch {
-        print("Unable to save RFC \(xml["doc-id"].text!)")
-        let nsError = error as NSError
-        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-    }
+    // Saving is done in bulk by the caller rather than once per RFC.
 }
